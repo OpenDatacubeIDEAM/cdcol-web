@@ -1,1 +1,1 @@
-web: gunicorn iteam_cdc.wsgi
+web: gunicorn ideam_cdc.wsgi
