@@ -1,0 +1,1 @@
+web: gunicorn iteam_cdc.wsgi
