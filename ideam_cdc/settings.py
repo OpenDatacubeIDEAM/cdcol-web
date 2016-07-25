@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'user_profile',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -145,3 +146,6 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 SITE_ID = 1
+ACCOUNT_SIGNUP_FORM_CLASS = 'user_profile.forms.SignupForm'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+LOGIN_REDIRECT_URL = '/'
