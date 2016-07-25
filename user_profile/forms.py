@@ -1,10 +1,13 @@
 from django import forms
+from models import UserProfile
 
-class SignupForm(forms.Form):
-    is_analyst = forms.BooleanField(label='Analista')
-    is_developer = forms.BooleanField(label='Desarrollador')
 
-    def signup(self, request, user):
-        user.is_analyst = True
-        user.is_developer = True
-        user.save()
+class SignupForm(forms.ModelForm):
+	class Meta:
+		model = UserProfile
+		fields = ('mobile_number',)
+
+	def save(self, user):
+		profile = UserProfile(user=user)
+		profile.mobile_number = self.cleaned_data['mobile_number']
+		profile.save()
