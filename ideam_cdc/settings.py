@@ -147,3 +147,5 @@ AUTHENTICATION_BACKENDS = (
 )
 SITE_ID = 1
 ACCOUNT_SIGNUP_FORM_CLASS = 'user_profile.forms.SignupForm'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+LOGIN_REDIRECT_URL = '/'
