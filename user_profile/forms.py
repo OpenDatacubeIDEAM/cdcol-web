@@ -6,7 +6,15 @@ from django.contrib.auth.models import Group
 class SignupForm(forms.ModelForm):
 	class Meta:
 		model = UserProfile
-		fields = ('is_analyst', 'is_developer')
+		fields = ()
+
+	PROFILES_CHOICES = (
+		('0', 'Analista',),
+		('1', 'Desarrollador',)
+	)
+	profile_field = forms.ChoiceField(label='Perfil',
+	                                  choices=PROFILES_CHOICES,
+	                                  widget=forms.RadioSelect())
 
 	def save(self, user):
 		"""
@@ -15,13 +23,13 @@ class SignupForm(forms.ModelForm):
 		:return:
 		"""
 		profile = UserProfile(user=user)
-		print self.cleaned_data
-		profile.is_analyst = self.cleaned_data['is_analyst']
-		profile.is_developer = self.cleaned_data['is_developer']
-		if profile.is_analyst:
+		profile_selected = self.cleaned_data['profile_field']
+		if profile_selected == '0':
+			profile.is_analyst = True
 			analyst_group = Group.objects.get(name='Analyst')
 			profile.user.groups.add(analyst_group)
-		if profile.is_developer:
+		elif profile_selected == '1':
+			profile.is_developer = True
 			developer_group = Group.objects.get(name='Developer')
 			profile.user.groups.add(developer_group)
 		profile.save()
