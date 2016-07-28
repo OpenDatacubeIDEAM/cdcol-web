@@ -8,4 +8,4 @@ def index(request):
 		message = "Hola {}".format(current_user.username)
 	else:
 		message = "Hola. No estas autenticado"
-	return render(request, 'public/index.html')
+	return render(request, 'public/login.html')
