@@ -5,8 +5,17 @@
 {% block head_title %}{% trans "Verify Your E-mail Address" %}{% endblock %}
 
 {% block content %}
-<h1>{% trans "Verify Your E-mail Address" %}</h1>
 
+    <!-- main-container start -->
+    <!-- ================ -->
+    <div class="main-container dark-translucent-bg" style="background-image:url('images/background-img-6.jpg');">
+        <div class="container">
+            <div class="row">
+                <!-- main start -->
+                <!-- ================ -->
+                <div class="main object-non-visible" data-animation-effect="fadeInUpSmall" data-effect-delay="100">
+                    <div class="form-block center-block p-30 light-gray-bg border-clear">
+                        <h2 class="title">{% trans "Verify Your E-mail Address" %}</h2>
 {% url 'account_email' as email_url %}
 
 <p>{% blocktrans %}This part of the site requires us to verify that
@@ -18,6 +27,12 @@ verification. Please click on the link inside this e-mail. Please
 contact us if you do not receive it within a few minutes.{% endblocktrans %}</p>
 
 <p>{% blocktrans %}<strong>Note:</strong> you can still <a href="{{ email_url }}">change your e-mail address</a>.{% endblocktrans %}</p>
-
+                    </div>
+                </div>
+                <!-- main end -->
+            </div>
+        </div>
+    </div>
+    <!-- main-container end -->
 
 {% endblock %}
