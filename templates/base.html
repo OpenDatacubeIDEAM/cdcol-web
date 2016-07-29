@@ -101,47 +101,12 @@
                             <!-- ================ -->
                             <div class="header-top-dropdown text-right">
                                 <div class="btn-group">
-                                    <a href="page-signup.html" class="btn btn-default btn-sm"><i
-                                            class="fa fa-user pr-10"></i> Sign Up</a>
+                                    <a href="{% url 'account_signup' %}" class="btn btn-default btn-sm"><i
+                                            class="fa fa-user pr-10"></i> Regístrate</a>
                                 </div>
-                                <div class="btn-group dropdown">
-                                    <button type="button" class="btn dropdown-toggle btn-default btn-sm"
-                                            data-toggle="dropdown"><i class="fa fa-lock pr-10"></i> Login
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-right dropdown-animation">
-                                        <li>
-                                            <form class="login-form margin-clear">
-                                                <div class="form-group has-feedback">
-                                                    <label class="control-label">Username</label>
-                                                    <input type="text" class="form-control" placeholder="">
-                                                    <i class="fa fa-user form-control-feedback"></i>
-                                                </div>
-                                                <div class="form-group has-feedback">
-                                                    <label class="control-label">Password</label>
-                                                    <input type="password" class="form-control" placeholder="">
-                                                    <i class="fa fa-lock form-control-feedback"></i>
-                                                </div>
-                                                <button type="submit" class="btn btn-gray btn-sm">Log In</button>
-                                                <span class="pl-5 pr-5">or</span>
-                                                <button type="submit" class="btn btn-default btn-sm">Sing Up</button>
-                                                <ul>
-                                                    <li><a href="#">Forgot your password?</a></li>
-                                                </ul>
-                                                <span class="text-center">Login with</span>
-                                                <ul class="social-links circle small colored clearfix">
-                                                    <li class="facebook"><a target="_blank"
-                                                                            href="http://www.facebook.com"><i
-                                                            class="fa fa-facebook"></i></a></li>
-                                                    <li class="twitter"><a target="_blank"
-                                                                           href="http://www.twitter.com"><i
-                                                            class="fa fa-twitter"></i></a></li>
-                                                    <li class="googleplus"><a target="_blank"
-                                                                              href="http://plus.google.com"><i
-                                                            class="fa fa-google-plus"></i></a></li>
-                                                </ul>
-                                            </form>
-                                        </li>
-                                    </ul>
+                                <div class="btn-group">
+                                    <a href="{% url 'account_login' %}" class="btn btn-default btn-sm"><i
+                                            class="fa fa-user pr-10"></i> Iniciar Sesión</a>
                                 </div>
                             </div>
                             <!--  header top dropdowns end -->

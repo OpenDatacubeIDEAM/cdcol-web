@@ -1,7 +1,6 @@
 {% extends "account/base.html" %}
 
 {% load i18n %}
-{% load account socialaccount %}
 
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
@@ -23,7 +22,7 @@
                             <!-- Errors -->
                             {% if form.errors %}
                                 {% for error in form.non_field_errors %}
-                                    <div class="alert alert-error">
+                                    <div class="alert alert-danger">
                                         <strong>{{ error|escape }}</strong>
                                     </div>
                                 {% endfor %}
@@ -51,8 +50,8 @@
                             </div>
                             <div class="form-group has-feedback">
                                 <!-- Errors -->
-                                {% if form.login.errors %}
-                                    {% for error in form.login.errors %}
+                                {% if form.password.errors %}
+                                    {% for error in form.password.errors %}
                                         <div class="alert alert-danger">
                                             <strong>{{ error|escape }}</strong>
                                         </div>
@@ -93,8 +92,8 @@
                             {% endif %}
                         </form>
                     </div>
-                    <p class="text-center space-top">Don't have an account yet? <a href="page-signup.html">Sing up</a>
-                        now.</p>
+                    <p class="text-center space-top">{% blocktrans %}If you have not created an account yet, then please
+<a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
                 </div>
                 <!-- main end -->
             </div>

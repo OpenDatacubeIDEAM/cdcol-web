@@ -5,17 +5,162 @@
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block content %}
-<h1>{% trans "Sign Up" %}</h1>
+    <!-- main-container start -->
+    <!-- ================ -->
+    <div class="main-container dark-translucent-bg" style="background-image:url('images/background-img-6.jpg');">
+        <div class="container">
+            <div class="row">
+                <!-- main start -->
+                <!-- ================ -->
+                <div class="main object-non-visible" data-animation-effect="fadeInUpSmall" data-effect-delay="100">
+                    <div class="form-block center-block p-30 light-gray-bg border-clear">
+                        <h2 class="title">{% trans "Sign Up" %}</h2>
+                        <form class="form-horizontal" role="form" id="signup_form" method="post"
+                              action="{% url 'account_signup' %}">
+                            {% csrf_token %}
 
-<p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+                            <!-- Errors -->
+                            {% if form.errors %}
+                                {% for error in form.non_field_errors %}
+                                    <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <!-- /Errors -->
 
-<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-  {% csrf_token %}
-  {{ form.as_p }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <button type="submit">{% trans "Sign Up" %} &raquo;</button>
-</form>
+                            <!-- Username -->
+                            <div class="form-group has-feedback">
+                                <label for="inputUserName" class="col-sm-3 control-label">{% trans "Username" %}<span
+                                        class="text-danger small">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="{{ form.login.html_name }}"
+                                           id="{{ form.login.id_for_label }}" placeholder="{% trans "Username" %}"
+                                            {% if form.login.value %} value="{{ form.login.value }}"{% endif %}
+                                           required>
+                                    <i class="fa fa-user form-control-feedback"></i>
+                                </div>
+                            </div>
+                            <!-- /Username -->
 
+                            <!-- Email -->
+                            <div class="form-group has-feedback">
+                                <!-- Errors -->
+                                {% if form.email.errors %}
+                                    {% for error in form.email.errors %}
+                                        <div class="alert alert-danger">
+                                            <strong>{{ error|escape }}</strong>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                <!-- /Errors -->
+                                <label for="inputEmail" class="col-sm-3 control-label">{% trans "Email" %}<span
+                                        class="text-danger small">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="email" class="form-control" name="{{ form.email.html_name }}"
+                                           id="{{ form.email.id_for_label }}"
+                                           placeholder="{% trans "Email" %}"
+                                            {% if form.email.value %} value="{{ form.email.value }}"{% endif %}
+                                           required>
+                                    <i class="fa fa-envelope form-control-feedback"></i>
+                                </div>
+                            </div>
+                            <!-- /Email -->
+
+                            <!-- Password -->
+                            <div class="form-group has-feedback">
+                                <!-- Errors -->
+                                {% if form.password.errors %}
+                                    {% for error in form.password.errors %}
+                                        <div class="alert alert-danger">
+                                            <strong>{{ error|escape }}</strong>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                <!-- /Errors -->
+                                <label for="inputPassword" class="col-sm-3 control-label">{% trans "Password" %}<span
+                                        class="text-danger small">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="password" class="form-control" name="{{ form.password.html_name }}"
+                                           id="{{ form.password.id_for_label }}"
+                                           placeholder="{% trans "Password" %}" required>
+                                    <i class="fa fa-lock form-control-feedback"></i>
+                                </div>
+                            </div>
+                            <!-- /Password -->
+
+                            <!-- Password2 -->
+                            <div class="form-group has-feedback">
+                                <!-- Errors -->
+                                {% if form.password2.errors %}
+                                    {% for error in form.password2.errors %}
+                                        <div class="alert alert-danger">
+                                            <strong>{{ error|escape }}</strong>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                <!-- /Errors -->
+                                <label for="inputPassword" class="col-sm-3 control-label">{% trans "Password (again)" %}<span
+                                        class="text-danger small">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="password" class="form-control" name="{{ form.password2.html_name }}"
+                                           id="{{ form.password2.id_for_label }}"
+                                           placeholder="{% trans "Password (again)" %}" required>
+                                    <i class="fa fa-lock form-control-feedback"></i>
+                                </div>
+                            </div>
+                            <!-- /Password2 -->
+
+                            <!-- Profile -->
+                            <div class="form-group has-feedback">
+                                <!-- Errors -->
+                                {% if form.profile_field.errors %}
+                                    {% for error in form.profile_field.errors %}
+                                        <div class="alert alert-danger">
+                                            <strong>{{ error|escape }}</strong>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                <!-- /Errors -->
+                                <p class="help-block">¿Qué roles deseas tener habilitado?</p>
+                                {% for field in form.profile_field %}
+                                    <div class="radio ">
+                                        <label>
+                                            {{ field|escape }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <!-- /Profile -->
+
+                            <div class="form-group">
+                                <div class="col-sm-offset-3 col-sm-8">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" required> Acepta <a href="#">política de
+                                            privacidad</a>
+                                            y <a href="#">términos y condiciones.</a>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-3 col-sm-8">
+                                    <button type="submit"
+                                            class="btn btn-group btn-default btn-animated">{% trans "Sign Up" %}<i
+                                            class="fa fa-check"></i></button>
+                                </div>
+                            </div>
+                            {% if redirect_field_value %}
+                                <input type="hidden" name="{{ redirect_field_name }}"
+                                       value="{{ redirect_field_value }}"/>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+                <!-- main end -->
+            </div>
+        </div>
+    </div>
+    <!-- main-container end -->
 {% endblock %}
