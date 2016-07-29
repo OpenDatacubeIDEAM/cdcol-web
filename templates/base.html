@@ -99,15 +99,26 @@
 
                             <!-- header top dropdowns start -->
                             <!-- ================ -->
-                            <div class="header-top-dropdown text-right">
-                                <div class="btn-group">
-                                    <a href="{% url 'account_signup' %}" class="btn btn-default btn-sm"><i
-                                            class="fa fa-user pr-10"></i> Regístrate</a>
-                                </div>
-                                <div class="btn-group">
-                                    <a href="{% url 'account_login' %}" class="btn btn-default btn-sm"><i
-                                            class="fa fa-user pr-10"></i> Iniciar Sesión</a>
-                                </div>
+                            <div class="header-top-second text-right">
+                                {% if user.is_authenticated %}
+                                    <ul class="list-inline">
+                                        <li><i class="fa fa-user pr-5 pl-10"></i>Hola, Manre -
+                                            <a href="#" onclick="document.getElementById('logout_form').submit();">Cerrar Sesión</a>
+                                            <form id="logout_form" method="post" action="{% url 'account_logout' %}" hidden>
+                                                {% csrf_token %}
+                                            </form>
+                                        </li>
+                                    </ul>
+                                {% else %}
+                                    <div class="btn-group">
+                                        <a href="{% url 'account_signup' %}" class="btn btn-default btn-sm"><i
+                                                class="fa fa-user pr-10"></i> Regístrate</a>
+                                    </div>
+                                    <div class="btn-group">
+                                        <a href="{% url 'account_login' %}" class="btn btn-default btn-sm"><i
+                                                class="fa fa-user pr-10"></i> Iniciar Sesión</a>
+                                    </div>
+                                {% endif %}
                             </div>
                             <!--  header top dropdowns end -->
                         </div>
