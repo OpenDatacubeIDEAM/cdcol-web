@@ -31,12 +31,21 @@
 
                             <!-- Username -->
                             <div class="form-group has-feedback">
+                                <!-- Errors -->
+                                {% if form.username.errors %}
+                                    {% for error in form.username.errors %}
+                                        <div class="alert alert-danger">
+                                            <strong>{{ error|escape }}</strong>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                <!-- /Errors -->
                                 <label for="inputUserName" class="col-sm-3 control-label">{% trans "Username" %}<span
                                         class="text-danger small">*</span></label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" name="{{ form.login.html_name }}"
-                                           id="{{ form.login.id_for_label }}" placeholder="{% trans "Username" %}"
-                                            {% if form.login.value %} value="{{ form.login.value }}"{% endif %}
+                                    <input type="text" class="form-control" name="{{ form.username.html_name }}"
+                                           id="{{ form.username.id_for_label }}" placeholder="{% trans "Username" %}"
+                                            {% if form.username.value %} value="{{ form.username.value }}"{% endif %}
                                            required>
                                     <i class="fa fa-user form-control-feedback"></i>
                                 </div>
@@ -70,8 +79,8 @@
                             <!-- Password -->
                             <div class="form-group has-feedback">
                                 <!-- Errors -->
-                                {% if form.password.errors %}
-                                    {% for error in form.password.errors %}
+                                {% if form.password1.errors %}
+                                    {% for error in form.password1.errors %}
                                         <div class="alert alert-danger">
                                             <strong>{{ error|escape }}</strong>
                                         </div>
@@ -81,8 +90,8 @@
                                 <label for="inputPassword" class="col-sm-3 control-label">{% trans "Password" %}<span
                                         class="text-danger small">*</span></label>
                                 <div class="col-sm-8">
-                                    <input type="password" class="form-control" name="{{ form.password.html_name }}"
-                                           id="{{ form.password.id_for_label }}"
+                                    <input type="password1" class="form-control" name="{{ form.password1.html_name }}"
+                                           id="{{ form.password1.id_for_label }}"
                                            placeholder="{% trans "Password" %}" required>
                                     <i class="fa fa-lock form-control-feedback"></i>
                                 </div>
