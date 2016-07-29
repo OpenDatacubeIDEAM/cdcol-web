@@ -318,16 +318,10 @@
     <!-- Banner block -->
 
     <div id="page-start"></div>
-
     {% if messages %}
-        <div>
-            <strong>Messages:</strong>
-            <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        </div>
+        {% for message in messages%}
+            <div class="alert {% if message.tags %}alert-{% if message.tags == "error" %}danger{% else %}{{ message.tags }}{% endif %}"{% endif %}>{{ message }}</div>
+        {% endfor %}
     {% endif %}
 
     <!-- Content block -->
