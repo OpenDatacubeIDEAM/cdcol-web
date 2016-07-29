@@ -14,7 +14,8 @@ class SignupForm(forms.ModelForm):
 	)
 	profile_field = forms.ChoiceField(label='Perfil',
 	                                  choices=PROFILES_CHOICES,
-	                                  widget=forms.RadioSelect())
+	                                  widget=forms.RadioSelect(),
+	                                  required=True)
 
 	def save(self, user):
 		"""
