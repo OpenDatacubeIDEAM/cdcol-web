@@ -12,10 +12,9 @@ class SignupForm(forms.ModelForm):
 		('0', 'Analista',),
 		('1', 'Desarrollador',)
 	)
-	profile_field = forms.ChoiceField(label='Perfil',
-	                                  choices=PROFILES_CHOICES,
-	                                  widget=forms.RadioSelect(),
-	                                  required=True)
+	profile_field = forms.ChoiceField(label='Perfil', choices=PROFILES_CHOICES, widget=forms.RadioSelect(),required=True)
+	first_name = forms.CharField(max_length=30, label='Nombres', required=True)
+	last_name = forms.CharField(max_length=30, label='Apellidos', required=True)
 
 	def save(self, user):
 		"""
@@ -23,6 +22,10 @@ class SignupForm(forms.ModelForm):
 		:param user: Django' user model
 		:return:
 		"""
+		# Saving the User model
+		user.first_name = self.cleaned_data['first_name']
+		user.last_name = self.cleaned_data['last_name']
+		# Saving the UserProfile model
 		profile = UserProfile(user=user)
 		profile_selected = self.cleaned_data['profile_field']
 		if profile_selected == '0':

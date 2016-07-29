@@ -52,6 +52,52 @@
                             </div>
                             <!-- /Username -->
 
+                            <!-- First Name -->
+                            <div class="form-group has-feedback">
+                                <!-- Errors -->
+                                {% if form.first_name.errors %}
+                                    {% for error in form.first_name.errors %}
+                                        <div class="alert alert-danger">
+                                            <strong>{{ error|escape }}</strong>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                <!-- /Errors -->
+                                <label for="inputFirstName" class="col-sm-3 control-label">Nombres<span
+                                        class="text-danger small">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="{{ form.first_name.html_name }}"
+                                           id="{{ form.first_name.id_for_label }}" placeholder="Nombres"
+                                            {% if form.first_name.value %} value="{{ form.first_name.value }}"{% endif %}
+                                           required>
+                                    <i class="fa fa-user form-control-feedback"></i>
+                                </div>
+                            </div>
+                            <!-- /First Name -->
+
+                            <!-- Last Name -->
+                            <div class="form-group has-feedback">
+                                <!-- Errors -->
+                                {% if form.last_name.errors %}
+                                    {% for error in form.last_name.errors %}
+                                        <div class="alert alert-danger">
+                                            <strong>{{ error|escape }}</strong>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                <!-- /Errors -->
+                                <label for="inputLastName" class="col-sm-3 control-label">Apellidos<span
+                                        class="text-danger small">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="{{ form.last_name.html_name }}"
+                                           id="{{ form.last_name.id_for_label }}" placeholder="Apellidos"
+                                            {% if form.last_name.value %} value="{{ form.last_name.value }}"{% endif %}
+                                           required>
+                                    <i class="fa fa-user form-control-feedback"></i>
+                                </div>
+                            </div>
+                            <!-- /Last Name -->
+
                             <!-- Email -->
                             <div class="form-group has-feedback">
                                 <!-- Errors -->
