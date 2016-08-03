@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^$', 'public.views.index'),
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('allauth.urls')),
+    url(r'^storage/', include('storage.urls')),
 ]
