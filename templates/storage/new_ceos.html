@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- breadcrumb start -->
+    <!-- ================ -->
+    <div class="breadcrumb-container">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home pr-10"></i><a href="/">Home</a></li>
+                <li><a href="{% url 'storage:index' %}">Unidades de Almacenamiento</a></li>
+                <li class="active">Nueva Unidad CEOS</li>
+            </ol>
+        </div>
+    </div>
+    <!-- breadcrumb end -->
+
+    <!-- main-container start -->
+    <!-- ================ -->
+    <section class="main-container">
+
+        <div class="container">
+            <div class="row">
+
+                <!-- main start -->
+                <!-- ================ -->
+                <div class="main col-md-10">
+
+                    <!-- page-title start -->
+                    <!-- ================ -->
+                    <h1 class="page-title">Nueva Unidad de Almacenamiento - CEOS</h1>
+                    <div class="separator-2"></div>
+                    <!-- page-title end -->
+                    <p>Ingresa la siguiente información de la unidad de almacenamiento:</p>
+                    <form role="form" class="col-md-8">
+
+                        <!-- Tipo de unidad -->
+                        <div class="form-group">
+                            <label for="nameUnitType"><b>Tipo de unidad</b></label>
+                            <input class="form-control" id="exampleInputEmail1" placeholder="CEOS" disabled=""
+                                   type="text">
+                        </div>
+                        <!-- /Tipo de unidad -->
+
+                        <!-- Descripción de Unidad -->
+                        <div class="form-group">
+                            <label for="nameUnitFile"><b>Descripción de la unidad*</b></label>
+                            <input id="unitInputFile" type="file">
+                            <p class="help-block">Debes ingresar el archivo YML que describe la unidad.</p>
+                        </div>
+                        <!-- /Descripción de Unidad -->
+
+                        <!-- Archivo de ingesta -->
+                        <div class="form-group">
+                            <label for="nameUnitIngestFile"><b>Archivo de ingesta*</b></label>
+                            <input id="unitInputIngestFile" type="file">
+                            <p class="help-block">Debes ingresar el archivo utilizado para la ingesta de la unidad.</p>
+                        </div>
+                        <!-- /Archivo de ingesta -->
+
+                        <!-- Unidad de origen -->
+                        <div class="form-group">
+                            <label for="exampleInputEmail1"><b>Unidad de origen*</b></label>
+                            <select id="" class="form-control">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                        </div>
+                        <!-- /Unidad de origen -->
+
+                        <button type="submit" class="btn btn-default">Crear Unidad</button>
+                    </form>
+                </div>
+                <!-- main end -->
+            </div>
+        </div>
+    </section>
+    <!-- main-container end -->
+{% endblock %}
