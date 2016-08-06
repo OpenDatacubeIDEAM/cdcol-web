@@ -37,7 +37,7 @@
                             {{ response.message|escape }}
                         </div>
                     {% endif %}
-                    <!-- /Errors -->
+                    <!-- /Success Messages -->
                     <form role="form" class="col-md-8" method="POST" action="{% url 'storage:new_cdcol' %}"
                           enctype="multipart/form-data">
                         {% csrf_token %}

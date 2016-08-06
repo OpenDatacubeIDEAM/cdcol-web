@@ -16,7 +16,7 @@ class StorageUnit(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 
 	def __unicode__(self):
-		return self.name
+		return "{} - {}".format(self.id, self.name)
 
 
 class StorageUnitCDCOL(models.Model):
@@ -24,4 +24,13 @@ class StorageUnitCDCOL(models.Model):
 	detailed_processing_level = models.CharField(max_length=200)
 
 	def __unicode__(self):
-		return self.storage_unit.name
+		return "{} - {}".format(self.storage_unit.id, self.storage_unit.name)
+
+
+class StorageUnitCEOS(models.Model):
+	storage_unit = models.OneToOneField(StorageUnit, on_delete=models.CASCADE)
+	source_storage_unit = models.ForeignKey(StorageUnit, related_name='source_storage_unit')
+	file_feed = models.FileField()
+
+	def __unicode__(self):
+		return "{} - {}".format(self.storage_unit.id, self.storage_unit.name)
