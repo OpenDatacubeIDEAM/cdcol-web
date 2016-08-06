@@ -102,9 +102,11 @@
                             <div class="header-top-second text-right">
                                 {% if user.is_authenticated %}
                                     <ul class="list-inline">
-                                        <li><i class="fa fa-user pr-5 pl-10"></i>Hola, Manre -
-                                            <a href="#" onclick="document.getElementById('logout_form').submit();">Cerrar Sesión</a>
-                                            <form id="logout_form" method="post" action="{% url 'account_logout' %}" hidden>
+                                        <li><i class="fa fa-user pr-5 pl-10"></i>Hola, {{ user.username }} -
+                                            <a href="#" onclick="document.getElementById('logout_form').submit();">Cerrar
+                                                Sesión</a>
+                                            <form id="logout_form" method="post" action="{% url 'account_logout' %}"
+                                                  hidden>
                                                 {% csrf_token %}
                                             </form>
                                         </li>
@@ -265,7 +267,28 @@
 
                                                 <!-- mega-menu start -->
                                                 <li class="dropdown active mega-menu">
-                                                    <a href="index.html" class="dropdown-toggle" data-toggle="dropdown">Home</a>
+                                                    <a href="/" class="dropdown-toggle" data-toggle="dropdown">Home</a>
+                                                </li>
+                                                <li class="dropdown ">
+                                                    <a class="dropdown-toggle" data-toggle="dropdown"
+                                                       href="{% url 'storage:index' %}">Almacenamiento</a>
+                                                    <ul class="dropdown-menu">
+                                                        <li class="dropdown ">
+                                                            <a class="dropdown-toggle" data-toggle="dropdown"
+                                                               href="{% url 'storage:index' %}">Listar</a>
+                                                        </li>
+                                                        <li class="dropdown ">
+                                                            <a class="dropdown-toggle" data-toggle="dropdown"
+                                                               href="{% url 'storage:index' %}">Crear</a>
+                                                            <ul class="dropdown-menu">
+                                                                <li><a href="{% url 'storage:new_ceos' %}">Crear UA
+                                                                    CEOS</a></li>
+                                                                <li><a href="{% url 'storage:new_cdcol' %}">Crear UA
+                                                                    CDCOL</a></li>
+                                                            </ul>
+                                                        </li>
+
+                                                    </ul>
                                                 </li>
                                                 <!-- mega-menu end -->
                                             </ul>
@@ -319,7 +342,7 @@
 
     <div id="page-start"></div>
     {% if messages %}
-        {% for message in messages%}
+        {% for message in messages %}
             <div class="alert {% if message.tags %}alert-{% if message.tags == "error" %}danger{% else %}{{ message.tags }}{% endif %}"{% endif %}>{{ message }}</div>
         {% endfor %}
     {% endif %}
@@ -342,7 +365,8 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="footer-content">
-                                <div class="logo-footer"><img id="logo-footer" src="{% static 'images/logo_light_blue.png' %}" alt="">
+                                <div class="logo-footer"><img id="logo-footer"
+                                                              src="{% static 'images/logo_light_blue.png' %}" alt="">
                                 </div>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus illo vel
                                     dolorum soluta consectetur doloribus sit. Delectus non tenetur odit dicta vitae
