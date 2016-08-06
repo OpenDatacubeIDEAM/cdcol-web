@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render
+import mimetypes
+import os
+from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.utils.encoding import smart_str
 from .forms import CDCOLForm, CEOSForm
 from storage.models import StorageUnit, StorageUnitCDCOL, StorageUnitCEOS
+from wsgiref.util import FileWrapper
 
 
 @login_required(login_url='/accounts/login/')
@@ -14,11 +18,33 @@ def index(request):
 	return render(request, 'storage/index.html', context)
 
 
+def download_file(request, file_name):
+	"""
+	Download a file
+	:param request:
+	:param file_name:
+	:return:
+	"""
+	file_path = file_name
+	file_wrapper = FileWrapper(file(file_path, 'rb'))
+	file_mimetype = mimetypes.guess_type(file_path)
+	response = HttpResponse(file_wrapper, content_type=file_mimetype)
+	response['X-Sendfile'] = file_path
+	response['Content-Length'] = os.stat(file_path).st_size
+	response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(file_name)
+	return response
+
+
 @login_required(login_url='/accounts/login/')
-def detail(request, item_id):
-	print item_id
-	current_user = request.user
-	return render(request, 'storage/detail.html')
+def detail(request, storage_unit_id):
+	storage_unit_ceos = None
+	# searching the storage unit by its id
+	storage_unit_detail = get_object_or_404(StorageUnit, id=storage_unit_id)
+	if storage_unit_detail.storage_unit_type == 'CEOS':
+		storage_unit_ceos = StorageUnitCEOS.objects.get(storage_unit__id=storage_unit_detail.id)
+	context = {'storage_unit_detail': storage_unit_detail, 'storage_unit_ceos': storage_unit_ceos }
+	print context
+	return render(request, 'storage/detail.html', context)
 
 
 @login_required(login_url='/accounts/login/')

@@ -35,39 +35,43 @@
                         <tbody>
                         <tr>
                             <td>Código de la unidad:</td>
-                            <td>0000001</td>
+                            <td>{{ storage_unit_detail.id }}</td>
                         </tr>
                         <tr>
                             <td>Nombre:</td>
-                            <td>Unidad de almacenamiento tipo A</td>
+                            <td>{{ storage_unit_detail.name }}</td>
                         </tr>
                         <tr>
                             <td>Tipo:</td>
-                            <td>CEOS</td>
+                            <td>{{ storage_unit_detail.storage_unit_type }}</td>
                         </tr>
                         <tr>
                             <td>Archivo de Descripción:</td>
-                            <td>Descargar</td>
+                            <td><a href="/storage/download/{{ storage_unit_detail.metadata.name }}"
+                                   class="btn btn-primary btn-sm">Descargar</a></td>
                         </tr>
-                        <tr>
-                            <td>Archivo de Ingesta:</td>
-                            <td>Descargar</td>
-                        </tr>
-                        <tr>
-                            <td>Unidad origen:</td>
-                            <td>0000001</td>
-                        </tr>
+                        {% if storage_unit_ceos %}
+                            <tr>
+                                <td>Archivo de Ingesta:</td>
+                                <td><a href="/storage/download/{{ storage_unit_ceos.file_feed.name }}"
+                                   class="btn btn-primary btn-sm">Descargar</a></td>
+                            </tr>
+                            <tr>
+                                <td>Unidad origen:</td>
+                                <td>{{ storage_unit_ceos.source_storage_unit }}</td>
+                            </tr>
+                        {% endif %}
                         <tr>
                             <td>Nivel de Procesamiento:</td>
-                            <td>INGESTADOS</td>
+                            <td>{{ storage_unit_detail.processing_level }}</td>
                         </tr>
                         <tr>
                             <td>Fecha de Creación:</td>
-                            <td>21 de Junio 10:00 AM</td>
+                            <td>{{ storage_unit_detail.created_at }}</td>
                         </tr>
                         <tr>
                             <td>Creada por:</td>
-                            <td>usuario1@abc.com</td>
+                            <td>{{ storage_unit_detail.created_by }}</td>
                         </tr>
                         </tbody>
                     </table>
