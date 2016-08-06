@@ -9,7 +9,7 @@ class StorageUnit(models.Model):
 	processing_level = models.CharField(max_length=200)
 	name = models.CharField(max_length=200)
 	file_description = models.CharField(max_length=200)
-	metadata = JSONField()
+	metadata = models.FileField()
 	root_dir = models.CharField(max_length=200)
 	created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author')
 	created_at = models.DateTimeField(auto_now_add=True)

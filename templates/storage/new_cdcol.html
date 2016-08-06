@@ -31,28 +31,67 @@
                     <div class="separator-2"></div>
                     <!-- page-title end -->
                     <p>Ingresa la siguiente información de la unidad de almacenamiento:</p>
-                    <form role="form" class="col-md-8">
+                    <!-- Success Messages  -->
+                    {% if response %}
+                        <div class="alert alert-success">
+                            {{ response.message|escape }}
+                        </div>
+                    {% endif %}
+                    <!-- /Errors -->
+                    <form role="form" class="col-md-8" method="POST" action="{% url 'storage:new_cdcol' %}"
+                          enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Errors -->
+                        {% if form.errors %}
+                            {% for error in form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        <!-- /Errors -->
 
                         <!-- Tipo de unidad -->
                         <div class="form-group">
                             <label for="nameUnitType"><b>Tipo de unidad</b></label>
-                            <input class="form-control" id="exampleInputEmail1" placeholder="CDCOL" disabled=""
+                            <input class="form-control" id="unit_type_id" placeholder="CDCOL" disabled=""
                                    type="text">
                         </div>
                         <!-- /Tipo de unidad -->
 
                         <!-- Descripción de Unidad -->
                         <div class="form-group">
+                            <!-- Errors -->
+                            {% if form.file.errors %}
+                                {% for error in form.file.errors %}
+                                    <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <!-- /Errors -->
                             <label for="nameUnitFile"><b>Descripción de la unidad*</b></label>
-                            <input id="unitInputFile" type="file">
+                            <input name="{{ form.file.html_name }}" id="{{ form.file.id_for_label }}" type="file">
                             <p class="help-block">Debes ingresar el archivo YML que describe la unidad.</p>
                         </div>
                         <!-- /Descripción de Unidad -->
 
                         <!-- Nivel de Procesamiento -->
                         <div class="form-group">
-                            <label for="exampleInputEmail1"><b>Nivel de procesamiento*</b></label>
-                            <select id="" class="form-control">
+                            <!-- Errors -->
+                            {% if form.processing_level.errors %}
+                                {% for error in form.processing_level.errors %}
+                                    <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <!-- /Errors -->
+                            <label for="processingLevel"><b>Nivel de procesamiento*</b></label>
+                            <select name="{{ form.processing_level.html_name }}"
+                                    id="{{ form.processing_level.id_for_label }}"
+                                    class="form-control">
                                 <option>Crudos</option>
                                 <option>Preprocesados</option>
                             </select>
@@ -61,8 +100,22 @@
 
                         <!-- Nivel Procesamiento Detallado -->
                         <div class="form-group">
-                            <label for="exampleInputEmail1"><b>Nivel de preprocesamiento detallado*</b></label>
-                            <input class="form-control" id="" placeholder="Describe el nivel de preprocesamiento"
+                            <!-- Errors -->
+                            {% if form.detailed_processing_level.errors %}
+                                {% for error in form.detailed_processing_level.errors %}
+                                    <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <!-- /Errors -->
+                            <label for="detailedProcessingLevel"><b>Nivel de preprocesamiento detallado*</b></label>
+                            <input class="form-control"
+                                   name="{{ form.detailed_processing_level.html_name }}"
+                                   id="{{ form.detailed_processing_level.id_for_label }}"
+                                   placeholder="Describe el nivel de preprocesamiento"
+                                    {% if form.detailed_processing_level.value %}
+                                   value="{{ form.detailed_processing_level.value }}"{% endif %}
                                    type="text">
                         </div>
                         <!-- /Nivel Procesamiento Detallado -->
