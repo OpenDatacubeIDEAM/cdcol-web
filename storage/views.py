@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 from .forms import CDCOLForm, CEOSForm
 from storage.models import StorageUnit, StorageUnitCDCOL, StorageUnitCEOS
 
 
+@login_required(login_url='/accounts/login/')
 def index(request):
 	current_user = request.user
 	storage_units = StorageUnit.objects.all()
@@ -12,12 +14,14 @@ def index(request):
 	return render(request, 'storage/index.html', context)
 
 
+@login_required(login_url='/accounts/login/')
 def detail(request, item_id):
 	print item_id
 	current_user = request.user
 	return render(request, 'storage/detail.html')
 
 
+@login_required(login_url='/accounts/login/')
 def new_ceos(request):
 	response = None
 	# obtaining the current user
@@ -65,6 +69,7 @@ def new_ceos(request):
 	return render(request, 'storage/new_ceos.html', context)
 
 
+@login_required(login_url='/accounts/login/')
 def new_cdcol(request):
 	"""
 	Creates a new CDCOL Storage Unit
