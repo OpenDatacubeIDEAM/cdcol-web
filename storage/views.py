@@ -7,7 +7,9 @@ from storage.models import StorageUnit, StorageUnitCDCOL
 
 def index(request):
 	current_user = request.user
-	return render(request, 'storage/index.html')
+	storage_units = StorageUnit.objects.all()
+	context = {'storage_units': storage_units}
+	return render(request, 'storage/index.html', context)
 
 
 def detail(request, item_id):

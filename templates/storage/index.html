@@ -41,24 +41,15 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>000001</td>
-                            <td>Unidad de almacenamiento datos tipo D</td>
-                            <td>CEOS</td>
-                            <td>Ingestados</td>
-                            <td>21 de Junio 10:00 AM</td>
-                            <td>usaurio1@abc.com</td>
-                            <td><a href="/storage/detail/1" class="btn btn-primary btn-sm">Ver Detalle</a></td>
-                        </tr>
-                        <tr>
-                            <td>000002</td>
-                            <td>Unidad de almacenamiento datos tipo A</td>
-                            <td>CDCOL</td>
-                            <td>Preprocesados</td>
-                            <td>21 de Junio 10:00 AM</td>
-                            <td>usaurio1@abc.com</td>
-                            <td><a href="/storage/detail/1" class="btn btn-primary btn-sm">Ver Detalle</a></td>
-                        </tr>
+                        {% for su in storage_units %}
+                            <td>{{ su.id }}</td>
+                            <td>{{ su.name }}</td>
+                            <td>{{ su.storage_unit_type }}</td>
+                            <td>{{ su.processing_level }}</td>
+                            <td>{{ su.created_at }}</td>
+                            <td>{{ su.created_by.email }}</td>
+                            <td><a href="/storage/detail/{{ su.id }}" class="btn btn-primary btn-sm">Ver Detalle</a></td>
+                        {% endfor %}
                         </tbody>
                     </table>
                 </div>
