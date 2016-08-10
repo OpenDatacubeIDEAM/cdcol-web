@@ -30,34 +30,36 @@
 
                     {% if storage_units %}
 
-                        <table class="table table-striped table-colored">
-                            <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Nombre</th>
-                                <th>Tipo</th>
-                                <th>Nivel</th>
-                                <th>Fecha de Creación</th>
-                                <th>Creada por</th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for su in storage_units %}
+                        <div class="table-responsive">
+                            <table class="table table-striped table-colored">
+                                <thead>
                                 <tr>
-                                    <td>{{ su.id }}</td>
-                                    <td>{{ su.name }}</td>
-                                    <td>{{ su.storage_unit_type }}</td>
-                                    <td>{{ su.processing_level }}</td>
-                                    <td>{{ su.created_at }}</td>
-                                    <td>{{ su.created_by.email }}</td>
-                                    <td><a href="/storage/detail/{{ su.id }}" class="btn btn-primary btn-sm">Ver
-                                        Detalle</a>
-                                    </td>
+                                    <th>Código</th>
+                                    <th>Nombre</th>
+                                    <th>Tipo</th>
+                                    <th>Nivel</th>
+                                    <th>Fecha de Creación</th>
+                                    <th>Creada por</th>
+                                    <th></th>
                                 </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                {% for su in storage_units %}
+                                    <tr>
+                                        <td>{{ su.id }}</td>
+                                        <td>{{ su.name }}</td>
+                                        <td>{{ su.storage_unit_type }}</td>
+                                        <td>{{ su.processing_level }}</td>
+                                        <td>{{ su.created_at }}</td>
+                                        <td>{{ su.created_by.email }}</td>
+                                        <td><a href="/storage/detail/{{ su.id }}" class="btn btn-primary btn-sm">Ver
+                                            Detalle</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
 
                     {% else %}
                         <div class="alert alert-warning">
