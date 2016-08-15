@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- breadcrumb start -->
+    <!-- ================ -->
+    <div class="breadcrumb-container">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
+                <li><a href="{% url 'algorithm:index' %}">Algoritmos</a></li>
+                <li class="active">Detalle de parámetro</li>
+            </ol>
+        </div>
+    </div>
+    <!-- breadcrumb end -->
+
+    <!-- main-container start -->
+    <!-- ================ -->
+    <section class="main-container">
+
+        <div class="container">
+            <div class="row">
+
+                <!-- main start -->
+                <!-- ================ -->
+                <div class="main col-md-8">
+
+                    <!-- page-title start -->
+                    <!-- ================ -->
+                    <h1 class="page-title">Información del parámetro</h1>
+                    <div class="separator-2"></div>
+                    <!-- page-title end -->
+                    <p>Esta es la información del parámetro seleccionado:</p>
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <td>Código del parámetro:</td>
+                            <td>000001</td>
+                        </tr>
+                        <tr>
+                            <td>Algoritmo:</td>
+                            <td>Nombre completo del algoritmo A</td>
+                        </tr>
+                        <tr>
+                            <td>Versión del algoritmo:</td>
+                            <td>1.3</td>
+                        </tr>
+                        <tr>
+                            <td>Nombre del parámetro:</td>
+                            <td>Nombre del parámetro</td>
+                        </tr>
+                        <tr>
+                            <td>Tipo:</td>
+                            <td>String</td>
+                        </tr>
+                        <tr>
+                            <td>Descripción:</td>
+                            <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tum Torquatus: Prorsus, inquit,
+                                assentior; Duo Reges: constructio interrete. Nam memini etiam quae nolo, oblivisci non
+                                possum quae volo. Ut placet, inquit, etsi enim illud erat aptius, aequum cuique
+                                concedere. Tecum optime, deinde etiam cum mediocri amico. Non potes, nisi retexueris
+                                illa. Quodsi vultum tibi, si incessum fingeres, quo gravior viderere, non esses tui
+                                similis; Nos vero, inquit ille;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Texto de ayuda:</td>
+                            <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tum Torquatus: Prorsus, inquit, assentior.</td>
+                        </tr>
+                        <tr>
+                            <td>Posición:</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>Obligatorio:</td>
+                            <td>Si</td>
+                        </tr>
+                        <tr>
+                            <td>Habilitado:</td>
+                            <td>Si</td>
+                        </tr>
+                        <tr>
+                            <td>Valor por defecto:</td>
+                            <td>Valor X</td>
+                        </tr>
+                        <tr>
+                            <td>Nombre en la función:</td>
+                            <td>param_a</td>
+                        </tr>
+                        <tr>
+                            <td>Fecha de Creación:</td>
+                            <td>21 de Junio 2016 10:00 AM</td>
+                        </tr>
+                        <tr>
+                            <td>Fecha de Modificación:</td>
+                            <td>21 de Junio 2016 10:00 AM</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <!-- main end -->
+
+                <!-- sidebar start -->
+                <!-- ================ -->
+                <aside class="col-md-4 col-lg-3 col-lg-offset-1">
+                    <div class="sidebar">
+                        <div class="block clearfix">
+                            <h3 class="title">Acciones</h3>
+                            <div class="separator-2"></div>
+                            <nav>
+                                <a href="#" class="btn btn-primary btn-sm">Editar parámetro</a>
+                            </nav>
+                        </div>
+                    </div>
+                </aside>
+                <!-- sidebar end -->
+
+            </div>
+        </div>
+    </section>
+    <!-- main-container end -->
+{% endblock %}
