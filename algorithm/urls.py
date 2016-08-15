@@ -12,4 +12,6 @@ urlpatterns = [
 	url(r'^detail/(?P<algorithm_id>[0-9]+)/$', views.detail, name='detail'),
 	# ex: /algorithm/11/version/new
 	url(r'^(?P<algorithm_id>[0-9]+)/version/new$', views.new_version, name='new_version'),
+	# ex: /algorithm/11/version/12
+	url(r'^(?P<algorithm_id>[0-9]+)/version/(?P<version_id>[0-9]+)$', views.version_detail, name='version_detail'),
 ]
