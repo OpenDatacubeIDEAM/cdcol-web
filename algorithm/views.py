@@ -13,3 +13,7 @@ def new(request):
 	current_user = request.user
 	return render(request, 'algorithm/new.html')
 
+
+@login_required(login_url='/accounts/login/')
+def detail(request, algorithm_id):
+	return render(request, 'algorithm/detail.html')
