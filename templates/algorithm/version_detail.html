@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- breadcrumb start -->
+    <!-- ================ -->
+    <div class="breadcrumb-container">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
+                <li><a href="{% url 'algorithm:index' %}">Algoritmos</a></li>
+                <li class="active">Detalle de versión</li>
+            </ol>
+        </div>
+    </div>
+    <!-- breadcrumb end -->
+
+    <!-- main-container start -->
+    <!-- ================ -->
+    <section class="main-container">
+
+        <div class="container">
+            <div class="row">
+
+                <!-- main start -->
+                <!-- ================ -->
+                <div class="main col-md-8">
+
+                    <!-- page-title start -->
+                    <!-- ================ -->
+                    <h1 class="page-title">Información del la versión</h1>
+                    <div class="separator-2"></div>
+                    <!-- page-title end -->
+                    <p>Esta es la información de la versión del algoritmo seleccionado:</p>
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <td>Código de la versión:</td>
+                            <td>000001</td>
+                        </tr>
+                        <tr>
+                            <td>Nombre del algoritmo:</td>
+                            <td>Nombre completo del algoritmo A</td>
+                        </tr>
+                        <tr>
+                            <td>Número:</td>
+                            <td>1.3</td>
+                        </tr>
+                        <tr>
+                            <td>Descripción:</td>
+                            <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tum Torquatus: Prorsus, inquit,
+                                assentior; Duo Reges: constructio interrete. Nam memini etiam quae nolo, oblivisci non
+                                possum quae volo. Ut placet, inquit, etsi enim illud erat aptius, aequum cuique
+                                concedere. Tecum optime, deinde etiam cum mediocri amico. Non potes, nisi retexueris
+                                illa. Quodsi vultum tibi, si incessum fingeres, quo gravior viderere, non esses tui
+                                similis; Nos vero, inquit ille;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Código fuente:</td>
+                            <td><a href="#" class="btn btn-primary btn-sm">Descargar</a></td>
+                        </tr>
+                        <tr>
+                            <td>Estado:</td>
+                            <td>En Desarrollo</td>
+                        </tr>
+                        <tr>
+                            <td>Fecha de Creación:</td>
+                            <td>21 de Junio 2016 10:00 AM</td>
+                        </tr>
+                        <tr>
+                            <td>Creada por:</td>
+                            <td>usuario1@abc.com</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="page-title">Parámetros de la versión</h3>
+                    <div class="separator-2"></div>
+                    <div class="pull-right">
+                        <a href="#"><a href="{% url 'algorithm:new_parameter' 1 2 %}" class="btn btn-primary btn-sm">Nuevo Parámetro</a></a>
+                    </div>
+                    <p>A continuación se encuentran los parámetros de esta versión::</p>
+                    <br/>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-colored">
+                            <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Tipo</th>
+                                <th>Posición</th>
+                                <th>Obligatorio</th>
+                                <th>Habilitado</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Parámetro A</td>
+                                    <td>Integer</td>
+                                    <td>1</td>
+                                    <td>Si</td>
+                                    <td>Si</td>
+                                    <td><a href="{% url 'algorithm:view_parameter' 1 2 3 %}" class="btn btn-primary btn-sm">Ver Detalle</a>
+                                        <a href="#" class="btn btn-primary btn-sm">Editar</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Parámetro B</td>
+                                    <td>String</td>
+                                    <td>2</td>
+                                    <td>Si</td>
+                                    <td>Si</td>
+                                    <td><a href="{% url 'algorithm:view_parameter' 1 2 3 %}" class="btn btn-primary btn-sm">Ver Detalle</a>
+                                        <a href="#" class="btn btn-primary btn-sm">Editar</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <!-- main end -->
+
+                <!-- sidebar start -->
+                <!-- ================ -->
+                <aside class="col-md-4 col-lg-3 col-lg-offset-1">
+                    <div class="sidebar">
+                        <div class="block clearfix">
+                            <h3 class="title">Acciones</h3>
+                            <div class="separator-2"></div>
+                            <nav>
+                                <a href="#" class="btn btn-primary btn-sm">Ejecutar esta versión</a>
+                            </nav>
+                            <nav>
+                                <a href="#" class="btn btn-primary btn-sm">Editar Versión</a>
+                            </nav>
+                            <nav>
+                                <a href="#" class="btn btn-primary btn-sm">Enviar para publicación</a>
+                            </nav>
+                            <nav>
+                                <a href="#" class="btn btn-primary btn-sm">Enviar para oficialización</a>
+                            </nav>
+                            <nav>
+                                <a href="#" class="btn btn-primary btn-sm">Ejecutar esta versión</a>
+                            </nav>
+                        </div>
+                    </div>
+                </aside>
+                <!-- sidebar end -->
+
+            </div>
+        </div>
+    </section>
+    <!-- main-container end -->
+{% endblock %}

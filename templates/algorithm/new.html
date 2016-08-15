@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- breadcrumb start -->
+    <!-- ================ -->
+    <div class="breadcrumb-container">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
+                <li><a href="{% url 'algorithm:index' %}">Algoritmos</a></li>
+                <li class="active">Nuevo</li>
+            </ol>
+        </div>
+    </div>
+    <!-- breadcrumb end -->
+
+    <!-- main-container start -->
+    <!-- ================ -->
+    <section class="main-container">
+
+        <div class="container">
+            <div class="row">
+
+                <!-- main start -->
+                <!-- ================ -->
+                <div class="main col-md-10">
+
+                    <!-- page-title start -->
+                    <!-- ================ -->
+                    <h1 class="page-title">Nuevo Algoritmo</h1>
+                    <div class="separator-2"></div>
+                    <!-- page-title end -->
+                    <p>Ingresa la siguiente información del algoritmo:</p>
+                    <!-- Success Messages  -->
+                    {% if response %}
+                        <div class="alert alert-success">
+                            {{ response.message|escape }}
+                        </div>
+                    {% endif %}
+                    <!-- /Success Messages -->
+                    <form role="form" class="col-md-8" method="POST" action="{% url 'algorithm:new' %}"
+                          enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Errors -->
+                        {% if form.errors %}
+                            {% for error in form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        <!-- /Errors -->
+
+                        <!-- Tipo de Algoritmo -->
+                        <div class="form-group">
+                            <!-- Errors -->
+                            {% if form.algorithm_type.errors %}
+                                {% for error in form.algorithm_type.errors %}
+                                    <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <!-- /Errors -->
+                            <label for=""><b>Tipo de Algoritmo*</b></label>
+                            <select class="form-control">
+                                <option>Descarga</option>
+                                <option>Procesamiento</option>
+                            </select>
+                        </div>
+                        <!-- /Tipo de Algoritmo -->
+
+                        <!-- Nombre -->
+                        <div class="form-group">
+                            <!-- Errors -->
+                            {% if form.name.errors %}
+                                {% for error in form.name.errors %}
+                                    <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <!-- /Errors -->
+                            <label for=""><b>Nombre*</b></label>
+                            <input class="form-control" placeholder="Escribe el nombre el algoritmo"
+                                   type="text">
+                        </div>
+                        <!-- /Nombre -->
+
+                        <!-- Descripción Algoritmo -->
+                        <div class="form-group">
+                            <!-- Errors -->
+                            {% if form.description.errors %}
+                                {% for error in form.description.errors %}
+                                    <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <!-- /Errors -->
+                            <label for=""><b>Descripción del algoritmo*</b></label>
+                            <textarea class="form-control" rows="3"
+                                      placeholder="Ingresa una descripción que te ayude a identificar el objetivo del análisis que deseas realizar"></textarea>
+                        </div>
+                        <!-- /Descripción Algoritmo -->
+
+                        <!-- Unidad Almacenamiento de entrada -->
+                        <div class="form-group">
+                            <!-- Errors -->
+                            {% if form.input_storage_unit.errors %}
+                                {% for error in form.input_storage_unit.errors %}
+                                    <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <!-- /Errors -->
+                            <label for=""><b>Posibles unidades de almacenamiento origen *</b></label>
+                            <select multiple="" class="form-control">
+                                <option>Unidad CDCOL 1 (Nivel de preprocesamiento detallado)</option>
+                                <option>Unidad CDCOL 2 (Nivel de preprocesamiento detallado)</option>
+                                <option>Unidad CDCOL 3 (Nivel de preprocesamiento detallado)</option>
+                                <option>Unidad CDCOL N (Nivel de preprocesamiento detallado)</option>
+                            </select>
+                        </div>
+                        <!-- /Unidad Almacenamiento de entrada -->
+
+                        <!-- Unidad de almacenamiento de salida -->
+                        <div class="form-group">
+                            <!-- Errors -->
+                            {% if form.output_storage_unit.errors %}
+                                {% for error in form.output_storage_unit.errors %}
+                                    <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <!-- /Errors -->
+                            <label for=""><b>Unidad de almacenamiento de salida*</b></label>
+                            <input class="form-control" placeholder="Escribe la unidad de almacenamiento de salida"
+                                   type="text">
+                        </div>
+                        <!-- /Unidad de almacenamiento de salida -->
+
+                        <button type="submit" class="btn btn-default">Crear Algoritmo</button>
+                    </form>
+                </div>
+                <!-- main end -->
+            </div>
+        </div>
+    </section>
+    <!-- main-container end -->
+{% endblock %}

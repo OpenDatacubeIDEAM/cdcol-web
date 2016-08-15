@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 	'allauth.socialaccount',
 	'user_profile',
 	'storage',
+	'algorithm',
 ]
 
 MIDDLEWARE_CLASSES = [
