@@ -27,3 +27,8 @@ def new_version(request, algorithm_id):
 @login_required(login_url='/accounts/login/')
 def version_detail(request, algorithm_id, version_id):
 	return render(request, 'algorithm/version_detail.html')
+
+
+@login_required(login_url='/accounts/login/')
+def new_parameter(request, algorithm_id, version_id):
+	return render(request, 'algorithm/new_parameter.html')
