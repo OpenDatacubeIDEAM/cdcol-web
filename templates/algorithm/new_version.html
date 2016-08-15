@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- breadcrumb start -->
+    <!-- ================ -->
+    <div class="breadcrumb-container">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
+                <li><a href="{% url 'algorithm:index' %}">Algoritmos</a></li>
+                <li class="active">Nueva Versión</li>
+            </ol>
+        </div>
+    </div>
+    <!-- breadcrumb end -->
+
+    <!-- main-container start -->
+    <!-- ================ -->
+    <section class="main-container">
+
+        <div class="container">
+            <div class="row">
+
+                <!-- main start -->
+                <!-- ================ -->
+                <div class="main col-md-10">
+
+                    <!-- page-title start -->
+                    <!-- ================ -->
+                    <h1 class="page-title">Nueva Versión</h1>
+                    <div class="separator-2"></div>
+                    <!-- page-title end -->
+                    <p>Ingresa la siguiente información para subir una nueva versión del algoritmo:</p>
+                    <!-- Success Messages  -->
+                    {% if response %}
+                        <div class="alert alert-success">
+                            {{ response.message|escape }}
+                        </div>
+                    {% endif %}
+                    <!-- /Success Messages -->
+                    <form role="form" class="col-md-8" method="POST" action="{% url 'algorithm:new' %}"
+                          enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Errors -->
+                        {% if form.errors %}
+                            {% for error in form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        <!-- /Errors -->
+
+                        <!-- Algoritmo -->
+                        <div class="form-group">
+                            <!-- Errors -->
+                            {% if form.name.errors %}
+                                {% for error in form.name.errors %}
+                                    <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <!-- /Errors -->
+                            <label for=""><b>Algoritmo*</b></label>
+                            <input class="form-control" placeholder="Nombre del Algoritmo" disabled=""
+                                   type="text">
+                        </div>
+                        <!-- /Algoritmo -->
+
+                        <!-- Número de la versión -->
+                        <div class="form-group">
+                            <!-- Errors -->
+                            {% if form.name.errors %}
+                                {% for error in form.name.errors %}
+                                    <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <!-- /Errors -->
+                            <label for=""><b>Número de la versión*</b></label>
+                            <input class="form-control" placeholder="Escribe el número de la versión"
+                                   type="text">
+                        </div>
+                        <!-- /Número de la versión -->
+
+                        <!-- Descripción de la versión -->
+                        <div class="form-group">
+                            <!-- Errors -->
+                            {% if form.description.errors %}
+                                {% for error in form.description.errors %}
+                                    <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <!-- /Errors -->
+                            <label for=""><b>Descripción de la versión*</b></label>
+                            <textarea class="form-control" rows="3"
+                                      placeholder="Ingresa una descripción de los cambios o ajustes realizados al algoritmo en esta nueva versión."></textarea>
+                        </div>
+                        <!-- /Descripción de la versión -->
+
+                        <!-- Descripción de Unidad -->
+                        <div class="form-group">
+                            <!-- Errors -->
+                            {% if form.file.errors %}
+                                {% for error in form.file.errors %}
+                                    <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <!-- /Errors -->
+                            <label for="nameUnitFile"><b>Código fuente*</b></label>
+                            <input type="file">
+                            <p class="help-block">Sube el archivo .py que contiene el código fuente de la versión.</p>
+                        </div>
+                        <!-- /Descripción de Unidad -->
+
+                        <button type="submit" class="btn btn-default">Crear Versión</button>
+                    </form>
+                </div>
+                <!-- main end -->
+            </div>
+        </div>
+    </section>
+    <!-- main-container end -->
+{% endblock %}
