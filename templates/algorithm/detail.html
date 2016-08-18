@@ -16,7 +16,7 @@
 
     <!-- main-container start -->
     <!-- ================ -->
-    <section class="main-container">
+    <section class="main-container" style="margin-bottom: 100px;">
 
         <div class="container">
             <div class="row">
@@ -27,7 +27,7 @@
 
                     <!-- page-title start -->
                     <!-- ================ -->
-                    <h1 class="page-title">Información del Algoritmo</h1>
+                    <h3 class="title">Información del Algoritmo</h3>
                     <div class="separator-2"></div>
                     <!-- page-title end -->
                     <p>Esta es la información del algoritmo seleccionado:</p>
@@ -66,7 +66,7 @@
                         </tbody>
                     </table>
 
-                    <h3 class="page-title">Posibles Unidades de Almacenamiento Origen</h3>
+                    <h3 class="page-title" style="padding-top: 30px;">Posibles Unidades de Almacenamiento Origen</h3>
                     <div class="separator-2"></div>
                     <p>A continuación se encuentran las posibles unidades de almacenamiento origen definidas para este
                         algoritmo:</p>
@@ -87,16 +87,16 @@
                                     <td>Unidad de almacenamiento datos tipo A</td>
                                     <td>CEOS</td>
                                     <td>Ingestados</td>
-                                    <td><a href="#" class="btn btn-primary btn-sm">Ver Detalle</a></td>
+                                    <td><a href="#" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
-                    <h3 class="page-title">Versiones del algoritmo</h3>
+                    <h3 class="page-title" style="padding-top: 30px;">Versiones del algoritmo</h3>
                     <div class="separator-2"></div>
                     <div class="pull-right">
-                        <a href="{% url 'algorithm:new_version' algorithm_id=1 %}" class="btn btn-primary btn-sm">Subir Versión</a>
+                        <a href="{% url 'algorithm:new_version' algorithm_id=1 %}" class="btn btn-default btn-md"><i class="fa fa-plus-circle"></i> Subir Versión</a>
                     </div>
                     <p>A continuación se encuentran las versiones del algoritmo:</p>
                     <br/>
@@ -118,8 +118,8 @@
                                     <td>Oficial</td>
                                     <td>21 de Junio 2016 10:00 AM</td>
                                     <td><a href="{% url 'algorithm:version_detail' algorithm_id=1 version_id=2 %}"
-                                           class="btn btn-primary btn-sm">Ver Detalle</a>
-                                        <a href="#" class="btn btn-primary btn-sm">Editar</a>
+                                           class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a>
+                                        <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -137,10 +137,10 @@
                             <h3 class="title">Acciones</h3>
                             <div class="separator-2"></div>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-sm">Ejecutar Algoritmo</a>
+                                <a href="#" class="btn btn-primary btn-md btn-block">Ejecutar Algoritmo</a>
                             </nav>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-sm">Editar Algoritmo</a>
+                                <a href="#" class="btn btn-primary btn-md btn-block"><i class="fa fa-edit"></i> Editar Algoritmo</a>
                             </nav>
                         </div>
                     </div>

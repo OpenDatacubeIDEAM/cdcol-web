@@ -23,11 +23,11 @@
 
                 <!-- main start -->
                 <!-- ================ -->
-                <div class="main col-md-10">
+                <div class="main col-md-12">
 
                     <!-- page-title start -->
                     <!-- ================ -->
-                    <h1 class="page-title">Nueva Unidad de Almacenamiento - CDCOL</h1>
+                    <h2 class="page-title">Nueva Unidad de Almacenamiento - CDCOL</h2>
                     <div class="separator-2"></div>
                     <!-- page-title end -->
                     <p>Ingresa la siguiente información de la unidad de almacenamiento:</p>
@@ -38,90 +38,95 @@
                         </div>
                     {% endif %}
                     <!-- /Success Messages -->
-                    <form role="form" class="col-md-8" method="POST" action="{% url 'storage:new_cdcol' %}"
-                          enctype="multipart/form-data">
-                        {% csrf_token %}
+                    <div class="section light-gray-bg">
+                        <div class="container">
+                            <form role="form" class="form-horizontal col-md-6 col-md-offset-3 " method="POST" action="{% url 'storage:new_cdcol' %}"
+                                  enctype="multipart/form-data">
+                                {% csrf_token %}
 
-                        <!-- Errors -->
-                        {% if form.errors %}
-                            {% for error in form.non_field_errors %}
-                                <div class="alert alert-danger">
-                                    <strong>{{ error|escape }}</strong>
+                                <!-- Errors -->
+                                {% if form.errors %}
+                                    {% for error in form.non_field_errors %}
+                                        <div class="alert alert-danger">
+                                            <strong>{{ error|escape }}</strong>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                <!-- /Errors -->
+
+                                <!-- Tipo de unidad -->
+                                <div class="form-group">
+                                    <label for="nameUnitType"><b>Tipo de unidad</b></label>
+                                    <input class="form-control" id="unit_type_id" placeholder="CDCOL" disabled=""
+                                           type="text">
                                 </div>
-                            {% endfor %}
-                        {% endif %}
-                        <!-- /Errors -->
+                                <!-- /Tipo de unidad -->
 
-                        <!-- Tipo de unidad -->
-                        <div class="form-group">
-                            <label for="nameUnitType"><b>Tipo de unidad</b></label>
-                            <input class="form-control" id="unit_type_id" placeholder="CDCOL" disabled=""
-                                   type="text">
+                                <!-- Descripción de Unidad -->
+                                <div class="form-group">
+                                    <!-- Errors -->
+                                    {% if form.file.errors %}
+                                        {% for error in form.file.errors %}
+                                            <div class="alert alert-danger">
+                                                <strong>{{ error|escape }}</strong>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <!-- /Errors -->
+                                    <label for="nameUnitFile"><b>Descripción de la unidad*</b></label>
+                                    <input name="{{ form.file.html_name }}" id="{{ form.file.id_for_label }}" type="file">
+                                    <p class="help-block">Debes ingresar el archivo YML que describe la unidad.</p>
+                                </div>
+                                <!-- /Descripción de Unidad -->
+
+                                <!-- Nivel de Procesamiento -->
+                                <div class="form-group">
+                                    <!-- Errors -->
+                                    {% if form.processing_level.errors %}
+                                        {% for error in form.processing_level.errors %}
+                                            <div class="alert alert-danger">
+                                                <strong>{{ error|escape }}</strong>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <!-- /Errors -->
+                                    <label for="processingLevel"><b>Nivel de procesamiento*</b></label>
+                                    <select name="{{ form.processing_level.html_name }}"
+                                            id="{{ form.processing_level.id_for_label }}"
+                                            class="form-control">
+                                        <option>Crudos</option>
+                                        <option>Preprocesados</option>
+                                    </select>
+                                </div>
+                                <!-- /Nivel de Procesamiento -->
+
+                                <!-- Nivel Procesamiento Detallado -->
+                                <div class="form-group">
+                                    <!-- Errors -->
+                                    {% if form.detailed_processing_level.errors %}
+                                        {% for error in form.detailed_processing_level.errors %}
+                                            <div class="alert alert-danger">
+                                                <strong>{{ error|escape }}</strong>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <!-- /Errors -->
+                                    <label for="detailedProcessingLevel"><b>Nivel de preprocesamiento detallado*</b></label>
+                                    <input class="form-control"
+                                           name="{{ form.detailed_processing_level.html_name }}"
+                                           id="{{ form.detailed_processing_level.id_for_label }}"
+                                           placeholder="Describe el nivel de preprocesamiento"
+                                            {% if form.detailed_processing_level.value %}
+                                           value="{{ form.detailed_processing_level.value }}"{% endif %}
+                                           type="text">
+                                </div>
+                                <!-- /Nivel Procesamiento Detallado -->
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-default">Crear Unidad</button>
+                                </div>
+                            </form>
                         </div>
-                        <!-- /Tipo de unidad -->
-
-                        <!-- Descripción de Unidad -->
-                        <div class="form-group">
-                            <!-- Errors -->
-                            {% if form.file.errors %}
-                                {% for error in form.file.errors %}
-                                    <div class="alert alert-danger">
-                                        <strong>{{ error|escape }}</strong>
-                                    </div>
-                                {% endfor %}
-                            {% endif %}
-                            <!-- /Errors -->
-                            <label for="nameUnitFile"><b>Descripción de la unidad*</b></label>
-                            <input name="{{ form.file.html_name }}" id="{{ form.file.id_for_label }}" type="file">
-                            <p class="help-block">Debes ingresar el archivo YML que describe la unidad.</p>
-                        </div>
-                        <!-- /Descripción de Unidad -->
-
-                        <!-- Nivel de Procesamiento -->
-                        <div class="form-group">
-                            <!-- Errors -->
-                            {% if form.processing_level.errors %}
-                                {% for error in form.processing_level.errors %}
-                                    <div class="alert alert-danger">
-                                        <strong>{{ error|escape }}</strong>
-                                    </div>
-                                {% endfor %}
-                            {% endif %}
-                            <!-- /Errors -->
-                            <label for="processingLevel"><b>Nivel de procesamiento*</b></label>
-                            <select name="{{ form.processing_level.html_name }}"
-                                    id="{{ form.processing_level.id_for_label }}"
-                                    class="form-control">
-                                <option>Crudos</option>
-                                <option>Preprocesados</option>
-                            </select>
-                        </div>
-                        <!-- /Nivel de Procesamiento -->
-
-                        <!-- Nivel Procesamiento Detallado -->
-                        <div class="form-group">
-                            <!-- Errors -->
-                            {% if form.detailed_processing_level.errors %}
-                                {% for error in form.detailed_processing_level.errors %}
-                                    <div class="alert alert-danger">
-                                        <strong>{{ error|escape }}</strong>
-                                    </div>
-                                {% endfor %}
-                            {% endif %}
-                            <!-- /Errors -->
-                            <label for="detailedProcessingLevel"><b>Nivel de preprocesamiento detallado*</b></label>
-                            <input class="form-control"
-                                   name="{{ form.detailed_processing_level.html_name }}"
-                                   id="{{ form.detailed_processing_level.id_for_label }}"
-                                   placeholder="Describe el nivel de preprocesamiento"
-                                    {% if form.detailed_processing_level.value %}
-                                   value="{{ form.detailed_processing_level.value }}"{% endif %}
-                                   type="text">
-                        </div>
-                        <!-- /Nivel Procesamiento Detallado -->
-
-                        <button type="submit" class="btn btn-default">Crear Unidad</button>
-                    </form>
+                    </div>
                 </div>
                 <!-- main end -->
             </div>
