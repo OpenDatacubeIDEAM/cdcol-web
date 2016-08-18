@@ -75,62 +75,6 @@
     <!-- header-container start -->
     <div class="header-container">
 
-        <!-- header-top start -->
-        <!-- classes:  -->
-        <!-- "dark": dark version of header top e.g. class="header-top dark" -->
-        <!-- "colored": colored version of header top e.g. class="header-top colored" -->
-        <!-- ================ -->
-        <div class="header-top dark ">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xs-3 col-sm-6 col-md-9">
-                        <!-- header-top-first start -->
-                        <!-- ================ -->
-                        <div class="header-top-first clearfix">
-
-                        </div>
-                        <!-- header-top-first end -->
-                    </div>
-                    <div class="col-xs-9 col-sm-6 col-md-3">
-
-                        <!-- header-top-second start -->
-                        <!-- ================ -->
-                        <div id="header-top-second" class="clearfix">
-
-                            <!-- header top dropdowns start -->
-                            <!-- ================ -->
-                            <div class="header-top-second text-right">
-                                {% if user.is_authenticated %}
-                                    <ul class="list-inline">
-                                        <li><i class="fa fa-user pr-5 pl-10"></i>Hola, {{ user.username }} -
-                                            <a href="#" onclick="document.getElementById('logout_form').submit();">Cerrar
-                                                Sesión</a>
-                                            <form id="logout_form" method="post" action="{% url 'account_logout' %}"
-                                                  hidden>
-                                                {% csrf_token %}
-                                            </form>
-                                        </li>
-                                    </ul>
-                                {% else %}
-                                    <div class="btn-group">
-                                        <a href="{% url 'account_signup' %}" class="btn btn-default btn-sm"><i
-                                                class="fa fa-user pr-10"></i> Regístrate</a>
-                                    </div>
-                                    <div class="btn-group">
-                                        <a href="{% url 'account_login' %}" class="btn btn-default btn-sm"><i
-                                                class="fa fa-user pr-10"></i> Iniciar Sesión</a>
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <!--  header top dropdowns end -->
-                        </div>
-                        <!-- header-top-second end -->
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- header-top end -->
-
         <!-- header start -->
         <!-- classes:  -->
         <!-- "fixed": enables fixed navigation mode (sticky menu) e.g. class="header fixed clearfix" -->
@@ -146,73 +90,6 @@
                         <!-- header-left start -->
                         <!-- ================ -->
                         <div class="header-left clearfix">
-
-                            <!-- header dropdown buttons -->
-                            <div class="header-dropdown-buttons visible-xs">
-                                <div class="btn-group dropdown">
-                                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown"><i
-                                            class="icon-search"></i></button>
-                                    <ul class="dropdown-menu dropdown-menu-right dropdown-animation">
-                                        <li>
-                                            <form role="search" class="search-box margin-clear">
-                                                <div class="form-group has-feedback">
-                                                    <input type="text" class="form-control" placeholder="Search">
-                                                    <i class="icon-search form-control-feedback"></i>
-                                                </div>
-                                            </form>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="btn-group dropdown">
-                                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown"><i
-                                            class="icon-basket-1"></i><span class="cart-count default-bg">8</span>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-right dropdown-animation cart">
-                                        <li>
-                                            <table class="table table-hover">
-                                                <thead>
-                                                <tr>
-                                                    <th class="quantity">QTY</th>
-                                                    <th class="product">Product</th>
-                                                    <th class="amount">Subtotal</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr>
-                                                    <td class="quantity">2 x</td>
-                                                    <td class="product"><a href="shop-product.html">Android 4.4
-                                                        Smartphone</a><span class="small">4.7" Dual Core 1GB</span></td>
-                                                    <td class="amount">$199.00</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="quantity">3 x</td>
-                                                    <td class="product"><a href="shop-product.html">Android 4.2
-                                                        Tablet</a><span class="small">7.3" Quad Core 2GB</span></td>
-                                                    <td class="amount">$299.00</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="quantity">3 x</td>
-                                                    <td class="product"><a href="shop-product.html">Desktop PC</a><span
-                                                            class="small">Quad Core 3.2MHz, 8GB RAM, 1TB Hard Disk</span>
-                                                    </td>
-                                                    <td class="amount">$1499.00</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="total-quantity" colspan="2">Total 8 Items</td>
-                                                    <td class="total-amount">$1997.00</td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                            <div class="panel-body text-right">
-                                                <a href="shop-cart.html" class="btn btn-group btn-gray btn-sm">View
-                                                    Cart</a>
-                                                <a href="shop-checkout.html" class="btn btn-group btn-gray btn-sm">Checkout</a>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <!-- header dropdown buttons end-->
 
                             <!-- logo -->
                             <div id="logo" class="logo">
@@ -258,46 +135,53 @@
                                         </div>
 
                                         <!-- Collect the nav links, forms, and other content for toggling -->
-                                        <div class="collapse navbar-collapse" id="navbar-collapse-1">
+                                        <div class="collapse navbar-collapse pull-right" style="padding-right: 0px;" id="navbar-collapse-1">
                                             <!-- main-menu -->
-                                            <ul class="nav navbar-nav ">
+                                            <ul class="nav navbar-nav">
 
                                                 <!-- mega-menu start -->
-                                                <li class="dropdown mega-menu">
-                                                    <a href="/" class="dropdown-toggle" data-toggle="dropdown">Inicio</a>
-                                                </li>
-                                                <li class="dropdown ">
-                                                    <a class="dropdown-toggle" data-toggle="dropdown"
-                                                       href="{% url 'storage:index' %}">Almacenamiento</a>
-                                                </li>
-                                                <li class="dropdown ">
-                                                    <a class="dropdown-toggle" data-toggle="dropdown"
-                                                       href="{% url 'algorithm:index' %}">Algoritmos</a>
-                                                </li>
+                                                {% if user.is_authenticated %}
+                                                    <li class="dropdown ">
+                                                        <a class="dropdown-toggle" data-toggle="dropdown"
+                                                           href="{% url 'storage:index' %}">Almacenamiento</a>
+                                                    </li>
+                                                    <li class="dropdown ">
+                                                        <a class="dropdown-toggle" data-toggle="dropdown"
+                                                           href="{% url 'algorithm:index' %}">Algoritmos</a>
+                                                    </li>
+                                                    <li class="dropdown ">
+                                                        <a class="dropdown-toggle" data-toggle="dropdown"
+                                                           href="">Bienvenid@, {{ user.first_name }}</a>
+                                                        <ul class="dropdown-menu">
+                                                            <li class="dropdown ">
+                                                            <li class="dropdown ">
+                                                                <a class="dropdown-toggle" data-toggle="dropdown"
+                                                                   href="#"
+                                                                   onclick="document.getElementById('logout_form').submit();">Cerrar
+                                                                    Sesión</a>
+                                                                <form id="logout_form" method="post"
+                                                                      action="{% url 'account_logout' %}"
+                                                                      hidden>
+                                                                    {% csrf_token %}
+                                                                </form>
+                                                            </li>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                {% else %}
+                                                    <li class="dropdown ">
+                                                        <a class="dropdown-toggle" data-toggle="dropdown"
+                                                           href="{% url 'algorithm:index' %}">Regístrate</a>
+                                                    </li>
+                                                    <li class="dropdown ">
+                                                        <a class="dropdown-toggle" data-toggle="dropdown"
+                                                           href="{% url 'algorithm:index' %}">Iniciar Sesión</a>
+                                                    </li>
+
+                                                {% endif %}
                                                 <!-- mega-menu end -->
                                             </ul>
                                             <!-- main-menu end -->
-
-                                            <!-- header dropdown buttons -->
-                                            <div class="header-dropdown-buttons hidden-xs ">
-                                                <div class="btn-group dropdown">
-                                                    <button type="button" class="btn dropdown-toggle"
-                                                            data-toggle="dropdown"><i class="icon-search"></i></button>
-                                                    <ul class="dropdown-menu dropdown-menu-right dropdown-animation">
-                                                        <li>
-                                                            <form role="search" class="search-box margin-clear">
-                                                                <div class="form-group has-feedback">
-                                                                    <input type="text" class="form-control"
-                                                                           placeholder="Search">
-                                                                    <i class="icon-search form-control-feedback"></i>
-                                                                </div>
-                                                            </form>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            <!-- header dropdown buttons end-->
-
                                         </div>
 
                                     </div>
