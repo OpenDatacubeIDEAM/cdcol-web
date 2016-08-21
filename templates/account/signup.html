@@ -177,14 +177,11 @@
                                     {% endfor %}
                                 {% endif %}
                                 <!-- /Errors -->
-                                <p class="help-block">¿Qué roles deseas tener habilitado?</p>
-                                {% for field in form.profile_field %}
-                                    <div class="radio ">
-                                        <label>
-                                            {{ field|escape }}
-                                        </label>
-                                    </div>
-                                {% endfor %}
+                                <label for="inputRol" class="col-sm-3 control-label">¿Qué roles deseas tener habilitado?<span
+                                        class="text-danger small">*</span></label>
+                                <div class="col-sm-8">
+                                    {{ form.profile_field }}
+                                </div>
                             </div>
                             <!-- /Profile -->
 

@@ -12,7 +12,8 @@ class SignupForm(forms.ModelForm):
 		('0', 'Analista',),
 		('1', 'Desarrollador',)
 	)
-	profile_field = forms.ChoiceField(label='Perfil', choices=PROFILES_CHOICES, widget=forms.RadioSelect(),required=True)
+	profile_field = forms.ChoiceField(label='Perfil', choices=PROFILES_CHOICES,
+	                                  widget=forms.Select(attrs={'class': 'form-control'}), required=True)
 	first_name = forms.CharField(max_length=30, label='Nombres', required=True)
 	last_name = forms.CharField(max_length=30, label='Apellidos', required=True)
 
