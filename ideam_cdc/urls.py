@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
     url(r'^storage/', include('storage.urls')),
     url(r'^algorithm/', include('algorithm.urls')),
+    url(r'^execution/', include('execution.urls')),
 ]

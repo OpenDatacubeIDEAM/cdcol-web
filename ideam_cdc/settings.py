@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 	'user_profile',
 	'storage',
 	'algorithm',
+	'execution',
 ]
 
 MIDDLEWARE_CLASSES = [
