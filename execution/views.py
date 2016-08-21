@@ -11,3 +11,8 @@ def index(request):
 @login_required(login_url='/accounts/login/')
 def detail(request, execution_id):
 	return render(request, 'execution/detail.html')
+
+
+@login_required(login_url='/accounts/login/')
+def new(request):
+	return render(request, 'execution/new.html')
