@@ -1,1 +1,165 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block banner_block %}
+    <div class="banner clearfix">
+
+        <!-- slideshow start -->
+        <!-- ================ -->
+        <div class="slideshow">
+
+            <!-- slider revolution start -->
+            <!-- ================ -->
+            <div class="slider-banner-container">
+                <div class="slider-banner-fullwidth">
+                    <ul class="slides">
+                        <!-- slide 1 start -->
+                        <!-- ================ -->
+                        <li data-transition="fade" data-slotamount="1" data-masterspeed="500" data-saveperformance="on"
+                            data-title="CDCOL">
+
+                            <!-- main image -->
+                            <img src="{% static 'images/corporate-1-slider-slide-1.jpg' %}" alt="slidebg2" data-bgposition="center top"
+                                 data-bgrepeat="no-repeat" data-bgfit="cover">
+
+                            <!-- Transparent Background -->
+                            <div class="tp-caption dark-translucent-bg"
+                                 data-x="center"
+                                 data-y="bottom"
+                                 data-speed="600"
+                                 data-start="0">
+                            </div>
+
+                            <!-- LAYER NR. 1 -->
+                            <div class="tp-caption sfb fadeout text-center large_white"
+                                 data-x="center"
+                                 data-y="110"
+                                 data-speed="500"
+                                 data-start="1000"
+                                 data-easing="easeOutQuad">CDCOL
+                            </div>
+
+                            <!-- LAYER NR. 2 -->
+                            <div class="tp-caption sfb fadeout text-center large_white tp-resizeme hidden-xs"
+                                 data-x="center"
+                                 data-y="150"
+                                 data-speed="500"
+                                 data-start="1300"
+                                 data-easing="easeOutQuad">
+                                <div class="separator light"></div>
+                            </div>
+
+                            <!-- LAYER NR. 3 -->
+                            <div class="tp-caption sfb fadeout medium_white text-center hidden-xs"
+                                 data-x="center"
+                                 data-y="180"
+                                 data-speed="500"
+                                 data-start="1300"
+                                 data-easing="easeOutQuad"
+                                 data-endspeed="600">Explora y realiza análisis sobre las imágenes de Colombia fácilmente.
+                            </div>
+
+                            <!-- LAYER NR. 4 -->
+                            <div class="tp-caption sfb fadeout small_white text-center"
+                                 data-x="center"
+                                 data-y="260"
+                                 data-speed="500"
+                                 data-start="1600"
+                                 data-easing="easeOutQuad"
+                                 data-endspeed="600"><a href="{% url 'account_signup' %}" class="btn radius-50 btn-dark btn-animated">Registrarme
+                                <i class="fa fa-pencil"></i></a> <span class="pl-5 pr-5">o</span> <a
+                                    href="{% url 'account_login' %}" class="btn radius-50 btn-default btn-animated">Iniciar Sesión
+                                <i class="fa fa-user"></i></a>
+                            </div>
+
+                        </li>
+                        <!-- slide 1 end -->
+                    </ul>
+                    <div class="tp-bannertimer"></div>
+                </div>
+            </div>
+            <!-- slider revolution end -->
+
+        </div>
+        <!-- slideshow end -->
+
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="main-container padding-bottom-clear">
+
+        <div class="container">
+            <div class="row">
+
+                <!-- main start -->
+                <!-- ================ -->
+                <div class="main col-md-12">
+
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6">
+                            <div class="ph-20 feature-box text-center object-non-visible"
+                                 data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+                                <span class="icon large default-bg circle"><i class="fa fa-diamond"></i></span>
+                                <h3>Clean Code &amp; Design</h3>
+                                <div class="separator clearfix"></div>
+                                <p class="text-muted">Voluptatem ad provident non repudiandae beatae cupiditate amet
+                                    reiciendis lorem ipsum dolor sit amet, consectetur.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <div class="ph-20 feature-box text-center object-non-visible"
+                                 data-animation-effect="fadeInDownSmall" data-effect-delay="200">
+                                <span class="icon large default-bg circle"><i class="fa fa-connectdevelop"></i></span>
+                                <h3>Extremely Flexible</h3>
+                                <div class="separator clearfix"></div>
+                                <p class="text-muted">Iure sequi unde hic. Sapiente quaerat sequi inventore veritatis
+                                    cumque lorem ipsum dolor sit amet, consectetur.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <div class="ph-20 feature-box text-center object-non-visible"
+                                 data-animation-effect="fadeInDownSmall" data-effect-delay="300">
+                                <span class="icon large default-bg circle"><i class="icon-snow"></i></span>
+                                <h3>Latest Technologies</h3>
+                                <div class="separator clearfix"></div>
+                                <p class="text-muted">Inventore dolores aut laboriosam cum consequuntur delectus sequi
+                                    lorem ipsum dolor sit amet, consectetur.</p>
+                            </div>
+                        </div>
+                        <div class="clearfix visible-md"></div>
+                    </div>
+
+                </div>
+                <!-- main end -->
+
+            </div>
+        </div>
+    </section>
+
+    <!-- footer top start -->
+    <!-- ================ -->
+    <div class="dark-translucent-bg footer-top" style="background-color:rgba(0,0,0,0.6);">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="call-to-action text-center">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h2>Haz parte de CDCOL ahora</h2>
+                            </div>
+                            <div class="col-sm-4">
+                                <p class="mt-10"><a href="{% url 'account_signup' %}"
+                                                    class="btn btn-animated radius-50 btn-lg btn-gray-transparent">Registrarme<i
+                                        class="fa fa-user pl-20"></i></a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- footer top end -->
+    <!-- footer start (Add "dark" class to #footer in order to enable dark footer) -->
+    <!-- ================ -->
+{% endblock %}

@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- breadcrumb start -->
+    <!-- ================ -->
+    <div class="breadcrumb-container">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
+                <li><a href="{% url 'execution:index' %}">Ejecuciones</a></li>
+                <li class="active">Nueva Unidad CEOS</li>
+            </ol>
+        </div>
+    </div>
+    <!-- breadcrumb end -->
+
+    <!-- main-container start -->
+    <!-- ================ -->
+    <section class="main-container">
+
+        <div class="container">
+            <div class="row">
+
+                <!-- main start -->
+                <!-- ================ -->
+                <div class="main col-md-8 col-lg-offset-1 col-md-push-4 col-lg-push-3">
+
+                    <!-- page-title start -->
+                    <!-- ================ -->
+                    {#                    <h3 class="page-title">Información del algoritmo</h3>#}
+                    {#                    <div class="separator-2"></div>#}
+                    <!-- page-title end -->
+
+                    <!-- blogpost start -->
+                    <article class="blogpost">
+                        <header>
+                            <h3 class="page-title">Información del algoritmo</h3>
+                            <div class="separator-2"></div>
+                        </header>
+                        <div class="blogpost-content">
+                            <p>La siguiente información del algoritmo:.</p>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+
+                                    <table class="table">
+                                        <tbody>
+                                        <tr>
+                                            <td>Código del algoritmo:</td>
+                                            <td>000001</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Nombre:</td>
+                                            <td>Compuesto de medianas</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Versión actual:</td>
+                                            <td>1.0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tipo:</td>
+                                            <td>Procesamiento</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Estado</td>
+                                            <td>oficial</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Fecha de creación:</td>
+                                            <td>21 de Junio 10:00 AM</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Creada por:</td>
+                                            <td>usuario1@abc.com</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <!-- blogpost end -->
+
+                    <!-- blogpost start -->
+                    <article class="blogpost">
+                        <header>
+                            <h3 class="page-title">Ejecutar algoritmo</h3>
+                            <div class="separator-2"></div>
+                        </header>
+                        <div class="blogpost-content">
+                            <p>Ingresa los siguientes parámetros para ejecutar el algoritmo:</p>
+                        </div>
+
+                        <div class="section light-gray-bg">
+                            <div class="container">
+                                <form role="form" class="form-horizontal col-md-6 col-md-offset-1" method="POST"
+                                      action=""
+                                      enctype="multipart/form-data">
+                                    {% csrf_token %}
+
+                                    <!-- Errors -->
+                                    {% if form.errors %}
+                                        {% for error in form.non_field_errors %}
+                                            <div class="alert alert-danger">
+                                                <strong>{{ error|escape }}</strong>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <!-- /Errors -->
+
+                                    <!-- Tipo de unidad -->
+                                    <div class="form-group">
+                                        <label for="nameUnitType"><b>Tipo de unidad</b></label>
+                                        <input class="form-control" id="" placeholder="CDCOL" disabled=""
+                                               type="text">
+                                    </div>
+                                    <!-- /Tipo de unidad -->
+
+                                    <!-- Descripción de Unidad -->
+                                    <div class="form-group">
+                                        <!-- Errors -->
+                                        {% if form.file.errors %}
+                                            {% for error in form.file.errors %}
+                                                <div class="alert alert-danger">
+                                                    <strong>{{ error|escape }}</strong>
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                        <!-- /Errors -->
+                                        <label for="nameUnitFile"><b>Descripción de la unidad*</b></label>
+                                        <input name=""
+                                               type="file">
+                                        <p class="help-block">Debes ingresar el archivo YML que describe la unidad.</p>
+                                    </div>
+                                    <!-- /Descripción de Unidad -->
+
+                                    <!-- Nivel de Procesamiento -->
+                                    <div class="form-group">
+                                        <!-- Errors -->
+                                        {% if form.processing_level.errors %}
+                                            {% for error in form.processing_level.errors %}
+                                                <div class="alert alert-danger">
+                                                    <strong>{{ error|escape }}</strong>
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                        <!-- /Errors -->
+                                        <label for="processingLevel"><b>Nivel de procesamiento*</b></label>
+                                        <select name=""
+                                                id=""
+                                                class="form-control">
+                                            <option>Crudos</option>
+                                            <option>Preprocesados</option>
+                                        </select>
+                                    </div>
+                                    <!-- /Nivel de Procesamiento -->
+
+                                    <!-- Nivel Procesamiento Detallado -->
+                                    <div class="form-group">
+                                        <!-- Errors -->
+                                        {% if form.detailed_processing_level.errors %}
+                                            {% for error in form.detailed_processing_level.errors %}
+                                                <div class="alert alert-danger">
+                                                    <strong>{{ error|escape }}</strong>
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                        <!-- /Errors -->
+                                        <label for="detailedProcessingLevel"><b>Nivel de preprocesamiento detallado*</b></label>
+                                        <input class="form-control"
+                                               name=""
+                                               id=""
+                                               placeholder="Describe el nivel de preprocesamiento"
+                                                {% if form.detailed_processing_level.value %}
+                                               value="{{ form.detailed_processing_level.value }}"{% endif %}
+                                               type="text">
+                                    </div>
+                                    <!-- /Nivel Procesamiento Detallado -->
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-default">Crear Unidad</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </article>
+                    <!-- blogpost end -->
+
+                </div>
+                <!-- main end -->
+
+                <!-- sidebar start -->
+                <!-- ================ -->
+                <aside class="col-md-4 col-lg-3 col-md-pull-8 col-lg-pull-9">
+                    <div class="sidebar">
+                        <div class="block clearfix">
+                            <h3 class="title">Listado de algoritmo</h3>
+                            <div class="separator-2"></div>
+                            <nav>
+                                <ul class="nav nav-pills nav-stacked">
+                                    <li>
+                                        <a href="#">Ingesta</a>
+                                        <ul>
+                                            <li><a href="#">Algoritmo Ejemplo</a></li>
+                                            <li><a href="#">Algoritmo Ejemplo B</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#">Preprocesamiento</a>
+                                        <ul>
+                                            <li><a href="#">Nombre Algoritmo B1</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#">Procesamiento</a>
+                                        <ul>
+                                            <li><a href="#">Compuesto Medianas</a></li>
+                                            <li><a href="#">NDVI</a></li>
+                                            <li><a href="#">Bosque no bosque</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </aside>
+                <!-- sidebar end -->
+
+            </div>
+        </div>
+    </section>
+    <!-- main-container end -->
+{% endblock %}

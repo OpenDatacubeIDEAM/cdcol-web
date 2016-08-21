@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 	'user_profile',
 	'storage',
 	'algorithm',
+	'execution',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -153,7 +154,10 @@ SITE_ID = 1
 ACCOUNT_SIGNUP_FORM_CLASS = 'user_profile.forms.SignupForm'
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 # Sendgrid
 

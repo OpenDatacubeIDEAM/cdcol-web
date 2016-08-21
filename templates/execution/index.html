@@ -7,7 +7,7 @@
         <div class="container">
             <ol class="breadcrumb">
                 <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
-                <li class="active">Algoritmos</li>
+                <li class="active">Ejecuciones</li>
             </ol>
         </div>
     </div>
@@ -22,14 +22,14 @@
                 <!-- main start -->
                 <!-- ================ -->
                 <div class="main col-md-12">
-                    <h2 class="title">Algoritmos</h2>
+                    <h2 class="title">Ejecuciones</h2>
                     <div class="separator-2"></div>
-                    <p>A continuación se presentan los algoritmos.</p>
+                    <p>A continuación se presenta el estado de las ejecuciones realizadas.</p>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="pull-right" style="margin-bottom: 10px;">
-                                <a href="{% url 'algorithm:new' %}" class="btn btn-default btn-sm"><i
-                                        class="fa fa-plus-circle"></i> Nuevo Algoritmo</a>
+                                <a href="{% url 'execution:new' %}" class="btn btn-default btn-sm"><i class="fa fa-plus-circle"></i> Nueva
+                                    Ejecución</a>
                             </div>
                         </div>
                     </div>
@@ -41,23 +41,23 @@
                                     <thead>
                                     <tr>
                                         <th>Código</th>
-                                        <th>Nombre</th>
-                                        <th>Tipo</th>
-                                        <th>Versiones</th>
+                                        <th>Algoritmo</th>
                                         <th>Estado</th>
                                         <th>Fecha de creación</th>
+                                        <th>Inicio ejecución</th>
+                                        <th>Fin ejecución</th>
                                         <th>Acciones</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr>
-                                        <td>0001</td>
-                                        <td>Nombre completo del algoritmo A</td>
-                                        <td>Descarga</td>
-                                        <td>18</td>
-                                        <td>En desarrollo</td>
-                                        <td>21 de Junio 10:00 AM</td>
-                                        <td><a href="/algorithm/detail/1" class="btn btn-gray btn-sm"><i
+                                        <td>000001</td>
+                                        <td>Nombre Algoritmo A</td>
+                                        <td>En ejecución</td>
+                                        <td>22 de Junio 2016 10:00 AM</td>
+                                        <td>22 de Junio 2016 10:00 AM</td>
+                                        <td>22 de Junio 2016 10:00 AM</td>
+                                        <td><a href="{% url 'execution:detail' 1 %}" class="btn btn-gray btn-sm"><i
                                                 class="fa fa-bars"></i> Ver Detalle</a>
                                         </td>
                                     </tr>
@@ -68,7 +68,6 @@
                     </div>
                 </div>
                 <!-- main end -->
-
 
             </div>
         </div>

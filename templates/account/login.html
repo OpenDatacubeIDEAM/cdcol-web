@@ -39,10 +39,10 @@
                                     {% endfor %}
                                 {% endif %}
                                 <!-- /Errors -->
-                                <label for="inputUserName" class="col-sm-3 control-label">{% trans "Username" %}</label>
+                                <label for="inputUserName" class="col-sm-3 control-label">{% trans "Email" %}</label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" name="{{ form.login.html_name }}"
-                                           id="{{ form.login.id_for_label }}" placeholder="{% trans "Username" %}"
+                                           id="{{ form.login.id_for_label }}" placeholder="{% trans "Email" %}"
                                             {% if form.login.value %} value="{{ form.login.value }}"{% endif %}
                                            required>
                                     <i class="fa fa-user form-control-feedback"></i>
