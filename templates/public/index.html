@@ -16,39 +16,10 @@
                         <!-- slide 1 start -->
                         <!-- ================ -->
                         <li data-transition="fade" data-slotamount="1" data-masterspeed="500" data-saveperformance="on"
-                            data-title="Next Generation Template">
+                            data-title="CDCOL">
 
                             <!-- main image -->
-                            <img src="{% static 'images/corporate-1-slider-slide-1.jpg' %}" alt="slidebg1" data-bgposition="center top"
-                                 data-bgrepeat="no-repeat" data-bgfit="cover">
-
-                            <!-- Transparent Background -->
-                            <div class="tp-caption dark-translucent-bg"
-                                 data-x="center"
-                                 data-y="bottom"
-                                 data-speed="600"
-                                 data-start="0">
-                            </div>
-
-                            <!-- LAYER NR. 1 -->
-                            <div class="tp-caption sfb fadeout large_white"
-                                 data-x="left"
-                                 data-y="110"
-                                 data-speed="500"
-                                 data-start="1000"
-                                 data-easing="easeOutQuad">Premium Bootstrap Template
-                            </div>
-
-                        </li>
-                        <!-- slide 1 end -->
-
-                        <!-- slide 2 start -->
-                        <!-- ================ -->
-                        <li data-transition="fade" data-slotamount="1" data-masterspeed="500" data-saveperformance="on"
-                            data-title="Premium Bootstrap Template">
-
-                            <!-- main image -->
-                            <img src="images/corporate-1-slider-slide-2.jpg" alt="slidebg2" data-bgposition="center top"
+                            <img src="{% static 'images/corporate-1-slider-slide-1.jpg' %}" alt="slidebg2" data-bgposition="center top"
                                  data-bgrepeat="no-repeat" data-bgfit="cover">
 
                             <!-- Transparent Background -->
@@ -65,7 +36,7 @@
                                  data-y="110"
                                  data-speed="500"
                                  data-start="1000"
-                                 data-easing="easeOutQuad">Next Generation Template
+                                 data-easing="easeOutQuad">CDCOL
                             </div>
 
                             <!-- LAYER NR. 2 -->
@@ -85,8 +56,7 @@
                                  data-speed="500"
                                  data-start="1300"
                                  data-easing="easeOutQuad"
-                                 data-endspeed="600">Lorem ipsum dolor sit amet, consectetur adipisicing elit. <br>
-                                Nesciunt, maiores, aliquid.
+                                 data-endspeed="600">Explora y realiza análisis sobre las imágenes de Colombia fácilmente.
                             </div>
 
                             <!-- LAYER NR. 4 -->
@@ -96,14 +66,14 @@
                                  data-speed="500"
                                  data-start="1600"
                                  data-easing="easeOutQuad"
-                                 data-endspeed="600"><a href="#" class="btn radius-50 btn-dark btn-animated">Read More
-                                <i class="fa fa-arrow-right"></i></a> <span class="pl-5 pr-5">or</span> <a
-                                    href="page-contact.html" class="btn radius-50 btn-default btn-animated">Contact Us
-                                <i class="fa fa-envelope"></i></a>
+                                 data-endspeed="600"><a href="{% url 'account_signup' %}" class="btn radius-50 btn-dark btn-animated">Registrarme
+                                <i class="fa fa-pencil"></i></a> <span class="pl-5 pr-5">o</span> <a
+                                    href="{% url 'account_login' %}" class="btn radius-50 btn-default btn-animated">Iniciar Sesión
+                                <i class="fa fa-user"></i></a>
                             </div>
 
                         </li>
-                        <!-- slide 2 end -->
+                        <!-- slide 1 end -->
                     </ul>
                     <div class="tp-bannertimer"></div>
                 </div>
