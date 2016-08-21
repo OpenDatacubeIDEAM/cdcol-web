@@ -27,7 +27,7 @@
 
                     <!-- page-title start -->
                     <!-- ================ -->
-                    <h1 class="page-title">Información del la versión</h1>
+                    <h3 class="page-title">Información del la versión</h3>
                     <div class="separator-2"></div>
                     <!-- page-title end -->
                     <p>Esta es la información de la versión del algoritmo seleccionado:</p>
@@ -77,7 +77,7 @@
                     <h3 class="page-title">Parámetros de la versión</h3>
                     <div class="separator-2"></div>
                     <div class="pull-right">
-                        <a href="#"><a href="{% url 'algorithm:new_parameter' 1 2 %}" class="btn btn-primary btn-sm">Nuevo Parámetro</a></a>
+                        <a href="#"><a href="{% url 'algorithm:new_parameter' 1 2 %}" class="btn btn-default btn-md"><i class="fa fa-plus-circle"></i>  Nuevo Parámetro</a></a>
                     </div>
                     <p>A continuación se encuentran los parámetros de esta versión::</p>
                     <br/>
@@ -100,8 +100,8 @@
                                     <td>1</td>
                                     <td>Si</td>
                                     <td>Si</td>
-                                    <td><a href="{% url 'algorithm:view_parameter' 1 2 3 %}" class="btn btn-primary btn-sm">Ver Detalle</a>
-                                        <a href="#" class="btn btn-primary btn-sm">Editar</a></td>
+                                    <td><a href="{% url 'algorithm:view_parameter' 1 2 3 %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a>
+                                        <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a></td>
                                 </tr>
                                 <tr>
                                     <td>Parámetro B</td>
@@ -109,8 +109,8 @@
                                     <td>2</td>
                                     <td>Si</td>
                                     <td>Si</td>
-                                    <td><a href="{% url 'algorithm:view_parameter' 1 2 3 %}" class="btn btn-primary btn-sm">Ver Detalle</a>
-                                        <a href="#" class="btn btn-primary btn-sm">Editar</a></td>
+                                    <td><a href="{% url 'algorithm:view_parameter' 1 2 3 %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a>
+                                        <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -127,19 +127,19 @@
                             <h3 class="title">Acciones</h3>
                             <div class="separator-2"></div>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-sm">Ejecutar esta versión</a>
+                                <a href="#" class="btn btn-primary btn-md btn-block">Ejecutar esta versión</a>
                             </nav>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-sm">Editar Versión</a>
+                                <a href="#" class="btn btn-primary btn-md btn-block">Editar Versión</a>
                             </nav>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-sm">Enviar para publicación</a>
+                                <a href="#" class="btn btn-primary btn-md btn-block">Enviar para publicación</a>
                             </nav>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-sm">Enviar para oficialización</a>
+                                <a href="#" class="btn btn-primary btn-md btn-block">Enviar para oficialización</a>
                             </nav>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-sm">Ejecutar esta versión</a>
+                                <a href="#" class="btn btn-primary btn-md btn-block">Ejecutar esta versión</a>
                             </nav>
                         </div>
                     </div>

@@ -22,43 +22,50 @@
                 <!-- main start -->
                 <!-- ================ -->
                 <div class="main col-md-12">
-                    <h1 class="title">Algoritmos</h1>
+                    <h2 class="title">Algoritmos</h2>
                     <div class="separator-2"></div>
-                    <div class="pull-right">
-                        <a href="{% url 'algorithm:new' %}">Nuevo Algoritmo</a>
-                    </div>
                     <p>A continuación se presentan los algoritmos.</p>
-
-                    <div class="table-responsive">
-                        <table class="table table-striped table-colored">
-                            <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Nombre</th>
-                                <th>Tipo</th>
-                                <th>Versiones</th>
-                                <th>Estado</th>
-                                <th>Fecha de creación</th>
-                                <th>Acciones</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-{#                            {% for algorithm in algorithms %}#}
-                                <tr>
-                                    <td>0001</td>
-                                    <td>Nombre completo del algoritmo A</td>
-                                    <td>Descarga</td>
-                                    <td>18</td>
-                                    <td>En desarrollo</td>
-                                    <td>21 de Junio 10:00 AM</td>
-                                    <td><a href="/algorithm/detail/1" class="btn btn-primary btn-sm">Ver
-                                        Detalle</a></td>
-                                </tr>
-{#                            {% endfor %}#}
-                            </tbody>
-                        </table>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="pull-right" style="margin-bottom: 10px;">
+                                <a href="{% url 'algorithm:new' %}" class="btn btn-default btn-sm"><i
+                                        class="fa fa-plus-circle"></i> Nuevo Algoritmo</a>
+                            </div>
+                        </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-colored">
+                                    <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Nombre</th>
+                                        <th>Tipo</th>
+                                        <th>Versiones</th>
+                                        <th>Estado</th>
+                                        <th>Fecha de creación</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>0001</td>
+                                        <td>Nombre completo del algoritmo A</td>
+                                        <td>Descarga</td>
+                                        <td>18</td>
+                                        <td>En desarrollo</td>
+                                        <td>21 de Junio 10:00 AM</td>
+                                        <td><a href="/algorithm/detail/1" class="btn btn-gray btn-sm"><i
+                                                class="fa fa-bars"></i> Ver Detalle</a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- main end -->
 
