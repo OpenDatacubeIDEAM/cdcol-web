@@ -27,7 +27,7 @@
 
                     <!-- page-title start -->
                     <!-- ================ -->
-                    <h1 class="page-title">Información de la Unidad</h1>
+                    <h3 class="page-title">Información de la Unidad</h3>
                     <div class="separator-2"></div>
                     <!-- page-title end -->
                     <p>La siguiente información de la unidad de almacenamiento:</p>
@@ -48,13 +48,13 @@
                         <tr>
                             <td>Archivo de Descripción:</td>
                             <td><a href="/storage/download/{{ storage_unit_detail.metadata.name }}"
-                                   class="btn btn-primary btn-sm">Descargar</a></td>
+                                   class="btn btn-gray btn-sm"><i class="fa fa-download"></i> Descargar</a></td>
                         </tr>
                         {% if storage_unit_ceos %}
                             <tr>
                                 <td>Archivo de Ingesta:</td>
                                 <td><a href="/storage/download/{{ storage_unit_ceos.file_feed.name }}"
-                                   class="btn btn-primary btn-sm">Descargar</a></td>
+                                   class="btn btn-gray btn-sm"><i class="fa fa-download"></i> Descargar</a></td>
                             </tr>
                             <tr>
                                 <td>Unidad origen:</td>
