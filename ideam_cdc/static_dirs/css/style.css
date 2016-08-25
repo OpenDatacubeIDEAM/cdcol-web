@@ -154,11 +154,13 @@ h6 {
 }
 .page-title {
   margin-top: 0;
+  padding-top: 30px;
 }
 /* Medium devices (desktops, tablets, 992px and up) */
 @media (min-width: 992px) {
   .title {
     margin-top: 0;
+    padding-top: 30px;
   }
 }
 .sidebar .title {
@@ -1628,6 +1630,7 @@ h5 + .separator {
 }
 /*Footer*/
 .footer {
+  margin-top: 100px;
   font-size: 14px;
   line-height: 1.5;
 }
