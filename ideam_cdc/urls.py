@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^storage/', include('storage.urls')),
     url(r'^algorithm/', include('algorithm.urls')),
     url(r'^execution/', include('execution.urls')),
+    url(r'^template/', include('template.urls')),
 ]
