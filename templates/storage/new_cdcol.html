@@ -40,7 +40,7 @@
                     <!-- /Success Messages -->
                     <div class="section light-gray-bg">
                         <div class="container">
-                            <form role="form" class="form-horizontal col-md-6 col-md-offset-3 " method="POST" action="{% url 'storage:new_cdcol' %}"
+                            <form role="form" class="form-horizontal col-md-6 col-md-offset-3" method="POST" action=""
                                   enctype="multipart/form-data">
                                 {% csrf_token %}
 
@@ -54,53 +54,25 @@
                                 {% endif %}
                                 <!-- /Errors -->
 
-                                <!-- Tipo de unidad -->
-                                <div class="form-group">
-                                    <label for="nameUnitType"><b>Tipo de unidad</b></label>
-                                    <input class="form-control" id="unit_type_id" placeholder="CDCOL" disabled=""
-                                           type="text">
-                                </div>
-                                <!-- /Tipo de unidad -->
-
-                                <!-- Descripción de Unidad -->
+                                <!-- Archivo de descripción -->
                                 <div class="form-group">
                                     <!-- Errors -->
-                                    {% if form.file.errors %}
-                                        {% for error in form.file.errors %}
+                                    {% if form.description_file.errors %}
+                                        {% for error in form.description_file.errors %}
                                             <div class="alert alert-danger">
                                                 <strong>{{ error|escape }}</strong>
                                             </div>
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for="nameUnitFile"><b>Descripción de la unidad*</b></label>
-                                    <input name="{{ form.file.html_name }}" id="{{ form.file.id_for_label }}" type="file">
+                                    <label for="nameUnitFile"><b>Archivo de descripción*</b></label>
+                                    <input name="{{ form.description_file.html_name }}"
+                                           id="{{ form.description_file.id_for_label }}" type="file">
                                     <p class="help-block">Debes ingresar el archivo YML que describe la unidad.</p>
                                 </div>
-                                <!-- /Descripción de Unidad -->
+                                <!-- /Archivo de descripción -->
 
-                                <!-- Nivel de Procesamiento -->
-                                <div class="form-group">
-                                    <!-- Errors -->
-                                    {% if form.processing_level.errors %}
-                                        {% for error in form.processing_level.errors %}
-                                            <div class="alert alert-danger">
-                                                <strong>{{ error|escape }}</strong>
-                                            </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                    <!-- /Errors -->
-                                    <label for="processingLevel"><b>Nivel de procesamiento*</b></label>
-                                    <select name="{{ form.processing_level.html_name }}"
-                                            id="{{ form.processing_level.id_for_label }}"
-                                            class="form-control">
-                                        <option>Crudos</option>
-                                        <option>Preprocesados</option>
-                                    </select>
-                                </div>
-                                <!-- /Nivel de Procesamiento -->
-
-                                <!-- Nivel Procesamiento Detallado -->
+                                <!-- Nombre de la unidad -->
                                 <div class="form-group">
                                     <!-- Errors -->
                                     {% if form.detailed_processing_level.errors %}
@@ -111,16 +83,58 @@
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for="detailedProcessingLevel"><b>Nivel de preprocesamiento detallado*</b></label>
+                                    <label for="detailedProcessingLevel"><b>Nombre de la unidad</b></label>
                                     <input class="form-control"
-                                           name="{{ form.detailed_processing_level.html_name }}"
-                                           id="{{ form.detailed_processing_level.id_for_label }}"
-                                           placeholder="Describe el nivel de preprocesamiento"
+                                           name=""
+                                           id=""
+                                           placeholder="Nombre UA" disabled=""
+                                            {% if form.detailed_processing_level.value %}
+                                           value="{{ form.detailed_processing_level.value }}"{% endif %}
+                                           type="text">
+                                    <p class="help-block">Sube el archivo .yml con la descripción de la unidad <a href="{% url 'template:index' %}" class="btn btn-default btn-sm">Ver plantillas</a></p>
+                                </div>
+                                <!-- /Nombre de la unidad -->
+
+                                <!-- Descripción -->
+                                <div class="form-group">
+                                    <!-- Errors -->
+                                    {% if form.detailed_processing_level.errors %}
+                                        {% for error in form.detailed_processing_level.errors %}
+                                            <div class="alert alert-danger">
+                                                <strong>{{ error|escape }}</strong>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <!-- /Errors -->
+                                    <label for="detailedProcessingLevel"><b>Descripción</b></label>
+                                    <input class="form-control"
+                                           name=""
+                                           id=""
+                                           placeholder="Descripción UA" disabled=""
                                             {% if form.detailed_processing_level.value %}
                                            value="{{ form.detailed_processing_level.value }}"{% endif %}
                                            type="text">
                                 </div>
-                                <!-- /Nivel Procesamiento Detallado -->
+                                <!-- /Descripción -->
+
+                                <!-- Archivo de ingesta -->
+                                <div class="form-group">
+                                    <!-- Errors -->
+                                    {% if form.ingest_file.errors %}
+                                        {% for error in form.ingest_file.errors %}
+                                            <div class="alert alert-danger">
+                                                <strong>{{ error|escape }}</strong>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <!-- /Errors -->
+                                    <label for="nameUnitIngestFile"><b>Archivo de ingesta*</b></label>
+                                    <input name=""
+                                           id="" type="file">
+                                    <p class="help-block">Sube el archivo .yml con la informaciónpara poder realizar la ingesta <a href="#" class="btn btn-default btn-sm">Ver plantillas</a></p>
+                                </div>
+                                <!-- /Archivo de ingesta -->
+
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-default">Crear Unidad</button>
                                 </div>
