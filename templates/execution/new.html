@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 
+{% block extra_head %}
+
+
+
+{%  endblock %}
+
 {% block content %}
     <!-- breadcrumb start -->
     <!-- ================ -->
@@ -30,7 +36,7 @@
                     <!-- page-title end -->
 
                     <!-- blogpost start -->
-                    <article class="blogpost">
+                    <article class="">
                         <header>
                             <h3 class="page-title">Información del algoritmo</h3>
                             <div class="separator-2"></div>
@@ -89,7 +95,52 @@
                     <!-- blogpost end -->
 
                     <!-- blogpost start -->
-                    <article class="blogpost">
+                    <article class="">
+                        <header>
+                            <h3 class="page-title">Calificación de la versión</h3>
+                            <div class="separator-2"></div>
+                        </header>
+                        <div class="blogpost-content">
+                            <p>Estadísticas de la versión del algoritmo:</p>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 ">
+                                <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible animated object-visible fadeInDownSmall"
+                                     data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+                                    <span class="icon default-bg circle"><i class="fa fa-star"></i></span>
+                                    <h4>Calificación</h4>
+                                    <div class="separator clearfix"></div>
+                                    <h2>4.5/5</h2>
+                                </div>
+                            </div>
+                            <div class="col-md-4 ">
+                                <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible animated object-visible fadeInDownSmall"
+                                     data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+                                    <span class="icon default-bg circle"><i class="fa fa-check"></i></span>
+                                    <h4># de Calificaciones</h4>
+                                    <div class="separator clearfix"></div>
+                                    <h2>15</h2>
+                                </div>
+                            </div>
+                            <div class="col-md-4 ">
+                                <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible animated object-visible fadeInDownSmall"
+                                     data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+                                    <span class="icon default-bg circle"><i class="fa fa-refresh"></i></span>
+                                    <h4># de Ejecuciones</h4>
+                                    <div class="separator clearfix"></div>
+                                    <h2>96</h2>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <a href="#" class="btn btn-gray btn-sm">Ver Calificaciones</a>
+                            </div>
+                        </div>
+                    </article>
+                    <!-- blogpost end -->
+
+                    <!-- blogpost start -->
+                    <article class="">
                         <header>
                             <h3 class="page-title">Ejecutar algoritmo</h3>
                             <div class="separator-2"></div>
