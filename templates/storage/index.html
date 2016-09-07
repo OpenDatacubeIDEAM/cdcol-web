@@ -28,7 +28,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="pull-right" style="margin-bottom: 10px;">
-                                <a href="{% url 'storage:new_cdcol' %}" class="btn btn-default btn-md"><i class="fa fa-plus-circle"></i> Nueva unidad CEOS</a>
+                                <a href="{% url 'storage:new' %}" class="btn btn-default btn-md"><i class="fa fa-plus-circle"></i> Nueva unidad</a>
                             </div>
                         </div>
                     </div>
@@ -39,22 +39,16 @@
                                 <table class="table table-striped table-colored">
                                     <thead>
                                     <tr>
-                                        <th>Código</th>
                                         <th>Nombre</th>
-                                        <th>Tipo</th>
-                                        <th>Nivel</th>
                                         <th>Fecha de Creación</th>
                                         <th>Creada por</th>
-                                        <th></th>
+                                        <th>Acciones</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {% for su in storage_units %}
                                         <tr>
-                                            <td>{{ su.id }}</td>
                                             <td>{{ su.name }}</td>
-                                            <td>{{ su.storage_unit_type }}</td>
-                                            <td>{{ su.processing_level }}</td>
                                             <td>{{ su.created_at }}</td>
                                             <td>{{ su.created_by.email }}</td>
                                             <td><a href="/storage/detail/{{ su.id }}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver

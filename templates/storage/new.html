@@ -8,7 +8,7 @@
             <ol class="breadcrumb">
                 <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
                 <li><a href="{% url 'storage:index' %}">Unidades de Almacenamiento</a></li>
-                <li class="active">Nueva Unidad CDCOL</li>
+                <li class="active">Nueva Unidad de Almacenamiento</li>
             </ol>
         </div>
     </div>
@@ -27,7 +27,7 @@
 
                     <!-- page-title start -->
                     <!-- ================ -->
-                    <h3 class="title">Nueva Unidad de Almacenamiento - CEOS</h3>
+                    <h3 class="title">Nueva Unidad de Almacenamiento</h3>
                     <div class="separator-2"></div>
                     <!-- page-title end -->
                     <p>Ingresa la siguiente información de la unidad de almacenamiento:</p>
@@ -40,7 +40,7 @@
                     <!-- /Success Messages -->
                     <div class="section light-gray-bg">
                         <div class="container">
-                            <form role="form" class="form-horizontal col-md-6 col-md-offset-3" method="POST" action=""
+                            <form role="form" class="form-horizontal col-md-6 col-md-offset-3" method="POST" action="{% url 'storage:new' %}"
                                   enctype="multipart/form-data">
                                 {% csrf_token %}
 
@@ -68,7 +68,7 @@
                                     <label for="nameUnitFile"><b>Archivo de descripción*</b></label>
                                     <input name="{{ form.description_file.html_name }}"
                                            id="{{ form.description_file.id_for_label }}" type="file">
-                                    <p class="help-block">Debes ingresar el archivo YML que describe la unidad.</p>
+                                    <p class="help-block">Sube el archivo .yml con la descripción de la unidad <a href="{% url 'template:index' %}" class="btn btn-default btn-sm">Ver plantillas</a></p>
                                 </div>
                                 <!-- /Archivo de descripción -->
 
@@ -85,13 +85,12 @@
                                     <!-- /Errors -->
                                     <label for="detailedProcessingLevel"><b>Nombre de la unidad</b></label>
                                     <input class="form-control"
-                                           name=""
-                                           id=""
+                                           name="{{ form.name.html_name }}"
+                                           id="{{ form.name.id_for_label }}"
                                            placeholder="Nombre UA" disabled=""
-                                            {% if form.detailed_processing_level.value %}
-                                           value="{{ form.detailed_processing_level.value }}"{% endif %}
+                                            {% if form.name.value %}
+                                           value="{{ form.name.value }}"{% endif %}
                                            type="text">
-                                    <p class="help-block">Sube el archivo .yml con la descripción de la unidad <a href="{% url 'template:index' %}" class="btn btn-default btn-sm">Ver plantillas</a></p>
                                 </div>
                                 <!-- /Nombre de la unidad -->
 
@@ -108,11 +107,11 @@
                                     <!-- /Errors -->
                                     <label for="detailedProcessingLevel"><b>Descripción</b></label>
                                     <input class="form-control"
-                                           name=""
-                                           id=""
+                                           name="{{ form.description.html_name }}"
+                                           id="{{ form.description.id_for_label }}"
                                            placeholder="Descripción UA" disabled=""
-                                            {% if form.detailed_processing_level.value %}
-                                           value="{{ form.detailed_processing_level.value }}"{% endif %}
+                                            {% if form.description.value %}
+                                           value="{{ form.description.value }}"{% endif %}
                                            type="text">
                                 </div>
                                 <!-- /Descripción -->
@@ -129,8 +128,8 @@
                                     {% endif %}
                                     <!-- /Errors -->
                                     <label for="nameUnitIngestFile"><b>Archivo de ingesta*</b></label>
-                                    <input name=""
-                                           id="" type="file">
+                                    <input name="{{ form.ingest_file.html_name }}"
+                                           id="{{ form.ingest_file.id_for_label }}" type="file">
                                     <p class="help-block">Sube el archivo .yml con la informaciónpara poder realizar la ingesta <a href="#" class="btn btn-default btn-sm">Ver plantillas</a></p>
                                 </div>
                                 <!-- /Archivo de ingesta -->

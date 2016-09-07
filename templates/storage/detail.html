@@ -34,44 +34,26 @@
                     <table class="table">
                         <tbody>
                         <tr>
-                            <td>Código de la unidad:</td>
-                            <td>{{ storage_unit_detail.id }}</td>
-                        </tr>
-                        <tr>
                             <td>Nombre:</td>
-                            <td>{{ storage_unit_detail.name }}</td>
-                        </tr>
-                        <tr>
-                            <td>Tipo:</td>
-                            <td>{{ storage_unit_detail.storage_unit_type }}</td>
+                            <td>{{ storage_unit.name }}</td>
                         </tr>
                         <tr>
                             <td>Archivo de Descripción:</td>
-                            <td><a href="/storage/download/{{ storage_unit_detail.metadata.name }}"
+                            <td><a href="/storage/download/{{ storage_unit.description_file.name }}"
                                    class="btn btn-gray btn-sm"><i class="fa fa-download"></i> Descargar</a></td>
                         </tr>
-                        {% if storage_unit_ceos %}
-                            <tr>
-                                <td>Archivo de Ingesta:</td>
-                                <td><a href="/storage/download/{{ storage_unit_ceos.file_feed.name }}"
-                                   class="btn btn-gray btn-sm"><i class="fa fa-download"></i> Descargar</a></td>
-                            </tr>
-                            <tr>
-                                <td>Unidad origen:</td>
-                                <td>{{ storage_unit_ceos.source_storage_unit }}</td>
-                            </tr>
-                        {% endif %}
                         <tr>
-                            <td>Nivel de Procesamiento:</td>
-                            <td>{{ storage_unit_detail.processing_level }}</td>
+                            <td>Archivo de Ingesta:</td>
+                            <td><a href="/storage/download/{{ storage_unit.ingest_file.name }}"
+                               class="btn btn-gray btn-sm"><i class="fa fa-download"></i> Descargar</a></td>
                         </tr>
                         <tr>
                             <td>Fecha de Creación:</td>
-                            <td>{{ storage_unit_detail.created_at }}</td>
+                            <td>{{ storage_unit.created_at }}</td>
                         </tr>
                         <tr>
                             <td>Creada por:</td>
-                            <td>{{ storage_unit_detail.created_by }}</td>
+                            <td>{{ storage_unit.created_by }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -86,9 +68,7 @@
                             <h3 class="title">Acciones</h3>
                             <div class="separator-2"></div>
                             <nav>
-                                <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="index.html">Ver contenido de la unidad</a></li>
-                                </ul>
+                                <a href="#" class="btn btn-primary btn-md btn-block">Ver contenido de la unidad</a>
                             </nav>
                         </div>
                     </div>
