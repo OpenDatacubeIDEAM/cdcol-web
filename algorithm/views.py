@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from algorithm.models import Algorithm, Topic, AlgorithmStorageUnit
+from algorithm.models import Algorithm, Topic, AlgorithmStorageUnit, Version
 from storage.models import StorageUnit
 from algorithm.forms import AlgorithmForm
 
@@ -46,6 +47,16 @@ def new(request):
 					storage_unit=source_storage_unit
 				)
 				new_algorithm_relation.save()
+			# creating the base version
+			new_algorithm_version = Version(
+				algorithm=new_algorithm,
+				description='Versión por defecto 1.0',
+				number='1.0.0',
+				source_code='',
+				publishing_state='En Desarrollo',
+				created_by=current_user
+			)
+			new_algorithm_version.save()
 			return HttpResponseRedirect(reverse('algorithm:index'))
 		else:
 			algorithm_form.add_error(None, "Favor completar todos los campos marcados.")

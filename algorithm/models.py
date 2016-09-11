@@ -36,3 +36,17 @@ class AlgorithmStorageUnit(models.Model):
 
 	def __unicode__(self):
 		return "{} - {}".format(self.algorithm.name, self.storage_unit.name)
+
+
+class Version(models.Model):
+	algorithm = models.ForeignKey(Algorithm, on_delete=models.CASCADE)
+	description = models.TextField()
+	number = models.CharField(max_length=200)
+	source_code = models.CharField(max_length=200)
+	publishing_state = models.CharField(max_length=200)
+	created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='version_author')
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+
+	def __unicode__(self):
+		return "{} - {} {}".format(self.id, self.algorithm.name, self.number)
