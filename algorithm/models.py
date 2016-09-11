@@ -33,3 +33,6 @@ class AlgorithmStorageUnit(models.Model):
 	storage_unit = models.ForeignKey(StorageUnit, on_delete=models.CASCADE, related_name='source_storage_unit')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+
+	def __unicode__(self):
+		return "{} - {}".format(self.algorithm.name, self.storage_unit.name)

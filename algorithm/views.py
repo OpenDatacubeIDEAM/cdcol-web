@@ -1,6 +1,8 @@
 from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from algorithm.models import Algorithm, Topic
+from algorithm.models import Algorithm, Topic, AlgorithmStorageUnit
 from storage.models import StorageUnit
 from algorithm.forms import AlgorithmForm
 
@@ -23,13 +25,25 @@ def new(request):
 			field_topic = algorithm_form.cleaned_data['topic']
 			field_name = algorithm_form.cleaned_data['name']
 			field_description = algorithm_form.cleaned_data['description']
-			field_source_storage_unit = algorithm_form.cleaned_data['source_storage_unit']
+			field_source_storage_units = algorithm_form.cleaned_data['source_storage_units']
 			field_output_storage_unit = algorithm_form.cleaned_data['output_storage_unit']
-
-			## TODO: Read the response and create the object
-
-			# print field_topic
-			# return render(request, 'algorithm/index.html')
+			# creating the new algorithm
+			new_algorithm = Algorithm(
+				name=field_name,
+				description=field_description,
+				topic=field_topic,
+				output_storage_unit=field_output_storage_unit,
+				created_by=current_user
+			)
+			new_algorithm.save()
+			# creating the relation with the storage units
+			for source_storage_unit in field_source_storage_units:
+				new_algorithm_relation = AlgorithmStorageUnit(
+					algorithm=new_algorithm,
+					storage_unit=source_storage_unit
+				)
+				new_algorithm_relation.save()
+			return HttpResponseRedirect(reverse('algorithm:index'))
 		else:
 			algorithm_form.add_error(None, "Favor completar todos los campos marcados.")
 	else:
