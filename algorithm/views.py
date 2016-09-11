@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from algorithm.models import Algorithm, Topic, AlgorithmStorageUnit, Version
 from storage.models import StorageUnit
-from algorithm.forms import AlgorithmForm
+from algorithm.forms import AlgorithmForm, AlgorithmUpdateForm
 
 
 @login_required(login_url='/accounts/login/')
@@ -64,6 +64,45 @@ def new(request):
 		algorithm_form = AlgorithmForm()
 	context = {'algorithm_form': algorithm_form, 'topics': topics, 'source_storage_units': source_storage_units}
 	return render(request, 'algorithm/new.html', context)
+
+
+@login_required(login_url='/accounts/login/')
+def update(request, algorithm_id):
+	source_storage_units = StorageUnit.objects.all()
+	algorithm = get_object_or_404(Algorithm, id=algorithm_id)
+	selected_storage_units = algorithm.source_storage_units.all()
+	if request.method == 'POST':
+		# getting the form
+		algorithm_form = AlgorithmUpdateForm(request.POST)
+		# checking if the form is valid
+		if algorithm_form.is_valid():
+			field_name = algorithm_form.cleaned_data['name']
+			field_description = algorithm_form.cleaned_data['description']
+			field_source_storage_units = algorithm_form.cleaned_data['source_storage_units']
+			# update the algorithm
+			algorithm.name = field_name
+			algorithm.description = field_description
+			algorithm.save()
+			# deleting all the source storage units associations
+			algorithm_associations = AlgorithmStorageUnit.objects.filter(algorithm_id=algorithm.id)
+			for association in algorithm_associations:
+				association.delete()
+			# creating all the new associations
+			for source_storage_unit in field_source_storage_units:
+				new_algorithm_relation = AlgorithmStorageUnit(
+					algorithm=algorithm,
+					storage_unit=source_storage_unit
+				)
+				new_algorithm_relation.save()
+			return HttpResponseRedirect(reverse('algorithm:index'))
+		else:
+			algorithm_form.add_error(None, "Favor completar todos los campos marcados.")
+	else:
+		algorithm_form = AlgorithmUpdateForm()
+	context = {'algorithm_form': algorithm_form, 'source_storage_units': source_storage_units,
+	           'selected_storage_units': selected_storage_units,
+	           'algorithm': algorithm}
+	return render(request, 'algorithm/update.html', context)
 
 
 @login_required(login_url='/accounts/login/')

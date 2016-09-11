@@ -11,6 +11,12 @@ class AlgorithmForm(forms.Form):
 	output_storage_unit = forms.CharField(max_length=200, required=True)
 
 
+class AlgorithmUpdateForm(forms.Form):
+	name = forms.CharField(max_length=200, required=True)
+	description = forms.CharField(widget=forms.Textarea, required=True)
+	source_storage_units = forms.ModelMultipleChoiceField(queryset=StorageUnit.objects.all(), required=True)
+
+
 class Version(forms.Form):
 	PUBLISHING_STATES = (
 		(1, "En Desarrollo"),
