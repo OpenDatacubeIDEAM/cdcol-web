@@ -68,7 +68,11 @@ def new(request):
 
 @login_required(login_url='/accounts/login/')
 def detail(request, algorithm_id):
-	return render(request, 'algorithm/detail.html')
+	algorithm = get_object_or_404(Algorithm, id=algorithm_id)
+	storage_units = AlgorithmStorageUnit.objects.filter(algorithm_id=algorithm_id)
+	versions = Version.objects.filter(algorithm_id=algorithm_id)
+	context = {'algorithm': algorithm, 'storage_units': storage_units, 'versions': versions}
+	return render(request, 'algorithm/detail.html', context)
 
 
 @login_required(login_url='/accounts/login/')

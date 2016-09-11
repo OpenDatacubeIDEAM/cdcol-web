@@ -27,6 +27,12 @@ class Algorithm(models.Model):
 	def __unicode__(self):
 		return "{} - {}".format(self.id, self.name)
 
+	def obtain_versions(self):
+		return Version.objects.filter(algorithm_id=self.id)
+
+	def last_version(self):
+		return Version.objects.filter(algorithm_id=self.id).last()
+
 
 class AlgorithmStorageUnit(models.Model):
 	algorithm = models.ForeignKey(Algorithm, on_delete=models.CASCADE, related_name='source_algorithm')
