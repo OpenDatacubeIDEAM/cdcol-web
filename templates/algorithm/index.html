@@ -50,17 +50,19 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>0001</td>
-                                        <td>Nombre completo del algoritmo A</td>
-                                        <td>Descarga</td>
-                                        <td>18</td>
-                                        <td>En desarrollo</td>
-                                        <td>21 de Junio 10:00 AM</td>
-                                        <td><a href="/algorithm/detail/1" class="btn btn-gray btn-sm"><i
-                                                class="fa fa-bars"></i> Ver Detalle</a>
-                                        </td>
-                                    </tr>
+                                    {% for algorithm in algorithms %}
+                                        <tr>
+                                            <td>{{ algorithm.id }}</td>
+                                            <td>{{ algorithm.name }}</td>
+                                            <td>{{ algorithm.topic }}</td>
+                                            <td>PENDIENTE</td>
+                                            <td>PENDIENTE</td>
+                                            <td>{{ algorithm.created_at }}</td>
+                                            <td><a href="{% url 'algorithm:detail' algorithm.id %}" class="btn btn-gray btn-sm"><i
+                                                    class="fa fa-bars"></i> Ver Detalle</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
                                     </tbody>
                                 </table>
                             </div>

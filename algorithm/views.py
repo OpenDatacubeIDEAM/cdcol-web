@@ -6,10 +6,13 @@ from algorithm.models import Algorithm, Topic, AlgorithmStorageUnit
 from storage.models import StorageUnit
 from algorithm.forms import AlgorithmForm
 
+
 @login_required(login_url='/accounts/login/')
 def index(request):
 	current_user = request.user
-	return render(request, 'algorithm/index.html')
+	algorithms = Algorithm.objects.filter(created_by=current_user)
+	context = {'algorithms': algorithms}
+	return render(request, 'algorithm/index.html', context)
 
 
 @login_required(login_url='/accounts/login/')
