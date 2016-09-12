@@ -8,7 +8,7 @@
             <ol class="breadcrumb">
                 <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
                 <li><a href="{% url 'algorithm:index' %}">Algoritmos</a></li>
-                <li class="active">Nuevo</li>
+                <li class="active">Editar</li>
             </ol>
         </div>
     </div>
@@ -27,10 +27,10 @@
 
                     <!-- page-title start -->
                     <!-- ================ -->
-                    <h1 class="page-title">Nuevo Algoritmo</h1>
+                    <h1 class="page-title">Editar Algoritmo</h1>
                     <div class="separator-2"></div>
                     <!-- page-title end -->
-                    <p>Ingresa la siguiente información del algoritmo:</p>
+                    <p>Edita la información del algoritmo:</p>
                     <!-- Success Messages  -->
                     {% if response %}
                         <div class="alert alert-success">
@@ -41,7 +41,7 @@
                     <div class="section light-gray-bg">
                         <div class="container">
                             <form role="form" class="form-horizontal col-md-6 col-md-offset-3" method="POST"
-                                  action="{% url 'algorithm:new' %}"
+                                  action="{% url 'algorithm:update' algorithm.id %}"
                                   enctype="multipart/form-data">
                                 {% csrf_token %}
 
@@ -68,10 +68,8 @@
                                     <!-- /Errors -->
                                     <label for=""><b>Temática*</b></label>
                                     <select name="{{ algorithm_form.topic.html_name }}"
-                                            id="{{ algorithm_form.topic.id_for_label }}" class="form-control">
-                                        {% for topic in topics %}
-                                            <option value="{{ topic.id }}">{{ topic.name }}</option>
-                                        {% endfor %}
+                                            id="{{ algorithm_form.topic.id_for_label }}" class="form-control" disabled>
+                                        <option value="{{ algorithm.topic.id }}">{{ algorithm.topic.name }}</option>
                                     </select>
                                 </div>
                                 <!-- /Temática -->
@@ -91,8 +89,7 @@
                                     <input name="{{ algorithm_form.name.html_name }}"
                                            id="{{ algorithm_form.name.id_for_label }}"
                                            class="form-control" placeholder="Escribe el nombre el algoritmo."
-                                            {% if algorithm_form.name.value %}
-                                           value="{{ algorithm_form.name.value }}"{% endif %}
+                                           value="{{ algorithm.name }}"
                                            type="text">
                                 </div>
                                 <!-- /Nombre -->
@@ -112,7 +109,7 @@
                             <textarea name="{{ algorithm_form.description.html_name }}"
                                       id="{{ algorithm_form.description.id_for_label }}"
                                       class="form-control" rows="3"
-                                      placeholder="Ingresa una descripción que te ayude a identificar el objetivo del análisis que deseas realizar."></textarea>
+                                      placeholder="Ingresa una descripción que te ayude a identificar el objetivo del análisis que deseas realizar.">{{ algorithm.description }}</textarea>
                                 </div>
                                 <!-- /Descripción Algoritmo -->
 
@@ -132,36 +129,18 @@
                                             id="{{ algorithm_form.source_storage_units.id_for_label }}"
                                             multiple="" class="form-control">
                                         {% for storage_unit in source_storage_units %}
-                                            <option value="{{ storage_unit.id }}">{{ storage_unit.name }}</option>
+                                            {% if storage_unit in selected_storage_units %}
+                                                <option selected value="{{ storage_unit.id }}">{{ storage_unit.name }}</option>
+                                            {% else %}
+                                                <option value="{{ storage_unit.id }}">{{ storage_unit.name }}</option>
+                                            {% endif %}
                                         {% endfor %}
                                     </select>
                                 </div>
                                 <!-- /Unidad Almacenamiento de entrada -->
 
-                                <!-- Unidad de almacenamiento de salida -->
-                                <div class="form-group">
-                                    <!-- Errors -->
-                                    {% if algorithm_form.output_storage_unit.errors %}
-                                        {% for error in algorithm_form.output_storage_unit.errors %}
-                                            <div class="alert alert-danger">
-                                                <strong>{{ error|escape }}</strong>
-                                            </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                    <!-- /Errors -->
-                                    <label for=""><b>Unidad de almacenamiento de salida*</b></label>
-                                    <input name="{{ algorithm_form.output_storage_unit.html_name }}"
-                                           id="{{ algorithm_form.output_storage_unit.id_for_label }}"
-                                           class="form-control"
-                                           placeholder="Escribe la unidad de almacenamiento de salida"
-                                            {% if algorithm_form.output_storage_unit.value %}
-                                           value="{{ algorithm_form.output_storage_unit.value }}"{% endif %}
-                                           type="text">
-                                </div>
-                                <!-- /Unidad de almacenamiento de salida -->
-
                                 <div class="text-center">
-                                    <button type="submit" class="btn btn-default">Crear Algoritmo</button>
+                                    <button type="submit" class="btn btn-default">Actualizar Algoritmo</button>
                                 </div>
                             </form>
                         </div>

@@ -35,33 +35,27 @@
                         <tbody>
                         <tr>
                             <td>Código del algoritmo:</td>
-                            <td>000001</td>
+                            <td>{{ algorithm.id }}</td>
                         </tr>
                         <tr>
                             <td>Nombre:</td>
-                            <td>Nombre completo del algoritmo A</td>
+                            <td>{{ algorithm.name }}</td>
                         </tr>
                         <tr>
                             <td>Tipo:</td>
-                            <td>Procesamiento</td>
+                            <td>{{ algorithm.topic.name }}</td>
                         </tr>
                         <tr>
                             <td>Archivo de Descripción:</td>
-                            <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tum Torquatus: Prorsus, inquit,
-                                assentior; Duo Reges: constructio interrete. Nam memini etiam quae nolo, oblivisci non
-                                possum quae volo. Ut placet, inquit, etsi enim illud erat aptius, aequum cuique
-                                concedere. Tecum optime, deinde etiam cum mediocri amico. Non potes, nisi retexueris
-                                illa. Quodsi vultum tibi, si incessum fingeres, quo gravior viderere, non esses tui
-                                similis; Nos vero, inquit ille;
-                            </td>
+                            <td>{{ algorithm.description }}</td>
                         </tr>
                         <tr>
                             <td>Fecha de Creación:</td>
-                            <td>21 de Junio 2016 10:00 AM</td>
+                            <td>{{ algorithm.created_at }}</td>
                         </tr>
                         <tr>
                             <td>Creada por:</td>
-                            <td>usuario1@abc.com</td>
+                            <td>{{ algorithm.created_by.email }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -82,13 +76,17 @@
                             </tr>
                             </thead>
                             <tbody>
+                            {% for storage_unit in storage_units %}
                                 <tr>
-                                    <td>0001</td>
-                                    <td>Unidad de almacenamiento datos tipo A</td>
-                                    <td>CEOS</td>
-                                    <td>Ingestados</td>
-                                    <td><a href="#" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a></td>
+                                    <td>{{ storage_unit.id }}</td>
+                                    <td>{{ storage_unit.storage_unit.name }}</td>
+                                    <td>PENDIENTE</td>
+                                    <td>PENDIENTE</td>
+                                    <td><a href="{% url 'storage:detail' storage_unit.id %}"
+                                           class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver
+                                        Detalle</a></td>
                                 </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -96,7 +94,8 @@
                     <h3 class="page-title">Versiones del algoritmo</h3>
                     <div class="separator-2"></div>
                     <div class="pull-right">
-                        <a href="{% url 'algorithm:new_version' algorithm_id=1 %}" class="btn btn-default btn-md"><i class="fa fa-plus-circle"></i> Subir Versión</a>
+                        <a href="{% url 'algorithm:new_version' algorithm_id=1 %}" class="btn btn-default btn-md"><i
+                                class="fa fa-plus-circle"></i> Crear nueva versión</a>
                     </div>
                     <p>A continuación se encuentran las versiones del algoritmo:</p>
                     <br/>
@@ -112,16 +111,18 @@
                             </tr>
                             </thead>
                             <tbody>
+                            {% for version in versions %}
                                 <tr>
-                                    <td>1.4</td>
-                                    <td>6</td>
-                                    <td>Oficial</td>
-                                    <td>21 de Junio 2016 10:00 AM</td>
-                                    <td><a href="{% url 'algorithm:version_detail' algorithm_id=1 version_id=2 %}"
+                                    <td>{{ version.number }}</td>
+                                    <td>PENDIENTE</td>
+                                    <td>{{ version.publishing_state }}</td>
+                                    <td>{{ version.created_at }}</td>
+                                    <td><a href="{% url 'algorithm:version_detail' algorithm_id=version.algorithm.id version_id=version.id %}"
                                            class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a>
                                         <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a>
                                     </td>
                                 </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -140,7 +141,8 @@
                                 <a href="#" class="btn btn-primary btn-md btn-block">Ejecutar Algoritmo</a>
                             </nav>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-md btn-block"><i class="fa fa-edit"></i> Editar Algoritmo</a>
+                                <a href="{% url 'algorithm:update' algorithm.id %}" class="btn btn-primary btn-md btn-block"><i class="fa fa-edit"></i> Editar
+                                    Algoritmo</a>
                             </nav>
                         </div>
                     </div>
