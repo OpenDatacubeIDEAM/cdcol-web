@@ -26,7 +26,7 @@ pip install -r /path/requirements.txt
 
 ```
 #!python
-export PATH=/Applications/Postgres.app/Contents/Versions/9.4/bin:"$PATH"
+export PATH=/Applications/Postgres.app/Contents/Versions/9.5/bin:"$PATH"
 ```
 ## Despliegue de prueba
 
@@ -39,3 +39,9 @@ python manage.py runserver
 # Utilizando el puerto 8000
 python manage.py runserver 0.0.0.0:8000
 ```
+
+## Versiones Utilizadas
+
+Se utilizaron las siguientes versiones para el portal.
+
+* PostgreSQL, Version 9.5.4.2 (9.5.4.2)
