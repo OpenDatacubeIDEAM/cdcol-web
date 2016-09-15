@@ -30,13 +30,11 @@ def new(request):
 			field_name = algorithm_form.cleaned_data['name']
 			field_description = algorithm_form.cleaned_data['description']
 			field_source_storage_units = algorithm_form.cleaned_data['source_storage_units']
-			field_output_storage_unit = algorithm_form.cleaned_data['output_storage_unit']
 			# creating the new algorithm
 			new_algorithm = Algorithm(
 				name=field_name,
 				description=field_description,
 				topic=field_topic,
-				output_storage_unit=field_output_storage_unit,
 				created_by=current_user
 			)
 			new_algorithm.save()

@@ -138,28 +138,6 @@
                                 </div>
                                 <!-- /Unidad Almacenamiento de entrada -->
 
-                                <!-- Unidad de almacenamiento de salida -->
-                                <div class="form-group">
-                                    <!-- Errors -->
-                                    {% if algorithm_form.output_storage_unit.errors %}
-                                        {% for error in algorithm_form.output_storage_unit.errors %}
-                                            <div class="alert alert-danger">
-                                                <strong>{{ error|escape }}</strong>
-                                            </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                    <!-- /Errors -->
-                                    <label for=""><b>Unidad de almacenamiento de salida*</b></label>
-                                    <input name="{{ algorithm_form.output_storage_unit.html_name }}"
-                                           id="{{ algorithm_form.output_storage_unit.id_for_label }}"
-                                           class="form-control"
-                                           placeholder="Escribe la unidad de almacenamiento de salida"
-                                            {% if algorithm_form.output_storage_unit.value %}
-                                           value="{{ algorithm_form.output_storage_unit.value }}"{% endif %}
-                                           type="text">
-                                </div>
-                                <!-- /Unidad de almacenamiento de salida -->
-
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-default">Crear Algoritmo</button>
                                 </div>

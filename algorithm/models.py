@@ -19,7 +19,6 @@ class Algorithm(models.Model):
 	description = models.TextField()
 	topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
 	source_storage_units = models.ManyToManyField(StorageUnit, through='AlgorithmStorageUnit')
-	output_storage_unit = models.CharField(max_length=200)
 	created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='algorithm_author')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)

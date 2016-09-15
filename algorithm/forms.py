@@ -8,7 +8,6 @@ class AlgorithmForm(forms.Form):
 	name = forms.CharField(max_length=200, required=True)
 	description = forms.CharField(widget=forms.Textarea, required=True)
 	source_storage_units = forms.ModelMultipleChoiceField(queryset=StorageUnit.objects.all(), required=True)
-	output_storage_unit = forms.CharField(max_length=200, required=True)
 
 
 class AlgorithmUpdateForm(forms.Form):
