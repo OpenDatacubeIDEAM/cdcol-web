@@ -115,7 +115,7 @@
                                     <td>{{ version.created_at }}</td>
                                     <td><a href="{% url 'algorithm:version_detail' algorithm_id=version.algorithm.id version_id=version.id %}"
                                            class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a>
-                                        <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a>
+                                        <a href="{% url 'algorithm:update_version' version.algorithm.id version.id %}" class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a>
                                     </td>
                                 </tr>
                             {% endfor %}

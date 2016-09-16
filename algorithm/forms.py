@@ -24,3 +24,9 @@ class VersionForm(forms.Form):
 	number = forms.CharField(max_length=200, required=True)
 	source_code = forms.CharField(max_length=200, required=True)
 
+
+class VersionUpdateForm(forms.Form):
+	description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control',
+								'placeholder': 'Ingresa una descripción de los cambios o ajustes realizados al algoritmo en esta nueva versión.'}),
+	                            required=True)
+	source_code = forms.CharField(max_length=200, required=True)

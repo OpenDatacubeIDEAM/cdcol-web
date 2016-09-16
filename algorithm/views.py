@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from algorithm.models import Algorithm, Topic, AlgorithmStorageUnit, Version
 from storage.models import StorageUnit
-from algorithm.forms import AlgorithmForm, AlgorithmUpdateForm, VersionForm
+from algorithm.forms import AlgorithmForm, AlgorithmUpdateForm, VersionForm, VersionUpdateForm
 
 
 @login_required(login_url='/accounts/login/')
@@ -147,6 +147,31 @@ def new_version(request, algorithm_id):
 	context = {'version_form': version_form, 'algorithm': algorithm, 'new_major_version': new_major_version_number,
 	           'new_minor_version': new_minor_version_number}
 	return render(request, 'algorithm/new_version.html', context)
+
+
+@login_required(login_url='/accounts/login/')
+def update_version(request, algorithm_id, version_id):
+	version = get_object_or_404(Version, id=version_id)
+	if request.method == 'POST':
+		# getting the form
+		version_form = VersionUpdateForm(request.POST)
+		# checking if the form is valid
+		if version_form.is_valid():
+			print 'formulario válido!'
+			description = version_form.cleaned_data['description']
+			source_code = version_form.cleaned_data['source_code']
+			# updating with the new information
+			version.description = description
+			version.source_code = source_code
+			version.save()
+			return HttpResponseRedirect(reverse('algorithm:detail', kwargs={'algorithm_id': algorithm_id}))
+		else:
+			version_form.add_error(None, "Favor completar todos los campos marcados.")
+	else:
+		version_form = VersionUpdateForm(initial={'description': version.description,
+		                                          'source_code': version.source_code})
+	context = {'version_form': version_form, 'version': version}
+	return render(request, 'algorithm/update_version.html', context)
 
 
 @login_required(login_url='/accounts/login/')
