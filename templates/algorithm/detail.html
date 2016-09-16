@@ -70,8 +70,6 @@
                             <tr>
                                 <th>Código</th>
                                 <th>Nombre</th>
-                                <th>Tipo</th>
-                                <th>Nivel</th>
                                 <th>Acciones</th>
                             </tr>
                             </thead>
@@ -80,9 +78,7 @@
                                 <tr>
                                     <td>{{ storage_unit.id }}</td>
                                     <td>{{ storage_unit.storage_unit.name }}</td>
-                                    <td>PENDIENTE</td>
-                                    <td>PENDIENTE</td>
-                                    <td><a href="{% url 'storage:detail' storage_unit.id %}"
+                                    <td><a target="_blank" href="{% url 'storage:detail' storage_unit.id %}"
                                            class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver
                                         Detalle</a></td>
                                 </tr>
@@ -114,7 +110,7 @@
                             {% for version in versions %}
                                 <tr>
                                     <td>{{ version.number }}</td>
-                                    <td>PENDIENTE</td>
+                                    <td>0</td>
                                     <td>{{ version.publishing_state }}</td>
                                     <td>{{ version.created_at }}</td>
                                     <td><a href="{% url 'algorithm:version_detail' algorithm_id=version.algorithm.id version_id=version.id %}"

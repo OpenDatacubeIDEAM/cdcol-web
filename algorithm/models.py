@@ -55,3 +55,15 @@ class Version(models.Model):
 
 	def __unicode__(self):
 		return "{} - {} {}".format(self.id, self.algorithm.name, self.number)
+
+	def new_minor_version(self):
+		current_version = self.algorithm.last_version().number
+		current_major_version = int(current_version.split('.')[0])
+		current_minor_version = int(current_version.split('.')[1])
+		return "{}.{}".format(current_major_version, current_minor_version + 1)
+
+	def new_major_version(self):
+		current_version = self.algorithm.last_version().number
+		current_major_version = int(current_version.split('.')[0])
+		return "{}.{}".format(current_major_version + 1, 0)
+

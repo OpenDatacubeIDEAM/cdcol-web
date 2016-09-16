@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django import forms
 from algorithm.models import Topic
 from storage.models import StorageUnit
@@ -16,15 +17,10 @@ class AlgorithmUpdateForm(forms.Form):
 	source_storage_units = forms.ModelMultipleChoiceField(queryset=StorageUnit.objects.all(), required=True)
 
 
-class Version(forms.Form):
-	PUBLISHING_STATES = (
-		(1, "En Desarrollo"),
-		(2, "Publicada"),
-		(3, "Obsoleta"),
-		(4, "Eliminada"),
-	)
-	algorithm = forms.CharField(max_length=200, required=True)
-	description = forms.CharField(widget=forms.Textarea, required=True)
+class VersionForm(forms.Form):
+	description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control',
+								'placeholder': 'Ingresa una descripción de los cambios o ajustes realizados al algoritmo en esta nueva versión.'}),
+	                            required=True)
 	number = forms.CharField(max_length=200, required=True)
 	source_code = forms.CharField(max_length=200, required=True)
-	publishing_state = forms.ChoiceField(choices=PUBLISHING_STATES, required=True)
+

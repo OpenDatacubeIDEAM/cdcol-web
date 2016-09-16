@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from algorithm.models import Algorithm, Topic, AlgorithmStorageUnit, Version
 from storage.models import StorageUnit
-from algorithm.forms import AlgorithmForm, AlgorithmUpdateForm
+from algorithm.forms import AlgorithmForm, AlgorithmUpdateForm, VersionForm
 
 
 @login_required(login_url='/accounts/login/')
@@ -49,7 +49,7 @@ def new(request):
 			new_algorithm_version = Version(
 				algorithm=new_algorithm,
 				description='Versión por defecto 1.0',
-				number='1.0.0',
+				number='1.0',
 				source_code='',
 				publishing_state='En Desarrollo',
 				created_by=current_user
@@ -114,7 +114,39 @@ def detail(request, algorithm_id):
 
 @login_required(login_url='/accounts/login/')
 def new_version(request, algorithm_id):
-	return render(request, 'algorithm/new_version.html')
+	current_user = request.user
+	algorithm = get_object_or_404(Algorithm, id=algorithm_id)
+	current_version = algorithm.last_version()
+	new_minor_version_number = current_version.new_minor_version()
+	new_major_version_number = current_version.new_major_version()
+	if request.method == 'POST':
+		# getting the form
+		version_form = VersionForm(request.POST)
+		# checking if the form is valid
+		if version_form.is_valid():
+			description = version_form.cleaned_data['description']
+			version_number = version_form.cleaned_data['number']
+			source_code = version_form.cleaned_data['source_code']
+			# reading the version
+			version_number = new_minor_version_number if version_number == "1" else new_major_version_number
+			# creating the new version
+			new_algorithm_version = Version(
+				algorithm=algorithm,
+				description=description,
+				number=version_number,
+				source_code=source_code,
+				publishing_state='En Desarrollo',
+				created_by=current_user
+			)
+			new_algorithm_version.save()
+			return HttpResponseRedirect(reverse('algorithm:detail', kwargs={'algorithm_id': algorithm_id}))
+		else:
+			version_form.add_error(None, "Favor completar todos los campos marcados.")
+	else:
+		version_form = VersionForm()
+	context = {'version_form': version_form, 'algorithm': algorithm, 'new_major_version': new_major_version_number,
+	           'new_minor_version': new_minor_version_number}
+	return render(request, 'algorithm/new_version.html', context)
 
 
 @login_required(login_url='/accounts/login/')

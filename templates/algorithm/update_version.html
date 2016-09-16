@@ -41,13 +41,13 @@
                     <div class="section light-gray-bg">
                         <div class="container">
                             <form role="form" class="form-horizontal col-md-6 col-md-offset-3" method="POST"
-                                  action="{% url 'algorithm:new_version' algorithm.id %}"
+                                  action="{% url 'algorithm:new' %}"
                                   enctype="multipart/form-data">
                                 {% csrf_token %}
 
                                 <!-- Errors -->
-                                {% if version_form.errors %}
-                                    {% for error in version_form.non_field_errors %}
+                                {% if form.errors %}
+                                    {% for error in form.non_field_errors %}
                                         <div class="alert alert-danger">
                                             <strong>{{ error|escape }}</strong>
                                         </div>
@@ -57,71 +57,72 @@
 
                                 <!-- Algoritmo -->
                                 <div class="form-group">
-                                    <label for="algorithmName"><b>Algoritmo*</b></label>
+                                    <!-- Errors -->
+                                    {% if form.name.errors %}
+                                        {% for error in form.name.errors %}
+                                            <div class="alert alert-danger">
+                                                <strong>{{ error|escape }}</strong>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <!-- /Errors -->
+                                    <label for=""><b>Algoritmo*</b></label>
                                     <input class="form-control" placeholder="Nombre del Algoritmo" disabled=""
-                                           type="text" value="{{ algorithm.name }}">
+                                           type="text">
                                 </div>
                                 <!-- /Algoritmo -->
 
                                 <!-- Número de la versión -->
                                 <div class="form-group">
                                     <!-- Errors -->
-                                    {% if version_form.number.errors %}
-                                        {% for error in version_form.number.errors %}
+                                    {% if form.name.errors %}
+                                        {% for error in form.name.errors %}
                                             <div class="alert alert-danger">
                                                 <strong>{{ error|escape }}</strong>
                                             </div>
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for="versionNumber"><b>Número de la versión*</b></label>
-                                    <select name="{{ version_form.number.html_name }}"
-                                            id="{{ version_form.number.id_for_label }}" class="form-control">
-                                        <option value="1">Versión menor {{ new_minor_version }}</option>
-                                        <option value="2">Versión mayor {{ new_major_version }}</option>
-                                    </select>
-
+                                    <label for=""><b>Número de la versión*</b></label>
+                                    <input class="form-control" placeholder="Escribe el número de la versión"
+                                           type="text">
                                 </div>
                                 <!-- /Número de la versión -->
 
                                 <!-- Descripción de la versión -->
                                 <div class="form-group">
                                     <!-- Errors -->
-                                    {% if version_form.description.errors %}
-                                        {% for error in version_form.description.errors %}
+                                    {% if form.description.errors %}
+                                        {% for error in form.description.errors %}
                                             <div class="alert alert-danger">
                                                 <strong>{{ error|escape }}</strong>
                                             </div>
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for="versionDescription"><b>Descripción de la versión*</b></label>
-                                    {{ version_form.description }}
+                                    <label for=""><b>Descripción de la versión*</b></label>
+                            <textarea class="form-control" rows="3"
+                                      placeholder="Ingresa una descripción de los cambios o ajustes realizados al algoritmo en esta nueva versión."></textarea>
                                 </div>
                                 <!-- /Descripción de la versión -->
 
-                                <!-- Código fuente -->
+                                <!-- Descripción de Unidad -->
                                 <div class="form-group">
                                     <!-- Errors -->
-                                    {% if version_form.source_code.errors %}
-                                        {% for error in version_form.source_code.errors %}
+                                    {% if form.file.errors %}
+                                        {% for error in form.file.errors %}
                                             <div class="alert alert-danger">
                                                 <strong>{{ error|escape }}</strong>
                                             </div>
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for="sourceCode"><b>Código fuente*</b></label>
-                                    <input name="{{ version_form.source_code.html_name }}"
-                                           id="{{ version_form.source_code.id_for_label }}"
-                                           class="form-control"
-                                           placeholder="Escribe la url donde se encuentra el algoritmo."
-                                            {% if version_form.source_code.value %}
-                                           value="{{ version_form.source_code.value }}"{% endif %}
-                                           type="text">
-                                    <p class="help-block">Coloca la URL del archivo en GitHub, Bitbucket, etc.</p>
+                                    <label for="nameUnitFile"><b>Código fuente*</b></label>
+                                    <input type="file">
+                                    <p class="help-block">Sube el archivo .py que contiene el código fuente de la
+                                        versión.</p>
                                 </div>
-                                <!-- /Código fuente -->
+                                <!-- /Descripción de Unidad -->
 
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-default">Crear Versión</button>
