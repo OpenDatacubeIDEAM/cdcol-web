@@ -27,7 +27,7 @@
 
                     <!-- page-title start -->
                     <!-- ================ -->
-                    <h3 class="page-title">Información del la versión</h3>
+                    <h3 class="page-title">Información de la versión</h3>
                     <div class="separator-2"></div>
                     <!-- page-title end -->
                     <p>Esta es la información de la versión del algoritmo seleccionado:</p>
@@ -123,10 +123,10 @@
                                 <a href="#" class="btn btn-primary btn-md btn-block">Editar Versión</a>
                             </nav>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-md btn-block">Publicar Versión</a>
+                                <a href="{% url 'algorithm:publish_version' version.algorithm.id version.id %}" class="btn btn-primary btn-md btn-block">Publicar Versión</a>
                             </nav>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-md btn-block">Despublicar Versión</a>
+                                <a href="{% url 'algorithm:unpublish_version' version.algorithm.id version.id %}" class="btn btn-primary btn-md btn-block">Despublicar Versión</a>
                             </nav>
                             <nav>
                                 <a href="#" class="btn btn-primary btn-md btn-block">Volver Versión Obsoleta</a>

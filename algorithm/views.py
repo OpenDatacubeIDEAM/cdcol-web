@@ -177,8 +177,28 @@ def update_version(request, algorithm_id, version_id):
 @login_required(login_url='/accounts/login/')
 def version_detail(request, algorithm_id, version_id):
 	version = get_object_or_404(Version, id=version_id)
-	context = { 'version': version}
+	context = {'version': version}
 	return render(request, 'algorithm/version_detail.html', context)
+
+
+@login_required(login_url='/accounts/login/')
+def publish_version(request, algorithm_id, version_id):
+	version = get_object_or_404(Version, id=version_id)
+	if request.method == 'GET':
+		version.publishing_state = 'Publicada'
+		version.save()
+	return HttpResponseRedirect(
+		reverse('algorithm:version_detail', kwargs={'algorithm_id': algorithm_id, 'version_id': version_id}))
+
+
+@login_required(login_url='/accounts/login/')
+def unpublish_version(request, algorithm_id, version_id):
+	version = get_object_or_404(Version, id=version_id)
+	if request.method == 'GET':
+		version.publishing_state = 'En Desarrollo'
+		version.save()
+	return HttpResponseRedirect(
+		reverse('algorithm:version_detail', kwargs={'algorithm_id': algorithm_id, 'version_id': version_id}))
 
 
 @login_required(login_url='/accounts/login/')
