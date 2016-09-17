@@ -22,6 +22,8 @@ urlpatterns = [
 	url(r'^update/(?P<algorithm_id>[0-9]+)/version/(?P<version_id>[0-9]+)/unpublish/$', views.unpublish_version, name='unpublish_version'),
 	# ex: /algorithm/11/version/12/deprecate
 	url(r'^update/(?P<algorithm_id>[0-9]+)/version/(?P<version_id>[0-9]+)/deprecate/$', views.deprecate_version, name='deprecate_version'),
+	# ex: /algorithm/11/version/12/delete
+	url(r'^update/(?P<algorithm_id>[0-9]+)/version/(?P<version_id>[0-9]+)/delete/$', views.delete_version, name='delete_version'),
 	# ex: /algorithm/11/version/12
 	url(r'^(?P<algorithm_id>[0-9]+)/version/(?P<version_id>[0-9]+)$', views.version_detail, name='version_detail'),
 	# ex: /algorithm/11/version/12/param/new

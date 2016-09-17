@@ -215,6 +215,18 @@ def deprecate_version(request, algorithm_id, version_id):
 
 
 @login_required(login_url='/accounts/login/')
+def delete_version(request, algorithm_id, version_id):
+	version = get_object_or_404(Version, id=version_id)
+	if request.method == 'GET':
+		# TODO: This must validate if this version was already executed.
+		# TODO: What happen if there is only one version?
+		if version.algorithm.obtain_versions().count() > 1:
+			version.delete()
+	return HttpResponseRedirect(
+		reverse('algorithm:detail', kwargs={'algorithm_id': algorithm_id}))
+
+
+@login_required(login_url='/accounts/login/')
 def new_parameter(request, algorithm_id, version_id):
 	return render(request, 'algorithm/new_parameter.html')
 
