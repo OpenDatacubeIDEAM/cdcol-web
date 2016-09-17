@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from algorithm.models import Algorithm, Topic, AlgorithmStorageUnit, Version
 from storage.models import StorageUnit
-from algorithm.forms import AlgorithmForm, AlgorithmUpdateForm
+from algorithm.forms import AlgorithmForm, AlgorithmUpdateForm, VersionForm, VersionUpdateForm
 
 
 @login_required(login_url='/accounts/login/')
@@ -30,13 +30,11 @@ def new(request):
 			field_name = algorithm_form.cleaned_data['name']
 			field_description = algorithm_form.cleaned_data['description']
 			field_source_storage_units = algorithm_form.cleaned_data['source_storage_units']
-			field_output_storage_unit = algorithm_form.cleaned_data['output_storage_unit']
 			# creating the new algorithm
 			new_algorithm = Algorithm(
 				name=field_name,
 				description=field_description,
 				topic=field_topic,
-				output_storage_unit=field_output_storage_unit,
 				created_by=current_user
 			)
 			new_algorithm.save()
@@ -51,7 +49,7 @@ def new(request):
 			new_algorithm_version = Version(
 				algorithm=new_algorithm,
 				description='Versión por defecto 1.0',
-				number='1.0.0',
+				number='1.0',
 				source_code='',
 				publishing_state='En Desarrollo',
 				created_by=current_user
@@ -116,12 +114,116 @@ def detail(request, algorithm_id):
 
 @login_required(login_url='/accounts/login/')
 def new_version(request, algorithm_id):
-	return render(request, 'algorithm/new_version.html')
+	current_user = request.user
+	algorithm = get_object_or_404(Algorithm, id=algorithm_id)
+	current_version = algorithm.last_version()
+	new_minor_version_number = current_version.new_minor_version()
+	new_major_version_number = current_version.new_major_version()
+	if request.method == 'POST':
+		# getting the form
+		version_form = VersionForm(request.POST)
+		# checking if the form is valid
+		if version_form.is_valid():
+			description = version_form.cleaned_data['description']
+			version_number = version_form.cleaned_data['number']
+			source_code = version_form.cleaned_data['source_code']
+			# reading the version
+			version_number = new_minor_version_number if version_number == "1" else new_major_version_number
+			# creating the new version
+			new_algorithm_version = Version(
+				algorithm=algorithm,
+				description=description,
+				number=version_number,
+				source_code=source_code,
+				publishing_state='En Desarrollo',
+				created_by=current_user
+			)
+			new_algorithm_version.save()
+			return HttpResponseRedirect(reverse('algorithm:detail', kwargs={'algorithm_id': algorithm_id}))
+		else:
+			version_form.add_error(None, "Favor completar todos los campos marcados.")
+	else:
+		version_form = VersionForm()
+	context = {'version_form': version_form, 'algorithm': algorithm, 'new_major_version': new_major_version_number,
+	           'new_minor_version': new_minor_version_number}
+	return render(request, 'algorithm/new_version.html', context)
+
+
+@login_required(login_url='/accounts/login/')
+def update_version(request, algorithm_id, version_id):
+	version = get_object_or_404(Version, id=version_id)
+	if request.method == 'POST':
+		# getting the form
+		version_form = VersionUpdateForm(request.POST)
+		# checking if the form is valid
+		if version_form.is_valid():
+			print 'formulario válido!'
+			description = version_form.cleaned_data['description']
+			source_code = version_form.cleaned_data['source_code']
+			# updating with the new information
+			version.description = description
+			version.source_code = source_code
+			version.save()
+			return HttpResponseRedirect(reverse('algorithm:detail', kwargs={'algorithm_id': algorithm_id}))
+		else:
+			version_form.add_error(None, "Favor completar todos los campos marcados.")
+	else:
+		version_form = VersionUpdateForm(initial={'description': version.description,
+		                                          'source_code': version.source_code})
+	context = {'version_form': version_form, 'version': version}
+	return render(request, 'algorithm/update_version.html', context)
 
 
 @login_required(login_url='/accounts/login/')
 def version_detail(request, algorithm_id, version_id):
-	return render(request, 'algorithm/version_detail.html')
+	version = get_object_or_404(Version, id=version_id)
+	context = {'version': version}
+	return render(request, 'algorithm/version_detail.html', context)
+
+
+@login_required(login_url='/accounts/login/')
+def publish_version(request, algorithm_id, version_id):
+	version = get_object_or_404(Version, id=version_id)
+	if request.method == 'GET':
+		# TODO: What is the condition to be published?
+		version.publishing_state = 'Publicada'
+		version.save()
+	return HttpResponseRedirect(
+		reverse('algorithm:version_detail', kwargs={'algorithm_id': algorithm_id, 'version_id': version_id}))
+
+
+@login_required(login_url='/accounts/login/')
+def unpublish_version(request, algorithm_id, version_id):
+	version = get_object_or_404(Version, id=version_id)
+	if request.method == 'GET':
+		if version.publishing_state == 'Publicada':
+			version.publishing_state = 'En Desarrollo'
+			version.save()
+	return HttpResponseRedirect(
+		reverse('algorithm:version_detail', kwargs={'algorithm_id': algorithm_id, 'version_id': version_id}))
+
+
+@login_required(login_url='/accounts/login/')
+def deprecate_version(request, algorithm_id, version_id):
+	version = get_object_or_404(Version, id=version_id)
+	if request.method == 'GET':
+		if version.publishing_state == 'Publicada':
+			version.publishing_state = 'Obsoleta'
+			version.save()
+	return HttpResponseRedirect(
+		reverse('algorithm:version_detail', kwargs={'algorithm_id': algorithm_id, 'version_id': version_id}))
+
+
+@login_required(login_url='/accounts/login/')
+def delete_version(request, algorithm_id, version_id):
+	version = get_object_or_404(Version, id=version_id)
+	if request.method == 'GET':
+		# TODO: This must validate if this version was already executed.
+		# TODO: What happen if there is only one version?
+		if version.algorithm.obtain_versions().count() > 1:
+			version.delete()
+	return HttpResponseRedirect(
+		reverse('algorithm:detail', kwargs={'algorithm_id': algorithm_id}))
 
 
 @login_required(login_url='/accounts/login/')
