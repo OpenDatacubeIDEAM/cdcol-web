@@ -129,7 +129,7 @@
                                 <a href="{% url 'algorithm:unpublish_version' version.algorithm.id version.id %}" class="btn btn-primary btn-md btn-block">Despublicar Versión</a>
                             </nav>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-md btn-block">Volver Versión Obsoleta</a>
+                                <a href="{% url 'algorithm:deprecate_version' version.algorithm.id version.id %}" class="btn btn-primary btn-md btn-block">Volver Versión Obsoleta</a>
                             </nav>
                             <nav>
                                 <a href="#" class="btn btn-primary btn-md btn-block">Eliminar Versión</a>
