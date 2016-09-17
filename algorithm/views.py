@@ -176,7 +176,9 @@ def update_version(request, algorithm_id, version_id):
 
 @login_required(login_url='/accounts/login/')
 def version_detail(request, algorithm_id, version_id):
-	return render(request, 'algorithm/version_detail.html')
+	version = get_object_or_404(Version, id=version_id)
+	context = { 'version': version}
+	return render(request, 'algorithm/version_detail.html', context)
 
 
 @login_required(login_url='/accounts/login/')

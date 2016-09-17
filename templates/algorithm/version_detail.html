@@ -34,26 +34,16 @@
                     <table class="table">
                         <tbody>
                         <tr>
-                            <td>Código de la versión:</td>
-                            <td>000001</td>
-                        </tr>
-                        <tr>
                             <td>Nombre del algoritmo:</td>
-                            <td>Nombre completo del algoritmo A</td>
+                            <td>{{ version.algorithm.name }}</td>
                         </tr>
                         <tr>
                             <td>Número:</td>
-                            <td>1.3</td>
+                            <td>{{ version.number }}</td>
                         </tr>
                         <tr>
                             <td>Descripción:</td>
-                            <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tum Torquatus: Prorsus, inquit,
-                                assentior; Duo Reges: constructio interrete. Nam memini etiam quae nolo, oblivisci non
-                                possum quae volo. Ut placet, inquit, etsi enim illud erat aptius, aequum cuique
-                                concedere. Tecum optime, deinde etiam cum mediocri amico. Non potes, nisi retexueris
-                                illa. Quodsi vultum tibi, si incessum fingeres, quo gravior viderere, non esses tui
-                                similis; Nos vero, inquit ille;
-                            </td>
+                            <td>{{ version.description }}</td>
                         </tr>
                         <tr>
                             <td>Código fuente:</td>
@@ -61,15 +51,15 @@
                         </tr>
                         <tr>
                             <td>Estado:</td>
-                            <td>En Desarrollo</td>
+                            <td>{{ version.publishing_state }}</td>
                         </tr>
                         <tr>
                             <td>Fecha de Creación:</td>
-                            <td>21 de Junio 2016 10:00 AM</td>
+                            <td>{{ version.created_at }}</td>
                         </tr>
                         <tr>
                             <td>Creada por:</td>
-                            <td>usuario1@abc.com</td>
+                            <td>{{ version.created_by }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -127,19 +117,22 @@
                             <h3 class="title">Acciones</h3>
                             <div class="separator-2"></div>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-md btn-block">Ejecutar esta versión</a>
+                                <a href="#" class="btn btn-primary btn-md btn-block">Ejecutar Esta Versión</a>
                             </nav>
                             <nav>
                                 <a href="#" class="btn btn-primary btn-md btn-block">Editar Versión</a>
                             </nav>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-md btn-block">Enviar para publicación</a>
+                                <a href="#" class="btn btn-primary btn-md btn-block">Publicar Versión</a>
                             </nav>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-md btn-block">Enviar para oficialización</a>
+                                <a href="#" class="btn btn-primary btn-md btn-block">Despublicar Versión</a>
                             </nav>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-md btn-block">Ejecutar esta versión</a>
+                                <a href="#" class="btn btn-primary btn-md btn-block">Volver Versión Obsoleta</a>
+                            </nav>
+                            <nav>
+                                <a href="#" class="btn btn-primary btn-md btn-block">Eliminar Versión</a>
                             </nav>
                         </div>
                     </div>
