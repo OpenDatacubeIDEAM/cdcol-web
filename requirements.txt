@@ -2,8 +2,11 @@ dj-database-url==0.4.1
 dj-static==0.0.6
 Django==1.9.7
 django-allauth==0.25.2
+django-filter==0.15.0
 django-toolbelt==0.0.1
+djangorestframework==3.4.7
 gunicorn==19.6.0
+Markdown==2.6.7
 oauthlib==1.1.2
 psycopg2==2.6.2
 python-openid==2.2.5

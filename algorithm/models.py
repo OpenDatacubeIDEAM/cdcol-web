@@ -13,6 +13,9 @@ class Topic(models.Model):
 	def __unicode__(self):
 		return "{} - {}".format(self.id, self.name)
 
+	def natural_key(self):
+		return self.name
+
 
 class Algorithm(models.Model):
 	name = models.CharField(max_length=200)

@@ -6,6 +6,7 @@ app_name = 'algorithm'
 urlpatterns = [
 	# ex: /algorithm/
 	url(r'^$', views.index, name='index'),
+	url(r'^json_algorithms/$', views.algorithms_as_json, name='json_algorithms'),
 	# ex: /algorithm/new
 	url(r'^new/$', views.new, name='new'),
 	# ex: /algorithm/detail/11

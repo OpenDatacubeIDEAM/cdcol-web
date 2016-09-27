@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
+from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from algorithm.models import Algorithm, Topic, AlgorithmStorageUnit, Version
 from storage.models import StorageUnit
@@ -14,6 +15,13 @@ def index(request):
 	algorithms = Algorithm.objects.filter(created_by=current_user)
 	context = {'algorithms': algorithms}
 	return render(request, 'algorithm/index.html', context)
+
+
+def algorithms_as_json(request):
+	current_user = request.user
+	object_list = Algorithm.objects.filter(created_by=current_user)
+	json = serializers.serialize('json', object_list, use_natural_foreign_keys=True)
+	return HttpResponse(json, content_type='application/json')
 
 
 @login_required(login_url='/accounts/login/')

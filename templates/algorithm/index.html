@@ -1,4 +1,10 @@
 {% extends 'base.html' %}
+{% load table_tags %}
+
+
+{% block extra_head %}
+    <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+{% endblock %}
 
 {% block content %}
     <!-- breadcrumb start -->
@@ -70,10 +76,48 @@
                     </div>
                 </div>
                 <!-- main end -->
+                <div class="row">
+                    <table id="example" class="display" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Versiones</th>
+                            <th>Estado</th>
+                            <th>Fecha de creación</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
 
 
             </div>
         </div>
     </section>
     <!-- main-container end -->
+{% endblock %}
+
+{% block extra_body %}
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" language="javascript" class="init">
+        $(document).ready(function () {
+            $('#example').dataTable({
+                "processing": true,
+                "ajax": {
+                    "processing": true,
+                    "url": "{% url 'algorithm:json_algorithms' %}",
+                    "dataSrc": ""
+                },
+
+                "columns": [
+                    {"data": "pk"},
+                    {"data": "fields.name"},
+                    {"data": "fields.topic"},
+                ]
+            });
+        });
+    </script>
 {% endblock %}
