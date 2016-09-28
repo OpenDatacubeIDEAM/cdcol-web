@@ -270,4 +270,6 @@ def new_parameter(request, algorithm_id, version_id):
 
 @login_required(login_url='/accounts/login/')
 def view_parameter(request, algorithm_id, version_id, parameter_id):
-	return render(request, 'algorithm/view_parameter.html')
+	parameter = get_object_or_404(Parameter, id=parameter_id)
+	context = {'parameter': parameter}
+	return render(request, 'algorithm/parameter_detail.html', context)
