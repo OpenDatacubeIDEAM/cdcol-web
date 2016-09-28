@@ -35,65 +35,59 @@
                         <tbody>
                         <tr>
                             <td>Código del parámetro:</td>
-                            <td>000001</td>
+                            <td>{{ parameter.id }}</td>
                         </tr>
                         <tr>
                             <td>Algoritmo:</td>
-                            <td>Nombre completo del algoritmo A</td>
+                            <td>{{ parameter.name }}</td>
                         </tr>
                         <tr>
                             <td>Versión del algoritmo:</td>
-                            <td>1.3</td>
+                            <td>{{ parameter.version.number }}</td>
                         </tr>
                         <tr>
                             <td>Nombre del parámetro:</td>
-                            <td>Nombre del parámetro</td>
+                            <td>{{ parameter.name }}</td>
                         </tr>
                         <tr>
                             <td>Tipo:</td>
-                            <td>String</td>
+                            <td>{{ parameter.get_parameter_type_display }}</td>
                         </tr>
                         <tr>
                             <td>Descripción:</td>
-                            <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tum Torquatus: Prorsus, inquit,
-                                assentior; Duo Reges: constructio interrete. Nam memini etiam quae nolo, oblivisci non
-                                possum quae volo. Ut placet, inquit, etsi enim illud erat aptius, aequum cuique
-                                concedere. Tecum optime, deinde etiam cum mediocri amico. Non potes, nisi retexueris
-                                illa. Quodsi vultum tibi, si incessum fingeres, quo gravior viderere, non esses tui
-                                similis; Nos vero, inquit ille;
-                            </td>
+                            <td>{{ parameter.description }}</td>
                         </tr>
                         <tr>
                             <td>Texto de ayuda:</td>
-                            <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tum Torquatus: Prorsus, inquit, assentior.</td>
+                            <td>{{ parameter.help_text }}</td>
                         </tr>
                         <tr>
                             <td>Posición:</td>
-                            <td>1</td>
+                            <td>{{ parameter.position }}</td>
                         </tr>
                         <tr>
                             <td>Obligatorio:</td>
-                            <td>Si</td>
+                            <td>{{ parameter.required }}</td>
                         </tr>
                         <tr>
                             <td>Habilitado:</td>
-                            <td>Si</td>
+                            <td>{{ parameter.enabled }}</td>
                         </tr>
                         <tr>
                             <td>Valor por defecto:</td>
-                            <td>Valor X</td>
+                            <td>{{ parameter.default_value }}</td>
                         </tr>
                         <tr>
                             <td>Nombre en la función:</td>
-                            <td>param_a</td>
+                            <td>{{ parameter.function_name }}</td>
                         </tr>
                         <tr>
                             <td>Fecha de Creación:</td>
-                            <td>21 de Junio 2016 10:00 AM</td>
+                            <td>{{ parameter.created_at }}</td>
                         </tr>
                         <tr>
                             <td>Fecha de Modificación:</td>
-                            <td>21 de Junio 2016 10:00 AM</td>
+                            <td>{{ parameter.updated_at }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -109,7 +103,7 @@
                             <h3 class="title">Acciones</h3>
                             <div class="separator-2"></div>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-md btn-block">Editar parámetro</a>
+                                <a href="{% url 'algorithm:update_parameter' parameter.version.algorithm.id parameter.version.id parameter.id %}" class="btn btn-primary btn-md btn-block">Editar parámetro</a>
                             </nav>
                         </div>
                     </div>

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.contrib.auth.models import User
 from django.db import models
@@ -67,3 +68,44 @@ class Version(models.Model):
 		current_major_version = int(current_version.split('.')[0])
 		return "{}.{}".format(current_major_version + 1, 0)
 
+
+class Parameter(models.Model):
+	STRING_TYPE = '1'
+	INTEGER_TYPE = '2'
+	DECIMAL_TYPE = '3'
+	BOOLEAN_TYPE = '4'
+	DATE_TYPE = '5'
+	DATETIME_TYPE = '6'
+	AREA_TYPE = '7'
+	STORAGE_UNIT_TYPE = '8'
+	TIME_PERIOD_TYPE = '9'
+	ONLY_CHOICE_LIST_TYPE = '10'
+	MULTIPLE_CHOICE_LIST_TYPE = '11'
+	FILE_TYPE = '12'
+	# full parameter type list
+	PARAMETER_TYPES = (
+		(STRING_TYPE, "STRING"),
+		(INTEGER_TYPE, "INTEGER"),
+		(DECIMAL_TYPE, "DECIMAL"),
+		(BOOLEAN_TYPE, "BOOLEAN"),
+		(DATE_TYPE, "FECHA"),
+		(DATETIME_TYPE, "FECHA Y HORA"),
+		(AREA_TYPE, "AREA"),
+		(STORAGE_UNIT_TYPE, "UNIDAD ALMACENAMIENTO"),
+		(TIME_PERIOD_TYPE, "PERIODO DE TIEMPO"),
+		(ONLY_CHOICE_LIST_TYPE, "LISTA DE SELECCIÓN ÚNICA"),
+		(MULTIPLE_CHOICE_LIST_TYPE, "LISTA DE SELECCIÓN MÚLTIPLE"),
+		(FILE_TYPE, "FILE"),
+	)
+	version = models.ForeignKey(Version, on_delete=models.CASCADE)
+	name = models.CharField(max_length=200)
+	parameter_type = models.CharField(max_length=2, choices=PARAMETER_TYPES)
+	description = models.TextField()
+	help_text = models.TextField()
+	position = models.IntegerField(default=0)
+	required = models.BooleanField(default=False)
+	enabled = models.BooleanField(default=False)
+	default_value = models.CharField(max_length=200, default="")
+	function_name = models.CharField(max_length=200, default="")
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)

@@ -3,9 +3,9 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from algorithm.models import Algorithm, Topic, AlgorithmStorageUnit, Version
+from algorithm.models import Algorithm, Topic, AlgorithmStorageUnit, Version, Parameter
 from storage.models import StorageUnit
-from algorithm.forms import AlgorithmForm, AlgorithmUpdateForm, VersionForm, VersionUpdateForm
+from algorithm.forms import AlgorithmForm, AlgorithmUpdateForm, VersionForm, VersionUpdateForm, NewParameterForm
 
 
 @login_required(login_url='/accounts/login/')
@@ -157,7 +157,6 @@ def update_version(request, algorithm_id, version_id):
 		version_form = VersionUpdateForm(request.POST)
 		# checking if the form is valid
 		if version_form.is_valid():
-			print 'formulario válido!'
 			description = version_form.cleaned_data['description']
 			source_code = version_form.cleaned_data['source_code']
 			# updating with the new information
@@ -177,7 +176,8 @@ def update_version(request, algorithm_id, version_id):
 @login_required(login_url='/accounts/login/')
 def version_detail(request, algorithm_id, version_id):
 	version = get_object_or_404(Version, id=version_id)
-	context = {'version': version}
+	parameters = Parameter.objects.filter(version=version_id).order_by('position')
+	context = {'version': version, 'parameters': parameters}
 	return render(request, 'algorithm/version_detail.html', context)
 
 
@@ -228,9 +228,92 @@ def delete_version(request, algorithm_id, version_id):
 
 @login_required(login_url='/accounts/login/')
 def new_parameter(request, algorithm_id, version_id):
-	return render(request, 'algorithm/new_parameter.html')
+	version = get_object_or_404(Version, id=version_id)
+	if request.method == 'POST':
+		# getting the form
+		new_parameter_form = NewParameterForm(request.POST)
+		# checking if the form is valid
+		if new_parameter_form.is_valid():
+			name = new_parameter_form.cleaned_data['name']
+			parameter_type = new_parameter_form.cleaned_data['parameter_type']
+			description = new_parameter_form.cleaned_data['description']
+			help_text = new_parameter_form.cleaned_data['help_text']
+			position = new_parameter_form.cleaned_data['position']
+			required = new_parameter_form.cleaned_data['required']
+			enabled = new_parameter_form.cleaned_data['enabled']
+			default_value = new_parameter_form.cleaned_data['default_value']
+			function_name = new_parameter_form.cleaned_data['function_name']
+			# creating the parameter
+			new_version_parameter = Parameter(
+				version=version,
+				name=name,
+				parameter_type=parameter_type,
+				description=description,
+				help_text=help_text,
+				position=position,
+				required=required,
+				enabled=enabled,
+				default_value=default_value,
+				function_name=function_name,
+			)
+			new_version_parameter.save()
+			return HttpResponseRedirect(
+				reverse('algorithm:version_detail', kwargs={'algorithm_id': algorithm_id, 'version_id': version_id}))
+		else:
+			new_parameter_form.add_error(None, "Favor completar todos los campos marcados.")
+	else:
+		new_parameter_form = NewParameterForm()
+	context = {'new_parameter_form': new_parameter_form, 'version': version}
+	return render(request, 'algorithm/new_parameter.html', context)
 
 
 @login_required(login_url='/accounts/login/')
 def view_parameter(request, algorithm_id, version_id, parameter_id):
-	return render(request, 'algorithm/view_parameter.html')
+	parameter = get_object_or_404(Parameter, id=parameter_id)
+	context = {'parameter': parameter}
+	return render(request, 'algorithm/parameter_detail.html', context)
+
+
+@login_required(login_url='/accounts/login/')
+def update_parameter(request, algorithm_id, version_id, parameter_id):
+	parameter = get_object_or_404(Parameter, id=parameter_id)
+	if request.method == 'POST':
+		# getting the form
+		parameter_form = NewParameterForm(request.POST)
+		# checking if the form is valid
+		if parameter_form.is_valid():
+			name = parameter_form.cleaned_data['name']
+			parameter_type = parameter_form.cleaned_data['parameter_type']
+			description = parameter_form.cleaned_data['description']
+			help_text = parameter_form.cleaned_data['help_text']
+			position = parameter_form.cleaned_data['position']
+			required = parameter_form.cleaned_data['required']
+			enabled = parameter_form.cleaned_data['enabled']
+			default_value = parameter_form.cleaned_data['default_value']
+			function_name = parameter_form.cleaned_data['function_name']
+			# updating the model
+			parameter.name = name
+			parameter.parameter_type = parameter_type
+			parameter.description = description
+			parameter.help_text = help_text
+			parameter.position = position
+			parameter.required = required
+			parameter.enabled = enabled
+			parameter.default_value = default_value
+			parameter.function_name = function_name
+			parameter.save()
+			return HttpResponseRedirect(reverse('algorithm:version_detail', kwargs={'algorithm_id': algorithm_id, 'version_id': version_id}))
+		else:
+			parameter_form.add_error(None, "Favor completar todos los campos marcados.")
+	else:
+		parameter_form = NewParameterForm(initial={'name': parameter.name,
+		                                           'parameter_type': parameter.parameter_type,
+		                                           'description': parameter.description,
+		                                           'help_text': parameter.help_text,
+		                                           'position': parameter.position,
+		                                           'required': parameter.required,
+		                                           'enabled': parameter.enabled,
+		                                           'default_value': parameter.default_value,
+		                                           'function_name': parameter.function_name})
+	context = {'parameter_form': parameter_form, 'parameter': parameter}
+	return render(request, 'algorithm/update_parameter.html', context)
