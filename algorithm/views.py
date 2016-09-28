@@ -157,7 +157,6 @@ def update_version(request, algorithm_id, version_id):
 		version_form = VersionUpdateForm(request.POST)
 		# checking if the form is valid
 		if version_form.is_valid():
-			print 'formulario válido!'
 			description = version_form.cleaned_data['description']
 			source_code = version_form.cleaned_data['source_code']
 			# updating with the new information
@@ -273,3 +272,48 @@ def view_parameter(request, algorithm_id, version_id, parameter_id):
 	parameter = get_object_or_404(Parameter, id=parameter_id)
 	context = {'parameter': parameter}
 	return render(request, 'algorithm/parameter_detail.html', context)
+
+
+@login_required(login_url='/accounts/login/')
+def update_parameter(request, algorithm_id, version_id, parameter_id):
+	parameter = get_object_or_404(Parameter, id=parameter_id)
+	if request.method == 'POST':
+		# getting the form
+		parameter_form = NewParameterForm(request.POST)
+		# checking if the form is valid
+		if parameter_form.is_valid():
+			name = parameter_form.cleaned_data['name']
+			parameter_type = parameter_form.cleaned_data['parameter_type']
+			description = parameter_form.cleaned_data['description']
+			help_text = parameter_form.cleaned_data['help_text']
+			position = parameter_form.cleaned_data['position']
+			required = parameter_form.cleaned_data['required']
+			enabled = parameter_form.cleaned_data['enabled']
+			default_value = parameter_form.cleaned_data['default_value']
+			function_name = parameter_form.cleaned_data['function_name']
+			# updating the model
+			parameter.name = name
+			parameter.parameter_type = parameter_type
+			parameter.description = description
+			parameter.help_text = help_text
+			parameter.position = position
+			parameter.required = required
+			parameter.enabled = enabled
+			parameter.default_value = default_value
+			parameter.function_name = function_name
+			parameter.save()
+			return HttpResponseRedirect(reverse('algorithm:version_detail', kwargs={'algorithm_id': algorithm_id, 'version_id': version_id}))
+		else:
+			parameter_form.add_error(None, "Favor completar todos los campos marcados.")
+	else:
+		parameter_form = NewParameterForm(initial={'name': parameter.name,
+		                                           'parameter_type': parameter.parameter_type,
+		                                           'description': parameter.description,
+		                                           'help_text': parameter.help_text,
+		                                           'position': parameter.position,
+		                                           'required': parameter.required,
+		                                           'enabled': parameter.enabled,
+		                                           'default_value': parameter.default_value,
+		                                           'function_name': parameter.function_name})
+	context = {'parameter_form': parameter_form, 'parameter': parameter}
+	return render(request, 'algorithm/update_parameter.html', context)

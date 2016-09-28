@@ -103,7 +103,7 @@
                             <h3 class="title">Acciones</h3>
                             <div class="separator-2"></div>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-md btn-block">Editar parámetro</a>
+                                <a href="{% url 'algorithm:update_parameter' parameter.version.algorithm.id parameter.version.id parameter.id %}" class="btn btn-primary btn-md btn-block">Editar parámetro</a>
                             </nav>
                         </div>
                     </div>

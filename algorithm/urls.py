@@ -33,4 +33,6 @@ urlpatterns = [
 	# ex: /algorithm/11/version/12/param/12
 	url(r'^(?P<algorithm_id>[0-9]+)/version/(?P<version_id>[0-9]+)/parameter/(?P<parameter_id>[0-9]+)$', views.view_parameter,
 	    name='view_parameter'),
+	# ex: /algorithm/11/version/12/param/13/update
+	url(r'^(?P<algorithm_id>[0-9]+)/version/(?P<version_id>[0-9]+)/parameter/(?P<parameter_id>[0-9]+)/update/$', views.update_parameter, name='update_parameter'),
 ]

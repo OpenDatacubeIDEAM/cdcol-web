@@ -92,7 +92,7 @@
                                         <td>{{ param.required }}</td>
                                         <td>{{ param.enabled }}</td>
                                         <td><a href="{% url 'algorithm:view_parameter' param.version.algorithm.id param.version.id param.id %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a>
-                                            <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a></td>
+                                            <a href="{% url 'algorithm:update_parameter' param.version.algorithm.id param.version.id param.id %}" class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a></td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -113,7 +113,7 @@
                                 <a href="#" class="btn btn-primary btn-md btn-block">Ejecutar Esta Versión</a>
                             </nav>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-md btn-block">Editar Versión</a>
+                                <a href="{% url 'algorithm:update_version' version.algorithm.id version.id %}" class="btn btn-primary btn-md btn-block">Editar Versión</a>
                             </nav>
                             <nav>
                                 <a href="{% url 'algorithm:publish_version' version.algorithm.id version.id %}" class="btn btn-primary btn-md btn-block">Publicar Versión</a>
