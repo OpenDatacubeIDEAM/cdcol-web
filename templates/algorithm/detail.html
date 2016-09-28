@@ -60,32 +60,32 @@
                         </tbody>
                     </table>
 
-                    <h3 class="page-title">Posibles Unidades de Almacenamiento Origen</h3>
-                    <div class="separator-2"></div>
-                    <p>A continuación se encuentran las posibles unidades de almacenamiento origen definidas para este
-                        algoritmo:</p>
-                    <div class="table-responsive">
-                        <table class="table table-striped table-colored">
-                            <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Nombre</th>
-                                <th>Acciones</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for storage_unit in storage_units %}
-                                <tr>
-                                    <td>{{ storage_unit.id }}</td>
-                                    <td>{{ storage_unit.storage_unit.name }}</td>
-                                    <td><a target="_blank" href="{% url 'storage:detail' storage_unit.id %}"
-                                           class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver
-                                        Detalle</a></td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+{#                    <h3 class="page-title">Posibles Unidades de Almacenamiento Origen</h3>#}
+{#                    <div class="separator-2"></div>#}
+{#                    <p>A continuación se encuentran las posibles unidades de almacenamiento origen definidas para este#}
+{#                        algoritmo:</p>#}
+{#                    <div class="table-responsive">#}
+{#                        <table class="table table-striped table-colored">#}
+{#                            <thead>#}
+{#                            <tr>#}
+{#                                <th>Código</th>#}
+{#                                <th>Nombre</th>#}
+{#                                <th>Acciones</th>#}
+{#                            </tr>#}
+{#                            </thead>#}
+{#                            <tbody>#}
+{#                            {% for storage_unit in storage_units %}#}
+{#                                <tr>#}
+{#                                    <td>{{ storage_unit.id }}</td>#}
+{#                                    <td>{{ storage_unit.storage_unit.name }}</td>#}
+{#                                    <td><a target="_blank" href="{% url 'storage:detail' storage_unit.id %}"#}
+{#                                           class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver#}
+{#                                        Detalle</a></td>#}
+{#                                </tr>#}
+{#                            {% endfor %}#}
+{#                            </tbody>#}
+{#                        </table>#}
+{#                    </div>#}
 
                     <h3 class="page-title">Versiones del algoritmo</h3>
                     <div class="separator-2"></div>

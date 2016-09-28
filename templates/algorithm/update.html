@@ -113,32 +113,6 @@
                                 </div>
                                 <!-- /Descripción Algoritmo -->
 
-                                <!-- Unidad Almacenamiento de entrada -->
-                                <div class="form-group">
-                                    <!-- Errors -->
-                                    {% if algorithm_form.source_storage_units.errors %}
-                                        {% for error in algorithm_form.source_storage_units.errors %}
-                                            <div class="alert alert-danger">
-                                                <strong>{{ error|escape }}</strong>
-                                            </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                    <!-- /Errors -->
-                                    <label for=""><b>Posibles unidades de almacenamiento origen *</b></label>
-                                    <select name="{{ algorithm_form.source_storage_units.html_name }}"
-                                            id="{{ algorithm_form.source_storage_units.id_for_label }}"
-                                            multiple="" class="form-control">
-                                        {% for storage_unit in source_storage_units %}
-                                            {% if storage_unit in selected_storage_units %}
-                                                <option selected value="{{ storage_unit.id }}">{{ storage_unit.name }}</option>
-                                            {% else %}
-                                                <option value="{{ storage_unit.id }}">{{ storage_unit.name }}</option>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <!-- /Unidad Almacenamiento de entrada -->
-
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-default">Actualizar Algoritmo</button>
                                 </div>
