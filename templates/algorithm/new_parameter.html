@@ -41,13 +41,13 @@
                     <div class="section light-gray-bg">
                         <div class="container">
                             <form role="form" class="form-horizontal col-md-6 col-md-offset-3" method="POST"
-                                  action="{% url 'algorithm:new' %}"
+                                  action="{% url 'algorithm:new_parameter' version.algorithm.id version.id %}"
                                   enctype="multipart/form-data">
                                 {% csrf_token %}
 
                                 <!-- Errors -->
-                                {% if form.errors %}
-                                    {% for error in form.non_field_errors %}
+                                {% if new_parameter_form.errors %}
+                                    {% for error in new_parameter_form.non_field_errors %}
                                         <div class="alert alert-danger">
                                             <strong>{{ error|escape }}</strong>
                                         </div>
@@ -57,34 +57,16 @@
 
                                 <!-- Algoritmo -->
                                 <div class="form-group">
-                                    <!-- Errors -->
-                                    {% if form.name.errors %}
-                                        {% for error in form.name.errors %}
-                                            <div class="alert alert-danger">
-                                                <strong>{{ error|escape }}</strong>
-                                            </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                    <!-- /Errors -->
                                     <label for=""><b>Algoritmo*</b></label>
-                                    <input class="form-control" placeholder="Nombre del Algoritmo" disabled=""
+                                    <input class="form-control" placeholder="{{ version.algorithm.name }}" disabled=""
                                            type="text">
                                 </div>
                                 <!-- /Algoritmo -->
 
                                 <!-- Número de la versión -->
                                 <div class="form-group">
-                                    <!-- Errors -->
-                                    {% if form.name.errors %}
-                                        {% for error in form.name.errors %}
-                                            <div class="alert alert-danger">
-                                                <strong>{{ error|escape }}</strong>
-                                            </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                    <!-- /Errors -->
                                     <label for=""><b>Versión*</b></label>
-                                    <input class="form-control" placeholder="1.3" disabled=""
+                                    <input class="form-control" placeholder="{{ version.number }}" disabled=""
                                            type="text">
                                 </div>
                                 <!-- /Número de la versión -->
@@ -92,8 +74,8 @@
                                 <!-- Nombre del parámetro -->
                                 <div class="form-group">
                                     <!-- Errors -->
-                                    {% if form.name.errors %}
-                                        {% for error in form.name.errors %}
+                                    {% if new_parameter_form.name.errors %}
+                                        {% for error in new_parameter_form.name.errors %}
                                             <div class="alert alert-danger">
                                                 <strong>{{ error|escape }}</strong>
                                             </div>
@@ -101,7 +83,11 @@
                                     {% endif %}
                                     <!-- /Errors -->
                                     <label for=""><b>Nombre del parámetro*</b></label>
-                                    <input class="form-control" placeholder="Escriba el nombre del parámetro"
+                                    <input name="{{ new_parameter_form.name.html_name }}"
+                                           id="{{ new_parameter_form.name.id_for_label }}"
+                                           class="form-control" placeholder="Escriba el nombre del parámetro"
+                                           {% if new_parameter_form.name.value %}
+                                           value="{{ new_parameter_form.name.value }}"{% endif %}
                                            type="text">
                                 </div>
                                 <!-- /Nombre del parámetro -->
@@ -109,8 +95,8 @@
                                 <!-- Tipo de parámetro -->
                                 <div class="form-group">
                                     <!-- Errors -->
-                                    {% if form.name.errors %}
-                                        {% for error in form.name.errors %}
+                                    {% if new_parameter_form.parameter_type.errors %}
+                                        {% for error in new_parameter_form.parameter_type.errors %}
                                             <div class="alert alert-danger">
                                                 <strong>{{ error|escape }}</strong>
                                             </div>
@@ -118,28 +104,15 @@
                                     {% endif %}
                                     <!-- /Errors -->
                                     <label for=""><b>Tipo de parámetro*</b></label>
-                                    <select class="form-control">
-                                        <option>STRING</option>
-                                        <option>INTEGER</option>
-                                        <option>DECIMAL</option>
-                                        <option>BOOLEAN</option>
-                                        <option>FECHA</option>
-                                        <option>FECHA Y HORA</option>
-                                        <option>AREA</option>
-                                        <option>UNIDAD ALMACENAMIENTO</option>
-                                        <option>PERIODO DE TIEMPO</option>
-                                        <option>LISTA DE SELECCIÓN ÚNICA</option>
-                                        <option>LISTA DE SELECCIÓN MÚLTIPLE</option>
-                                        <option>FILE</option>
-                                    </select>
+                                    {{ new_parameter_form.parameter_type }}
                                 </div>
                                 <!-- /Tipo de parámetro -->
 
                                 <!-- Descripción del parámetro -->
                                 <div class="form-group">
                                     <!-- Errors -->
-                                    {% if form.description.errors %}
-                                        {% for error in form.description.errors %}
+                                    {% if new_parameter_form.description.errors %}
+                                        {% for error in new_parameter_form.description.errors %}
                                             <div class="alert alert-danger">
                                                 <strong>{{ error|escape }}</strong>
                                             </div>
@@ -147,16 +120,15 @@
                                     {% endif %}
                                     <!-- /Errors -->
                                     <label for=""><b>Descripción del parámetro*</b></label>
-                            <textarea class="form-control" rows="3"
-                                      placeholder="Ingresa una descripción del significado de este parámetro en la ejecución del algortimo."></textarea>
+                                    {{ new_parameter_form.description }}
                                 </div>
                                 <!-- /Descripción del parámetro -->
 
                                 <!-- Texto de ayuda parámetro -->
                                 <div class="form-group">
                                     <!-- Errors -->
-                                    {% if form.description.errors %}
-                                        {% for error in form.description.errors %}
+                                    {% if new_parameter_form.help_text.errors %}
+                                        {% for error in new_parameter_form.help_text.errors %}
                                             <div class="alert alert-danger">
                                                 <strong>{{ error|escape }}</strong>
                                             </div>
@@ -164,16 +136,15 @@
                                     {% endif %}
                                     <!-- /Errors -->
                                     <label for=""><b>Texto de ayuda del parámetro (opcional)</b></label>
-                            <textarea class="form-control" rows="3"
-                                      placeholder="Ingresa un texto con las ayudas y consideraciones que deben tener en cuenta por los usuarios al ingresar este parámetro."></textarea>
+                                    {{ new_parameter_form.help_text }}
                                 </div>
                                 <!-- /Texto de ayuda parámetro -->
 
                                 <!-- Posición -->
                                 <div class="form-group">
                                     <!-- Errors -->
-                                    {% if form.name.errors %}
-                                        {% for error in form.name.errors %}
+                                    {% if new_parameter_form.position.errors %}
+                                        {% for error in new_parameter_form.position.errors %}
                                             <div class="alert alert-danger">
                                                 <strong>{{ error|escape }}</strong>
                                             </div>
@@ -181,8 +152,12 @@
                                     {% endif %}
                                     <!-- /Errors -->
                                     <label for=""><b>Posición*</b></label>
-                                    <input class="form-control"
+                                    <input name="{{ new_parameter_form.position.html_name }}"
+                                           id="{{ new_parameter_form.position.id_for_label }}"
+                                           class="form-control"
                                            placeholder="Indica el orden en el que aparecerá el parámetro al momento de ejecutarse el algoritmo."
+                                           {% if new_parameter_form.position.value %}
+                                           value="{{ new_parameter_form.position.value }}"{% endif %}
                                            type="number">
                                 </div>
                                 <!-- /Posición -->
@@ -191,7 +166,7 @@
                                 <div class="form-group">
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox"><b>Este parámetro es obligatorio</b>
+                                            {{ new_parameter_form.required }}<b>Este parámetro es obligatorio</b>
                                         </label>
                                         <p class="help-block">Si el parámetro es opcional desmarcar esta casilla.</p>
                                     </div>
@@ -203,7 +178,7 @@
                                 <div class="form-group">
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox"><b>Este parámetro está habilitado</b>
+                                            {{ new_parameter_form.enabled}}<b>Este parámetro está habilitado</b>
                                         </label>
                                         <p class="help-block">Para deshabilitar este parámetro, desmarcar esta
                                             casilla.</p>
@@ -214,18 +189,13 @@
 
                                 <!-- Valor por defecto -->
                                 <div class="form-group">
-                                    <!-- Errors -->
-                                    {% if form.name.errors %}
-                                        {% for error in form.name.errors %}
-                                            <div class="alert alert-danger">
-                                                <strong>{{ error|escape }}</strong>
-                                            </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                    <!-- /Errors -->
                                     <label for=""><b>Valor por defecto (opcional)</b></label>
-                                    <input class="form-control"
+                                    <input name="{{ new_parameter_form.default_value.html_name }}"
+                                           id="{{ new_parameter_form.default_value.id_for_label }}"
+                                           class="form-control"
                                            placeholder="Escriba el valor por defecto si lo require."
+                                           {% if new_parameter_form.default_value.value %}
+                                           value="{{ new_parameter_form.default_value.value }}"{% endif %}
                                            type="text">
                                 </div>
                                 <!-- /Valor por defecto -->
@@ -233,8 +203,8 @@
                                 <!-- Nombre por defecto de función -->
                                 <div class="form-group">
                                     <!-- Errors -->
-                                    {% if form.name.errors %}
-                                        {% for error in form.name.errors %}
+                                    {% if new_parameter_form.function_name.errors %}
+                                        {% for error in new_parameter_form.function_name.errors %}
                                             <div class="alert alert-danger">
                                                 <strong>{{ error|escape }}</strong>
                                             </div>
@@ -242,8 +212,12 @@
                                     {% endif %}
                                     <!-- /Errors -->
                                     <label for=""><b>Nombre por defecto en la función*</b></label>
-                                    <input class="form-control"
+                                    <input name="{{ new_parameter_form.function_name.html_name }}"
+                                           id="{{ new_parameter_form.function_name.id_for_label }}"
+                                           class="form-control"
                                            placeholder="Ingresa el nombre del parámetro en la función en Python."
+                                           {% if new_parameter_form.function_name.value %}
+                                           value="{{ new_parameter_form.function_name.value }}"{% endif %}
                                            type="text">
                                 </div>
                                 <!-- /Nombre por defecto de función -->

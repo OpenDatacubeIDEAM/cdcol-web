@@ -67,7 +67,7 @@
                     <h3 class="page-title">Parámetros de la versión</h3>
                     <div class="separator-2"></div>
                     <div class="pull-right">
-                        <a href="#"><a href="{% url 'algorithm:new_parameter' 1 2 %}" class="btn btn-default btn-md"><i class="fa fa-plus-circle"></i>  Nuevo Parámetro</a></a>
+                        <a href="#"><a href="{% url 'algorithm:new_parameter' version.algorithm.id version.id %}" class="btn btn-default btn-md"><i class="fa fa-plus-circle"></i>  Nuevo Parámetro</a></a>
                     </div>
                     <p>A continuación se encuentran los parámetros de esta versión::</p>
                     <br/>
@@ -84,24 +84,17 @@
                             </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Parámetro A</td>
-                                    <td>Integer</td>
-                                    <td>1</td>
-                                    <td>Si</td>
-                                    <td>Si</td>
-                                    <td><a href="{% url 'algorithm:view_parameter' 1 2 3 %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a>
-                                        <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a></td>
-                                </tr>
-                                <tr>
-                                    <td>Parámetro B</td>
-                                    <td>String</td>
-                                    <td>2</td>
-                                    <td>Si</td>
-                                    <td>Si</td>
-                                    <td><a href="{% url 'algorithm:view_parameter' 1 2 3 %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a>
-                                        <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a></td>
-                                </tr>
+                                {% for param in parameters %}
+                                    <tr>
+                                        <td>{{ param.name }}</td>
+                                        <td>{{ param.get_parameter_type_display }}</td>
+                                        <td>{{ param.position }}</td>
+                                        <td>{{ param.required }}</td>
+                                        <td>{{ param.enabled }}</td>
+                                        <td><a href="{% url 'algorithm:view_parameter' param.version.algorithm.id param.version.id param.id %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a>
+                                            <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a></td>
+                                    </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
