@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load execution_extras %}
 
 {% block extra_head %}
 
@@ -255,33 +256,16 @@
                             <div class="separator-2"></div>
                             <nav>
                                 <ul class="nav nav-pills">
-                                    <li>
-                                        <a href="#">MOSAICOS</a>
-                                        <ul>
-                                            <li><a href="#">Compuesto de medianas</a></li>
-                                            <li><a href="#">Mejor pixel</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">ÍNDICES TEMÁTICOS</a>
-                                        <ul>
-                                            <li><a href="#">NVDI</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">CLASIFICACIONES</a>
-                                        <ul>
-                                            <li><a href="#">Coberturas de la tierra</a></li>
-                                            <li><a href="#">Espejos de agua</a</li>
-                                            <li><a href="#">Bosque/no bosque</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">OTROS ANÁLISIS</a>
-                                        <ul>
-                                            <li><a href="#">Detección de cambio/PCA</a></li>
-                                        </ul>
-                                    </li>
+                                    {% for topic in topics %}
+                                        <li>
+                                            <a href="#">{{ topic.name }}</a>
+                                            <ul>
+                                                {% for algorithm in topic|get_algorithms %}
+                                                    <li><a href="#">{{ algorithm.name }}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% endfor %}
                                 </ul>
                             </nav>
                         </div>
