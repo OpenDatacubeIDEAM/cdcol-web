@@ -1,6 +1,7 @@
-from django.shortcuts import render
+# -*- coding: utf-8 -*-
+from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
-from algorithm.models import Topic
+from algorithm.models import Topic, Algorithm, Version
 
 
 @login_required(login_url='/accounts/login/')
@@ -15,8 +16,10 @@ def detail(request, execution_id):
 
 
 @login_required(login_url='/accounts/login/')
-def new(request):
+def new(request, algorithm_id):
 	current_user = request.user
+	algorithm = get_object_or_404(Algorithm, id=algorithm_id)
+	versions = Version.objects.filter(algorithm=algorithm)
 	topics = Topic.objects.all()
-	context = {'topics': topics}
+	context = {'topics': topics, 'algorithm': algorithm, 'versions': versions}
 	return render(request, 'execution/new.html', context)
