@@ -83,7 +83,7 @@
                             {% for version in versions %}
                                 <tr>
                                     <td>{{ version.number }}</td>
-                                    <td>0</td>
+                                    <td>{{ version.count_parameters }}</td>
                                     <td>{{ version.publishing_state }}</td>
                                     <td>{{ version.created_at }}</td>
                                     <td><a href="{% url 'algorithm:version_detail' algorithm_id=version.algorithm.id version_id=version.id %}"

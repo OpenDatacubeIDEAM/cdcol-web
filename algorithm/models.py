@@ -58,6 +58,9 @@ class Version(models.Model):
 		current_major_version = int(current_version.split('.')[0])
 		return "{}.{}".format(current_major_version + 1, 0)
 
+	def count_parameters(self):
+		return Parameter.objects.filter(version=self.id).count()
+
 
 class VersionStorageUnit(models.Model):
 	version = models.ForeignKey(Version, on_delete=models.CASCADE, related_name='source_version')
