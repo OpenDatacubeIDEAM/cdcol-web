@@ -16,10 +16,17 @@ def detail(request, execution_id):
 
 
 @login_required(login_url='/accounts/login/')
-def new(request, algorithm_id):
+def new_blank_execution(request):
+	topics = Topic.objects.all()
+	context = {'topics': topics}
+	return render(request, 'execution/new_blank_execution.html', context)
+
+
+@login_required(login_url='/accounts/login/')
+def new_execution(request, algorithm_id):
 	current_user = request.user
 	algorithm = get_object_or_404(Algorithm, id=algorithm_id)
-	versions = Version.objects.filter(algorithm=algorithm)
+	versions = Version.objects.filter(algorithm=algorithm).order_by('-number')
 	topics = Topic.objects.all()
 	context = {'topics': topics, 'algorithm': algorithm, 'versions': versions}
 	return render(request, 'execution/new.html', context)
