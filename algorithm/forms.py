@@ -48,3 +48,5 @@ class NewParameterForm(forms.Form):
 	enabled = forms.BooleanField(required=False)
 	default_value = forms.CharField(max_length=200, required=False)
 	function_name = forms.CharField(max_length=200, required=True)
+
+## TODO: Check this out https://spapas.github.io/2013/12/24/django-dynamic-forms/

@@ -1,10 +1,8 @@
 {% extends 'base.html' %}
+{% load execution_extras %}
 
 {% block extra_head %}
-
-
-
-{%  endblock %}
+{% endblock %}
 
 {% block content %}
     <!-- breadcrumb start -->
@@ -52,39 +50,30 @@
                                     <table class="table">
                                         <tbody>
                                         <tr>
-                                            <td>Código del algoritmo:</td>
-                                            <td>000001</td>
+                                            <td>Tematica:</td>
+                                            <td>{{ algorithm.topic.name }}</td>
                                         </tr>
                                         <tr>
                                             <td>Nombre:</td>
-                                            <td>Compuesto de medianas</td>
+                                            <td>{{ algorithm.name }}</td>
                                         </tr>
                                         <tr>
-                                            <td>Versión actual:</td>
+                                            <td>Versión a ejecutar:</td>
                                             <td>
                                                 <select>
-                                                    <option value="1">1.4 (En Desarrollo)</option>
-                                                    <option value="2">1.3</option>
-                                                    <option value="3">1.0</option>
-                                                    <option value="3">0.5</option>
+                                                    {% for version in versions %}
+                                                        <option value="{{ version.id }}">{{ version.number }} ({{ version.publishing_state }})</option>
+                                                    {% endfor %}
                                                 </select>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Tipo:</td>
-                                            <td>Procesamiento</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Estado</td>
-                                            <td>oficial</td>
-                                        </tr>
-                                        <tr>
                                             <td>Fecha de creación:</td>
-                                            <td>21 de Junio 10:00 AM</td>
+                                            <td>{{ algorithm.created_at }}</td>
                                         </tr>
                                         <tr>
                                             <td>Creada por:</td>
-                                            <td>usuario1@abc.com</td>
+                                            <td>{{ algorithm.created_by.email }}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -152,90 +141,109 @@
                         <div class="section light-gray-bg">
                             <div class="container">
                                 <form role="form" class="form-horizontal col-md-6 col-md-offset-1" method="POST"
-                                      action=""
+                                      action="{% url 'execution:new_execution' algorithm.id %}"
                                       enctype="multipart/form-data">
                                     {% csrf_token %}
 
-                                    <!-- Errors -->
-                                    {% if form.errors %}
-                                        {% for error in form.non_field_errors %}
-                                            <div class="alert alert-danger">
-                                                <strong>{{ error|escape }}</strong>
-                                            </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                    <!-- /Errors -->
-
-                                    <!-- Tipo de unidad -->
+                                    <!-- Parametro 1 -->
                                     <div class="form-group">
-                                        <label for="nameUnitType"><b>Tipo de unidad</b></label>
-                                        <input class="form-control" id="" placeholder="CDCOL" disabled=""
-                                               type="text">
+                                        <label><b>Descripción de la ejecución</b></label>
+                                        <textarea id="textarea_id"
+                                                  name="textarea_name"
+                                                placeholder="Ingresa una descripción que te ayude a identificar el objetivo del análisis que deseas realizar"
+                                                class="form-control" rows="4"></textarea>
                                     </div>
-                                    <!-- /Tipo de unidad -->
+                                    <!-- /Parametro 1 -->
 
-                                    <!-- Descripción de Unidad -->
+                                    <!-- Parametro 2 -->
                                     <div class="form-group">
-                                        <!-- Errors -->
-                                        {% if form.file.errors %}
-                                            {% for error in form.file.errors %}
-                                                <div class="alert alert-danger">
-                                                    <strong>{{ error|escape }}</strong>
-                                                </div>
-                                            {% endfor %}
-                                        {% endif %}
-                                        <!-- /Errors -->
-                                        <label for="nameUnitFile"><b>Descripción de la unidad*</b></label>
-                                        <input name=""
-                                               type="file">
-                                        <p class="help-block">Debes ingresar el archivo YML que describe la unidad.</p>
+                                        <label><b>Mapa</b></label>
+                                        <div id="map" class="align-center" style="width: 550px; height: 400px"></div>
+                                        <div class="col-md-6 col-sm-6 col-xs-6">
+                                            <label><b>Latitud Inicio: </b></label>
+                                            <input id="latitude_init_id"
+                                                   name="latitude_init_name"
+                                                   class="form-control" placeholder="" type="text">
+                                            <label><b>Latitud Fin: </b></label>
+                                            <input id="latitude_end_id"
+                                                   name="latitude_end_name"
+                                                   class="form-control" placeholder="" type="text">
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-6">
+                                            <label><b>Longitud Inicio: </b></label>
+                                            <input id="longitude_init_id"
+                                                   name="longitude_init_name"
+                                                   class="form-control" placeholder="" type="text">
+                                            <label><b>Longitud Fin: </b></label>
+                                            <input id="longitude_end_id"
+                                                   name="longitude_end_name"
+                                                   class="form-control" placeholder="" type="text">
+                                        </div>
                                     </div>
-                                    <!-- /Descripción de Unidad -->
+                                    <!-- /Parametro 2 -->
 
-                                    <!-- Nivel de Procesamiento -->
+                                    <!-- Parametro 3 -->
                                     <div class="form-group">
-                                        <!-- Errors -->
-                                        {% if form.processing_level.errors %}
-                                            {% for error in form.processing_level.errors %}
-                                                <div class="alert alert-danger">
-                                                    <strong>{{ error|escape }}</strong>
-                                                </div>
-                                            {% endfor %}
-                                        {% endif %}
-                                        <!-- /Errors -->
-                                        <label for="processingLevel"><b>Nivel de procesamiento*</b></label>
-                                        <select name=""
-                                                id=""
-                                                class="form-control">
-                                            <option>Crudos</option>
-                                            <option>Preprocesados</option>
+                                        <label><b>Mínimo de pixeles válidos</b></label>
+                                        <input id="min_pixel_id"
+                                               name="min_pixel_name" class="form-control" placeholder="" type="number">
+                                    </div>
+                                    <!-- /Parametro 3 -->
+
+                                    <!-- Parametro 4 -->
+                                    <div class="form-group">
+                                        <p><b>Periodo de consulta</b></p>
+                                        <div class="col-md-6">
+                                            <label><b>Desde</b></label>
+                                            <input id="date_from_id"
+                                                   name="date_from_name"
+                                                   class="form-control" placeholder="" type="date">
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label><b>Hasta</b></label>
+                                            <input id="date_to_id"
+                                                   name="date_to_name"
+                                                   class="form-control" placeholder="" type="date">
+                                        </div>
+                                        <p class="help-block">Seleccione una fecha inicial y una fecha final para crear
+                                            el compuesto de medianas.</p>
+                                    </div>
+                                    <!-- /Parametro 4 -->
+
+                                    <!-- Parametro 5 -->
+                                    <div class="form-group">
+                                        <label for=""><b>Posibles unidades de almacenamiento origen *</b></label>
+                                        <select class="form-control" id="storage_unit_id"
+                                                name="storage_unit_name">
+                                            <option value="1">Unidad de Almacenamiento 1</option>
+                                            <option value="2">Unidad de Almacenamiento 2</option>
+                                            <option value="3">Unidad de Almacenamiento 3</option>
                                         </select>
                                     </div>
-                                    <!-- /Nivel de Procesamiento -->
+                                    <!-- /Parametro 5-->
 
-                                    <!-- Nivel Procesamiento Detallado -->
+                                    <!-- Parametro 6 -->
                                     <div class="form-group">
-                                        <!-- Errors -->
-                                        {% if form.detailed_processing_level.errors %}
-                                            {% for error in form.detailed_processing_level.errors %}
-                                                <div class="alert alert-danger">
-                                                    <strong>{{ error|escape }}</strong>
-                                                </div>
-                                            {% endfor %}
-                                        {% endif %}
-                                        <!-- /Errors -->
-                                        <label for="detailedProcessingLevel"><b>Nivel de preprocesamiento detallado*</b></label>
-                                        <input class="form-control"
-                                               name=""
-                                               id=""
-                                               placeholder="Describe el nivel de preprocesamiento"
-                                                {% if form.detailed_processing_level.value %}
-                                               value="{{ form.detailed_processing_level.value }}"{% endif %}
-                                               type="text">
+                                        <label for=""><b>Bandas de compuesto</b></label>
+                                        <select multiple class="form-control" id="bands_id"
+                                                name="bands_name">
+                                            <option value="1">Banda 1</option>
+                                            <option value="2">Banda 2</option>
+                                            <option value="3">Banda 3</option>
+                                        </select>
                                     </div>
-                                    <!-- /Nivel Procesamiento Detallado -->
+                                    <!-- /Parametro 6-->
+
+                                    <!-- Parametro 7 -->
+                                    <div class="form-group">
+                                        <input type="checkbox" id="normalized_id" name="normalized_name"><b> Normalizado</b><br>
+                                        <p class="help-block">Habilite esta opción si se deben normalizar las imágenes.</p>
+                                    </div>
+                                    <!-- /Parametro 7-->
+
                                     <div class="text-center">
-                                        <button type="submit" class="btn btn-default">Crear Unidad</button>
+                                        <button type="submit" class="btn btn-default">Ejecutar Algoritmo</button>
                                     </div>
                                 </form>
                             </div>
@@ -255,33 +263,16 @@
                             <div class="separator-2"></div>
                             <nav>
                                 <ul class="nav nav-pills">
-                                    <li>
-                                        <a href="#">MOSAICOS</a>
-                                        <ul>
-                                            <li><a href="#">Compuesto de medianas</a></li>
-                                            <li><a href="#">Mejor pixel</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">ÍNDICES TEMÁTICOS</a>
-                                        <ul>
-                                            <li><a href="#">NVDI</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">CLASIFICACIONES</a>
-                                        <ul>
-                                            <li><a href="#">Coberturas de la tierra</a></li>
-                                            <li><a href="#">Espejos de agua</a</li>
-                                            <li><a href="#">Bosque/no bosque</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">OTROS ANÁLISIS</a>
-                                        <ul>
-                                            <li><a href="#">Detección de cambio/PCA</a></li>
-                                        </ul>
-                                    </li>
+                                    {% for topic in topics %}
+                                        <li>
+                                            <a href="#">{{ topic.name }}</a>
+                                            <ul>
+                                                {% for algorithm in topic|get_algorithms %}
+                                                    <li><a href="{% url 'execution:new_execution' algorithm.id %}">{{ algorithm.name }}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% endfor %}
                                 </ul>
                             </nav>
                         </div>
@@ -293,4 +284,60 @@
         </div>
     </section>
     <!-- main-container end -->
+{% endblock %}
+
+{% block extra_body %}
+<script type="text/javascript">
+
+    // This example adds a user-editable rectangle to the map.
+    // When the user changes the bounds of the rectangle,
+    // an info window pops up displaying the new bounds.
+
+    var rectangle;
+    var map;
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 4.1, lng: -72.8},
+            zoom: 5
+        });
+
+        var bounds = {
+            north: 4.0,
+            south: 8.0,
+            east: -70.0,
+            west: -75.7
+        };
+
+        // Define the rectangle and set its editable property to true.
+        rectangle = new google.maps.Rectangle({
+            bounds: bounds,
+            editable: true,
+            draggable: true,
+            strokeColor: '#FF0000',
+            fillColor: '#FF0000',
+        });
+
+        rectangle.setMap(map);
+
+        // Add an event listener on the rectangle.
+        rectangle.addListener('bounds_changed', showNewRect);
+    }
+    // Show the new coordinates for the rectangle in an info window.
+
+    /** @this {google.maps.Rectangle} */
+    function showNewRect(event) {
+        var ne = rectangle.getBounds().getNorthEast();
+        var sw = rectangle.getBounds().getSouthWest();
+
+        document.getElementById("latitude_init_id").value = ne.lat();
+        document.getElementById("latitude_end_id").value = ne.lng();
+        document.getElementById("longitude_init_id").value = sw.lat();
+        document.getElementById("longitude_end_id").value = sw.lng();
+
+    }
+
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgHk6zP-EhApihfwqpoeoOe2ZjSraVVPM&callback=initMap"></script>
 {% endblock %}

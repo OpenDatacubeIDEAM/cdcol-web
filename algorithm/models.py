@@ -58,6 +58,9 @@ class Version(models.Model):
 		current_major_version = int(current_version.split('.')[0])
 		return "{}.{}".format(current_major_version + 1, 0)
 
+	def count_parameters(self):
+		return Parameter.objects.filter(version=self.id).count()
+
 
 class VersionStorageUnit(models.Model):
 	version = models.ForeignKey(Version, on_delete=models.CASCADE, related_name='source_version')
@@ -109,3 +112,6 @@ class Parameter(models.Model):
 	function_name = models.CharField(max_length=200, default="")
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+
+	def __unicode__(self):
+		return "{}".format(self.name)

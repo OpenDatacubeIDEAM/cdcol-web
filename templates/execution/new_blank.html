@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load execution_extras %}
+
+{% block extra_head %}
+
+
+
+{%  endblock %}
+
+{% block content %}
+    <!-- breadcrumb start -->
+    <!-- ================ -->
+    <div class="breadcrumb-container">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
+                <li><a href="{% url 'execution:index' %}">Ejecuciones</a></li>
+                <li class="active">Nueva Unidad CEOS</li>
+            </ol>
+        </div>
+    </div>
+    <!-- breadcrumb end -->
+
+    <!-- main-container start -->
+    <!-- ================ -->
+    <section class="main-container">
+
+        <div class="container">
+            <div class="row">
+
+                <!-- main start -->
+                <!-- ================ -->
+                <div class="main col-md-8 col-lg-offset-1 col-md-push-4 col-lg-push-3">
+
+                    <!-- page-title start -->
+                    <!-- ================ -->
+                    <!-- page-title end -->
+
+                    <!-- blogpost start -->
+                    <article class="">
+                        <header>
+                            <h3 class="page-title">Selecciona el algoritmo</h3>
+                            <div class="separator-2"></div>
+                        </header>
+                        <div class="blogpost-content">
+                            <p>Selecciona el algoritmo que deseas ejecutar en el menú que se encuentra a la izquierda.</p>
+                        </div>
+                    </article>
+                    <!-- blogpost end -->
+                </div>
+                <!-- main end -->
+
+                <!-- sidebar start -->
+                <!-- ================ -->
+                <aside class="col-md-4 col-lg-3 col-md-pull-8 col-lg-pull-9">
+                    <div class="sidebar">
+                        <div class="block clearfix">
+                            <h3 class="title">Listado de algoritmo</h3>
+                            <div class="separator-2"></div>
+                            <nav>
+                                <ul class="nav nav-pills">
+                                    {% for topic in topics %}
+                                        <li>
+                                            <a href="#">{{ topic.name }}</a>
+                                            <ul>
+                                                {% for algorithm in topic|get_algorithms %}
+                                                    <li><a href="{% url 'execution:new_execution' algorithm.id %}">{{ algorithm.name }}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </aside>
+                <!-- sidebar end -->
+
+            </div>
+        </div>
+    </section>
+    <!-- main-container end -->
+{% endblock %}
