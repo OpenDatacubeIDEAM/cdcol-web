@@ -17,9 +17,8 @@ def index(request):
 @login_required(login_url='/accounts/login/')
 def detail(request, execution_id):
 	execution = get_object_or_404(Execution, id=execution_id)
-	# executed_params = ExecutionParameter.objects.filter(execution=execution)
-	# context = {'execution': execution, 'executed_params': executed_params}
-	context = {'execution': execution}
+	executed_params = ExecutionParameter.objects.filter(execution=execution)
+	context = {'execution': execution, 'executed_params': executed_params}
 	return render(request, 'execution/detail.html', context)
 
 
@@ -38,7 +37,7 @@ def new_execution(request, algorithm_id):
 	parameters = Parameter.objects.filter(version=Version.objects.last()).order_by('position')
 	topics = Topic.objects.all()
 	if request.method == 'POST':
-		current_version = Version.objects.last() ## TODO: Must fix this
+		current_version = algorithm.last_version() ## TODO: Must fix this
 
 		textarea_name = request.POST.get('textarea_name', False);
 		latitude_init_name = request.POST.get('latitude_init_name', False)
