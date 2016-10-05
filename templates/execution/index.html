@@ -50,17 +50,19 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>000001</td>
-                                        <td>Nombre Algoritmo A</td>
-                                        <td>En ejecución</td>
-                                        <td>22 de Junio 2016 10:00 AM</td>
-                                        <td>22 de Junio 2016 10:00 AM</td>
-                                        <td>22 de Junio 2016 10:00 AM</td>
-                                        <td><a href="{% url 'execution:detail' 1 %}" class="btn btn-gray btn-sm"><i
-                                                class="fa fa-bars"></i> Ver Detalle</a>
-                                        </td>
-                                    </tr>
+                                    {% for execution in executions %}
+                                        <tr>
+                                            <td>{{ execution.id }}</td>
+                                            <td>{{ execution.version.algorithm.name }}</td>
+                                            <td>{{ execution.get_state_display }}</td>
+                                            <td>{{ execution.created_at }}</td>
+                                            <td>{{ execution.started_at }}</td>
+                                            <td>{{ execution.finished_at }}</td>
+                                            <td><a href="{% url 'execution:detail' execution.id %}" class="btn btn-gray btn-sm"><i
+                                                    class="fa fa-bars"></i> Ver Detalle</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
                                     </tbody>
                                 </table>
                             </div>

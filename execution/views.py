@@ -9,12 +9,18 @@ import datetime
 @login_required(login_url='/accounts/login/')
 def index(request):
 	current_user = request.user
-	return render(request, 'execution/index.html')
+	executions = Execution.objects.filter(executed_by=current_user)
+	context = {'executions': executions}
+	return render(request, 'execution/index.html', context)
 
 
 @login_required(login_url='/accounts/login/')
 def detail(request, execution_id):
-	return render(request, 'execution/detail.html')
+	execution = get_object_or_404(Execution, id=execution_id)
+	# executed_params = ExecutionParameter.objects.filter(execution=execution)
+	# context = {'execution': execution, 'executed_params': executed_params}
+	context = {'execution': execution}
+	return render(request, 'execution/detail.html', context)
 
 
 @login_required(login_url='/accounts/login/')

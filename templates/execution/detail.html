@@ -35,31 +35,31 @@
                         <tbody>
                         <tr>
                             <td>Código de la ejecución:</td>
-                            <td>000011</td>
+                            <td>{{ execution.id }}</td>
                         </tr>
                         <tr>
                             <td>Algoritmo:</td>
-                            <td>Nombre Algoritmo A</td>
+                            <td>{{ execution.version.algorithm.name }}</td>
                         </tr>
                         <tr>
                             <td>Estado:</td>
-                            <td>Finalizado</td>
+                            <td>{{ execution.get_state_display }}</td>
                         </tr>
                         <tr>
                             <td>Fecha de Creación:</td>
-                            <td>21 de Junio 10:00 AM</td>
+                            <td>{{ execution.created_at }}</td>
                         </tr>
                         <tr>
                             <td>Inicio ejecución:</td>
-                            <td>21 de Junio 10:00 AM</td>
+                            <td>{{ execution.started_at }}</td>
                         </tr>
                         <tr>
                             <td>Fin ejecución:</td>
-                            <td>21 de Junio 10:00 AM</td>
+                            <td>{{ execution.finished_at }}</td>
                         </tr>
                         <tr>
                             <td>Creada por:</td>
-                            <td>usuario1@abc.com</td>
+                            <td>{{ execution.executed_by.email }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -70,19 +70,12 @@
                     <p>Los parámetros de la ejecución son los siguientes:</p>
                     <table class="table">
                         <tbody>
-                        <tr>
-                            <td>Nombre parámetro 1</td>
-                            <td>Valor parámetro 1</td>
-                        </tr>
-                        <tr>
-                            <td>Nombre parámetro 2</td>
-                            <td>Valor parámetro 2</td>
-                        </tr>
-                        <tr>
-                            <td>Nombre parámetro 3</td>
-                            <td>Valor parámetro 3</td>
-                        </tr>
-
+                        {% for param in executed_params %}
+                            <tr>
+                                <td>{{ param.parameter.name }}</td>
+                                <td>{{ param.parameter.value }}</td>
+                            </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
 
