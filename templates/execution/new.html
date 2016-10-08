@@ -283,55 +283,64 @@
 {% endblock %}
 
 {% block extra_body %}
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    // This example adds a user-editable rectangle to the map.
-    // When the user changes the bounds of the rectangle,
-    // an info window pops up displaying the new bounds.
+        // This example adds a user-editable rectangle to the map.
+        // When the user changes the bounds of the rectangle,
+        // an info window pops up displaying the new bounds.
 
-    var rectangle;
-    var map;
+        var rectangle;
+        var map;
 
-    function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: 4.1, lng: -72.8},
-            zoom: 5
-        });
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 4.1, lng: -72.8},
+                zoom: 5
+            });
 
-        var bounds = {
-            north: 4.0,
-            south: 8.0,
-            east: -70.0,
-            west: -75.7
-        };
+            var bounds = {
+                north: 4.0,
+                south: 8.0,
+                east: -70.0,
+                west: -75.7
+            };
 
-        // Define the rectangle and set its editable property to true.
-        rectangle = new google.maps.Rectangle({
-            bounds: bounds,
-            editable: true,
-            draggable: true,
-            strokeColor: '#FF0000',
-            fillColor: '#FF0000',
-        });
+            // Define the rectangle and set its editable property to true.
+            rectangle = new google.maps.Rectangle({
+                bounds: bounds,
+                editable: true,
+                draggable: true,
+                strokeColor: '#FF0000',
+                fillColor: '#FF0000',
+            });
 
-        rectangle.setMap(map);
+            rectangle.setMap(map);
 
-        // Add an event listener on the rectangle.
-        rectangle.addListener('bounds_changed', showNewRect);
-    }
-    // Show the new coordinates for the rectangle in an info window.
+            // Add an event listener on the rectangle.
+            rectangle.addListener('bounds_changed', showNewRect);
+        }
+        // Show the new coordinates for the rectangle in an info window.
 
-    /** @this {google.maps.Rectangle} */
-    function showNewRect(event) {
-        var ne = rectangle.getBounds().getNorthEast();
-        var sw = rectangle.getBounds().getSouthWest();
+        /** @this {google.maps.Rectangle} */
+        function showNewRect(event) {
+            var ne = rectangle.getBounds().getNorthEast();
+            var sw = rectangle.getBounds().getSouthWest();
 
-        document.getElementById("latitude_init_id").value = ne.lat();
-        document.getElementById("latitude_end_id").value = ne.lng();
-        document.getElementById("longitude_init_id").value = sw.lat();
-        document.getElementById("longitude_end_id").value = sw.lng();
+            document.getElementById("latitude_init_id").value = ne.lat();
+            document.getElementById("latitude_end_id").value = ne.lng();
+            document.getElementById("longitude_init_id").value = sw.lat();
+            document.getElementById("longitude_end_id").value = sw.lng();
 
-    }
+        }
+
+        // Getting the version id from the url and selecting it
+
+        var pathArray = window.location.pathname.split('/');
+        var versionIndex = pathArray.indexOf("version");
+        if (versionIndex > 0){
+            var value = pathArray[versionIndex+1];
+            $('#id_version').val(value);
+        }
 
     </script>
     <script async defer
