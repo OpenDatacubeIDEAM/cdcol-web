@@ -60,11 +60,7 @@
                                         <tr>
                                             <td>Versión a ejecutar:</td>
                                             <td>
-                                                <select>
-                                                    {% for version in versions %}
-                                                        <option value="{{ version.id }}">{{ version.number }} ({{ version.publishing_state }})</option>
-                                                    {% endfor %}
-                                                </select>
+                                                {{ version_selection_form.version }}
                                             </td>
                                         </tr>
                                         <tr>
