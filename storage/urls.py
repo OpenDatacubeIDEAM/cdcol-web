@@ -12,4 +12,6 @@ urlpatterns = [
 	url(r'^new/$', views.new, name='new'),
 	# ex: /storage/download/filename.ext
 	url(r'^download/(?P<file_name>.+)$', views.download_file, name='download_file'),
+	# ex: /storage/storage_units/
+	url(r'^storage_units/$', views.obtain_storage_units, name='obtain_storage_units'),
 ]

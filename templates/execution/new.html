@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% load execution_extras %}
 
 {% block extra_head %}
@@ -136,7 +137,8 @@
 
                         <div class="section light-gray-bg">
                             <div class="container">
-                                <form role="form" class="form-horizontal col-md-6 col-md-offset-1" method="POST"
+                                <form id="mainForm" role="form" class="form-horizontal col-md-6 col-md-offset-1"
+                                      method="POST"
                                       action="{% url 'execution:new_execution' algorithm.id %}"
                                       enctype="multipart/form-data">
                                     {% csrf_token %}
@@ -193,7 +195,7 @@
                                             <label><b>Desde</b></label>
                                             <input id="date_from_id"
                                                    name="date_from_name"
-                                                   class="form-control" placeholder="" type="date">
+                                                       class="form-control" placeholder="" type="date">
                                         </div>
 
                                         <div class="col-md-6">
@@ -285,10 +287,6 @@
 {% block extra_body %}
     <script type="text/javascript">
 
-        // This example adds a user-editable rectangle to the map.
-        // When the user changes the bounds of the rectangle,
-        // an info window pops up displaying the new bounds.
-
         var rectangle;
         var map;
 
@@ -345,4 +343,5 @@
     </script>
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgHk6zP-EhApihfwqpoeoOe2ZjSraVVPM&callback=initMap"></script>
+    <script type="text/javascript" src={% static "js/formBuilder.js" %}></script>
 {% endblock %}
