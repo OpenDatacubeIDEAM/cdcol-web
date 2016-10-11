@@ -54,13 +54,14 @@ $(document).ready(function () {
 
     var pathArray = window.location.pathname.split('/');
     var versionIndex = pathArray.indexOf("version");
+    var versionValue = null;
     if (versionIndex > 0) {
-        var value = pathArray[versionIndex + 1];
-        $('#id_version').val(value);
+        versionValue = pathArray[versionIndex + 1];
+        $('#id_version').val(versionValue);
     }
 
     $.ajax({
-        url: 'http://localhost:8000/execution/parameters/12/',
+        url: "http://localhost:8000/execution/parameters/" + versionValue + "/",
         data: {
             format: 'json'
         },
@@ -69,6 +70,7 @@ $(document).ready(function () {
         },
         dataType: 'json',
         success: function (data) {
+            console.log("Loading parameters for version " + versionValue + " of the algorithm.");
             createForm(data);
         },
         type: 'GET'
