@@ -60,6 +60,25 @@ $(document).ready(function () {
         $('#id_version').val(versionValue);
     }
 
+    // Reloading the web when the version changes
+
+    $('#id_version').on('change', function () {
+        console.log("alla");
+        var selectedIndex = this.selectedIndex;
+        var algorithmIndex = pathArray.indexOf("new");
+        if (selectedIndex > 0){
+            var algorithmValue= pathArray[algorithmIndex + 1];
+            var versionValue = this.options[this.selectedIndex].value;
+            if(versionValue){
+                var new_url = "/execution/new/"+algorithmValue+"/version/"+versionValue;
+                window.location = new_url;
+            }
+            else{
+                window.location = window.location + "version/" + this.options[this.selectedIndex].value;
+            }
+        }
+    });
+
     $.ajax({
         url: "http://localhost:8000/execution/parameters/" + versionValue + "/",
         data: {
@@ -93,24 +112,28 @@ $(document).ready(function () {
                     sw_latitude_1.id = "sw_latitude";
                     sw_latitude_1.name = "sw_latitude";
                     sw_latitude_1.className = "form-control";
+                    sw_latitude_1.required = parameter.fields.required;
                     // sw longitude point
                     var sw_longitude_1 = document.createElement("input");
                     sw_longitude_1.type = "text";
                     sw_longitude_1.id = "sw_longitude";
                     sw_longitude_1.name = "sw_longitude";
                     sw_longitude_1.className = "form-control";
+                    sw_longitude_1.required = parameter.fields.required;
                     // ne latitude point
                     var ne_latitude_2 = document.createElement("input");
                     ne_latitude_2.type = "text";
                     ne_latitude_2.id = "ne_latitude";
                     ne_latitude_2.name = "ne_latitude";
                     ne_latitude_2.className = "form-control";
+                    ne_latitude_2.required = parameter.fields.required;
                     // ne longitude point
                     var ne_longitude_2 = document.createElement("input");
                     ne_longitude_2.type = "text";
                     ne_longitude_2.id = "ne_longitude";
                     ne_longitude_2.name = "ne_longitude";
                     ne_longitude_2.className = "form-control";
+                    ne_longitude_2.required = parameter.fields.required;
                     // ===== LABELS =====
                     var label_sw_latitude_1 = document.createElement("label");
                     label_sw_latitude_1.innerHTML = "<b>Latitud SW</b>";
@@ -158,6 +181,7 @@ $(document).ready(function () {
                     integer_input.id = "integer_input_"+pk;
                     integer_input.name = "integer_input_"+pk;
                     integer_input.className = "form-control";
+                    integer_input.required = parameter.fields.required;
                     // ===== LABELS =====
                     var label_integer_title = document.createElement("label");
                     label_integer_title.innerHTML = "<b>"+parameter.fields.name+"</b>";
@@ -178,12 +202,14 @@ $(document).ready(function () {
                     start_date_input.id = "start_date_"+pk;
                     start_date_input.name = "start_date_"+pk;
                     start_date_input.className = "form-control";
+                    start_date_input.required = parameter.fields.required;
                     // end date
                     var end_date_input = document.createElement("input");
                     end_date_input.type = "date";
                     end_date_input.id = "end_date_"+pk;
                     end_date_input.name = "end_date_"+pk;
                     end_date_input.className = "form-control";
+                    end_date_input.required = parameter.fields.required;
                     // ===== LABELS =====
                     var start_date_label = document.createElement("label");
                     start_date_label.innerHTML = "<b>Desde</b>";
@@ -246,6 +272,7 @@ $(document).ready(function () {
                         bands_select.name = "bands_"+pk;
                         bands_select.className = "form-control";
                         bands_select.multiple = true;
+                        bands_select.required = parameter.fields.required;
                         // band_options
                         var band_option = document.createElement("option");
                         for (i = 0; i < 3; i++) {
@@ -278,7 +305,6 @@ $(document).ready(function () {
                     boolean_input.placeholder = parameter.fields.help_text;
                     boolean_input.id = "boolean_input_"+pk;
                     boolean_input.name = "boolean_input_"+pk;
-                    //boolean_input.text = "<b>"+parameter.fields.name+"</b>";
                     // ===== Bold =====
                     var boolean_name = document.createElement("B");
                     boolean_name.innerHTML = " <b>"+parameter.fields.name+"</b>";

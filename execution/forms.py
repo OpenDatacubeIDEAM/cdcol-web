@@ -3,8 +3,7 @@ from algorithm.models import Version
 
 
 class VersionSelectionForm(forms.Form):
-	version = forms.ModelChoiceField(queryset=None, widget=forms.Select(
-		attrs={'onChange': "window.location = 'version/' + this.options[this.selectedIndex].value;"}))
+	version = forms.ModelChoiceField(queryset=None, widget=forms.Select())
 
 	def __init__(self, *args, **kwargs):
 		self.algorithm_id = kwargs.pop('algorithm_id')
