@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, HttpResponseRedirect
+from django.core import serializers
+from django.core.urlresolvers import reverse
 from algorithm.models import Topic, Algorithm, StorageUnit
 from execution.models import *
 from execution.forms import VersionSelectionForm
-from django.http import HttpResponse
-from django.core import serializers
+import datetime
 
 
 @login_required(login_url='/accounts/login/')
@@ -35,7 +37,99 @@ def new_blank_execution(request):
 def obtain_parameters(request, version_id):
 	data = serializers.serialize("json", Parameter.objects.filter(version__id=version_id, enabled=True))
 	return HttpResponse(data, content_type='application/json')
-	# return JsonResponse(data, safe=False)
+
+
+def create_execution_parameter_objects(parameters, request, execution, current_version):
+	"""
+	Creates an execution parameter based on the parameter type
+	:param parameters: The parameters of the version
+	:param request: The HTTP request object
+	:return:
+	"""
+	for parameter in parameters:
+		if parameter.parameter_type == "7":
+			print "Getting elements for AreaType parameter"
+			sw_latitude = request.POST.get('sw_latitude', False)
+			sw_longitude = request.POST.get('sw_longitude', False)
+			ne_latitude = request.POST.get('ne_latitude', False)
+			ne_longitude = request.POST.get('ne_longitude', False)
+			print sw_latitude, sw_longitude
+			print ne_latitude, ne_longitude
+			# AREA TYPE
+			type_params = Parameter.objects.filter(version=current_version, parameter_type='7')
+			for param in type_params:
+				new_execution_parameter = AreaType(
+					execution=execution,
+					parameter=param,
+					latitude_start=sw_latitude,
+					latitude_end=ne_latitude,
+					longitude_start=sw_longitude,
+					longitude_end=ne_longitude
+				)
+				new_execution_parameter.save()
+		if parameter.parameter_type == "2":
+			print "Getting elements for IntegerType parameter"
+			integer_name = "integer_input_{}".format(parameter.id)
+			integer_value = request.POST.get(integer_name, False)
+			print integer_value
+			# INTEGER TYPE
+			type_params = Parameter.objects.filter(version=current_version, parameter_type='2')
+			for param in type_params:
+				new_execution_parameter = IntegerType(
+					execution=execution,
+					parameter=param,
+					value=integer_value
+				)
+				new_execution_parameter.save()
+		if parameter.parameter_type == "9":
+			print "Getting elements for TimePeriod parameter"
+			start_date_name = "start_date_{}".format(parameter.id)
+			end_date_name = "end_date_{}".format(parameter.id)
+			start_date_value = request.POST.get(start_date_name, False)
+			end_date_value = request.POST.get(end_date_name, False)
+			print start_date_value, end_date_value
+			# TIME PERIOD TYPE
+			type_params = Parameter.objects.filter(version=current_version, parameter_type='9')
+			for param in type_params:
+				new_execution_parameter = TimePeriodType(
+					execution=execution,
+					parameter=param,
+					start_date=start_date_value,
+					end_date=end_date_value
+				)
+				new_execution_parameter.save()
+		if parameter.parameter_type == "8":
+			print "Getting elements for StorageUnitType parameter"
+			select_name = "storage_unit_{}".format(parameter.id)
+			bands_name = "bands_{}".format(parameter.id)
+			select_value = request.POST.get(select_name, False)
+			print select_value
+			bands_selected = request.POST.getlist(bands_name, False)
+			for band in bands_selected:
+				print band
+			# STORAGE UNIT TYPE
+			type_params = Parameter.objects.filter(version=current_version, parameter_type='8')
+			for param in type_params:
+				new_execution_parameter = StorageUnitType(
+					execution=execution,
+					parameter=param,
+					value=select_value
+				)
+				new_execution_parameter.save()
+		if parameter.parameter_type == "4":
+			print "Getting elements for BooleanType parameter"
+			boolean_name = "boolean_input_{}".format(parameter.id)
+			boolean_value = request.POST.get(boolean_name, False)
+			print boolean_value
+			# BOOLEAN TYPE
+			type_params = Parameter.objects.filter(version=current_version, parameter_type='4')
+			for param in type_params:
+				new_execution_parameter = BooleanType(
+					execution=execution,
+					parameter=param,
+					value=boolean_value
+				)
+				new_execution_parameter.save()
 
 
 @login_required(login_url='/accounts/login/')
@@ -49,94 +143,22 @@ def new_execution(request, algorithm_id, version_id=None):
 	parameters = Parameter.objects.filter(version=current_version).order_by('position')
 	topics = Topic.objects.all()
 	if request.method == 'POST':
-		version_selection_form = VersionSelectionForm(request.POST)
-		if version_selection_form.is_valid():
-			print 'formulario valido'
-		else:
-			version_selection_form.add_error(None, "Favor completar todos los campos marcados.")
-	else:
-		version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id)
+		textarea_name = request.POST.get('textarea_name', False)
+		started_at = datetime.datetime.now()
+		print textarea_name
+
+		new_execution = Execution(
+			version=current_version,
+			description=textarea_name,
+			state=1,
+			started_at=started_at,
+			executed_by=current_user
+		)
+		new_execution.save()
+
+		create_execution_parameter_objects(parameters, request, new_execution, current_version)
+		return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': new_execution.id}))
+	version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id)
 	context = {'topics': topics, 'algorithm': algorithm, 'parameters': parameters,
 	           'version_selection_form': version_selection_form}
 	return render(request, 'execution/new.html', context)
-
-
-		#
-		# textarea_name = request.POST.get('textarea_name', False);
-		# latitude_init_name = request.POST.get('latitude_init_name', False)
-		# latitude_end_name = request.POST.get('latitude_end_name', False)
-		# longitude_init_name = request.POST.get('longitude_init_name', False)
-		# longitude_end_name = request.POST.get('longitude_end_name', False)
-		# min_pixel_name = request.POST.get('min_pixel_name', False)
-		# date_to_name = request.POST.get('date_to_name', False)
-		# date_from_name = request.POST.get('date_from_name', False)
-		# storage_unit_name = request.POST.get('storage_unit_name', False)
-		# bands_name = request.POST.get('bands_name', False)
-		# normalized_name = request.POST.get('normalized_name', False)
-		# started_at = datetime.datetime.now()
-		#
-		# # creating a new execution
-		# new_execution = Execution(
-		# 	version=current_version,
-		# 	description=textarea_name,
-		# 	state=1,
-		# 	started_at=started_at,
-		# 	executed_by=current_user
-		# )
-		# new_execution.save()
-		#
-		# # Creating the execution parameters by type
-		#
-		# # AREA TYPE
-		# type_params = Parameter.objects.filter(version=current_version, parameter_type='7')
-		# for param in type_params:
-		# 	new_execution_parameter = AreaType(
-		# 		execution=new_execution,
-		# 		parameter=param,
-		# 		latitude_start=latitude_init_name,
-		# 		latitude_end=latitude_end_name,
-		# 		longitude_start=longitude_init_name,
-		# 		longitude_end=longitude_end_name
-		# 	)
-		# 	new_execution_parameter.save()
-		#
-		# # INTEGER TYPE
-		# type_params = Parameter.objects.filter(version=current_version, parameter_type='2')
-		# for param in type_params:
-		# 	new_execution_parameter = IntegerType(
-		# 		execution=new_execution,
-		# 		parameter=param,
-		# 		value=min_pixel_name
-		# 	)
-		# 	new_execution_parameter.save()
-		#
-		# # TIME PERIOD TYPE
-		# type_params = Parameter.objects.filter(version=current_version, parameter_type='9')
-		# for param in type_params:
-		# 	new_execution_parameter = TimePeriodType(
-		# 		execution=new_execution,
-		# 		parameter=param,
-		# 		start_date=date_to_name,
-		# 		end_date=date_from_name
-		# 	)
-		# 	new_execution_parameter.save()
-		#
-		# # STORAGE UNIT TYPE
-		# type_params = Parameter.objects.filter(version=current_version, parameter_type='8')
-		# for param in type_params:
-		# 	new_execution_parameter = StorageUnitType(
-		# 		execution=new_execution,
-		# 		parameter=param,
-		# 		value=storage_unit_name
-		# 	)
-		# 	new_execution_parameter.save()
-		#
-		# # BOOLEAN TYPE
-		# type_params = Parameter.objects.filter(version=current_version, parameter_type='4')
-		# for param in type_params:
-		# 	new_execution_parameter = BooleanType(
-		# 		execution=new_execution,
-		# 		parameter=param,
-		# 		value=normalized_name
-		# 	)
-		# 	new_execution_parameter.save()
