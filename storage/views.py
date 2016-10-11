@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.utils.encoding import smart_str
+from django.core import serializers
 from .forms import StorageUnitForm
 from storage.models import StorageUnit
 from wsgiref.util import FileWrapper
@@ -74,3 +75,9 @@ def new(request):
 		form = StorageUnitForm()
 	context = {'form': form, 'response': response}
 	return render(request, 'storage/new.html', context)
+
+
+@login_required(login_url='/accounts/login/')
+def obtain_storage_units(request):
+	data = serializers.serialize("json", StorageUnit.objects.all())
+	return HttpResponse(data, content_type='application/json')
