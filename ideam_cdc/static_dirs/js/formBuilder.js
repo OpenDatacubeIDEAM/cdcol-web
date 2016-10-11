@@ -8,6 +8,57 @@
 
 $(document).ready(function () {
 
+    var rectangle;
+    var map;
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 4.1, lng: -72.8},
+            zoom: 5
+        });
+
+        var bounds = {
+            north: 4.0,
+            south: 8.0,
+            east: -70.0,
+            west: -75.7
+        };
+
+        rectangle = new google.maps.Rectangle({
+            bounds: bounds,
+            editable: true,
+            draggable: true,
+            strokeColor: '#FF0000',
+            fillColor: '#FF0000',
+        });
+
+        rectangle.setMap(map);
+
+        // Add an event listener on the rectangle.
+        rectangle.addListener('bounds_changed', showNewRect);
+    }
+
+    /** @this {google.maps.Rectangle} */
+    function showNewRect(event) {
+        var ne = rectangle.getBounds().getNorthEast();
+        var sw = rectangle.getBounds().getSouthWest();
+
+        document.getElementById("sw_latitude").value = sw.lat();
+        document.getElementById("sw_longitude").value = sw.lng();
+        document.getElementById("ne_latitude").value = ne.lat();
+        document.getElementById("ne_longitude").value = ne.lng();
+
+    }
+
+    // Getting the version id from the url and selecting it
+
+    var pathArray = window.location.pathname.split('/');
+    var versionIndex = pathArray.indexOf("version");
+    if (versionIndex > 0) {
+        var value = pathArray[versionIndex + 1];
+        $('#id_version').val(value);
+    }
+
     $.ajax({
         url: 'http://localhost:8000/execution/parameters/12/',
         data: {
@@ -24,7 +75,6 @@ $(document).ready(function () {
     });
 
     function createForm(json) {
-        console.log(json);
         // obtaining the form
         var f = document.getElementById("mainForm");
         // iterating over the parameters
@@ -38,26 +88,26 @@ $(document).ready(function () {
                     // sw latitude point
                     var sw_latitude_1 = document.createElement("input");
                     sw_latitude_1.type = "text";
-                    sw_latitude_1.id = "sw_latitude_"+pk;
-                    sw_latitude_1.name = "sw_latitude_"+pk;
+                    sw_latitude_1.id = "sw_latitude";
+                    sw_latitude_1.name = "sw_latitude";
                     sw_latitude_1.className = "form-control";
                     // sw longitude point
                     var sw_longitude_1 = document.createElement("input");
                     sw_longitude_1.type = "text";
-                    sw_longitude_1.id = "sw_longitude_"+pk;
-                    sw_longitude_1.name = "sw_longitude_"+pk;
+                    sw_longitude_1.id = "sw_longitude";
+                    sw_longitude_1.name = "sw_longitude";
                     sw_longitude_1.className = "form-control";
                     // ne latitude point
                     var ne_latitude_2 = document.createElement("input");
                     ne_latitude_2.type = "text";
-                    ne_latitude_2.id = "ne_latitude_"+pk;
-                    ne_latitude_2.name = "ne_latitude_"+pk;
+                    ne_latitude_2.id = "ne_latitude";
+                    ne_latitude_2.name = "ne_latitude";
                     ne_latitude_2.className = "form-control";
                     // ne longitude point
                     var ne_longitude_2 = document.createElement("input");
                     ne_longitude_2.type = "text";
-                    ne_longitude_2.id = "ne_longitude_"+pk;
-                    ne_longitude_2.name = "ne_longitude_"+pk;
+                    ne_longitude_2.id = "ne_longitude";
+                    ne_longitude_2.name = "ne_longitude";
                     ne_longitude_2.className = "form-control";
                     // ===== LABELS =====
                     var label_sw_latitude_1 = document.createElement("label");
@@ -96,6 +146,7 @@ $(document).ready(function () {
                     param_div.appendChild(right_div);
                     // appending to the form
                     f.appendChild(param_div);
+                    initMap();
                     break;
                 case "2":
                     console.log("Creating IntegerType field");
@@ -247,6 +298,17 @@ $(document).ready(function () {
                     console.log("Object not supported");
             }
         });
+        console.log("Creating Send Button");
+        var send_button = document.createElement("button");
+        send_button.type = "submit";
+        send_button.className = "btn btn-default";
+        send_button.innerHTML = "Ejecutar Elgoritmo";
+        var param_div = document.createElement("div");
+        param_div.className = "text-center";
+        // appending the button
+        param_div.appendChild(send_button);
+        f.appendChild(param_div);
+        // appending the custom form
         $("mainForm").append(f);
     };
 });
