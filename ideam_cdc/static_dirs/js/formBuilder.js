@@ -163,6 +163,14 @@ $(document).ready(function () {
                     break;
                 case "8":
                     console.log("Creating StorageUnitType field");
+                    // creating initial divs
+                    var tmp_storage = document.createElement("div");
+                    var tmp_bands = document.createElement("div");
+                    tmp_storage.id = "storage_div";
+                    tmp_bands.id = "band_div";
+                    f.appendChild(tmp_storage);
+                    f.appendChild(tmp_bands);
+                    //getting the json
                     $.getJSON( "/storage/storage_units", function( su_data ) {
                         // storage_unit_select
                         var storage_unit_select = document.createElement("select");
@@ -179,21 +187,36 @@ $(document).ready(function () {
                             storage_unit_option.text = storage_name;
                             storage_unit_select.appendChild(storage_unit_option);
                         });
+                        // bands_select
+                        var bands_select = document.createElement("select");
+                        bands_select.id = "bands_"+pk;
+                        bands_select.name = "bands_"+pk;
+                        bands_select.className = "form-control";
+                        bands_select.multiple = true;
+                        // band_options
+                        var band_option = document.createElement("option");
+                        for (i = 0; i < 3; i++) {
+                            band_option = document.createElement("option");
+                            band_option.value = i;
+                            band_option.text = "Banda " + i;
+                            bands_select.appendChild(band_option);
+                        }
                         // ===== LABELS =====
                         var storage_unit_label = document.createElement("label");
                         storage_unit_label.innerHTML = "<b>Posibles unidades de almacenamiento origen *</b>";
+                        var band_label = document.createElement("label");
+                        band_label.innerHTML = "<b>Bandas de compuesto</b>";
                         // ===== DIVs =====
-                        var param_div = document.createElement("div");
-                        param_div.className = "form-group";
+                        var storage_unit_param_div = document.getElementById("storage_div");
+                        storage_unit_param_div.className = "form-group";
+                        var band_param_div = document.getElementById("band_div");
+                        band_param_div.className = "form-group";
                         // appending everything
-                        param_div.appendChild(storage_unit_label);
-                        param_div.appendChild(storage_unit_select);
-                        // appending to the form
-                        f.appendChild(param_div);
+                        storage_unit_param_div.appendChild(storage_unit_label);
+                        storage_unit_param_div.appendChild(storage_unit_select);
+                        band_param_div.appendChild(band_label);
+                        band_param_div.appendChild(bands_select);
                     });
-                    break;
-                case "11":
-                    console.log("Creating MultipleChoiceListType field");
                     break;
                 case "4":
                     console.log("Creating BooleanType field");
@@ -202,7 +225,10 @@ $(document).ready(function () {
                     boolean_input.placeholder = parameter.fields.help_text;
                     boolean_input.id = "boolean_input_"+pk;
                     boolean_input.name = "boolean_input_"+pk;
-                    boolean_input.text = "<b>"+parameter.fields.name+"</b>";
+                    //boolean_input.text = "<b>"+parameter.fields.name+"</b>";
+                    // ===== Bold =====
+                    var boolean_name = document.createElement("B");
+                    boolean_name.innerHTML = " <b>"+parameter.fields.name+"</b>";
                     // ===== Paragraphs =====
                     var boolean_text = document.createElement("p");
                     boolean_text.innerHTML = parameter.fields.help_text;
@@ -212,6 +238,7 @@ $(document).ready(function () {
                     param_div.className = "form-group";
                     // appending everything
                     param_div.appendChild(boolean_input);
+                    param_div.appendChild(boolean_name);
                     param_div.appendChild(boolean_text);
                     // appending to the form
                     f.appendChild(param_div);

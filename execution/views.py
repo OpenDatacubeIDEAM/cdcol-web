@@ -33,10 +33,7 @@ def new_blank_execution(request):
 
 @login_required(login_url='/accounts/login/')
 def obtain_parameters(request, version_id):
-	# http://stackoverflow.com/questions/3297143/dynamically-create-a-html-form-with-javascript
-	# https://www.formget.com/how-to-dynamically-add-and-remove-form-fields-using-javascript/
-	# http://www.randomsnippets.com/2008/02/21/how-to-dynamically-add-form-elements-via-javascript/
-	data = serializers.serialize("json", Parameter.objects.filter(version__id=version_id))
+	data = serializers.serialize("json", Parameter.objects.filter(version__id=version_id, enabled=True))
 	return HttpResponse(data, content_type='application/json')
 	# return JsonResponse(data, safe=False)
 
