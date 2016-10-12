@@ -80,7 +80,7 @@ $(document).ready(function () {
     });
 
     $.ajax({
-        url: "http://localhost:8000/execution/parameters/" + versionValue + "/",
+        url: "http://172.24.99.167:8000/execution/parameters/" + versionValue + "/",
         data: {
             format: 'json'
         },
