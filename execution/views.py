@@ -35,7 +35,8 @@ def new_blank_execution(request):
 
 @login_required(login_url='/accounts/login/')
 def obtain_parameters(request, version_id):
-	data = serializers.serialize("json", Parameter.objects.filter(version__id=version_id, enabled=True))
+	data = serializers.serialize(
+		"json", Parameter.objects.filter(version__id=version_id, enabled=True).order_by('position'))
 	return HttpResponse(data, content_type='application/json')
 
 
