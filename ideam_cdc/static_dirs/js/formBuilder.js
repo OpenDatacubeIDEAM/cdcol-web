@@ -63,7 +63,6 @@ $(document).ready(function () {
     // Reloading the web when the version changes
 
     $('#id_version').on('change', function () {
-        console.log("alla");
         var selectedIndex = this.selectedIndex;
         var algorithmIndex = pathArray.indexOf("new");
         if (selectedIndex > 0){
@@ -80,7 +79,7 @@ $(document).ready(function () {
     });
 
     $.ajax({
-        url: "http://172.24.99.167:8000/execution/parameters/" + versionValue + "/",
+        url: "/execution/parameters/" + versionValue + "/",
         data: {
             format: 'json'
         },
@@ -102,6 +101,7 @@ $(document).ready(function () {
         jQuery.each(json, function (i, parameter) {
             var parameter_type = parameter.fields.parameter_type;
             var pk = parameter.pk;
+            var requiredText = (parameter.fields.required ? "*":"");
             switch (parameter_type) {
                 case "7":
                     console.log("Creating AreaType field");
@@ -144,7 +144,7 @@ $(document).ready(function () {
                     var label_ne_longitude_2 = document.createElement("label");
                     label_ne_longitude_2.innerHTML = "<b>Longitud NE</b>";
                     var area_title = document.createElement("label");
-                    area_title.innerHTML = "<b>Mapa</b>";
+                    area_title.innerHTML = "<b>Mapa"+requiredText+"</b>";
                     // ===== DIVs =====
                     var left_div = document.createElement("div");
                     left_div.className = "col-md-6 col-sm-6 col-xs-6";
@@ -184,7 +184,7 @@ $(document).ready(function () {
                     integer_input.required = parameter.fields.required;
                     // ===== LABELS =====
                     var label_integer_title = document.createElement("label");
-                    label_integer_title.innerHTML = "<b>"+parameter.fields.name+"</b>";
+                    label_integer_title.innerHTML = "<b>"+parameter.fields.name+requiredText+"</b>";
                     // ===== DIVs =====
                     var param_div = document.createElement("div");
                     param_div.className = "form-group";
@@ -217,7 +217,7 @@ $(document).ready(function () {
                     end_date_label.innerHTML = "<b>Hasta</b>";
                     // ===== Paragraphs =====
                     var paragraph_title = document.createElement("p");
-                    paragraph_title.innerHTML = "<b>Periodo de consulta</b>";
+                    paragraph_title.innerHTML = "<b>Periodo de consulta"+requiredText+"</b>";
                     var paragraph_text = document.createElement("p");
                     paragraph_text.innerHTML = parameter.fields.help_text;
                     paragraph_text.className = "help-block";
@@ -283,7 +283,7 @@ $(document).ready(function () {
                         }
                         // ===== LABELS =====
                         var storage_unit_label = document.createElement("label");
-                        storage_unit_label.innerHTML = "<b>Posibles unidades de almacenamiento origen *</b>";
+                        storage_unit_label.innerHTML = "<b>Posibles unidades de almacenamiento origen"+requiredText+"</b>";
                         var band_label = document.createElement("label");
                         band_label.innerHTML = "<b>Bandas de compuesto</b>";
                         // ===== DIVs =====
@@ -307,7 +307,7 @@ $(document).ready(function () {
                     boolean_input.name = "boolean_input_"+pk;
                     // ===== Bold =====
                     var boolean_name = document.createElement("B");
-                    boolean_name.innerHTML = " <b>"+parameter.fields.name+"</b>";
+                    boolean_name.innerHTML = " <b>"+parameter.fields.name+requiredText+"</b>";
                     // ===== Paragraphs =====
                     var boolean_text = document.createElement("p");
                     boolean_text.innerHTML = parameter.fields.help_text;
