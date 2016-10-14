@@ -139,7 +139,7 @@
                             <div class="container">
                                 <form id="mainForm" role="form" class="form-horizontal col-md-6 col-md-offset-1"
                                       method="POST"
-                                      action="{% url 'execution:new_execution' algorithm.id %}"
+                                      action="{% url 'execution:new_execution' algorithm_id=algorithm.id version_id=version.id %}"
                                       enctype="multipart/form-data">
                                     {% csrf_token %}
 
@@ -176,7 +176,7 @@
                                             <a href="#">{{ topic.name }}</a>
                                             <ul>
                                                 {% for algorithm in topic|get_algorithms %}
-                                                    <li><a href="{% url 'execution:new_execution' algorithm.id %}">{{ algorithm.name }}</a></li>
+                                                    <li><a href="{% url 'execution:new_execution' algorithm.id algorithm|last_version_id %}">{{ algorithm.name }}</a></li>
                                                 {% endfor %}
                                             </ul>
                                         </li>
