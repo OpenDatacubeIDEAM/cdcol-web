@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core import serializers
 from django.core.urlresolvers import reverse
-from algorithm.models import Topic, Algorithm, StorageUnit
+from algorithm.models import Topic, Algorithm
 from execution.models import *
 from execution.forms import VersionSelectionForm
 import datetime

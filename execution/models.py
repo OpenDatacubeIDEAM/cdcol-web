@@ -38,6 +38,22 @@ class ExecutionParameter(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
+	def obtain_value(self):
+		parameter_type = self.parameter.parameter_type
+		response = "Parámetro no soportado"
+		if parameter_type == "7":
+			response = "{}, {} - {}, {}".format(self.areatype.latitude_start, self.areatype.longitude_start,
+			                                    self.areatype.latitude_end, self.areatype.longitude_end)
+		elif parameter_type == "2":
+			response = "{}".format(self.integertype.value)
+		elif parameter_type == "9":
+			response = "{} - {}".format(self.timeperiodtype.start_date, self.timeperiodtype.end_date)
+		elif parameter_type == "8":
+			response = "{}".format(self.storageunittype.value)
+		elif parameter_type == "4":
+			response = "{}".format(self.booleantype.value)
+		return response
+
 	def __unicode__(self):
 		return "{} - {} - {}".format(self.execution.id, self.parameter.get_parameter_type_display(), self.parameter.name)
 
