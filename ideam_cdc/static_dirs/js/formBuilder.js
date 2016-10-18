@@ -10,11 +10,13 @@ $(document).ready(function () {
 
     var rectangle;
     var map;
+    var grid;
 
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 4.1, lng: -72.8},
-            zoom: 5
+            zoom: 5,
+            mapTypeId: google.maps.MapTypeId.TERRAIN,
         });
 
         var bounds = {
@@ -43,10 +45,10 @@ $(document).ready(function () {
         var ne = rectangle.getBounds().getNorthEast();
         var sw = rectangle.getBounds().getSouthWest();
 
-        document.getElementById("sw_latitude").value = sw.lat();
-        document.getElementById("sw_longitude").value = sw.lng();
-        document.getElementById("ne_latitude").value = ne.lat();
-        document.getElementById("ne_longitude").value = ne.lng();
+        document.getElementById("sw_latitude").value = Math.ceil(ne.lat());
+        document.getElementById("sw_longitude").value = Math.floor(sw.lng());
+        document.getElementById("ne_latitude").value = Math.floor(sw.lat());
+        document.getElementById("ne_longitude").value = Math.ceil(ne.lng());
 
     }
 
