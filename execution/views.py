@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core import serializers
 from django.core.urlresolvers import reverse
-from algorithm.models import Topic, Algorithm, StorageUnit
+from algorithm.models import Topic, Algorithm
 from execution.models import *
 from execution.forms import VersionSelectionForm
 import datetime
@@ -134,19 +134,17 @@ def create_execution_parameter_objects(parameters, request, execution, current_v
 
 
 @login_required(login_url='/accounts/login/')
-def new_execution(request, algorithm_id, version_id=None):
+def new_execution(request, algorithm_id, version_id):
 	current_user = request.user
 	algorithm = get_object_or_404(Algorithm, id=algorithm_id)
+	current_version = None
 	if version_id:
 		current_version = get_object_or_404(Version, id=version_id)
-	else:
-		current_version = algorithm.last_version()
 	parameters = Parameter.objects.filter(version=current_version).order_by('position')
 	topics = Topic.objects.all()
 	if request.method == 'POST':
 		textarea_name = request.POST.get('textarea_name', False)
 		started_at = datetime.datetime.now()
-		print textarea_name
 
 		new_execution = Execution(
 			version=current_version,
@@ -161,5 +159,5 @@ def new_execution(request, algorithm_id, version_id=None):
 		return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': new_execution.id}))
 	version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id)
 	context = {'topics': topics, 'algorithm': algorithm, 'parameters': parameters,
-	           'version_selection_form': version_selection_form}
+	           'version_selection_form': version_selection_form, 'version': current_version}
 	return render(request, 'execution/new.html', context)

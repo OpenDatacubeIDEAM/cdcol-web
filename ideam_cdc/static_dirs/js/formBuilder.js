@@ -8,48 +8,30 @@
 
 $(document).ready(function () {
 
-    var rectangle;
     var map;
 
     function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: 4.1, lng: -72.8},
-            zoom: 5
+        var mymap = L.map('map').setView([4.6870819, -74.0808636], 5);
+
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
+            maxZoom: 15,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+            'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            id: 'mapbox.streets'
+        }).addTo(mymap);
+
+        var areaSelect = L.areaSelect({width: 200, height: 250});
+        areaSelect.on("change", function () {
+            var bounds = this.getBounds();
+            document.getElementById("sw_latitude").value = Math.ceil(bounds.getSouthWest().lat);
+            document.getElementById("sw_longitude").value = Math.floor(bounds.getSouthWest().lng);
+            document.getElementById("ne_latitude").value = Math.floor(bounds.getNorthEast().lat);
+            document.getElementById("ne_longitude").value = Math.ceil(bounds.getNorthEast().lng);
         });
-
-        var bounds = {
-            north: 4.0,
-            south: 8.0,
-            east: -70.0,
-            west: -75.7
-        };
-
-        rectangle = new google.maps.Rectangle({
-            bounds: bounds,
-            editable: true,
-            draggable: true,
-            strokeColor: '#FF0000',
-            fillColor: '#FF0000',
-        });
-
-        rectangle.setMap(map);
-
-        // Add an event listener on the rectangle.
-        rectangle.addListener('bounds_changed', showNewRect);
+        areaSelect.addTo(mymap);
     }
-
-    /** @this {google.maps.Rectangle} */
-    function showNewRect(event) {
-        var ne = rectangle.getBounds().getNorthEast();
-        var sw = rectangle.getBounds().getSouthWest();
-
-        document.getElementById("sw_latitude").value = sw.lat();
-        document.getElementById("sw_longitude").value = sw.lng();
-        document.getElementById("ne_latitude").value = ne.lat();
-        document.getElementById("ne_longitude").value = ne.lng();
-
-    }
-
+    
     // Getting the version id from the url and selecting it
 
     var pathArray = window.location.pathname.split('/');
@@ -63,7 +45,6 @@ $(document).ready(function () {
     // Reloading the web when the version changes
 
     $('#id_version').on('change', function () {
-        console.log("alla");
         var selectedIndex = this.selectedIndex;
         var algorithmIndex = pathArray.indexOf("new");
         if (selectedIndex > 0){
@@ -80,7 +61,7 @@ $(document).ready(function () {
     });
 
     $.ajax({
-        url: "http://172.24.99.167:8000/execution/parameters/" + versionValue + "/",
+        url: "/execution/parameters/" + versionValue + "/",
         data: {
             format: 'json'
         },
@@ -102,6 +83,7 @@ $(document).ready(function () {
         jQuery.each(json, function (i, parameter) {
             var parameter_type = parameter.fields.parameter_type;
             var pk = parameter.pk;
+            var requiredText = (parameter.fields.required ? "*":"");
             switch (parameter_type) {
                 case "7":
                     console.log("Creating AreaType field");
@@ -144,7 +126,7 @@ $(document).ready(function () {
                     var label_ne_longitude_2 = document.createElement("label");
                     label_ne_longitude_2.innerHTML = "<b>Longitud NE</b>";
                     var area_title = document.createElement("label");
-                    area_title.innerHTML = "<b>Mapa</b>";
+                    area_title.innerHTML = "<b>Mapa"+requiredText+"</b>";
                     // ===== DIVs =====
                     var left_div = document.createElement("div");
                     left_div.className = "col-md-6 col-sm-6 col-xs-6";
@@ -184,7 +166,7 @@ $(document).ready(function () {
                     integer_input.required = parameter.fields.required;
                     // ===== LABELS =====
                     var label_integer_title = document.createElement("label");
-                    label_integer_title.innerHTML = "<b>"+parameter.fields.name+"</b>";
+                    label_integer_title.innerHTML = "<b>"+parameter.fields.name+requiredText+"</b>";
                     // ===== DIVs =====
                     var param_div = document.createElement("div");
                     param_div.className = "form-group";
@@ -217,7 +199,7 @@ $(document).ready(function () {
                     end_date_label.innerHTML = "<b>Hasta</b>";
                     // ===== Paragraphs =====
                     var paragraph_title = document.createElement("p");
-                    paragraph_title.innerHTML = "<b>Periodo de consulta</b>";
+                    paragraph_title.innerHTML = "<b>Periodo de consulta"+requiredText+"</b>";
                     var paragraph_text = document.createElement("p");
                     paragraph_text.innerHTML = parameter.fields.help_text;
                     paragraph_text.className = "help-block";
@@ -283,7 +265,7 @@ $(document).ready(function () {
                         }
                         // ===== LABELS =====
                         var storage_unit_label = document.createElement("label");
-                        storage_unit_label.innerHTML = "<b>Posibles unidades de almacenamiento origen *</b>";
+                        storage_unit_label.innerHTML = "<b>Posibles unidades de almacenamiento origen"+requiredText+"</b>";
                         var band_label = document.createElement("label");
                         band_label.innerHTML = "<b>Bandas de compuesto</b>";
                         // ===== DIVs =====
@@ -307,7 +289,7 @@ $(document).ready(function () {
                     boolean_input.name = "boolean_input_"+pk;
                     // ===== Bold =====
                     var boolean_name = document.createElement("B");
-                    boolean_name.innerHTML = " <b>"+parameter.fields.name+"</b>";
+                    boolean_name.innerHTML = " <b>"+parameter.fields.name+requiredText+"</b>";
                     // ===== Paragraphs =====
                     var boolean_text = document.createElement("p");
                     boolean_text.innerHTML = parameter.fields.help_text;

@@ -28,6 +28,9 @@ class Execution(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
+	def __unicode__(self):
+		return "{} - {} - v{}".format(self.id, self.version.algorithm.name, self.version.number)
+
 
 class ExecutionParameter(models.Model):
 	execution = models.ForeignKey(Execution, on_delete=models.CASCADE)
@@ -35,17 +38,45 @@ class ExecutionParameter(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
+	def obtain_value(self):
+		parameter_type = self.parameter.parameter_type
+		response = "Parámetro no soportado"
+		if parameter_type == "7":
+			response = "{}, {} - {}, {}".format(self.areatype.latitude_start, self.areatype.longitude_start,
+			                                    self.areatype.latitude_end, self.areatype.longitude_end)
+		elif parameter_type == "2":
+			response = "{}".format(self.integertype.value)
+		elif parameter_type == "9":
+			response = "{} - {}".format(self.timeperiodtype.start_date, self.timeperiodtype.end_date)
+		elif parameter_type == "8":
+			response = "{}".format(self.storageunittype.value)
+		elif parameter_type == "4":
+			response = "{}".format(self.booleantype.value)
+		return response
+
+	def __unicode__(self):
+		return "{} - {} - {}".format(self.execution.id, self.parameter.get_parameter_type_display(), self.parameter.name)
+
 
 class StringType(ExecutionParameter):
 	value = models.CharField(max_length=200)
+
+	def __unicode__(self):
+		return "{} - {}".format(self.execution, self.value)
 
 
 class IntegerType(ExecutionParameter):
 	value = models.IntegerField()
 
+	def __unicode__(self):
+		return "{} - {}".format(self.execution, self.value)
+
 
 class BooleanType(ExecutionParameter):
 	value = models.BooleanField(default=False)
+
+	def __unicode__(self):
+		return "{} - {}".format(self.execution, self.value)
 
 
 class AreaType(ExecutionParameter):
@@ -54,15 +85,27 @@ class AreaType(ExecutionParameter):
 	longitude_start = models.CharField(max_length=200)
 	longitude_end = models.CharField(max_length=200)
 
+	def __unicode__(self):
+		return "{}".format(self.execution.id)
+
 
 class StorageUnitType(ExecutionParameter):
 	value = models.CharField(max_length=200)
+
+	def __unicode__(self):
+		return "{} - {}".format(self.execution, self.value)
 
 
 class TimePeriodType(ExecutionParameter):
 	start_date = models.DateField()
 	end_date = models.DateField()
 
+	def __unicode__(self):
+		return "{} - {}".format(self.execution)
+
 
 class MultipleChoiceListType(ExecutionParameter):
 	value = models.CharField(max_length=200)
+
+	def __unicode__(self):
+		return "{} - {}".format(self.execution, self.value)

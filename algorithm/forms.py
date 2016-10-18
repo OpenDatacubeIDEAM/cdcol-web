@@ -44,8 +44,8 @@ class NewParameterForm(forms.Form):
 	                              'placeholder': 'Ingresa un texto con las ayudas y consideraciones que deben tener en cuenta por los usuarios al ingresar este parámetro.'}),
 	                              required=True)
 	position = forms.IntegerField(min_value=0, required=True)
-	required = forms.BooleanField(required=False)
-	enabled = forms.BooleanField(required=False)
+	required = forms.BooleanField(required=False, initial=True)
+	enabled = forms.BooleanField(required=False, initial=True)
 	default_value = forms.CharField(max_length=200, required=False)
 	function_name = forms.CharField(max_length=200, required=True)
 
