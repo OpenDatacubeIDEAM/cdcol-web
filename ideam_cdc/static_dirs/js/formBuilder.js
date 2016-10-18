@@ -8,50 +8,30 @@
 
 $(document).ready(function () {
 
-    var rectangle;
     var map;
-    var grid;
 
     function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: 4.1, lng: -72.8},
-            zoom: 5,
-            mapTypeId: google.maps.MapTypeId.TERRAIN,
+        var mymap = L.map('map').setView([4.6870819, -74.0808636], 5);
+
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
+            maxZoom: 15,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+            'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            id: 'mapbox.streets'
+        }).addTo(mymap);
+
+        var areaSelect = L.areaSelect({width: 200, height: 250});
+        areaSelect.on("change", function () {
+            var bounds = this.getBounds();
+            document.getElementById("sw_latitude").value = Math.ceil(bounds.getSouthWest().lat);
+            document.getElementById("sw_longitude").value = Math.floor(bounds.getSouthWest().lng);
+            document.getElementById("ne_latitude").value = Math.floor(bounds.getNorthEast().lat);
+            document.getElementById("ne_longitude").value = Math.ceil(bounds.getNorthEast().lng);
         });
-
-        var bounds = {
-            north: 4.0,
-            south: 8.0,
-            east: -70.0,
-            west: -75.7
-        };
-
-        rectangle = new google.maps.Rectangle({
-            bounds: bounds,
-            editable: true,
-            draggable: true,
-            strokeColor: '#FF0000',
-            fillColor: '#FF0000',
-        });
-
-        rectangle.setMap(map);
-
-        // Add an event listener on the rectangle.
-        rectangle.addListener('bounds_changed', showNewRect);
+        areaSelect.addTo(mymap);
     }
-
-    /** @this {google.maps.Rectangle} */
-    function showNewRect(event) {
-        var ne = rectangle.getBounds().getNorthEast();
-        var sw = rectangle.getBounds().getSouthWest();
-
-        document.getElementById("sw_latitude").value = Math.ceil(ne.lat());
-        document.getElementById("sw_longitude").value = Math.floor(sw.lng());
-        document.getElementById("ne_latitude").value = Math.floor(sw.lat());
-        document.getElementById("ne_longitude").value = Math.ceil(ne.lng());
-
-    }
-
+    
     // Getting the version id from the url and selecting it
 
     var pathArray = window.location.pathname.split('/');
