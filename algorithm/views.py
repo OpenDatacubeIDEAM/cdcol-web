@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from algorithm.models import Algorithm, Topic, VersionStorageUnit, Version, Parameter
+from execution.models import Review
 from storage.models import StorageUnit
 from algorithm.forms import AlgorithmForm, AlgorithmUpdateForm, VersionForm, VersionUpdateForm, NewParameterForm
 
@@ -175,8 +176,9 @@ def update_version(request, algorithm_id, version_id):
 def version_detail(request, algorithm_id, version_id):
 	version = get_object_or_404(Version, id=version_id)
 	parameters = Parameter.objects.filter(version=version_id).order_by('position')
+	reviews = Review.objects.filter(execution__version=version).order_by('created_at')
 	storage_units = VersionStorageUnit.objects.filter(version_id=version_id)
-	context = {'version': version, 'storage_units': storage_units, 'parameters': parameters}
+	context = {'version': version, 'storage_units': storage_units, 'parameters': parameters, 'reviews': reviews}
 	return render(request, 'algorithm/version_detail.html', context)
 
 

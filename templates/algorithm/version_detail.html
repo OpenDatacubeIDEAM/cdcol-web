@@ -126,6 +126,70 @@
                         </table>
                     </div>
 
+                    <h3 class="page-title">Calificaciones de la versión</h3>
+                    <div class="separator-2"></div>
+                    <p>A continuación encuentras el listado de calificaciones de esta versión del algoritmo:</p>
+                    <br/>
+                    <!-- blogpost start -->
+                    <article class="">
+                        <div class="row">
+                            <div class="col-md-6 ">
+                                <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible animated object-visible fadeInDownSmall"
+                                     data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+                                    <span class="icon default-bg circle"><i class="fa fa-star"></i></span>
+                                    <h4>Calificación</h4>
+                                    <div class="separator clearfix"></div>
+                                    <h2>4.5/5</h2>
+                                </div>
+                            </div>
+                            <div class="col-md-6 ">
+                                <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible animated object-visible fadeInDownSmall"
+                                     data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+                                    <span class="icon default-bg circle"><i class="fa fa-check"></i></span>
+                                    <h4># de Calificaciones</h4>
+                                    <div class="separator clearfix"></div>
+                                    <h2>{{ reviews.count }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <!-- blogpost end -->
+
+                    {% for review in reviews %}
+
+                        <!-- blogpost start -->
+                        <article class="">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <b>Creada por: </b>
+                                </div>
+                                <div class="col-md-8">
+                                    <p>{{ review.reviewed_by }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <b>Calificación: </b>
+                                </div>
+                                <div class="col-md-8">
+                                    <p>{{ review.rating }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <b>Comentarios de la calificación</b>
+                                </div>
+                                <div class="col-md-8">
+                                    <p>{{ review.comments }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <b>Fecha de creación: </b>
+                                </div>
+                                <div class="col-md-8">
+                                    <p>{{ review.created_at }}</p>
+                                </div>
+
+                            </div>
+                        </article>
+                        <!-- blogpost end -->
+                    {% endfor %}
+
                 </div>
                 <!-- main end -->
 

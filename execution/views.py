@@ -6,7 +6,7 @@ from django.core import serializers
 from django.core.urlresolvers import reverse
 from algorithm.models import Topic, Algorithm
 from execution.models import *
-from execution.forms import VersionSelectionForm
+from execution.forms import VersionSelectionForm, ReviewForm
 import datetime
 
 
@@ -161,3 +161,32 @@ def new_execution(request, algorithm_id, version_id):
 	context = {'topics': topics, 'algorithm': algorithm, 'parameters': parameters,
 	           'version_selection_form': version_selection_form, 'version': current_version}
 	return render(request, 'execution/new.html', context)
+
+
+@login_required(login_url='/accounts/login/')
+def rate_execution(request, execution_id):
+	current_user = request.user
+	execution = get_object_or_404(Execution, id=execution_id)
+	if request.method == 'POST':
+		# getting the form
+		review_form = ReviewForm(request.POST)
+		# checking if the form is valid
+		if review_form.is_valid():
+			rating = review_form.cleaned_data['rating']
+			comments = review_form.cleaned_data['comments']
+
+			# creating the review
+			new_review = Review(
+				execution=execution,
+				rating=rating,
+				comments=comments,
+				reviewed_by=current_user
+			)
+			new_review.save()
+			return HttpResponseRedirect(reverse('execution:index'))
+		else:
+			review_form.add_error(None, "Favor completar todos los campos marcados.")
+	else:
+		review_form = ReviewForm()
+	context = {'review_form': review_form, 'execution': execution}
+	return render(request, 'execution/rate.html', context)

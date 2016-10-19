@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- breadcrumb start -->
+    <!-- ================ -->
+    <div class="breadcrumb-container">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
+                <li><a href="{% url 'execution:index' %}">Ejecuciones</a></li>
+                <li class="active">Calificación</li>
+            </ol>
+        </div>
+    </div>
+    <!-- breadcrumb end -->
+
+    <!-- main-container start -->
+    <!-- ================ -->
+    <section class="main-container">
+
+        <div class="container">
+            <div class="row">
+
+                <!-- main start -->
+                <!-- ================ -->
+                <div class="main col-md-8">
+
+                    <!-- page-title start -->
+                    <!-- ================ -->
+                    <h3 class="page-title">Información de la ejecución</h3>
+                    <div class="separator-2"></div>
+                    <!-- page-title end -->
+                    <p>Esta es la información de la ejecución seleccionada.</p>
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <td>Algoritmo:</td>
+                            <td>{{ execution.version.algorithm.name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Versión:</td>
+                            <td>{{ execution.version.number }}</td>
+                        </tr>
+                        <tr>
+                            <td>Estado:</td>
+                            <td>{{ execution.get_state_display }}</td>
+                        </tr>
+                        <tr>
+                            <td>Fecha de Creación:</td>
+                            <td>{{ execution.created_at }}</td>
+                        </tr>
+                        <tr>
+                            <td>Inicio de ejecución:</td>
+                            <td>{{ execution.started_at }}</td>
+                        </tr>
+                        <tr>
+                            <td>Fin de ejecución:</td>
+                            <td>{{ execution.finished_at }}</td>
+                        </tr>
+                        <tr>
+                            <td>Creada por:</td>
+                            <td>{{ execution.executed_by.email }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="page-title">Calificación de la ejecución</h3>
+                    <div class="separator-2"></div>
+                    <!-- page-title end -->
+                    <p>A continuación puedes calificar en una escala de 1 a 5 la calidad de los resultados que obtuviste con esta ejecución:</p>
+                    <div class="section light-gray-bg">
+                        <div class="container">
+                            <form role="form" class="form-horizontal col-md-5 col-md-offset-1" method="POST"
+                                  action="{% url 'execution:rate_execution' execution.id %}"
+                                  enctype="multipart/form-data">
+                                {% csrf_token %}
+
+                                <!-- Errors -->
+                                {% if algorithm_form.errors %}
+                                    {% for error in algorithm_form.non_field_errors %}
+                                        <div class="alert alert-danger">
+                                            <strong>{{ error|escape }}</strong>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                <!-- /Errors -->
+
+                                <!-- Calificación -->
+                                <div class="form-group">
+                                    <!-- /Errors -->
+                                    <label for=""><b>Calificación*</b></label>
+                                    {{ review_form.rating }}
+                                </div>
+                                <!-- /Calificación -->
+
+                                <!-- Comentario -->
+                                <div class="form-group">
+                                    <label for=""><b>Comentarios de la calificación*</b></label>
+                                    {{ review_form.comments }}
+                                </div>
+                                <!-- /Comentario -->
+
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-default">Enviar calificación</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- main end -->
+
+            </div>
+        </div>
+    </section>
+    <!-- main-container end -->
+{% endblock %}

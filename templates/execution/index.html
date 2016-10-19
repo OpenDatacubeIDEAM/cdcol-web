@@ -60,6 +60,8 @@
                                             <td>{{ execution.finished_at }}</td>
                                             <td><a href="{% url 'execution:detail' execution.id %}" class="btn btn-gray btn-sm"><i
                                                     class="fa fa-bars"></i> Ver Detalle</a>
+                                                <a href="{% url 'execution:rate_execution' execution.id %}" class="btn btn-gray btn-sm"><i
+                                                    class="fa fa-bars"></i> Calificar</a>
                                             </td>
                                         </tr>
                                     {% endfor %}

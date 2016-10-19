@@ -109,3 +109,15 @@ class MultipleChoiceListType(ExecutionParameter):
 
 	def __unicode__(self):
 		return "{} - {}".format(self.execution, self.value)
+
+
+class Review(models.Model):
+	execution = models.ForeignKey(Execution, on_delete=models.CASCADE)
+	rating = models.IntegerField()
+	comments = models.TextField()
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+	reviewed_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='review_author')
+
+	def __unicode__(self):
+		return "{} - {}".format(self.execution.id, self.rating)
