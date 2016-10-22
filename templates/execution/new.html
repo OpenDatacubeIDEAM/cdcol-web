@@ -121,7 +121,7 @@
                                     <span class="icon default-bg circle"><i class="fa fa-star"></i></span>
                                     <h4>Calificación</h4>
                                     <div class="separator clearfix"></div>
-                                    <h2>4.5/5</h2>
+                                    <h2>{{ average_rating }}/5</h2>
                                 </div>
                             </div>
                             <div class="col-md-4 ">
@@ -130,7 +130,7 @@
                                     <span class="icon default-bg circle"><i class="fa fa-check"></i></span>
                                     <h4># de Calificaciones</h4>
                                     <div class="separator clearfix"></div>
-                                    <h2>15</h2>
+                                    <h2>{{ reviews.count }}</h2>
                                 </div>
                             </div>
                             <div class="col-md-4 ">
@@ -139,7 +139,7 @@
                                     <span class="icon default-bg circle"><i class="fa fa-refresh"></i></span>
                                     <h4># de Ejecuciones</h4>
                                     <div class="separator clearfix"></div>
-                                    <h2>96</h2>
+                                    <h2>{{ executions.count }}</h2>
                                 </div>
                             </div>
                             <div class="text-center">
@@ -221,5 +221,7 @@
 {% block extra_body %}
     <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
     <script src={% static "js/leaflet-areaselect.js" %}></script>
+    <script defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgHk6zP-EhApihfwqpoeoOe2ZjSraVVPM"></script>
     <script type="text/javascript" src={% static "js/formBuilder.js" %}></script>
 {% endblock %}

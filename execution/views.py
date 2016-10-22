@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core import serializers
 from django.core.urlresolvers import reverse
+from django.db.models import Avg
 from algorithm.models import Topic, Algorithm
 from execution.models import *
 from execution.forms import VersionSelectionForm, ReviewForm
@@ -141,6 +142,11 @@ def new_execution(request, algorithm_id, version_id):
 	if version_id:
 		current_version = get_object_or_404(Version, id=version_id)
 	parameters = Parameter.objects.filter(version=current_version).order_by('position')
+	reviews = Review.objects.filter(version=current_version)
+	# getting the average rating
+	average_rating = Review.objects.filter(version=current_version).aggregate(Avg('rating'))['rating__avg']
+	average_rating = average_rating if average_rating is not None else 0
+	executions = Execution.objects.filter(version=current_version)
 	topics = Topic.objects.all()
 	if request.method == 'POST':
 		textarea_name = request.POST.get('textarea_name', False)
@@ -159,7 +165,8 @@ def new_execution(request, algorithm_id, version_id):
 		return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': new_execution.id}))
 	version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id)
 	context = {'topics': topics, 'algorithm': algorithm, 'parameters': parameters,
-	           'version_selection_form': version_selection_form, 'version': current_version}
+	           'version_selection_form': version_selection_form, 'version': current_version,
+	           'reviews': reviews, 'average_rating': average_rating, 'executions': executions}
 	return render(request, 'execution/new.html', context)
 
 
@@ -174,9 +181,13 @@ def rate_execution(request, execution_id):
 		if review_form.is_valid():
 			rating = review_form.cleaned_data['rating']
 			comments = review_form.cleaned_data['comments']
+			version = execution.version
+			algorithm = version.algorithm
 
 			# creating the review
 			new_review = Review(
+				algorithm=algorithm,
+				version=version,
 				execution=execution,
 				rating=rating,
 				comments=comments,

@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from django.contrib.auth.models import User
 from django.db import models
-from algorithm.models import Version, Parameter
+from algorithm.models import Version, Algorithm, Parameter
 
 
 class Execution(models.Model):
@@ -112,6 +112,8 @@ class MultipleChoiceListType(ExecutionParameter):
 
 
 class Review(models.Model):
+	algorithm = models.ForeignKey(Algorithm, on_delete=models.CASCADE)
+	version = models.ForeignKey(Version, on_delete=models.CASCADE)
 	execution = models.ForeignKey(Execution, on_delete=models.CASCADE)
 	rating = models.IntegerField()
 	comments = models.TextField()

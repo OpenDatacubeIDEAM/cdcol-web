@@ -10,7 +10,7 @@ $(document).ready(function () {
 
     var map;
 
-    function initMap() {
+    function init_osm() {
         var mymap = L.map('map').setView([4.6870819, -74.0808636], 5);
 
         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
@@ -30,6 +30,46 @@ $(document).ready(function () {
             document.getElementById("ne_longitude").value = Math.ceil(bounds.getNorthEast().lng);
         });
         areaSelect.addTo(mymap);
+    }
+
+    function init_google_map() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 4.1, lng: -72.8},
+            zoom: 5,
+            mapTypeId: google.maps.MapTypeId.TERRAIN,
+        });
+
+        var bounds = {
+            north: 4.0,
+            south: 8.0,
+            east: -70.0,
+            west: -75.7
+        };
+
+        rectangle = new google.maps.Rectangle({
+            bounds: bounds,
+            editable: true,
+            draggable: true,
+            strokeColor: '#FF0000',
+            fillColor: '#FF0000',
+        });
+
+        rectangle.setMap(map);
+
+        // Add an event listener on the rectangle.
+        rectangle.addListener('bounds_changed', showNewRect);
+    }
+
+    /** @this {google.maps.Rectangle} */
+    function showNewRect(event) {
+        var ne = rectangle.getBounds().getNorthEast();
+        var sw = rectangle.getBounds().getSouthWest();
+
+        document.getElementById("sw_latitude").value = ne.lat();
+        document.getElementById("sw_longitude").value = sw.lng();
+        document.getElementById("ne_latitude").value = sw.lat();
+        document.getElementById("ne_longitude").value = ne.lng();
+
     }
     
     // Getting the version id from the url and selecting it
@@ -153,7 +193,7 @@ $(document).ready(function () {
                     param_div.appendChild(right_div);
                     // appending to the form
                     f.appendChild(param_div);
-                    initMap();
+                    init_google_map();
                     break;
                 case "2":
                     console.log("Creating IntegerType field");
