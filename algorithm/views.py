@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django.db.models import Avg
 from algorithm.models import Algorithm, Topic, VersionStorageUnit, Version, Parameter
 from execution.models import Review
 from storage.models import StorageUnit
@@ -177,8 +178,12 @@ def version_detail(request, algorithm_id, version_id):
 	version = get_object_or_404(Version, id=version_id)
 	parameters = Parameter.objects.filter(version=version_id).order_by('position')
 	reviews = Review.objects.filter(execution__version=version).order_by('created_at')
+	# getting the average rating
+	average_rating = Review.objects.filter(version=version).aggregate(Avg('rating'))['rating__avg']
+	average_rating = average_rating if average_rating is not None else 0
 	storage_units = VersionStorageUnit.objects.filter(version_id=version_id)
-	context = {'version': version, 'storage_units': storage_units, 'parameters': parameters, 'reviews': reviews}
+	context = {'version': version, 'storage_units': storage_units, 'parameters': parameters, 'reviews': reviews,
+	           'average_rating': average_rating}
 	return render(request, 'algorithm/version_detail.html', context)
 
 
