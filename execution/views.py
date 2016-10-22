@@ -23,7 +23,8 @@ def index(request):
 def detail(request, execution_id):
 	execution = get_object_or_404(Execution, id=execution_id)
 	executed_params = ExecutionParameter.objects.filter(execution=execution)
-	context = {'execution': execution, 'executed_params': executed_params}
+	review = Review.objects.filter(execution=execution).last()
+	context = {'execution': execution, 'executed_params': executed_params, 'review': review}
 	return render(request, 'execution/detail.html', context)
 
 
@@ -145,7 +146,7 @@ def new_execution(request, algorithm_id, version_id):
 	reviews = Review.objects.filter(version=current_version)
 	# getting the average rating
 	average_rating = Review.objects.filter(version=current_version).aggregate(Avg('rating'))['rating__avg']
-	average_rating = average_rating if average_rating is not None else 0
+	average_rating = round(average_rating if average_rating is not None else 0, 2)
 	executions = Execution.objects.filter(version=current_version)
 	topics = Topic.objects.all()
 	if request.method == 'POST':

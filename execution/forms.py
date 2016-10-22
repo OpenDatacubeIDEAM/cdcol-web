@@ -13,7 +13,15 @@ class VersionSelectionForm(forms.Form):
 
 
 class ReviewForm(forms.Form):
-	rating = forms.IntegerField(required=True, widget=forms.TextInput(attrs={'required': 'true', 'type': 'number', 'class': 'form-control'}))
+	REVIEW_TYPES = (
+		(1, 1),
+		(2, 2),
+		(3, 3),
+		(4, 4),
+		(5, 5),
+	)
+	rating = forms.ChoiceField(
+		widget=forms.Select(attrs={'required': 'true', 'class': 'form-control'}), choices=REVIEW_TYPES, required=True)
 	comments = forms.CharField(widget=forms.Textarea(attrs={'required': 'true', 'rows': 5, 'class': 'form-control',
 	                                                        'placeholder': 'Ingresa detalles de la calidad de los resultados que obtuviste con la ejecución, la descripción del análisis realizaste, sobre qué región lo ejecutaste, etc.'}),
 	                           required=True)
