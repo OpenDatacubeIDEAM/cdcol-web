@@ -26,6 +26,8 @@ urlpatterns = [
 	url(r'^update/(?P<algorithm_id>[0-9]+)/version/(?P<version_id>[0-9]+)/delete/$', views.delete_version, name='delete_version'),
 	# ex: /algorithm/11/version/12
 	url(r'^(?P<algorithm_id>[0-9]+)/version/(?P<version_id>[0-9]+)$', views.version_detail, name='version_detail'),
+	# ex: /algorithm/11/version/12/ratings
+	url(r'^(?P<algorithm_id>[0-9]+)/version/(?P<version_id>[0-9]+)/ratings$', views.version_rating, name='version_rating'),
 	# ==== Params ====
 	# ex: /algorithm/11/version/12/param/new
 	url(r'^(?P<algorithm_id>[0-9]+)/version/(?P<version_id>[0-9]+)/parameter/new$', views.new_parameter,

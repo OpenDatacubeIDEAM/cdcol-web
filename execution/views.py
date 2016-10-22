@@ -145,7 +145,7 @@ def new_execution(request, algorithm_id, version_id):
 	reviews = Review.objects.filter(version=current_version)
 	# getting the average rating
 	average_rating = Review.objects.filter(version=current_version).aggregate(Avg('rating'))['rating__avg']
-	average_rating = average_rating if average_rating is not None else 0
+	average_rating = round(average_rating if average_rating is not None else 0, 2)
 	executions = Execution.objects.filter(version=current_version)
 	topics = Topic.objects.all()
 	if request.method == 'POST':
