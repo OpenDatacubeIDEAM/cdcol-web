@@ -23,7 +23,8 @@ def index(request):
 def detail(request, execution_id):
 	execution = get_object_or_404(Execution, id=execution_id)
 	executed_params = ExecutionParameter.objects.filter(execution=execution)
-	context = {'execution': execution, 'executed_params': executed_params}
+	review = Review.objects.filter(execution=execution).last()
+	context = {'execution': execution, 'executed_params': executed_params, 'review': review}
 	return render(request, 'execution/detail.html', context)
 
 

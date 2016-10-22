@@ -122,6 +122,43 @@
                 </div>
                 <!-- main end -->
 
+                <!-- sidebar start -->
+                <!-- ================ -->
+                <aside class="col-md-4 col-lg-3 col-lg-offset-1">
+                    <div class="sidebar">
+                        <div class=" clearfix">
+                            <h3 class="title">Acciones</h3>
+                            <div class="separator-2"></div>
+                            {% if review %}
+                                <nav>
+                                    <a href="#" class="btn btn-gray btn-md btn-block">No hay acciones disponibles</a>
+                                </nav>
+                            {% else %}
+                                <nav>
+                                    <a href="{% url 'execution:rate_execution' execution.id %}" class="btn btn-primary btn-md btn-block">Calificar Resultados de la
+                                        Ejecución</a>
+                                </nav>
+                            {% endif %}
+
+                        </div>
+                        {% if review %}
+                            <div class="block clearfix">
+                                <h3 class="title">Calificación realizada</h3>
+                                <div class="separator-2"></div>
+                                <p>La calificación que realizaste de los resultados de esta ejecución es la
+                                    siguiente:</p>
+                                <nav>
+                                    <ul>
+                                        <li>Calificación: {{ review.rating }}</li>
+                                        <li>Comentario: {{ review.comments }}</li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        {% endif %}
+                    </div>
+                </aside>
+                <!-- sidebar end -->
+
             </div>
         </div>
     </section>
