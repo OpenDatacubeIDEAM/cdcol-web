@@ -263,6 +263,7 @@ def new_parameter(request, algorithm_id, version_id):
 			enabled = new_parameter_form.cleaned_data['enabled']
 			default_value = new_parameter_form.cleaned_data['default_value']
 			function_name = new_parameter_form.cleaned_data['function_name']
+			output_included = new_parameter_form.cleaned_data['output_included']
 			# creating the parameter
 			new_version_parameter = Parameter(
 				version=version,
@@ -275,6 +276,7 @@ def new_parameter(request, algorithm_id, version_id):
 				enabled=enabled,
 				default_value=default_value,
 				function_name=function_name,
+				output_included=output_included,
 			)
 			new_version_parameter.save()
 			return HttpResponseRedirect(
@@ -311,6 +313,7 @@ def update_parameter(request, algorithm_id, version_id, parameter_id):
 			enabled = parameter_form.cleaned_data['enabled']
 			default_value = parameter_form.cleaned_data['default_value']
 			function_name = parameter_form.cleaned_data['function_name']
+			output_included = parameter_form.cleaned_data['output_included']
 			# updating the model
 			parameter.name = name
 			parameter.parameter_type = parameter_type
@@ -321,6 +324,7 @@ def update_parameter(request, algorithm_id, version_id, parameter_id):
 			parameter.enabled = enabled
 			parameter.default_value = default_value
 			parameter.function_name = function_name
+			parameter.output_included = output_included
 			parameter.save()
 			return HttpResponseRedirect(reverse('algorithm:version_detail', kwargs={'algorithm_id': algorithm_id, 'version_id': version_id}))
 		else:
@@ -334,6 +338,7 @@ def update_parameter(request, algorithm_id, version_id, parameter_id):
 		                                           'required': parameter.required,
 		                                           'enabled': parameter.enabled,
 		                                           'default_value': parameter.default_value,
-		                                           'function_name': parameter.function_name})
+		                                           'function_name': parameter.function_name,
+		                                           'output_included': parameter.output_included,})
 	context = {'parameter_form': parameter_form, 'parameter': parameter}
 	return render(request, 'algorithm/update_parameter.html', context)

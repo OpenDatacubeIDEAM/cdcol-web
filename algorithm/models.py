@@ -110,6 +110,7 @@ class Parameter(models.Model):
 	enabled = models.BooleanField(default=False)
 	default_value = models.CharField(max_length=200, default="")
 	function_name = models.CharField(max_length=200, default="")
+	output_included = models.BooleanField(default=False)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
