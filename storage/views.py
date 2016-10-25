@@ -9,6 +9,8 @@ from django.core import serializers
 from .forms import StorageUnitForm
 from storage.models import StorageUnit
 from wsgiref.util import FileWrapper
+from django.conf import settings
+from django.core.urlresolvers import reverse
 
 
 @login_required(login_url='/accounts/login/')
@@ -81,3 +83,25 @@ def new(request):
 def obtain_storage_units(request):
 	data = serializers.serialize("json", StorageUnit.objects.all())
 	return HttpResponse(data, content_type='application/json')
+
+
+@login_required(login_url='/accounts/login/')
+def view_content(request, storage_unit_id, path):
+	dirs = []
+	files = []
+	selected_path = path if path else "/"
+	# creating the path to query
+	query_path = settings.STORAGE_UNIT_DIRECTORY_PATH + selected_path
+	# fetching the entries into a directory
+	entries = os.listdir(query_path)
+	for entry in entries:
+		entry_path = query_path + entry
+		if os.path.isdir(entry_path):
+			dirs.append(selected_path + entry + "/")
+		else:
+			files.append(entry)
+	storage_unit = get_object_or_404(StorageUnit, id=storage_unit_id)
+	context = {'storage_unit': storage_unit, 'dirs': dirs, 'files': files}
+	return render(request, 'storage/content.html', context)
+
+
