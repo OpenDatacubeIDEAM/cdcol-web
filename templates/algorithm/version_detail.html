@@ -107,6 +107,7 @@
                                 <th>Posición</th>
                                 <th>Obligatorio</th>
                                 <th>Habilitado</th>
+                                <th>Incluido en Salida</th>
                                 <th>Acciones</th>
                             </tr>
                             </thead>
@@ -118,6 +119,7 @@
                                         <td>{{ param.position }}</td>
                                         <td>{{ param.required }}</td>
                                         <td>{{ param.enabled }}</td>
+                                        <td>{{ param.output_included }}</td>
                                         <td><a href="{% url 'algorithm:view_parameter' param.version.algorithm.id param.version.id param.id %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a>
                                             <a href="{% url 'algorithm:update_parameter' param.version.algorithm.id param.version.id param.id %}" class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a></td>
                                     </tr>
