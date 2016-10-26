@@ -2,13 +2,15 @@
 import mimetypes
 import os
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.encoding import smart_str
 from django.core import serializers
 from .forms import StorageUnitForm
 from storage.models import StorageUnit
 from wsgiref.util import FileWrapper
+from django.conf import settings
+import re
 
 
 @login_required(login_url='/accounts/login/')
@@ -81,3 +83,31 @@ def new(request):
 def obtain_storage_units(request):
 	data = serializers.serialize("json", StorageUnit.objects.all())
 	return HttpResponse(data, content_type='application/json')
+
+
+@login_required(login_url='/accounts/login/')
+def view_content(request, storage_unit_id, path):
+	dirs = set()
+	files = set()
+	selected_path = path.replace("/", "_") if path else "_"
+	entries = os.listdir(settings.STORAGE_UNIT_DIRECTORY_PATH)
+	dir_level = selected_path.count('_')
+	for entry in entries:
+		entry_split = entry.split('_')
+		if selected_path == "_":
+			dirs.add(entry_split[dir_level-1])
+		else:
+			regex = r"^"+selected_path[1:]
+			if re.match(regex, entry):
+				if len(entry_split) == dir_level+1:
+					files.add(entry_split[dir_level])
+				else:
+					dirs.add(entry_split[dir_level])
+	if selected_path != "_":
+		selected_path += "_"
+	selected_path = selected_path.replace("_", "/")
+	storage_unit = get_object_or_404(StorageUnit, id=storage_unit_id)
+	context = {'storage_unit': storage_unit, 'dirs': dirs, 'files': files, 'selected_path': selected_path}
+	return render(request, 'storage/content.html', context)
+
+

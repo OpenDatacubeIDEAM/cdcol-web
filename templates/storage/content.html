@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- breadcrumb start -->
+    <!-- ================ -->
+    <div class="breadcrumb-container">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
+                <li class="active"><a href="{% url 'storage:detail' storage_unit.id %}">{{ storage_unit.name }}</a></li>
+                <li class="active">Contenido</li>
+            </ol>
+        </div>
+    </div>
+    <!-- breadcrumb end -->
+
+    <!-- main-container start -->
+    <!-- ================ -->
+    <section class="main-container padding-ver-clear">
+        <div class="container pv-40">
+            <div class="row">
+
+                <!-- main start -->
+                <!-- ================ -->
+                <div class="main col-md-12">
+                    <h3 class="title">Contenido de la Unidad</h3>
+                    <div class="separator-2"></div>
+                    <p>A continuación se presenta el contenido de la unidad de almacenamiento.</p>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-colored">
+                                    <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Fecha de creación</th>
+                                        <th>Creado por</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for dir in dirs %}
+                                        <tr>
+                                            <td>{{ dir }}</td>
+                                            <td>21 de febrero de 2016 5:30 pm</td>
+                                            <td>usuario@dominio.com</td>
+                                            <td>
+                                                <a href="{% url 'storage:view_content' storage_unit.id selected_path|add:dir %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Abrir</a>
+                                                <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i>
+                                                    Eliminar</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    {% for file in files %}
+                                        <tr>
+                                            <td>{{ file }}</td>
+                                            <td>21 de febrero de 2016 5:30 pm</td>
+                                            <td>usuario@dominio.com</td>
+                                            <td>
+                                                <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i>
+                                                    Descargar</a>
+                                                <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver
+                                                    Detalle</a>
+                                                <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i>
+                                                    Eliminar</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- main end -->
+
+
+            </div>
+        </div>
+    </section>
+    <!-- main-container end -->
+{% endblock %}
