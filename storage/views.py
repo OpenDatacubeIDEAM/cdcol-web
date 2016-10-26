@@ -74,11 +74,10 @@ def new(request):
 			# new_storage_unit.save()
 			try:
 				encoded_description = base64.b64encode(description_file.read())
-				print encoded_description
 				encoded_ingest = base64.b64encode(ingest_file.read())
 				data = {
-					"name": name,
-					"description": description,
+					"name": "nombreTest",
+					"description": "descripcionTest",
 					"description_file": encoded_description,
 					"ingest_file": encoded_ingest,
 					"created_by": 1
