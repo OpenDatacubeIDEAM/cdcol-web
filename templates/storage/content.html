@@ -46,7 +46,7 @@
                                             <td>21 de febrero de 2016 5:30 pm</td>
                                             <td>usuario@dominio.com</td>
                                             <td>
-                                                <a href="{% url 'storage:view_content' storage_unit.id dir %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Abrir</a>
+                                                <a href="{% url 'storage:view_content' storage_unit.id selected_path|add:dir %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Abrir</a>
                                                 <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i>
                                                     Eliminar</a>
                                             </td>

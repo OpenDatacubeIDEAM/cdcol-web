@@ -2,7 +2,7 @@
 import mimetypes
 import os
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.encoding import smart_str
 from django.core import serializers
@@ -10,7 +10,7 @@ from .forms import StorageUnitForm
 from storage.models import StorageUnit
 from wsgiref.util import FileWrapper
 from django.conf import settings
-from django.core.urlresolvers import reverse
+import re
 
 
 @login_required(login_url='/accounts/login/')
@@ -87,21 +87,27 @@ def obtain_storage_units(request):
 
 @login_required(login_url='/accounts/login/')
 def view_content(request, storage_unit_id, path):
-	dirs = []
-	files = []
-	selected_path = path if path else "/"
-	# creating the path to query
-	query_path = settings.STORAGE_UNIT_DIRECTORY_PATH + selected_path
-	# fetching the entries into a directory
-	entries = os.listdir(query_path)
+	dirs = set()
+	files = set()
+	selected_path = path.replace("/", "_") if path else "_"
+	entries = os.listdir(settings.STORAGE_UNIT_DIRECTORY_PATH)
+	dir_level = selected_path.count('_')
 	for entry in entries:
-		entry_path = query_path + entry
-		if os.path.isdir(entry_path):
-			dirs.append(selected_path + entry + "/")
+		entry_split = entry.split('_')
+		if selected_path == "_":
+			dirs.add(entry_split[dir_level-1])
 		else:
-			files.append(entry)
+			regex = r"^"+selected_path[1:]
+			if re.match(regex, entry):
+				if len(entry_split) == dir_level+1:
+					files.add(entry_split[dir_level])
+				else:
+					dirs.add(entry_split[dir_level])
+	if selected_path != "_":
+		selected_path += "_"
+	selected_path = selected_path.replace("_", "/")
 	storage_unit = get_object_or_404(StorageUnit, id=storage_unit_id)
-	context = {'storage_unit': storage_unit, 'dirs': dirs, 'files': files}
+	context = {'storage_unit': storage_unit, 'dirs': dirs, 'files': files, 'selected_path': selected_path}
 	return render(request, 'storage/content.html', context)
 
 
