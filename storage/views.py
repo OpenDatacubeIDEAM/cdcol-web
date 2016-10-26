@@ -11,6 +11,8 @@ from storage.models import StorageUnit
 from wsgiref.util import FileWrapper
 from django.conf import settings
 import re
+import requests
+import base64
 
 
 @login_required(login_url='/accounts/login/')
@@ -62,14 +64,29 @@ def new(request):
 			description_file = request.FILES['description_file']
 			ingest_file = request.FILES['ingest_file']
 			# creating the generic model
-			new_storage_unit = StorageUnit(
-				name=name,
-				description=description,
-				description_file=description_file,
-				ingest_file=ingest_file,
-				created_by=current_user
-			)
-			new_storage_unit.save()
+			# new_storage_unit = StorageUnit(
+			# 	name=name,
+			# 	description=description,
+			# 	description_file=description_file,
+			# 	ingest_file=ingest_file,
+			# 	created_by=current_user
+			# )
+			# new_storage_unit.save()
+			try:
+				encoded_description = base64.b64encode(description_file.read())
+				print encoded_description
+				encoded_ingest = base64.b64encode(ingest_file.read())
+				data = {
+					"name": name,
+					"description": description,
+					"description_file": encoded_description,
+					"ingest_file": encoded_ingest,
+					"created_by": 1
+				}
+				r = requests.post('http://172.24.98.95:8000/api/storage_units/', data=data)
+				print r
+			except:
+				print 'error :/'
 			return render(request, 'storage/index.html')
 		else:
 			form.add_error(None, "Favor completar todos los campos marcados.")
