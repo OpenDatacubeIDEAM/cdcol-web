@@ -95,6 +95,7 @@ def new(request):
 					"ingest_file": encoded_ingest,
 					"created_by": 1
 				}
+				print data
 				r = requests.post('http://172.24.98.95:8000/api/storage_units/', data=data)
 				print r
 				print r.status_code
