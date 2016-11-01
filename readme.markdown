@@ -2,7 +2,7 @@
 
 A continuación se presentan los pasos para configurar el proyecto.
 
-##Configuración Ambiente virtual
+## Configuración Ambiente virtual
 
 Se debe instalar el paquete virtualenv en el directorio donde va a quedar el proyecto
 
@@ -11,7 +11,20 @@ Se debe instalar el paquete virtualenv en el directorio donde va a quedar el pro
 pip install virtualenv
 # Se crea el entorno virtual
 virtualenv v_ideam
+# Para ingresar al ambiente se puede utilizar . bin/activate ó source bin/activate ingresando a la carpeta v_ideam
 ```
+
+## Instalación de PostgresSQL
+
+Se deberá instalar PostgreSQL, en Ubuntu el comando sería el siguiente.
+
+```
+#!bash
+sudo apt-get install postgresql postgresql-contrib
+```
+
+**Nota**: Se debe tener en cuenta que antes de ejecutar el comando anterior se deben actualizar el respositorio ya que es posible que se instale una versión anterior.
+
 
 ## Instalación de dependencias
 
@@ -28,6 +41,24 @@ pip install -r /path/requirements.txt
 #!python
 export PATH=/Applications/Postgres.app/Contents/Versions/9.5/bin:"$PATH"
 ```
+
+## Configuración de variables de entorno
+
+Se deberán configurar las siguientes variables de entorno, este archivo dependerá del SO utilizado.
+
+```
+#!bash
+# Buscar el archivo .bash_profile/.bash_rc
+cd
+nano .bash_profile
+# Adicionar las siguientes lineas dentro del archivo
+export IDEAM_STORAGE_UNIT_DIRECTORY_PATH="..."
+export IDEAM_SENDGRID_USERNAME="..."
+export IDEAM_SENDGRID_PASSWORD="..."
+export IDEAM_PRODUCTION_DATABASE_URL="..."
+export IDEAM_DATABASE_URL="..."
+```
+
 ## Despliegue de prueba
 
 Para probar el despliegue sólo es necesario ejecutar el siguiente comando

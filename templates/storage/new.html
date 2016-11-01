@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 
 {% block content %}
     <!-- breadcrumb start -->
@@ -146,4 +147,20 @@
         </div>
     </section>
     <!-- main-container end -->
+{% endblock %}
+
+{% block extra_body %}
+    <script src="{% static 'js/yaml.min.js' %}"></script>
+    <script type="text/javascript">
+        $("#id_description_file").change(function(event){
+            var input = event.target;
+            var reader = new FileReader();
+            reader.onload = function(){
+                parsed = YAML.parse(reader.result);
+                $("#id_name").val(parsed["name"]);
+                $("#id_description").val(parsed["description"]);
+            };
+            reader.readAsText(input.files[0]);
+        });
+    </script>
 {% endblock %}

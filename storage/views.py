@@ -2,7 +2,8 @@
 import mimetypes
 import os
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.utils.encoding import smart_str
 from django.core import serializers
@@ -12,6 +13,7 @@ from wsgiref.util import FileWrapper
 from django.conf import settings
 import re
 import requests
+import StringIO
 import base64
 
 
@@ -63,30 +65,46 @@ def new(request):
 			description = form.cleaned_data['description']
 			description_file = request.FILES['description_file']
 			ingest_file = request.FILES['ingest_file']
+			# encoding the files
+			try:
+				# encoding the description file
+				strio = StringIO.StringIO()
+				base64.encode(description_file, strio)
+				encoded_description = strio.getvalue().replace('\n', '\\\\n')
+				# encoding the ingest file
+				strio = StringIO.StringIO()
+				base64.encode(ingest_file, strio)
+				encoded_ingest = strio.getvalue().replace('\n', '\\\\n')
+			except:
+				print 'Something went wrong when encoding the files'
 			# creating the generic model
-			new_storage_unit = StorageUnit(
-				name=name,
-				description=description,
-				description_file=description_file,
-				ingest_file=ingest_file,
-				created_by=current_user
-			)
-			new_storage_unit.save()
-			# try:
-			# 	encoded_description = base64.b64encode(description_file.read())
-			# 	encoded_ingest = base64.b64encode(ingest_file.read())
-			# 	data = {
-			# 		"name": "nombreTest",
-			# 		"description": "descripcionTest",
-			# 		"description_file": encoded_description,
-			# 		"ingest_file": encoded_ingest,
-			# 		"created_by": 1
-			# 	}
-			# 	r = requests.post('http://172.24.98.95:8000/api/storage_units/', data=data)
-			# 	print r
-			# except:
-			# 	print 'error :/'
-			return render(request, 'storage/index.html')
+			# new_storage_unit = StorageUnit(
+			# 	name=name,
+			# 	description=description,
+			# 	description_file=description_file,
+			# 	ingest_file=ingest_file,
+			# 	created_by=current_user
+			# )
+			# new_storage_unit.save()
+			# sending the request
+			try:
+				data = {
+					"name": name,
+					"description": description,
+					"description_file": encoded_description,
+					"ingest_file": encoded_ingest,
+					"created_by": 1
+				}
+				r = requests.post('http://172.24.98.95:8000/api/storage_units/', data=data)
+				print r
+				print r.status_code
+				if r.status_code == 201:
+					return HttpResponseRedirect(reverse('storage:index'))
+				else:
+					print r.status_code
+					form.add_error(None, "Ha ocurrido un error con el envío de la información, por favor vuelve a intentarlo.")
+			except:
+				print 'Something went wrong when trying to call the REST service'
 		else:
 			form.add_error(None, "Favor completar todos los campos marcados.")
 	else:
