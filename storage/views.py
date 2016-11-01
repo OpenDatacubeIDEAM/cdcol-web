@@ -15,6 +15,7 @@ import re
 import requests
 import StringIO
 import base64
+import json
 
 
 @login_required(login_url='/accounts/login/')
@@ -95,10 +96,8 @@ def new(request):
 					"ingest_file": encoded_ingest,
 					"created_by": 1
 				}
-				print data
-				r = requests.post('http://172.24.98.95:8000/api/storage_units/', data=data)
-				print r
-				print r.status_code
+				header = {'Content-Type': 'application/json'}
+				r = requests.post('http://172.24.98.95:8000/api/storage_units/', data=json.dumps(data), headers=header)
 				if r.status_code == 201:
 					return HttpResponseRedirect(reverse('storage:index'))
 				else:
