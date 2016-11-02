@@ -1,21 +1,21 @@
+# -*- coding: utf-8 -*-
 from django import forms
 from models import UserProfile
-from django.contrib.auth.models import Group
 
 
 class SignupForm(forms.ModelForm):
 	class Meta:
 		model = UserProfile
-		fields = ()
+		fields = ('institution', 'phone', 'usage', )
 
-	PROFILES_CHOICES = (
-		('0', 'Analista',),
-		('1', 'Desarrollador',)
-	)
-	profile_field = forms.ChoiceField(label='Perfil', choices=PROFILES_CHOICES,
-	                                  widget=forms.Select(attrs={'class': 'form-control'}), required=True)
 	first_name = forms.CharField(max_length=30, label='Nombres', required=True)
 	last_name = forms.CharField(max_length=30, label='Apellidos', required=True)
+	institution = forms.CharField(max_length=200, label='Institución', required=True)
+	phone = forms.CharField(max_length=200, label='Teléfono Institucional', required=True)
+	usage = forms.CharField(widget=forms.Textarea(attrs={'rows': 3,
+	                                                           'class': 'form-control',
+	                                                           'placeholder': '¿Para qué desea utilizar CDCOL?'}),
+	                              required=True)
 
 	def save(self, user):
 		"""
@@ -28,13 +28,7 @@ class SignupForm(forms.ModelForm):
 		user.last_name = self.cleaned_data['last_name']
 		# Saving the UserProfile model
 		profile = UserProfile(user=user)
-		profile_selected = self.cleaned_data['profile_field']
-		if profile_selected == '0':
-			profile.is_analyst = True
-			analyst_group = Group.objects.get(name='Analyst')
-			profile.user.groups.add(analyst_group)
-		elif profile_selected == '1':
-			profile.is_developer = True
-			developer_group = Group.objects.get(name='Developer')
-			profile.user.groups.add(developer_group)
+		profile.institution = self.cleaned_data['institution']
+		profile.phone = self.cleaned_data['phone']
+		profile.usage = self.cleaned_data['usage']
 		profile.save()

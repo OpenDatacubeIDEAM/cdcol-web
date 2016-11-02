@@ -143,24 +143,71 @@
                             </div>
                             <!-- /Password2 -->
 
-                            <!-- Profile -->
+                            <!-- Institución -->
                             <div class="form-group has-feedback">
                                 <!-- Errors -->
-                                {% if form.profile_field.errors %}
-                                    {% for error in form.profile_field.errors %}
+                                {% if form.institution.errors %}
+                                    {% for error in form.institution.errors %}
                                         <div class="alert alert-danger">
                                             <strong>{{ error|escape }}</strong>
                                         </div>
                                     {% endfor %}
                                 {% endif %}
                                 <!-- /Errors -->
-                                <label for="inputRol" class="col-sm-3 control-label">¿Qué roles deseas tener habilitado?<span
+                                <label class="col-sm-3 control-label">Institución<span
                                         class="text-danger small">*</span></label>
                                 <div class="col-sm-8">
-                                    {{ form.profile_field }}
+                                    <input type="text" class="form-control" name="{{ form.institution.html_name }}"
+                                           id="{{ form.institution.id_for_label }}" placeholder="Institución"
+                                            {% if form.institution.value %} value="{{ form.institution.value }}"{% endif %}
+                                           required>
+                                    <i class="fa fa-user form-control-feedback"></i>
                                 </div>
                             </div>
-                            <!-- /Profile -->
+                            <!-- /Institución -->
+
+                            <!-- Teléfono Institucional -->
+                            <div class="form-group has-feedback">
+                                <!-- Errors -->
+                                {% if form.phone.errors %}
+                                    {% for error in form.phone.errors %}
+                                        <div class="alert alert-danger">
+                                            <strong>{{ error|escape }}</strong>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                <!-- /Errors -->
+                                <label class="col-sm-3 control-label">Teléfono Institucional<span
+                                        class="text-danger small">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="{{ form.phone.html_name }}"
+                                           id="{{ form.phone.id_for_label }}" placeholder="Teléfono Institucional"
+                                            {% if form.phone.value %} value="{{ form.phone.value }}"{% endif %}
+                                           required>
+                                    <i class="fa fa-user form-control-feedback"></i>
+                                </div>
+                            </div>
+                            <!-- /Teléfono Institucional -->
+
+                            <!-- Uso -->
+                            <div class="form-group has-feedback">
+                                <!-- Errors -->
+                                {% if form.usage.errors %}
+                                    {% for error in form.usage.errors %}
+                                        <div class="alert alert-danger">
+                                            <strong>{{ error|escape }}</strong>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                <!-- /Errors -->
+                                <label class="col-sm-3 control-label">Uso<span
+                                        class="text-danger small">*</span></label>
+                                <div class="col-sm-8">
+                                    {{ form.usage }}
+                                    <i class="fa fa-user form-control-feedback"></i>
+                                </div>
+                            </div>
+                            <!-- /Uso -->
 
                             <div class="form-group">
                                 <div class="col-sm-offset-3 col-sm-8">
