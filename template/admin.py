@@ -1,3 +1,4 @@
 from django.contrib import admin
+from template.models import *
 
-# Register your models here.
+admin.site.register(YamlTemplate)

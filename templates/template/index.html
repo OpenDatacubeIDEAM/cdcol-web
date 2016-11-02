@@ -33,36 +33,20 @@
                                     <thead>
                                     <tr>
                                         <th>Nombre</th>
-                                        <th>Tipo</th>
                                         <th>Fecha de creación</th>
                                         <th>Acciones</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>Nombre del template D</td>
-                                        <td>Descripción</td>
-                                        <td>21 de Junio 10:00 AM</td>
-                                        <td><a href="/storage/detail/{{ su.id }}" class="btn btn-gray btn-sm"><i
-                                                class="fa fa-download"></i> Descargar</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Nombre del template C</td>
-                                        <td>Ingesta</td>
-                                        <td>21 de Junio 10:00 AM</td>
-                                        <td><a href="/storage/detail/{{ su.id }}" class="btn btn-gray btn-sm"><i
-                                                class="fa fa-download"></i> Descargar</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Nombre del template A</td>
-                                        <td>Descripción</td>
-                                        <td>21 de Junio 10:00 AM</td>
-                                        <td><a href="/storage/detail/{{ su.id }}" class="btn btn-gray btn-sm"><i
-                                                class="fa fa-download"></i> Descargar</a>
-                                        </td>
-                                    </tr>
+                                    {% for template in templates %}
+                                        <tr>
+                                            <td>{{ template.name }}</td>
+                                            <td>{{ template.created_at }}</td>
+                                            <td><a href="{% url 'template:download_file' template.file %}" class="btn btn-gray btn-sm"><i
+                                                    class="fa fa-download"></i> Descargar</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
