@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
 from django.db import models
+
+
+def get_upload_to(new_yaml_template, filename):
+	return "uploads/yaml_templates/file/{}".format(filename)
 
 
 class YamlTemplate(models.Model):
@@ -12,7 +15,7 @@ class YamlTemplate(models.Model):
 		(INGEST_TYPE, "INGESTA"),
 	)
 	name = models.CharField(max_length=200)
-	file = models.FileField()
+	file = models.FileField(upload_to=get_upload_to)
 	type = models.CharField(max_length=2, choices=TYPES)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
