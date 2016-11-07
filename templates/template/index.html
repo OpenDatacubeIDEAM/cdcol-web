@@ -33,6 +33,7 @@
                                     <thead>
                                     <tr>
                                         <th>Nombre</th>
+                                        <th>Tipo</th>
                                         <th>Fecha de creación</th>
                                         <th>Acciones</th>
                                     </tr>
@@ -41,6 +42,7 @@
                                     {% for template in templates %}
                                         <tr>
                                             <td>{{ template.name }}</td>
+                                            <td>{{ template.get_type_display }}</td>
                                             <td>{{ template.created_at }}</td>
                                             <td><a href="{% url 'template:download_file' template.file %}" class="btn btn-gray btn-sm"><i
                                                     class="fa fa-download"></i> Descargar</a>
