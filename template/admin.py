@@ -7,5 +7,6 @@ class YamlAdmin(admin.ModelAdmin):
 	# search_fields = ['name']
 	admin.ModelAdmin.ordering = ('-created_at', )
 	admin.ModelAdmin.list_per_page = 20
+	# readonly_fields = ('id', 'type', 'name', 'file', 'updated_at')
 
 admin.site.register(YamlTemplate, YamlAdmin)
