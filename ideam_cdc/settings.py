@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 	'execution',
 	'template',
 	'ingest',
+	'rest_framework', 
 ]
 
 MIDDLEWARE_CLASSES = [
