@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'^execution/', include('execution.urls')),
     url(r'^template/', include('template.urls')),
     url(r'^ingest/', include('ingest.urls')),
+    url(r'^ingest_template/', include('ingest_template.urls')),
 ]
