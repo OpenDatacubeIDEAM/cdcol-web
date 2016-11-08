@@ -2,7 +2,7 @@ from rest_framework import serializers
 from ingest_template.models import IngestTemplate
 
 
-class IngestSerializer(serializers.ModelSerializer):
+class IngestScriptSerializer(serializers.ModelSerializer):
 	created_at = serializers.DateTimeField(format="%d-%m-%Y")
 	updated_at = serializers.DateTimeField(format="%d-%m-%Y")
 

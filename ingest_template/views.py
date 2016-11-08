@@ -8,7 +8,7 @@ from wsgiref.util import FileWrapper
 from django.utils.encoding import smart_str
 from django.conf import settings
 from rest_framework.renderers import JSONRenderer
-from ingest_template.serializers import IngestSerializer
+from ingest_template.serializers import IngestScriptSerializer
 
 
 class JSONResponse(HttpResponse):
@@ -24,7 +24,7 @@ class JSONResponse(HttpResponse):
 
 def as_json(request):
 	queryset = IngestTemplate.objects.all()
-	serializer = IngestSerializer(queryset, many=True)
+	serializer = IngestScriptSerializer(queryset, many=True)
 	return JSONResponse(serializer.data)
 
 
