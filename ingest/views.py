@@ -45,13 +45,13 @@ def new(request):
 		if ingest_form.is_valid():
 			# getting all the fields
 			storage_unit = ingest_form.cleaned_data['storage_unit']
-			description = ingest_form.cleaned_data['description']
+			comments = ingest_form.cleaned_data['comments']
 			state = IngestTask.SCHEDULED_STATE
 
 			# # creating the generic model
 			new_ingest_task = IngestTask(
 				storage_unit=storage_unit,
-				description=description,
+				comments=comments,
 				state=state,
 				created_by=current_user
 			)

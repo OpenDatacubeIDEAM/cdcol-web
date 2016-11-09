@@ -74,21 +74,21 @@
                                 <!-- Observaciones -->
                                 <div class="form-group">
                                     <!-- Errors -->
-                                    {% if ingest_form.description.errors %}
-                                        {% for error in ingest_form.description.errors %}
+                                    {% if ingest_form.comments.errors %}
+                                        {% for error in ingest_form.comments.errors %}
                                             <div class="alert alert-danger">
                                                 <strong>{{ error|escape }}</strong>
                                             </div>
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label><b>Observaciones*</b></label>
-                                    {{ ingest_form.description }}
+                                    <label><b>Observaciones</b></label>
+                                    {{ ingest_form.comments }}
                                 </div>
                                 <!-- /Observaciones -->
 
                                 <div class="text-center">
-                                    <button type="submit" class="btn btn-default">Crear Versión</button>
+                                    <button type="submit" class="btn btn-default">Programar Tarea</button>
                                 </div>
                             </form>
                         </div>

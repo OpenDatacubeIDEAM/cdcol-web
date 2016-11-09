@@ -19,7 +19,7 @@ class IngestTask(models.Model):
 	)
 	storage_unit = models.ForeignKey(StorageUnit, on_delete=models.CASCADE, related_name='ingest_storage_unit')
 	state = models.CharField(max_length=2, choices=INGEST_STATES)
-	description = models.TextField()
+	comments = models.TextField()
 	errors = models.TextField()
 	start_execution_date = models.DateField(null=True, blank=True)
 	end_execution_date = models.DateField(null=True, blank=True)
