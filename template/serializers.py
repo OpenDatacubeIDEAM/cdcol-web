@@ -5,7 +5,7 @@ from template.models import YamlTemplate
 class YamlSerializer(serializers.ModelSerializer):
 	# name = serializers.CharField()
 	type = serializers.SerializerMethodField()
-	created_at = serializers.DateTimeField(format="%d-%m-%Y")
+	created_at = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S")
 
 	class Meta:
 		model = YamlTemplate
