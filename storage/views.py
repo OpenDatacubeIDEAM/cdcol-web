@@ -123,25 +123,32 @@ def obtain_storage_units(request):
 def view_content(request, storage_unit_id, path):
 	dirs = set()
 	files = set()
-	selected_path = path.replace("/", "_") if path else "_"
-	entries = os.listdir(settings.STORAGE_UNIT_DIRECTORY_PATH)
-	dir_level = selected_path.count('_')
-	for entry in entries:
-		entry_split = entry.split('_')
-		if selected_path == "_":
-			dirs.add(entry_split[dir_level-1])
-		else:
-			regex = r"^"+selected_path[1:]
-			if re.match(regex, entry):
-				if len(entry_split) == dir_level+1:
-					files.add(entry_split[dir_level])
-				else:
-					dirs.add(entry_split[dir_level])
-	if selected_path != "_":
-		selected_path += "_"
-	selected_path = selected_path.replace("_", "/")
+	url = "{}/api/storage_units/{}/{}".format(settings.API_URL, storage_unit_id, path)
+	print "primera url", url
+	if url.endswith("/years/"):
+		print "anio_url=", url
+		fake_url = "http://www.mocky.io/v2/582b77b3280000401d53c4ac"
+		response = requests.get(url)
+		entries = response.json()["years"]
+		for entry in entries:
+			dirs.add(entry + "/")
+	elif re.search('years/([0-9]*)/$', url):
+		print "cordenada_urls=", url
+		fake_url = "http://www.mocky.io/v2/582b7c37280000bf1d53c4b9"
+		response = requests.get(url)
+		entries = response.json()["coordinates"]
+		for entry in entries:
+			entry = entry["longitude"] + "_" + entry["latitude"] + "/"
+			dirs.add(entry)
+	else:
+		print "archivos_url=", url
+		fake_url = "http://www.mocky.io/v2/582b7ec9280000f41d53c4be"
+		response = requests.get(url)
+		entries = response.json()["images"]
+		for entry in entries:
+			files.add(entry + "/")
 	storage_unit = get_object_or_404(StorageUnit, id=storage_unit_id)
-	context = {'storage_unit': storage_unit, 'dirs': dirs, 'files': files, 'selected_path': selected_path}
+	context = {'storage_unit': storage_unit, 'dirs': dirs, 'files': files, 'selected_path': path}
 	return render(request, 'storage/content.html', context)
 
 
