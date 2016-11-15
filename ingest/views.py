@@ -7,6 +7,7 @@ from rest_framework.renderers import JSONRenderer
 from ingest.serializers import IngestTaskSerializer
 from django.core.urlresolvers import reverse
 from ingest.forms import IngestTaskForm
+from storage.models import StorageUnit
 
 
 class JSONResponse(HttpResponse):
@@ -44,9 +45,12 @@ def new(request):
 		# checking if the form is valid
 		if ingest_form.is_valid():
 			# getting all the fields
-			storage_unit = ingest_form.cleaned_data['storage_unit']
+			storage_unit_id = ingest_form.cleaned_data['storage_unit']
 			comments = ingest_form.cleaned_data['comments']
 			state = IngestTask.SCHEDULED_STATE
+
+			# getting the StorageUnit object
+			storage_unit = get_object_or_404(StorageUnit, id=storage_unit_id)
 
 			# # creating the generic model
 			new_ingest_task = IngestTask(

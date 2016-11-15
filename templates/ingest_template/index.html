@@ -28,7 +28,7 @@
                 <div class="main col-md-12">
                     <h3 class="title">Plantillas de scripts de generación de metadatos</h3>
                     <div class="separator-2"></div>
-                    <p>A continuación se presentan la lista de plantillas de ingesta.</p>
+                    <p>A continuación se presentan la lista de plantillas de ingesta que son archivos Python (.py).</p>
 
                     <div class="row">
                         <div class="col-md-12">
@@ -76,7 +76,7 @@
                         "render": function (data) {
                             var date = new Date(data);
                             var month = date.getMonth() + 1 + "";
-                            return date.getDate() + "/" + (month.length > 1 ? month : "0" + month) + "/" + date.getFullYear();
+                            return date.toLocaleString();
                         }
                     },
                     {
