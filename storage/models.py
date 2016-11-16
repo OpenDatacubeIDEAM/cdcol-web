@@ -5,10 +5,13 @@ from django.db import models
 
 
 class StorageUnit(models.Model):
-	name = models.CharField(max_length=200)
-	description = models.CharField(max_length=200)
-	description_file = models.FileField()
-	ingest_file = models.FileField()
+	name = models.CharField(max_length=200, unique=True)
+	description = models.TextField()
+	description_file = models.CharField(max_length=200)
+	ingest_file = models.CharField(max_length=200)
+	metadata_generation_script = models.CharField(max_length=200)
+	metadata = JSONField()
+	root_dir = models.FilePathField()
 	created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
