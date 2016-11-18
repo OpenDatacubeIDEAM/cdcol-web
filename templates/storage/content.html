@@ -34,8 +34,6 @@
                                     <thead>
                                     <tr>
                                         <th>Nombre</th>
-                                        <th>Fecha de creación</th>
-                                        <th>Creado por</th>
                                         <th>Acciones</th>
                                     </tr>
                                     </thead>
@@ -43,8 +41,6 @@
                                     {% for dir in dirs %}
                                         <tr>
                                             <td>{{ dir }}</td>
-                                            <td>21 de febrero de 2016 5:30 pm</td>
-                                            <td>usuario@dominio.com</td>
                                             <td>
                                                 <a href="{% url 'storage:view_content' storage_unit.id selected_path|add:dir %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Abrir</a>
                                                 <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i>
@@ -55,8 +51,6 @@
                                     {% for file in files %}
                                         <tr>
                                             <td>{{ file }}</td>
-                                            <td>21 de febrero de 2016 5:30 pm</td>
-                                            <td>usuario@dominio.com</td>
                                             <td>
                                                 <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i>
                                                     Descargar</a>
