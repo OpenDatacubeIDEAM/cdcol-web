@@ -16,14 +16,33 @@ import requests
 import StringIO
 import base64
 import json
+from rest_framework.renderers import JSONRenderer
 
+
+class JSONResponse(HttpResponse):
+	"""
+	An HttpResponse that renders its content into JSON.
+	"""
+
+	def __init__(self, data, **kwargs):
+		content = JSONRenderer().render(data)
+		kwargs['content_type'] = 'application/json'
+		super(JSONResponse, self).__init__(content, **kwargs)
+
+
+def as_json(request):
+	try:
+		fake_url = "http://www.mocky.io/v2/582e7d81260000c60065efc2"
+		url = "{}/api/storage_units/".format(settings.API_URL)
+		response = requests.get(url)
+		storage_units = response.json()
+	except:
+		storage_units = []
+	return JSONResponse(storage_units)
 
 @login_required(login_url='/accounts/login/')
 def index(request):
-	current_user = request.user
-	storage_units = StorageUnit.objects.all()
-	context = {'storage_units': storage_units}
-	return render(request, 'storage/index.html', context)
+	return render(request, 'storage/index.html')
 
 
 def download_file(request, file_name):
