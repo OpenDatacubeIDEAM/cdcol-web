@@ -85,6 +85,7 @@ def new(request):
 			description = form.cleaned_data['description']
 			description_file = request.FILES['description_file']
 			ingest_file = request.FILES['ingest_file']
+			metadata_generation_script_file = request.FILES['metadata_generation_script']
 			# encoding the files
 			try:
 				# encoding the description file
@@ -95,6 +96,10 @@ def new(request):
 				strio = StringIO.StringIO()
 				base64.encode(ingest_file, strio)
 				encoded_ingest = strio.getvalue().replace('\n', '\\\\n')
+				# encoding the metadata generation file
+				strio = StringIO.StringIO()
+				base64.encode(metadata_generation_script_file, strio)
+				encoded_metadata_script = strio.getvalue().replace('\n', '\\\\n')
 			except:
 				print 'Something went wrong when encoding the files'
 			try:
@@ -103,6 +108,7 @@ def new(request):
 					"description": description,
 					"description_file": encoded_description,
 					"ingest_file": encoded_ingest,
+					"metadata_generation_script": encoded_metadata_script,
 					"created_by": 1
 				}
 				header = {'Content-Type': 'application/json'}
