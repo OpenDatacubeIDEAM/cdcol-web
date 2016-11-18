@@ -43,8 +43,6 @@
                                             <td>{{ dir }}</td>
                                             <td>
                                                 <a href="{% url 'storage:view_content' storage_unit.id selected_path|add:dir %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Abrir</a>
-                                                <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i>
-                                                    Eliminar</a>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -56,8 +54,6 @@
                                                     Descargar</a>
                                                 <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver
                                                     Detalle</a>
-                                                <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i>
-                                                    Eliminar</a>
                                             </td>
                                         </tr>
                                     {% endfor %}
