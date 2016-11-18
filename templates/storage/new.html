@@ -69,7 +69,7 @@
                                     <label for="nameUnitFile"><b>Archivo de descripción*</b></label>
                                     <input name="{{ form.description_file.html_name }}"
                                            id="{{ form.description_file.id_for_label }}" type="file">
-                                    <p class="help-block">Suba el archivo .yml con la descripción de la unidad <a href="{% url 'template:index' %}" class="btn btn-default btn-sm">Ver plantillas</a></p>
+                                    <p class="help-block">Suba el archivo .yml con la descripción de la unidad <a target="_blank" href="{% url 'template:index' %}" class="btn btn-default btn-sm">Ver plantillas</a></p>
                                 </div>
                                 <!-- /Archivo de descripción -->
 
@@ -131,7 +131,7 @@
                                     <label for="nameUnitIngestFile"><b>Archivo de ingesta*</b></label>
                                     <input name="{{ form.ingest_file.html_name }}"
                                            id="{{ form.ingest_file.id_for_label }}" type="file">
-                                    <p class="help-block">Suba el archivo .yml con la informaciónpara poder realizar la ingesta <a href="{% url 'storage:new' %}" class="btn btn-default btn-sm">Ver plantillas</a></p>
+                                    <p class="help-block">Suba el archivo .yml con la informaciónpara poder realizar la ingesta <a target="_blank" href="{% url 'storage:new' %}" class="btn btn-default btn-sm">Ver plantillas</a></p>
                                 </div>
                                 <!-- /Archivo de ingesta -->
 
@@ -149,7 +149,7 @@
                                     <label for=""><b>Script de generación de metadatos*</b></label>
                                     <input name="{{ form.metadata_generation_script.html_name }}"
                                            id="{{ form.metadata_generation_script.id_for_label }}" type="file">
-                                    <p class="help-block">Suba el archivo .py que genera los metadatos de las imágenes a ingestar <a href="{% url 'ingest_template:index' %}" class="btn btn-default btn-sm">Ver scripts</a></p>
+                                    <p class="help-block">Suba el archivo .py que genera los metadatos de las imágenes a ingestar <a target="_blank" href="{% url 'ingest_template:index' %}" class="btn btn-default btn-sm">Ver scripts</a></p>
                                 </div>
                                 <!-- /Metadata script file -->
 
