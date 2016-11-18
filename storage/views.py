@@ -97,16 +97,6 @@ def new(request):
 				encoded_ingest = strio.getvalue().replace('\n', '\\\\n')
 			except:
 				print 'Something went wrong when encoding the files'
-			# creating the generic model
-			# new_storage_unit = StorageUnit(
-			# 	name=name,
-			# 	description=description,
-			# 	description_file=description_file,
-			# 	ingest_file=ingest_file,
-			# 	created_by=current_user
-			# )
-			# new_storage_unit.save()
-			# sending the request
 			try:
 				data = {
 					"name": name,
@@ -121,7 +111,7 @@ def new(request):
 				if r.status_code == 201:
 					return HttpResponseRedirect(reverse('storage:index'))
 				else:
-					print r.status_code
+					print r.status_code, r.text
 					form.add_error(None, "Ha ocurrido un error con el envío de la información, por favor vuelve a intentarlo.")
 			except:
 				print 'Something went wrong when trying to call the REST service'
