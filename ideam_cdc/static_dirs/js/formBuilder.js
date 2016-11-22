@@ -352,7 +352,7 @@ $(document).ready(function () {
         var send_button = document.createElement("button");
         send_button.type = "submit";
         send_button.className = "btn btn-default";
-        send_button.innerHTML = "Ejecutar Elgoritmo";
+        send_button.innerHTML = "Ejecutar Algoritmo";
         var param_div = document.createElement("div");
         param_div.className = "text-center";
         // appending the button
