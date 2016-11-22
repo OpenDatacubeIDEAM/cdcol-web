@@ -8,7 +8,7 @@
             <ol class="breadcrumb">
                 <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
                 <li><a href="{% url 'storage:index' %}">Unidades de Almacenamiento</a></li>
-                <li class="active">Detalle</li>
+                <li class="active">Detalle de Imagen</li>
             </ol>
         </div>
     </div>
@@ -34,23 +34,93 @@
                     <table class="table">
                         <tbody>
                         <tr>
-                            <td>Unidad de almacenamiento: </td>
-                            <td>{{ storage_unit.name }}</td>
+                            <td>Unidad de almacenamiento:</td>
+                            <td>{{ image_info.storage_unit }}</td>
                         </tr>
                         <tr>
                             <td>Año:</td>
-                            <td>{{ storage_unit.name }}</td>
+                            <td>{{ image_info.year }}</td>
                         </tr>
                         <tr>
-                            <td>Longitud - Latitud: </td>
-                            <td>{{ storage_unit.name }}</td>
+                            <td>Longitud - Latitud:</td>
+                            <td>{{ image_info.longitude_latitude }}</td>
                         </tr>
                         <tr>
-                            <td>Nombre: </td>
-                            <td>{{ storage_unit.created_at }}</td>
+                            <td>Nombre:</td>
+                            <td>{{ image_info.image }}</td>
                         </tr>
                         </tbody>
                     </table>
+
+                    <h3 class="page-title">Thumbnails</h3>
+                    <div class="separator-2"></div>
+                    <p>Los thumbnails de esta imagen son los siguientes:</p>
+
+                    <div class="isotope-container-fitrows row grid-space-10">
+                        <div class="col-sm-6 col-md-4 isotope-item">
+                            <div class="image-box style-2 mb-20 bordered text-center">
+                                <div class="carousel slide">
+                                    <div class="carousel-inner">
+                                        <div class="item active">
+                                            <div class="">
+                                                <img src="https://imageryspeaks.files.wordpress.com/2013/05/landsat8_vandenberg.jpg" alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="body shadow light-gray-bg ">
+                                    <p>Banda 1.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 isotope-item">
+                            <div class="image-box style-2 mb-20 bordered text-center">
+                                <div class="carousel slide">
+                                    <div class="carousel-inner">
+                                        <div class="item active">
+                                            <div class="">
+                                                <img src="http://d32ogoqmya1dw8.cloudfront.net/images/eyesinthesky2/week3/432_false_color_landsat.jpg" alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="body shadow light-gray-bg ">
+                                    <p>Banda 2.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 isotope-item">
+                            <div class="image-box style-2 mb-20 bordered text-center">
+                                <div class="carousel slide">
+                                    <div class="carousel-inner">
+                                        <div class="item active">
+                                            <div class="">
+                                                <img src="http://www.landcareresearch.co.nz/__data/assets/image/0003/28470/pel18r_500.jpg" alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="body shadow light-gray-bg ">
+                                    <p>Banda 3.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="page-title">Metadatos</h3>
+                    <div class="separator-2"></div>
+                    <p>Los metadatos del contenido son los siguientes:</p>
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <pre><code> {{ metadata }} </code></pre>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+
                 </div>
                 <!-- main end -->
 
@@ -62,7 +132,10 @@
                             <h3 class="title">Acciones</h3>
                             <div class="separator-2"></div>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-md btn-block">Ver contenido de la unidad</a>
+                                <a href="#" class="btn btn-primary btn-md btn-block">Descargar archivo</a>
+                            </nav>
+                            <nav>
+                                <a href="#" class="btn btn-primary btn-md btn-block">Descargar metadatos</a>
                             </nav>
                         </div>
                     </div>
