@@ -34,7 +34,7 @@ def as_json(request):
 	try:
 		fake_url = "http://www.mocky.io/v2/582e7d81260000c60065efc2"
 		url = "{}/api/storage_units/".format(settings.API_URL)
-		response = requests.get(url)
+		response = requests.get(fake_url)
 		storage_units = response.json()
 	except:
 		storage_units = []
@@ -142,33 +142,35 @@ def view_content(request, storage_unit_id, path):
 	url = "{}/api/storage_units/{}/{}".format(settings.API_URL, storage_unit_id, path)
 	print "primera url", url
 	if url.endswith("/years/"):
-		response = requests.get(url)
+		fake_url = "http://www.mocky.io/v2/582b77b3280000401d53c4ac"
+		response = requests.get(fake_url)
 		entries = response.json()["years"]
 		for entry in entries:
 			dirs.add(entry + "/")
 	elif re.search('years/([0-9]*)/$', url):
-		response = requests.get(url)
+		fake_url = "http://www.mocky.io/v2/582b7c37280000bf1d53c4b9"
+		response = requests.get(fake_url)
 		entries = response.json()["coordinates"]
 		for entry in entries:
 			entry = entry["longitude"] + "_" + entry["latitude"] + "/"
 			dirs.add(entry)
 	else:
-		response = requests.get(url)
+		fake_url = "http://www.mocky.io/v2/582b7ec9280000f41d53c4be"
+		response = requests.get(fake_url)
 		entries = response.json()["images"]
 		for entry in entries:
-			files.add(entry + "/")
+			files.add(entry)
 	storage_unit = get_object_or_404(StorageUnit, id=storage_unit_id)
 	context = {'storage_unit': storage_unit, 'dirs': dirs, 'files': files, 'selected_path': path}
 	return render(request, 'storage/content.html', context)
 
 
 @login_required(login_url='/accounts/login/')
-def image_detail(request):
-	# http://157.253.236.30:8000/api/storage_units/4/contents/LS8_OLI_LEDAPS_4326_-73_2_20141126150733000000.nc
-	# storage_units/4/contents/LS8_OLI_LEDAPS_4326_-73_2_20141126150733000000.nc/
-	image_name = "LS8_OLI_LEDAPS_4326_-73_2_20141126150733000000.nc"
+def image_detail(request, image_name):
 	url = "{}/api/storage_units/contents/{}/".format(settings.API_URL, image_name)
-	fake_url = "http://www.mocky.io/v2/582b77b3280000401d53c4ac"
-	response = requests.get(url)
-	entries = response.json()
-	return render(request, 'storage/image_detail.html')
+	fake_url = "http://www.mocky.io/v2/5834ca180f00007410bba851"
+	response = requests.get(fake_url)
+	image_info = response.json()
+	metadata = json.dumps(image_info["metadata"], indent=4, sort_keys=True)
+	context = {'metadata': metadata}
+	return render(request, 'storage/image_detail.html', context)
