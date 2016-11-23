@@ -7,6 +7,7 @@ from django.db.models import Avg
 from algorithm.models import Algorithm, Topic, VersionStorageUnit, Version, Parameter
 from execution.models import Review
 from storage.models import StorageUnit
+from execution.models import Execution
 from algorithm.forms import AlgorithmForm, AlgorithmUpdateForm, VersionForm, VersionUpdateForm, NewParameterForm
 
 
@@ -93,8 +94,12 @@ def new_version(request, algorithm_id):
 	current_user = request.user
 	algorithm = get_object_or_404(Algorithm, id=algorithm_id)
 	current_version = algorithm.last_version()
-	new_minor_version_number = current_version.new_minor_version()
-	new_major_version_number = current_version.new_major_version()
+	try:
+		new_minor_version_number = current_version.new_minor_version()
+		new_major_version_number = current_version.new_major_version()
+	except:
+		new_minor_version_number = "1.0"
+		new_major_version_number = "1.0"
 	source_storage_units = StorageUnit.objects.all()
 	if request.method == 'POST':
 		# getting the form
@@ -113,7 +118,7 @@ def new_version(request, algorithm_id):
 				description=description,
 				number=version_number,
 				source_code=source_code,
-				publishing_state='En Desarrollo',
+				publishing_state=Version.DEVELOPED_STATE,
 				created_by=current_user
 			)
 			new_algorithm_version.save()
@@ -142,6 +147,8 @@ def update_version(request, algorithm_id, version_id):
 	if request.method == 'POST':
 		# getting the form
 		version_form = VersionUpdateForm(request.POST)
+		if version.publishing_state != Version.DEVELOPED_STATE:
+			version_form.add_error(None, "Solo es posible actualizar una versión si esta se encuentra en estado 'En Desarrollo'.")
 		# checking if the form is valid
 		if version_form.is_valid():
 			description = version_form.cleaned_data['description']
@@ -178,12 +185,14 @@ def version_detail(request, algorithm_id, version_id):
 	version = get_object_or_404(Version, id=version_id)
 	parameters = Parameter.objects.filter(version=version_id).order_by('position')
 	reviews = Review.objects.filter(execution__version=version).order_by('created_at')
+	# getting version executions
+	execution_count = Execution.objects.filter(version=version).count()
 	# getting the average rating
 	average_rating = Review.objects.filter(version=version).aggregate(Avg('rating'))['rating__avg']
 	average_rating = average_rating if average_rating is not None else 0
 	storage_units = VersionStorageUnit.objects.filter(version_id=version_id)
 	context = {'version': version, 'storage_units': storage_units, 'parameters': parameters, 'reviews': reviews,
-	           'average_rating': average_rating}
+	           'average_rating': average_rating, 'execution_count': execution_count}
 	return render(request, 'algorithm/version_detail.html', context)
 
 
@@ -205,9 +214,11 @@ def version_rating(request, algorithm_id, version_id):
 def publish_version(request, algorithm_id, version_id):
 	version = get_object_or_404(Version, id=version_id)
 	if request.method == 'GET':
-		# TODO: What is the condition to be published?
-		version.publishing_state = 'Publicada'
-		version.save()
+		if version.publishing_state == Version.DEVELOPED_STATE:
+			version.publishing_state = Version.PUBLISHED_STATE
+			version.save()
+		else:
+			print "Trying to publish a version, state is not 'in develop'"
 	return HttpResponseRedirect(
 		reverse('algorithm:version_detail', kwargs={'algorithm_id': algorithm_id, 'version_id': version_id}))
 
@@ -216,9 +227,11 @@ def publish_version(request, algorithm_id, version_id):
 def unpublish_version(request, algorithm_id, version_id):
 	version = get_object_or_404(Version, id=version_id)
 	if request.method == 'GET':
-		if version.publishing_state == 'Publicada':
-			version.publishing_state = 'En Desarrollo'
+		if version.publishing_state == Version.PUBLISHED_STATE:
+			version.publishing_state = Version.DEVELOPED_STATE
 			version.save()
+		else:
+			print "Trying to unpublish a version, state is not published"
 	return HttpResponseRedirect(
 		reverse('algorithm:version_detail', kwargs={'algorithm_id': algorithm_id, 'version_id': version_id}))
 
@@ -227,9 +240,11 @@ def unpublish_version(request, algorithm_id, version_id):
 def deprecate_version(request, algorithm_id, version_id):
 	version = get_object_or_404(Version, id=version_id)
 	if request.method == 'GET':
-		if version.publishing_state == 'Publicada':
-			version.publishing_state = 'Obsoleta'
+		if version.publishing_state == Version.PUBLISHED_STATE:
+			version.publishing_state = Version.DEPRECATED_STATE
 			version.save()
+		else:
+			print "Trying to deprecate version, state is not published"
 	return HttpResponseRedirect(
 		reverse('algorithm:version_detail', kwargs={'algorithm_id': algorithm_id, 'version_id': version_id}))
 
@@ -238,10 +253,12 @@ def deprecate_version(request, algorithm_id, version_id):
 def delete_version(request, algorithm_id, version_id):
 	version = get_object_or_404(Version, id=version_id)
 	if request.method == 'GET':
-		# TODO: This must validate if this version was already executed.
-		# TODO: What happen if there is only one version?
-		if version.algorithm.obtain_versions().count() > 1:
+		execution_count = Execution.objects.filter(version=version).count()
+		# if execution_count == 0 and version.algorithm.obtain_versions().count() > 1: # TODO: Must ask this
+		if execution_count == 0:
 			version.delete()
+		else:
+			print "Trying to delete version but there are executions"
 	return HttpResponseRedirect(
 		reverse('algorithm:detail', kwargs={'algorithm_id': algorithm_id}))
 
@@ -252,6 +269,8 @@ def new_parameter(request, algorithm_id, version_id):
 	if request.method == 'POST':
 		# getting the form
 		new_parameter_form = NewParameterForm(request.POST)
+		if version.publishing_state != Version.DEVELOPED_STATE:
+			new_parameter_form.add_error(None, "Solo es posible agregar parámetros a versiones en estado 'En Desarrollo'.")
 		# checking if the form is valid
 		if new_parameter_form.is_valid():
 			name = new_parameter_form.cleaned_data['name']
@@ -302,6 +321,8 @@ def update_parameter(request, algorithm_id, version_id, parameter_id):
 	if request.method == 'POST':
 		# getting the form
 		parameter_form = NewParameterForm(request.POST)
+		if parameter.version.publishing_state != Version.DEVELOPED_STATE:
+			parameter_form.add_error(None, "Solo es posible actualizar parámetros a versiones en estado 'En Desarrollo'.")
 		# checking if the form is valid
 		if parameter_form.is_valid():
 			name = parameter_form.cleaned_data['name']

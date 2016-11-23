@@ -34,12 +34,21 @@ class Algorithm(models.Model):
 
 
 class Version(models.Model):
+	DEVELOPED_STATE = '1'
+	PUBLISHED_STATE = '2'
+	DEPRECATED_STATE = '3'
+	# PUBLISHING STATES
+	VERSION_STATES = (
+		(DEVELOPED_STATE, "EN DESARROLLO"),
+		(PUBLISHED_STATE, "PUBLICADA"),
+		(DEPRECATED_STATE, "OBSOLETA"),
+	)
 	algorithm = models.ForeignKey(Algorithm, on_delete=models.CASCADE)
 	source_storage_units = models.ManyToManyField(StorageUnit, through='VersionStorageUnit')
 	description = models.TextField()
 	number = models.CharField(max_length=200)
 	source_code = models.CharField(max_length=200)
-	publishing_state = models.CharField(max_length=200)
+	publishing_state = models.CharField(max_length=2, choices=VERSION_STATES)
 	created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='version_author')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
