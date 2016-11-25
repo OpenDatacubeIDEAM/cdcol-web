@@ -48,12 +48,17 @@
                                class="btn btn-gray btn-sm"><i class="fa fa-download"></i> Descargar</a></td>
                         </tr>
                         <tr>
+                            <td>Script de generación de metadatos::</td>
+                            <td><a href="/storage/download/{{ storage_unit.metadata_generation_script.name }}"
+                               class="btn btn-gray btn-sm"><i class="fa fa-download"></i> Descargar</a></td>
+                        </tr>
+                        <tr>
                             <td>Fecha de Creación:</td>
                             <td>{{ storage_unit.created_at }}</td>
                         </tr>
                         <tr>
                             <td>Creada por:</td>
-                            <td>{{ storage_unit.created_by }}</td>
+                            <td>{{ storage_unit.created_by.email }}</td>
                         </tr>
                         </tbody>
                     </table>

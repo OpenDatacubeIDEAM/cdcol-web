@@ -168,9 +168,12 @@ def view_content(request, storage_unit_id, path):
 @login_required(login_url='/accounts/login/')
 def image_detail(request, image_name):
 	url = "{}/api/storage_units/contents/{}/".format(settings.API_URL, image_name)
-	fake_url = "http://www.mocky.io/v2/5834ca180f00007410bba851"
+	fake_url = "http://www.mocky.io/v2/583877151100002a108fd372"
 	response = requests.get(fake_url)
 	image_info = response.json()
+	year = image_info["year"]
+	coordinates = image_info["coordinates"]
+	thumbnails = image_info["thumbnails"]
 	metadata = json.dumps(image_info["metadata"], indent=4, sort_keys=True)
-	context = {'metadata': metadata}
+	context = {'metadata': metadata, 'thumbnails': thumbnails, 'year': year, 'coordinates': coordinates}
 	return render(request, 'storage/image_detail.html', context)
