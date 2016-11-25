@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block extra_head %}
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+{% endblock %}
+
 {% block content %}
     <!-- breadcrumb start -->
     <!-- ================ -->
@@ -30,7 +34,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">
-                                <table class="table table-striped table-colored">
+                                <table id="storage_unit_detail" class="table table-striped table-colored">
                                     <thead>
                                     <tr>
                                         <th>Nombre</th>
@@ -42,7 +46,8 @@
                                         <tr>
                                             <td>{{ dir }}</td>
                                             <td>
-                                                <a href="{% url 'storage:view_content' storage_unit.id selected_path|add:dir %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Abrir</a>
+                                                <a href="{% url 'storage:view_content' storage_unit.id selected_path|add:dir %}"
+                                                   class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Abrir</a>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -52,7 +57,7 @@
                                             <td>
                                                 <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i>
                                                     Descargar</a>
-                                                <a href="{% url 'storage:image_detail' file %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver
+                                                <a href="{% url 'storage:image_detail' storage_unit.id file %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver
                                                     Detalle</a>
                                             </td>
                                         </tr>
@@ -71,3 +76,42 @@
     </section>
     <!-- main-container end -->
 {% endblock %}
+
+{#{% block extra_body %}#}
+{#    <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>#}
+{#    <script type="text/javascript">#}
+{#        $(document).ready(function () {#}
+{#            $('#storage_unit_detail').dataTable({#}
+{#                "language": {#}
+{#                    "url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Spanish.json"#}
+{#                },#}
+{#                "processing": true,#}
+{#                "ajax": {#}
+{#                    "processing": true,#}
+{#                    "url": "{% url 'storage:as_json' %}",#}
+{#                    "dataSrc": ""#}
+{#                },#}
+{#                "columns": [#}
+{#                    {"data": "name"},#}
+{#                    {#}
+{#                        "data": "created_at",#}
+{#                        "render": function (data) {#}
+{#                            var date = new Date(data);#}
+{#                            var month = date.getMonth() + 1 + "";#}
+{#                            return date.toLocaleString();#}
+{#                        }#}
+{#                    },#}
+{#                    {"data": "created_by"},#}
+{#                    {#}
+{#                        "data": "id",#}
+{#                        "searchable": false,#}
+{#                        "sortable": false,#}
+{#                        "render": function (data) {#}
+{#                            return "<a href='detail/" + data + "' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>";#}
+{#                        }#}
+{#                    },#}
+{#                ]#}
+{#            });#}
+{#        });#}
+{#    </script>#}
+{#{% endblock %}#}

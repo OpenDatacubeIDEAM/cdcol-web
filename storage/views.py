@@ -140,22 +140,21 @@ def view_content(request, storage_unit_id, path):
 	dirs = set()
 	files = set()
 	url = "{}/api/storage_units/{}/{}".format(settings.API_URL, storage_unit_id, path)
-	print "primera url", url
 	if url.endswith("/years/"):
-		fake_url = "http://www.mocky.io/v2/582b77b3280000401d53c4ac"
+		fake_url = "http://www.mocky.io/v2/5838bf6511000096168fd3ca"
 		response = requests.get(fake_url)
 		entries = response.json()["years"]
 		for entry in entries:
 			dirs.add(entry + "/")
 	elif re.search('years/([0-9]*)/$', url):
-		fake_url = "http://www.mocky.io/v2/582b7c37280000bf1d53c4b9"
+		fake_url = "http://www.mocky.io/v2/5838bf921100009c168fd3cb"
 		response = requests.get(fake_url)
 		entries = response.json()["coordinates"]
 		for entry in entries:
-			entry = entry["longitude"] + "_" + entry["latitude"] + "/"
+			entry = str(entry["longitude"]) + "_" + str(entry["latitude"]) + "/"
 			dirs.add(entry)
 	else:
-		fake_url = "http://www.mocky.io/v2/582b7ec9280000f41d53c4be"
+		fake_url = "http://www.mocky.io/v2/5838bfb51100009d168fd3cc"
 		response = requests.get(fake_url)
 		entries = response.json()["images"]
 		for entry in entries:
@@ -166,14 +165,17 @@ def view_content(request, storage_unit_id, path):
 
 
 @login_required(login_url='/accounts/login/')
-def image_detail(request, image_name):
-	url = "{}/api/storage_units/contents/{}/".format(settings.API_URL, image_name)
-	fake_url = "http://www.mocky.io/v2/583877151100002a108fd372"
+def image_detail(request, storage_unit_id, image_name):
+	url = "{}/api/storage_units/{}/contents/{}/".format(settings.API_URL, storage_unit_id, image_name)
+	fake_url = "http://www.mocky.io/v2/5838bfd6110000a2168fd3cd"
 	response = requests.get(fake_url)
 	image_info = response.json()
 	year = image_info["year"]
 	coordinates = image_info["coordinates"]
+	name = image_info["image_name"]
+	image_storage_unit = image_info["storage_unit"]
 	thumbnails = image_info["thumbnails"]
 	metadata = json.dumps(image_info["metadata"], indent=4, sort_keys=True)
-	context = {'metadata': metadata, 'thumbnails': thumbnails, 'year': year, 'coordinates': coordinates}
+	context = {'metadata': metadata, 'thumbnails': thumbnails, 'year': year, 'coordinates': coordinates, 'name': name,
+	           'image_storage_unit': image_storage_unit}
 	return render(request, 'storage/image_detail.html', context)
