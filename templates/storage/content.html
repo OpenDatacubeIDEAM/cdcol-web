@@ -41,28 +41,6 @@
                                         <th>Acciones</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                    {% for dir in dirs %}
-                                        <tr>
-                                            <td>{{ dir }}</td>
-                                            <td>
-                                                <a href="{% url 'storage:view_content' storage_unit.id selected_path|add:dir %}"
-                                                   class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Abrir</a>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                    {% for file in files %}
-                                        <tr>
-                                            <td>{{ file }}</td>
-                                            <td>
-                                                <a href="#" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i>
-                                                    Descargar</a>
-                                                <a href="{% url 'storage:image_detail' storage_unit.id file %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver
-                                                    Detalle</a>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -77,41 +55,63 @@
     <!-- main-container end -->
 {% endblock %}
 
-{#{% block extra_body %}#}
-{#    <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>#}
-{#    <script type="text/javascript">#}
-{#        $(document).ready(function () {#}
-{#            $('#storage_unit_detail').dataTable({#}
-{#                "language": {#}
-{#                    "url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Spanish.json"#}
-{#                },#}
-{#                "processing": true,#}
-{#                "ajax": {#}
-{#                    "processing": true,#}
-{#                    "url": "{% url 'storage:as_json' %}",#}
-{#                    "dataSrc": ""#}
-{#                },#}
-{#                "columns": [#}
-{#                    {"data": "name"},#}
-{#                    {#}
-{#                        "data": "created_at",#}
-{#                        "render": function (data) {#}
-{#                            var date = new Date(data);#}
-{#                            var month = date.getMonth() + 1 + "";#}
-{#                            return date.toLocaleString();#}
-{#                        }#}
-{#                    },#}
-{#                    {"data": "created_by"},#}
-{#                    {#}
-{#                        "data": "id",#}
-{#                        "searchable": false,#}
-{#                        "sortable": false,#}
-{#                        "render": function (data) {#}
-{#                            return "<a href='detail/" + data + "' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>";#}
-{#                        }#}
-{#                    },#}
-{#                ]#}
-{#            });#}
-{#        });#}
-{#    </script>#}
-{#{% endblock %}#}
+{% block extra_body %}
+    <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            /*
+            Using getUrlParameter
+            url: http://stackoverflow.com/questions/19491336/get-url-parameter-jquery-or-how-to-get-query-string-values-in-js
+            */
+            var getUrlParameter = function getUrlParameter(sParam) {
+                var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                        sURLVariables = sPageURL.split('&'),
+                        sParameterName,
+                        i;
+
+                for (i = 0; i < sURLVariables.length; i++) {
+                    sParameterName = sURLVariables[i].split('=');
+
+                    if (sParameterName[0] === sParam) {
+                        return sParameterName[1] === undefined ? true : sParameterName[1];
+                    }
+                }
+            };
+
+            $('#storage_unit_detail').dataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Spanish.json"
+                },
+                "processing": true,
+                "ajax": {
+                    "processing": true,
+                    "url": "{% url 'storage:content_as_json' storage_unit.id %}" + (getUrlParameter('path') === undefined ? "" : "?path=" + getUrlParameter('path')) ,
+                    "dataSrc": ""
+                },
+                "columns": [
+                    {"data": "name"},
+                    {
+                        "data": function ( row, type, val, meta ) {
+                            var pathName = row.name;
+                            var isDir = row.is_dir;
+
+                            if (isDir){
+                                var currentPath = getUrlParameter('path');
+                                var newUrl = (currentPath != undefined) ? '?path=' + currentPath + pathName + '/' : '?path=/years/';
+                                return "<a href='" + newUrl + "' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>";
+                            }
+                            else{
+                                var option1 = "<a href='#' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Descargar</a>";
+                                var option2 = "<a href='/storage/{{ storage_unit.id }}/image/" + pathName + "/detail/' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>";
+                                return option1 + "\n" + option2;
+                            }
+                        },
+                        "searchable": false,
+                        "sortable": false,
+                    },
+                ]
+            });
+        });
+    </script>
+{% endblock %}

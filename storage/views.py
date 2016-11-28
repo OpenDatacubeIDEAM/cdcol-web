@@ -2,7 +2,7 @@
 import mimetypes
 import os
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.utils.encoding import smart_str
@@ -135,32 +135,56 @@ def obtain_storage_units(request):
 	return HttpResponse(data, content_type='application/json')
 
 
+def content_as_json(request, storage_unit_id):
+	path = request.GET.get('path', "/years/")
+	try:
+		json_response = []
+		url = "{}/api/storage_units/{}{}".format(settings.API_URL, storage_unit_id, path)
+		if url.endswith("/years/"):
+			print 'fetching years'
+			fake_url = "http://www.mocky.io/v2/5838bf6511000096168fd3ca"
+			response = requests.get(fake_url)
+			entries = response.json()["years"]
+			for entry in entries:
+				json_object = {
+					'name': "{}".format(entry),
+					'is_dir': True,
+					'is_file': False,
+				}
+				json_response.append(json_object)
+		elif re.search('years/([0-9]*)/$', url):
+			print 'fetching coordinates'
+			fake_url = "http://www.mocky.io/v2/5838bf921100009c168fd3cb"
+			response = requests.get(fake_url)
+			entries = response.json()["coordinates"]
+			for entry in entries:
+				json_object = {
+					'name': "{}".format(str(entry["longitude"]) + "_" + str(entry["latitude"])),
+					'is_dir': True,
+					'is_file': False,
+				}
+				json_response.append(json_object)
+		else:
+			print 'fetching images'
+			fake_url = "http://www.mocky.io/v2/5838bfb51100009d168fd3cc"
+			response = requests.get(fake_url)
+			entries = response.json()["images"]
+			for entry in entries:
+				json_object = {
+					'name': "{}".format(entry),
+					'is_dir': False,
+					'is_file': True,
+				}
+				json_response.append(json_object)
+		return JSONResponse(json_response)
+	except:
+		return HttpResponseBadRequest()
+
+
 @login_required(login_url='/accounts/login/')
-def view_content(request, storage_unit_id, path):
-	dirs = set()
-	files = set()
-	url = "{}/api/storage_units/{}/{}".format(settings.API_URL, storage_unit_id, path)
-	if url.endswith("/years/"):
-		fake_url = "http://www.mocky.io/v2/5838bf6511000096168fd3ca"
-		response = requests.get(fake_url)
-		entries = response.json()["years"]
-		for entry in entries:
-			dirs.add(entry + "/")
-	elif re.search('years/([0-9]*)/$', url):
-		fake_url = "http://www.mocky.io/v2/5838bf921100009c168fd3cb"
-		response = requests.get(fake_url)
-		entries = response.json()["coordinates"]
-		for entry in entries:
-			entry = str(entry["longitude"]) + "_" + str(entry["latitude"]) + "/"
-			dirs.add(entry)
-	else:
-		fake_url = "http://www.mocky.io/v2/5838bfb51100009d168fd3cc"
-		response = requests.get(fake_url)
-		entries = response.json()["images"]
-		for entry in entries:
-			files.add(entry)
+def view_content(request, storage_unit_id):
 	storage_unit = get_object_or_404(StorageUnit, id=storage_unit_id)
-	context = {'storage_unit': storage_unit, 'dirs': dirs, 'files': files, 'selected_path': path}
+	context = {'storage_unit': storage_unit}
 	return render(request, 'storage/content.html', context)
 
 
