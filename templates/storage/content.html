@@ -9,10 +9,9 @@
     <!-- ================ -->
     <div class="breadcrumb-container">
         <div class="container">
-            <ol class="breadcrumb">
+            <ol id="custom_breadcrumb" class="breadcrumb">
                 <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
-                <li class="active"><a href="{% url 'storage:detail' storage_unit.id %}">{{ storage_unit.name }}</a></li>
-                <li class="active">Contenido</li>
+                <li class=""><a href="{% url 'storage:detail' storage_unit.id %}">{{ storage_unit.name }}</a></li>
             </ol>
         </div>
     </div>
@@ -78,6 +77,43 @@
                     }
                 }
             };
+
+            /*
+            * Append a new element
+            * */
+            var appendNewElement = function appendNewElement(name, url){
+                // Getting the ol element
+                var ol = document.getElementById("custom_breadcrumb");
+                // Creating the li element
+                var li = document.createElement("li");
+                // Creating the a element
+                var aInnerHtml = "<a href='" + url + "'>" + name + "</a>";
+                var aElement = document.createElement('a');
+                aElement.innerHTML = aInnerHtml;
+                // Appending the elements
+                li.appendChild(aElement);
+                // Appending the new node
+                ol.appendChild(li);
+            };
+
+            /*
+             Autocompletes the breadcrumb path
+             * */
+            var breadcrumbPath = getUrlParameter('path');
+            if (breadcrumbPath != undefined) {
+                var tmp = breadcrumbPath.split('/');
+                console.log(tmp);
+                switch (tmp.length) {
+                    case 4:
+                        appendNewElement('Años', '?path=/years/');
+                        break;
+                    case 5:
+                        var yearSelected = tmp[2];
+                        appendNewElement('Años', '?path=/years/');
+                        appendNewElement(yearSelected, '?path=/years/' + yearSelected + '/');
+                        break;
+                }
+            }
 
             $('#storage_unit_detail').dataTable({
                 "language": {
