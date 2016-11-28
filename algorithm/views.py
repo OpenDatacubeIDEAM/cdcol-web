@@ -227,11 +227,12 @@ def publish_version(request, algorithm_id, version_id):
 def unpublish_version(request, algorithm_id, version_id):
 	version = get_object_or_404(Version, id=version_id)
 	if request.method == 'GET':
-		if version.publishing_state == Version.PUBLISHED_STATE:
+		execution_count = Execution.objects.filter(version=version).count()
+		if version.publishing_state == Version.PUBLISHED_STATE and execution_count == 0:
 			version.publishing_state = Version.DEVELOPED_STATE
 			version.save()
 		else:
-			print "Trying to unpublish a version, state is not published"
+			print "Trying to unpublish a version, state is not published or executions are not 0"
 	return HttpResponseRedirect(
 		reverse('algorithm:version_detail', kwargs={'algorithm_id': algorithm_id, 'version_id': version_id}))
 

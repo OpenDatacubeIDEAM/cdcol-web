@@ -51,7 +51,7 @@
                         </tr>
                         <tr>
                             <td>Estado:</td>
-                            <td>{{ version.publishing_state }}</td>
+                            <td>{{ version.get_publishing_state_display }}</td>
                         </tr>
                         <tr>
                             <td>Fecha de Creación:</td>
@@ -148,9 +148,6 @@
                         <div class="block clearfix">
                             <h3 class="title">Acciones</h3>
                             <div class="separator-2"></div>
-                            <nav>
-                                <a href="#" class="btn btn-primary btn-md btn-block">Ejecutar Esta Versión</a>
-                            </nav>
                             {% if version.publishing_state == "1" %}
                                 <nav>
                                     <a href="{% url 'algorithm:update_version' version.algorithm.id version.id %}"
@@ -163,7 +160,7 @@
                                        class="btn btn-primary btn-md btn-block">Publicar Versión</a>
                                 </nav>
                             {% endif %}
-                            {% if version.publishing_state == "2" %}
+                            {% if version.publishing_state == "2" and execution_count == 0 %}
                                 <nav>
                                     <a href="{% url 'algorithm:unpublish_version' version.algorithm.id version.id %}"
                                        class="btn btn-primary btn-md btn-block">Despublicar Versión</a>
