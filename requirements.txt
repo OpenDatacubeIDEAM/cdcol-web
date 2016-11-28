@@ -1,3 +1,4 @@
+cffi==1.9.1
 dj-database-url==0.4.1
 dj-static==0.0.6
 Django==1.9.7
@@ -5,12 +6,18 @@ django-allauth==0.25.2
 django-filter==0.15.0
 django-toolbelt==0.0.1
 djangorestframework==3.4.7
+enum34==1.1.6
 gunicorn==19.6.0
+idna==2.1
+ipaddress==1.0.17
 Markdown==2.6.7
 oauthlib==1.1.2
 psycopg2==2.6.2
+pyasn1==0.1.9
+pycparser==2.17
 python-openid==2.2.5
 requests==2.10.0
 requests-oauthlib==0.6.2
+six==1.10.0
 static3==0.7.0
 whitenoise==3.2

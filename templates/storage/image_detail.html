@@ -35,19 +35,19 @@
                         <tbody>
                         <tr>
                             <td>Unidad de almacenamiento:</td>
-                            <td>{{ image_info.storage_unit }}</td>
+                            <td>{{ image_storage_unit }}</td>
                         </tr>
                         <tr>
                             <td>Año:</td>
-                            <td>{{ image_info.year }}</td>
+                            <td>{{ year }}</td>
                         </tr>
                         <tr>
                             <td>Longitud - Latitud:</td>
-                            <td>{{ image_info.longitude_latitude }}</td>
+                            <td>{{ coordinates.latitude }} - {{ coordinates.longitude }}</td>
                         </tr>
                         <tr>
                             <td>Nombre:</td>
-                            <td>{{ image_info.image }}</td>
+                            <td>{{ name }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -57,54 +57,25 @@
                     <p>Los thumbnails de esta imagen son los siguientes:</p>
 
                     <div class="isotope-container-fitrows row grid-space-10">
-                        <div class="col-sm-6 col-md-4 isotope-item">
-                            <div class="image-box style-2 mb-20 bordered text-center">
-                                <div class="carousel slide">
-                                    <div class="carousel-inner">
-                                        <div class="item active">
-                                            <div class="">
-                                                <img src="https://imageryspeaks.files.wordpress.com/2013/05/landsat8_vandenberg.jpg" alt="">
+                        {% for thumb_name, thumb_url in thumbnails.items %}
+                            <div class="col-sm-6 col-md-4 isotope-item">
+                                <div class="image-box style-2 mb-20 bordered text-center">
+                                    <div class="carousel slide">
+                                        <div class="carousel-inner">
+                                            <div class="item active">
+                                                <div class="">
+                                                    <img src="{{ thumb_url }}"
+                                                         alt="">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="body shadow light-gray-bg ">
-                                    <p>Banda 1.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-md-4 isotope-item">
-                            <div class="image-box style-2 mb-20 bordered text-center">
-                                <div class="carousel slide">
-                                    <div class="carousel-inner">
-                                        <div class="item active">
-                                            <div class="">
-                                                <img src="http://d32ogoqmya1dw8.cloudfront.net/images/eyesinthesky2/week3/432_false_color_landsat.jpg" alt="">
-                                            </div>
-                                        </div>
+                                    <div class="body shadow light-gray-bg ">
+                                        <p>{{ thumb_name }}</p>
                                     </div>
                                 </div>
-                                <div class="body shadow light-gray-bg ">
-                                    <p>Banda 2.</p>
-                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-6 col-md-4 isotope-item">
-                            <div class="image-box style-2 mb-20 bordered text-center">
-                                <div class="carousel slide">
-                                    <div class="carousel-inner">
-                                        <div class="item active">
-                                            <div class="">
-                                                <img src="http://www.landcareresearch.co.nz/__data/assets/image/0003/28470/pel18r_500.jpg" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="body shadow light-gray-bg ">
-                                    <p>Banda 3.</p>
-                                </div>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
 
                     <h3 class="page-title">Metadatos</h3>
