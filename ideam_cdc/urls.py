@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'^template/', include('template.urls')),
     url(r'^ingest/', include('ingest.urls')),
     url(r'^ingest_template/', include('ingest_template.urls')),
+    url(r'^profile/', include('user_profile.urls')),
 ]
