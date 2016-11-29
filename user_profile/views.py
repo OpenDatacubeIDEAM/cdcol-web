@@ -5,6 +5,10 @@ from user_profile.models import UserProfile
 from user_profile.forms import UserProfileForm
 
 
+def pending(request):
+	return render(request, 'profile/pending.html')
+
+
 @login_required(login_url='/accounts/login/')
 def index(request):
 	current_user = request.user

@@ -6,4 +6,6 @@ app_name = 'profile'
 urlpatterns = [
 	# ex: /profile/
 	url(r'^$', views.index, name='index'),
+	# ex: /profile/pending
+	url(r'^pending/$', views.pending, name='pending'),
 ]
