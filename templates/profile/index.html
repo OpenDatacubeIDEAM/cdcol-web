@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load public_extras %}
 
 {% block content %}
     <!-- breadcrumb start -->
@@ -19,6 +20,24 @@
 
         <div class="container">
             <div class="row">
+
+                <!-- sidebar start -->
+                <!-- ================ -->
+                <aside class="col-md-4 col-lg-3 col-lg-offset-1">
+                    <div class="sidebar">
+                        <div class="block clearfix">
+                            <h3 class="title">Configuración</h3>
+                            <div class="separator-2"></div>
+                            <nav>
+                                <a href="{% url 'profile:index' %}" class="btn btn-primary btn-md btn-block">Información de la Cuenta</a>
+                            </nav>
+                            <nav>
+                                <a href="{% url 'account_reset_password' %}" class="btn btn-primary btn-md btn-block">Restablecer contraseña</a>
+                            </nav>
+                        </div>
+                    </div>
+                </aside>
+                <!-- sidebar end -->
 
                 <!-- main start -->
                 <!-- ================ -->
@@ -127,6 +146,21 @@
                                 </div>
                                 <!-- /Teléfono Institucional -->
 
+                                <div class="form-group">
+                                    <p><b>Roles Habilitados</b></p>
+                                    <ul>
+                                        {% if request.user|has_group:"DataAdmin" %}
+                                            <li>Administrador de Datos</li>
+                                        {% endif %}
+                                        {% if request.user|has_group:"Developer" %}
+                                            <li>Desarrollador</li>
+                                        {% endif %}
+                                        {% if request.user|has_group:"Analyst" %}
+                                            <li>Analista</li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-default">Actualizar Perfil</button>
                                 </div>
@@ -136,24 +170,6 @@
 
                 </div>
                 <!-- main end -->
-
-                <!-- sidebar start -->
-                <!-- ================ -->
-                <aside class="col-md-4 col-lg-3 col-lg-offset-1">
-                    <div class="sidebar">
-                        <div class="block clearfix">
-                            <h3 class="title">Configuración</h3>
-                            <div class="separator-2"></div>
-                            <nav>
-                                <a href="{% url 'profile:index' %}" class="btn btn-primary btn-md btn-block">Información de la Cuenta</a>
-                            </nav>
-                            <nav>
-                                <a href="{% url 'account_reset_password' %}" class="btn btn-primary btn-md btn-block">Restablecer contraseña</a>
-                            </nav>
-                        </div>
-                    </div>
-                </aside>
-                <!-- sidebar end -->
 
             </div>
         </div>
