@@ -116,6 +116,37 @@ $(document).ready(function () {
         type: 'GET'
     });
 
+    function getBands(){
+        console.log(this);
+        var element = this.id;
+        var elementId = element.split('_')[2];
+        $.post("/storage/json", {'storage_unit_id': elementId}, function (data) {
+            console.log('Obteniendo bandas para unidad de almacenamiento ' + elementId);
+            console.log(data.metadata);
+            var tempMetadata = data.metadata;
+            console.log(tempMetadata);
+            console.log(tempMetadata.length);
+            var bands_select = document.getElementById("bands_"+elementId);
+            var band_option = document.createElement("option");
+            for (var key in tempMetadata){
+                band_option = document.createElement("option");
+                band_option.value = key;
+                band_option.text = key;
+                bands_select.appendChild(band_option);
+            }
+
+            //var bands_select = document.getElementById("bands_"+elementId);
+            //// appending all the bands
+            //var band_option = document.createElement("option");
+            //for (var i = 0; i < 3; i++) {
+            //    band_option = document.createElement("option");
+            //    band_option.value = i;
+            //    band_option.text = "Banda " + i;
+            //    bands_select.appendChild(band_option);
+            //}
+        });
+    }
+
     function createForm(json) {
         // obtaining the form
         var f = document.getElementById("mainForm");
@@ -278,6 +309,7 @@ $(document).ready(function () {
                         storage_unit_select.id = "storage_unit_"+pk;
                         storage_unit_select.name = "storage_unit_"+pk;
                         storage_unit_select.className = "form-control";
+                        storage_unit_select.onchange = getBands;
                         // storage_unit_options
                         var storage_unit_option = document.createElement("option");
                         jQuery.each(su_data, function (i, storage_unit_value) {
@@ -296,13 +328,13 @@ $(document).ready(function () {
                         bands_select.multiple = true;
                         bands_select.required = parameter.fields.required;
                         // band_options
-                        var band_option = document.createElement("option");
-                        for (i = 0; i < 3; i++) {
-                            band_option = document.createElement("option");
-                            band_option.value = i;
-                            band_option.text = "Banda " + i;
-                            bands_select.appendChild(band_option);
-                        }
+                        //var band_option = document.createElement("option");
+                        //for (i = 0; i < 3; i++) {
+                        //    band_option = document.createElement("option");
+                        //    band_option.value = i;
+                        //    band_option.text = "Banda " + i;
+                        //    bands_select.appendChild(band_option);
+                        //}
                         // ===== LABELS =====
                         var storage_unit_label = document.createElement("label");
                         storage_unit_label.innerHTML = "<b>Posibles unidades de almacenamiento origen"+requiredText+"</b>";

@@ -56,7 +56,7 @@
                                             <td>{{ algorithm.name }}</td>
                                             <td>{{ algorithm.topic.name }}</td>
                                             <td>{{ algorithm.obtain_versions.count }}</td>
-                                            <td>{{ algorithm.last_version.publishing_state }}</td>
+                                            <td>{{ algorithm.last_version.get_publishing_state_display }}</td>
                                             <td>{{ algorithm.created_at }}</td>
                                             <td><a href="{% url 'algorithm:detail' algorithm.id %}" class="btn btn-gray btn-sm"><i
                                                     class="fa fa-bars"></i> Ver Detalle</a>
