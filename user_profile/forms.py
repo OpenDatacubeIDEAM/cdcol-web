@@ -32,3 +32,14 @@ class SignupForm(forms.ModelForm):
 		profile.phone = self.cleaned_data['phone']
 		profile.usage = self.cleaned_data['usage']
 		profile.save()
+
+
+class UserProfileForm(forms.Form):
+	email = forms.CharField(max_length=200, label='Email', required=False,
+	                        widget=forms.TextInput(attrs={'class': 'form-control', 'disabled': 'true'}))
+	name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label='Nombres', required=True)
+	last_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label='Apellidos', required=True)
+	institution = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label='Institución',
+	                              required=True)
+	phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label='Teléfono Institucional',
+	                        required=True)
