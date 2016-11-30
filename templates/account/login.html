@@ -39,10 +39,11 @@
                                     {% endfor %}
                                 {% endif %}
                                 <!-- /Errors -->
-                                <label for="inputUserName" class="col-sm-3 control-label">{% trans "Email" %}</label>
+                                <label for="inputUserName" class="col-sm-3 control-label">Email<span
+                                        class="text-danger small"> *</span></label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" name="{{ form.login.html_name }}"
-                                           id="{{ form.login.id_for_label }}" placeholder="{% trans "Email" %}"
+                                           id="{{ form.login.id_for_label }}" placeholder="Email"
                                             {% if form.login.value %} value="{{ form.login.value }}"{% endif %}
                                            required>
                                     <i class="fa fa-user form-control-feedback"></i>
@@ -58,7 +59,8 @@
                                     {% endfor %}
                                 {% endif %}
                                 <!-- /Errors -->
-                                <label for="inputPassword" class="col-sm-3 control-label">{% trans "Password" %}</label>
+                                <label for="inputPassword" class="col-sm-3 control-label">{% trans "Password" %}<span
+                                        class="text-danger small"> *</span></label>
                                 <div class="col-sm-8">
                                     <input type="password" class="form-control" name="{{ form.password.html_name }}"
                                            id="{{ form.password.id_for_label }}"
