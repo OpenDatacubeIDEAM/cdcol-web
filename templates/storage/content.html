@@ -109,8 +109,10 @@
                         break;
                     case 5:
                         var yearSelected = tmp[2];
+                        var coordSelected= tmp[3];
                         appendNewElement('Años', '?path=/years/');
                         appendNewElement(yearSelected, '?path=/years/' + yearSelected + '/');
+                        appendNewElement(coordSelected, '#');
                         break;
                 }
             }
