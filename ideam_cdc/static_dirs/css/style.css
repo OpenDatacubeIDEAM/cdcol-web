@@ -763,9 +763,11 @@ tbody {
   background-color: #ffffff;
 }
 .light-gray-bg {
-  background-color: #fafafa;
+  background-color: #efefef;
   border-top: 1px solid #f3f3f3;
   border-bottom: 1px solid #f3f3f3;
+  border-right: 1px solid #f3f3f3;
+  border-left: 1px solid #f3f3f3;
 }
 .footer-top.light-gray-bg {
   background-color: #f5f5f5;
