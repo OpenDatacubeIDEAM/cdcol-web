@@ -237,7 +237,9 @@
     <div id="page-start"></div>
     {% if messages %}
         {% for message in messages %}
-            <div class="alert {% if message.tags %}alert-{% if message.tags == "error" %}danger{% else %}{{ message.tags }}{% endif %}"{% endif %}>{{ message }}</div>
+            <div class="alert {% if message.tags %}alert-{% if message.tags == "error" %}danger{% else %}{{ message.tags }}{% endif %}"{% endif %}>{{ message }}
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            </div>
         {% endfor %}
     {% endif %}
 
