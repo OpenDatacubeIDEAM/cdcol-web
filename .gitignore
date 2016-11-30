@@ -1,1 +1,11 @@
 .idea/
+*~
+.DS_Store
+*.pyc
+.idea/.name
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/parkeo.iml
+.idea/workspace.xml
+.idea
