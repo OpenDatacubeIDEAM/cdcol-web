@@ -31,7 +31,7 @@
                     <h3 class="title">Nueva Unidad de Almacenamiento</h3>
                     <div class="separator-2"></div>
                     <!-- page-title end -->
-                    <p>Ingresa la siguiente información de la unidad de almacenamiento:</p>
+                    <p>Ingrese la siguiente información de la unidad de almacenamiento:</p>
                     <!-- Success Messages  -->
                     {% if response %}
                         <div class="alert alert-success">
@@ -66,7 +66,7 @@
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for="nameUnitIngestFile"><b>Archivo de ingesta*</b></label>
+                                    <label for="nameUnitIngestFile"><b>Archivo de ingesta <span class="text-danger small"> *</span></b></label>
                                     <input name="{{ form.ingest_file.html_name }}"
                                            id="{{ form.ingest_file.id_for_label }}" type="file">
                                     <p class="help-block">Suba el archivo .yml con la información para poder realizar la ingesta <a target="_blank" href="{% url 'storage:new' %}" class="btn btn-default btn-sm">Ver plantillas</a></p>
@@ -130,7 +130,7 @@
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for="nameUnitFile"><b>Archivo de descripción*</b></label>
+                                    <label for="nameUnitFile"><b>Archivo de descripción <span class="text-danger small"> *</span></b></label>
                                     <input name="{{ form.description_file.html_name }}"
                                            id="{{ form.description_file.id_for_label }}" type="file">
                                     <p class="help-block">Suba el archivo .yml con la descripción de la unidad <a target="_blank" href="{% url 'template:index' %}" class="btn btn-default btn-sm">Ver plantillas</a></p>
@@ -148,7 +148,7 @@
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for=""><b>Script de generación de metadatos*</b></label>
+                                    <label for=""><b>Script de generación de metadatos <span class="text-danger small"> *</span></b></label>
                                     <input name="{{ form.metadata_generation_script.html_name }}"
                                            id="{{ form.metadata_generation_script.id_for_label }}" type="file">
                                     <p class="help-block">Suba el archivo .py que genera los metadatos de las imágenes a ingestar <a target="_blank" href="{% url 'ingest_template:index' %}" class="btn btn-default btn-sm">Ver scripts</a></p>
