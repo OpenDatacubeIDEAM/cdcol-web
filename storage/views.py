@@ -17,6 +17,7 @@ import StringIO
 import base64
 import json
 from rest_framework.renderers import JSONRenderer
+from django.views.decorators.csrf import csrf_exempt
 
 
 class JSONResponse(HttpResponse):
@@ -30,10 +31,16 @@ class JSONResponse(HttpResponse):
 		super(JSONResponse, self).__init__(content, **kwargs)
 
 
+@csrf_exempt
 def as_json(request):
 	try:
-		fake_url = "http://www.mocky.io/v2/582e7d81260000c60065efc2"
-		url = "{}/api/storage_units/".format(settings.API_URL)
+		storage_unit_id = request.POST.get('storage_unit_id', None)
+		if storage_unit_id:
+			fake_url = "http://www.mocky.io/v2/583f3658240000620c83b44e"
+			url = "{}/api/storage_units/{}/".format(settings.API_URL, storage_unit_id)
+		else:
+			fake_url = "http://www.mocky.io/v2/582e7d81260000c60065efc2"
+			url = "{}/api/storage_units/".format(settings.API_URL)
 		response = requests.get(fake_url)
 		storage_units = response.json()
 	except:
