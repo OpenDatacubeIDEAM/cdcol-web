@@ -84,7 +84,7 @@ class VersionStorageUnit(models.Model):
 class Parameter(models.Model):
 	STRING_TYPE = '1'
 	INTEGER_TYPE = '2'
-	DECIMAL_TYPE = '3'
+	DOUBLE_TYPE = '3'
 	BOOLEAN_TYPE = '4'
 	# DATE_TYPE = '5'
 	# DATETIME_TYPE = '6'
@@ -99,7 +99,7 @@ class Parameter(models.Model):
 	PARAMETER_TYPES = (
 		(STRING_TYPE, "STRING"),
 		(INTEGER_TYPE, "INTEGER"),
-		(DECIMAL_TYPE, "DECIMAL"),
+		(DOUBLE_TYPE, "DOUBLE"),
 		(BOOLEAN_TYPE, "BOOLEAN"),
 		# (DATE_TYPE, "FECHA"),
 		# (DATETIME_TYPE, "FECHA Y HORA"),

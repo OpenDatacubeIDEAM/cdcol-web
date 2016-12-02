@@ -36,7 +36,7 @@ def as_json(request):
 	try:
 		storage_unit_id = request.POST.get('storage_unit_id', None)
 		if storage_unit_id:
-			fake_url = "http://www.mocky.io/v2/583f3658240000620c83b44e"
+			fake_url = "http://www.mocky.io/v2/58409450100000e60f3582bb"
 			url = "{}/api/storage_units/{}/".format(settings.API_URL, storage_unit_id)
 		else:
 			fake_url = "http://www.mocky.io/v2/582e7d81260000c60065efc2"

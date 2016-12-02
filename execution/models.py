@@ -41,17 +41,23 @@ class ExecutionParameter(models.Model):
 	def obtain_value(self):
 		parameter_type = self.parameter.parameter_type
 		response = "Parámetro no soportado"
-		if parameter_type == "7":
-			response = "{}, {} - {}, {}".format(self.areatype.latitude_start, self.areatype.longitude_start,
-			                                    self.areatype.latitude_end, self.areatype.longitude_end)
+		if parameter_type == "1":
+			response = "{}".format(self.stringtype.value)
 		elif parameter_type == "2":
 			response = "{}".format(self.integertype.value)
-		elif parameter_type == "9":
-			response = "{} - {}".format(self.timeperiodtype.start_date, self.timeperiodtype.end_date)
-		elif parameter_type == "8":
-			response = "{}".format(self.storageunittype.value)
+		elif parameter_type == "3":
+			response = "{}".format(self.doubletype.value)
 		elif parameter_type == "4":
 			response = "{}".format(self.booleantype.value)
+		elif parameter_type == "7":
+			response = "{}, {} - {}, {}".format(self.areatype.latitude_start, self.areatype.longitude_start,
+			                                    self.areatype.latitude_end, self.areatype.longitude_end)
+		elif parameter_type == "8":
+			response = "{}, {}".format(self.storageunitbandtype.storage_unit_name, self.storageunitbandtype.bands)
+		elif parameter_type == "9":
+			response = "{} - {}".format(self.timeperiodtype.start_date, self.timeperiodtype.end_date)
+		elif parameter_type == "13":
+			response = "{}".format(self.storageunitnobandtype.storage_unit_name)
 		return response
 
 	def __unicode__(self):
@@ -67,6 +73,13 @@ class StringType(ExecutionParameter):
 
 class IntegerType(ExecutionParameter):
 	value = models.IntegerField()
+
+	def __unicode__(self):
+		return "{} - {}".format(self.execution, self.value)
+
+
+class DoubleType(ExecutionParameter):
+	value = models.FloatField()
 
 	def __unicode__(self):
 		return "{} - {}".format(self.execution, self.value)
@@ -89,11 +102,19 @@ class AreaType(ExecutionParameter):
 		return "{}".format(self.execution.id)
 
 
-class StorageUnitType(ExecutionParameter):
-	value = models.CharField(max_length=200)
+class StorageUnitBandType(ExecutionParameter):
+	storage_unit_name = models.CharField(max_length=200)
+	bands = models.CharField(max_length=200)
 
 	def __unicode__(self):
-		return "{} - {}".format(self.execution, self.value)
+		return "{} - {}".format(self.execution, self.storage_unit_name)
+
+
+class StorageUnitNoBandType(ExecutionParameter):
+	storage_unit_name = models.CharField(max_length=200)
+
+	def __unicode__(self):
+		return "{} - {}".format(self.execution, self.storage_unit_name)
 
 
 class TimePeriodType(ExecutionParameter):
@@ -101,7 +122,7 @@ class TimePeriodType(ExecutionParameter):
 	end_date = models.DateField()
 
 	def __unicode__(self):
-		return "{} - {}".format(self.execution)
+		return "{}".format(self.execution)
 
 
 class MultipleChoiceListType(ExecutionParameter):
