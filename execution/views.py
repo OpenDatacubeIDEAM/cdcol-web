@@ -9,6 +9,7 @@ from algorithm.models import Topic, Algorithm
 from execution.models import *
 from execution.forms import VersionSelectionForm, ReviewForm
 import datetime
+from storage.models import StorageUnit
 
 
 @login_required(login_url='/accounts/login/')
@@ -50,89 +51,116 @@ def create_execution_parameter_objects(parameters, request, execution, current_v
 	:return:
 	"""
 	for parameter in parameters:
+		if parameter.parameter_type == "1":
+			print "Getting elements for String parameter"
+			string_name = "string_input_{}".format(parameter.id)
+			string_value = request.POST.get(string_name, False)
+			# STRING TYPE
+			new_execution_parameter = StringType(
+				execution=execution,
+				parameter=parameter,
+				value=string_value
+			)
+			new_execution_parameter.save()
+		if parameter.parameter_type == "2":
+			print "Getting elements for Integer parameter"
+			integer_name = "integer_input_{}".format(parameter.id)
+			integer_value = request.POST.get(integer_name, False)
+			# INTEGER TYPE
+			new_execution_parameter = IntegerType(
+				execution=execution,
+				parameter=parameter,
+				value=integer_value
+			)
+			new_execution_parameter.save()
+		if parameter.parameter_type == "3":
+			print "Getting elements for Double parameter"
+			double_name = "double_input_{}".format(parameter.id)
+			double_value = request.POST.get(double_name, False)
+			# DOUBLE TYPE
+			new_execution_parameter = DoubleType(
+				execution=execution,
+				parameter=parameter,
+				value=double_value
+			)
+			new_execution_parameter.save()
+		if parameter.parameter_type == "4":
+			print "Getting elements for BooleanType parameter"
+			boolean_name = "boolean_input_{}".format(parameter.id)
+			boolean_value = request.POST.get(boolean_name, False)
+			# BOOLEAN TYPE
+			new_execution_parameter = BooleanType(
+				execution=execution,
+				parameter=parameter,
+				value=boolean_value
+			)
+			new_execution_parameter.save()
 		if parameter.parameter_type == "7":
 			print "Getting elements for AreaType parameter"
 			sw_latitude = request.POST.get('sw_latitude', False)
 			sw_longitude = request.POST.get('sw_longitude', False)
 			ne_latitude = request.POST.get('ne_latitude', False)
 			ne_longitude = request.POST.get('ne_longitude', False)
-			print sw_latitude, sw_longitude
-			print ne_latitude, ne_longitude
 			# AREA TYPE
-			type_params = Parameter.objects.filter(version=current_version, parameter_type='7')
-			for param in type_params:
-				new_execution_parameter = AreaType(
-					execution=execution,
-					parameter=param,
-					latitude_start=sw_latitude,
-					latitude_end=ne_latitude,
-					longitude_start=sw_longitude,
-					longitude_end=ne_longitude
-				)
-				new_execution_parameter.save()
-		if parameter.parameter_type == "2":
-			print "Getting elements for IntegerType parameter"
-			integer_name = "integer_input_{}".format(parameter.id)
-			integer_value = request.POST.get(integer_name, False)
-			print integer_value
-			# INTEGER TYPE
-			type_params = Parameter.objects.filter(version=current_version, parameter_type='2')
-			for param in type_params:
-				new_execution_parameter = IntegerType(
-					execution=execution,
-					parameter=param,
-					value=integer_value
-				)
-				new_execution_parameter.save()
+			new_execution_parameter = AreaType(
+				execution=execution,
+				parameter=parameter,
+				latitude_start=sw_latitude,
+				latitude_end=ne_latitude,
+				longitude_start=sw_longitude,
+				longitude_end=ne_longitude
+			)
+			new_execution_parameter.save()
+		if parameter.parameter_type == "8":
+			print "Getting elements for StorageUnitType (Bands) parameter"
+			select_name = "storage_unit_{}".format(parameter.id)
+			bands_name = "bands_{}".format(parameter.id)
+			select_value = request.POST.get(select_name, False)
+			select_value = StorageUnit.objects.get(pk=select_value)
+			bands_selected = request.POST.getlist(bands_name, False)
+			bands = ""
+			for band in bands_selected:
+				bands += band + ","
+			# STORAGE UNIT BAND TYPE
+			new_execution_parameter = StorageUnitBandType(
+				execution=execution,
+				parameter=parameter,
+				storage_unit_name=select_value.name,
+				bands=bands
+			)
+			new_execution_parameter.save()
 		if parameter.parameter_type == "9":
 			print "Getting elements for TimePeriod parameter"
 			start_date_name = "start_date_{}".format(parameter.id)
 			end_date_name = "end_date_{}".format(parameter.id)
 			start_date_value = request.POST.get(start_date_name, False)
 			end_date_value = request.POST.get(end_date_name, False)
-			print start_date_value, end_date_value
+			# parsing dates
+			start_date_value = datetime.datetime.strptime(start_date_value, "%Y-%m-%d")
+			end_date_value = datetime.datetime.strptime(end_date_value, "%Y-%m-%d")
 			# TIME PERIOD TYPE
-			type_params = Parameter.objects.filter(version=current_version, parameter_type='9')
-			for param in type_params:
-				new_execution_parameter = TimePeriodType(
-					execution=execution,
-					parameter=param,
-					start_date=start_date_value,
-					end_date=end_date_value
-				)
-				new_execution_parameter.save()
-		if parameter.parameter_type == "8":
-			print "Getting elements for StorageUnitType parameter"
+			new_execution_parameter = TimePeriodType(
+				execution=execution,
+				parameter=parameter,
+				start_date=start_date_value,
+				end_date=end_date_value
+			)
+			new_execution_parameter.save()
+		if parameter.parameter_type == "12":
+			print "Getting elements for File parameter"
+			print request.POST
+		if parameter.parameter_type == "13":
+			print "Getting elements for StorageUnitType (NoBands) parameter"
 			select_name = "storage_unit_{}".format(parameter.id)
-			bands_name = "bands_{}".format(parameter.id)
 			select_value = request.POST.get(select_name, False)
-			print select_value
-			bands_selected = request.POST.getlist(bands_name, False)
-			for band in bands_selected:
-				print band
-			# STORAGE UNIT TYPE
-			type_params = Parameter.objects.filter(version=current_version, parameter_type='8')
-			for param in type_params:
-				new_execution_parameter = StorageUnitType(
-					execution=execution,
-					parameter=param,
-					value=select_value
-				)
-				new_execution_parameter.save()
-		if parameter.parameter_type == "4":
-			print "Getting elements for BooleanType parameter"
-			boolean_name = "boolean_input_{}".format(parameter.id)
-			boolean_value = request.POST.get(boolean_name, False)
-			print boolean_value
-			# BOOLEAN TYPE
-			type_params = Parameter.objects.filter(version=current_version, parameter_type='4')
-			for param in type_params:
-				new_execution_parameter = BooleanType(
-					execution=execution,
-					parameter=param,
-					value=boolean_value
-				)
-				new_execution_parameter.save()
+			select_value = StorageUnit.objects.get(pk=select_value)
+			# STORAGE UNIT NO BAND TYPE
+			new_execution_parameter = StorageUnitNoBandType(
+				execution=execution,
+				parameter=parameter,
+				storage_unit_name=select_value.name
+			)
+			new_execution_parameter.save()
 
 
 @login_required(login_url='/accounts/login/')
@@ -142,7 +170,7 @@ def new_execution(request, algorithm_id, version_id):
 	current_version = None
 	if version_id:
 		current_version = get_object_or_404(Version, id=version_id)
-	parameters = Parameter.objects.filter(version=current_version).order_by('position')
+	parameters = Parameter.objects.filter(version=current_version, enabled=True).order_by('position')
 	reviews = Review.objects.filter(version=current_version)
 	# getting the average rating
 	average_rating = Review.objects.filter(version=current_version).aggregate(Avg('rating'))['rating__avg']
@@ -156,7 +184,7 @@ def new_execution(request, algorithm_id, version_id):
 		new_execution = Execution(
 			version=current_version,
 			description=textarea_name,
-			state=1,
+			state=Execution.ENQUEUED_STATE,
 			started_at=started_at,
 			executed_by=current_user
 		)

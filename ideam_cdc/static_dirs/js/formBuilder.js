@@ -146,6 +146,97 @@ $(document).ready(function () {
             var pk = parameter.pk;
             var requiredText = (parameter.fields.required ? "*":"");
             switch (parameter_type) {
+                case "1":
+                    console.log("Creating String field");
+                    var string_input = document.createElement("input");
+                    string_input.type = "text";
+                    string_input.placeholder = parameter.fields.help_text;
+                    string_input.id = "string_input_"+pk;
+                    string_input.name = "string_input_"+pk;
+                    string_input.className = "form-control";
+                    string_input.required = parameter.fields.required;
+                    string_input.value = parameter.fields.default_value;
+                    // ===== LABELS =====
+                    var label_string_title = document.createElement("label");
+                    label_string_title.innerHTML = "<b>"+parameter.fields.name+requiredText+"</b>";
+                    // ===== DIVs =====
+                    var param_div = document.createElement("div");
+                    param_div.className = "form-group";
+                    // appending everything
+                    param_div.appendChild(label_string_title);
+                    param_div.appendChild(string_input);
+                    // appending to the form
+                    f.appendChild(param_div);
+                    break;
+                case "2":
+                    console.log("Creating IntegerType field");
+                    var integer_input = document.createElement("input");
+                    integer_input.type = "number";
+                    integer_input.placeholder = parameter.fields.help_text;
+                    integer_input.id = "integer_input_"+pk;
+                    integer_input.name = "integer_input_"+pk;
+                    integer_input.className = "form-control";
+                    integer_input.required = parameter.fields.required;
+                    integer_input.value = parameter.fields.default_value;
+                    // ===== LABELS =====
+                    var label_integer_title = document.createElement("label");
+                    label_integer_title.innerHTML = "<b>"+parameter.fields.name+requiredText+"</b>";
+                    // ===== DIVs =====
+                    var param_div = document.createElement("div");
+                    param_div.className = "form-group";
+                    // appending everything
+                    param_div.appendChild(label_integer_title);
+                    param_div.appendChild(integer_input);
+                    // appending to the form
+                    f.appendChild(param_div);
+                    break;
+                case "3":
+                    console.log("Creating Double field");
+                    var double_input = document.createElement("input");
+                    double_input.type = "number";
+                    double_input.step = "any";
+                    double_input.placeholder = parameter.fields.help_text;
+                    double_input.id = "double_input_"+pk;
+                    double_input.name = "double_input_"+pk;
+                    double_input.className = "form-control";
+                    double_input.required = parameter.fields.required;
+                    double_input.value = parameter.fields.default_value;
+                    // ===== LABELS =====
+                    var label_double_title = document.createElement("label");
+                    label_double_title.innerHTML = "<b>"+parameter.fields.name+requiredText+"</b>";
+                    // ===== DIVs =====
+                    var param_div = document.createElement("div");
+                    param_div.className = "form-group";
+                    // appending everything
+                    param_div.appendChild(label_double_title);
+                    param_div.appendChild(double_input);
+                    // appending to the form
+                    f.appendChild(param_div);
+                    break;
+                case "4":
+                    console.log("Creating BooleanType field");
+                    var boolean_input = document.createElement("input");
+                    boolean_input.type = "checkbox";
+                    boolean_input.placeholder = parameter.fields.help_text;
+                    boolean_input.id = "boolean_input_"+pk;
+                    boolean_input.name = "boolean_input_"+pk;
+                    // ===== Bold =====
+                    var boolean_name = document.createElement("B");
+                    boolean_name.innerHTML = " <b>"+parameter.fields.name+requiredText+"</b>";
+                    // ===== Paragraphs =====
+                    var boolean_text = document.createElement("p");
+                    boolean_text.innerHTML = parameter.fields.help_text;
+                    boolean_text.className = "help-block";
+                    // ===== DIVs =====
+                    var param_div = document.createElement("div");
+                    param_div.className = "form-group";
+                    // appending everything
+                    param_div.appendChild(boolean_input);
+                    param_div.appendChild(boolean_name);
+                    param_div.appendChild(boolean_text);
+                    // appending to the form
+                    f.appendChild(param_div);
+                    break;
                 case "7":
                     console.log("Creating AreaType field");
                     // ===== INPUTS =====
@@ -216,26 +307,59 @@ $(document).ready(function () {
                     f.appendChild(param_div);
                     init_google_map();
                     break;
-                case "2":
-                    console.log("Creating IntegerType field");
-                    var integer_input = document.createElement("input");
-                    integer_input.type = "number";
-                    integer_input.placeholder = parameter.fields.help_text;
-                    integer_input.id = "integer_input_"+pk;
-                    integer_input.name = "integer_input_"+pk;
-                    integer_input.className = "form-control";
-                    integer_input.required = parameter.fields.required;
-                    // ===== LABELS =====
-                    var label_integer_title = document.createElement("label");
-                    label_integer_title.innerHTML = "<b>"+parameter.fields.name+requiredText+"</b>";
-                    // ===== DIVs =====
-                    var param_div = document.createElement("div");
-                    param_div.className = "form-group";
-                    // appending everything
-                    param_div.appendChild(label_integer_title);
-                    param_div.appendChild(integer_input);
-                    // appending to the form
-                    f.appendChild(param_div);
+                case "8":
+                    console.log("Creating StorageUnitType field");
+                    // creating initial divs
+                    var tmp_storage = document.createElement("div");
+                    var tmp_bands = document.createElement("div");
+                    tmp_storage.id = "storage_band_div";
+                    tmp_bands.id = "band_div";
+                    f.appendChild(tmp_storage);
+                    f.appendChild(tmp_bands);
+                    //getting the json
+                    $.getJSON( "/storage/storage_units", function( su_data ) {
+                        // storage_unit_select
+                        var storage_unit_select = document.createElement("select");
+                        storage_unit_select.id = "storage_unit_"+pk;
+                        storage_unit_select.name = "storage_unit_"+pk;
+                        storage_unit_select.className = "form-control";
+                        storage_unit_select.onchange = getBands;
+                        // storage_unit_options
+                        var storage_unit_option = document.createElement("option");
+                        jQuery.each(su_data, function (i, storage_unit_value) {
+                            var storage_pk = storage_unit_value.pk;
+                            var storage_name = storage_unit_value.fields.name;
+                            storage_unit_option = document.createElement("option");
+                            storage_unit_option.value = storage_pk;
+                            storage_unit_option.text = storage_name;
+                            storage_unit_select.appendChild(storage_unit_option);
+                        });
+                        // bands_select
+                        var bands_select = document.createElement("select");
+                        bands_select.id = "bands_"+pk;
+                        bands_select.name = "bands_"+pk;
+                        bands_select.className = "form-control";
+                        bands_select.multiple = true;
+                        bands_select.required = parameter.fields.required;
+                        bands_select.size = 8;
+                        // ===== LABELS =====
+                        var storage_unit_label = document.createElement("label");
+                        storage_unit_label.innerHTML = "<b>Posibles unidades de almacenamiento origen"+requiredText+"</b>";
+                        var band_label = document.createElement("label");
+                        band_label.innerHTML = "<b>Bandas de compuesto</b>";
+                        // ===== DIVs =====
+                        var storage_unit_param_div = document.getElementById("storage_band_div");
+                        storage_unit_param_div.className = "form-group";
+                        var band_param_div = document.getElementById("band_div");
+                        band_param_div.className = "form-group";
+                        // appending everything
+                        storage_unit_param_div.appendChild(storage_unit_label);
+                        storage_unit_param_div.appendChild(storage_unit_select);
+                        band_param_div.appendChild(band_label);
+                        band_param_div.appendChild(bands_select);
+                        // getting the bands for the storage unit;
+                        getBands(su_data[0].pk, pk);
+                    });
                     break;
                 case "9":
                     console.log("Creating TimePeriod field");
@@ -283,15 +407,32 @@ $(document).ready(function () {
                     // appending to the form
                     f.appendChild(param_div);
                     break;
-                case "8":
-                    console.log("Creating StorageUnitType field");
+                case "12":
+                    console.log("Creating File field");
+                    var file_input = document.createElement("input");
+                    file_input.type = "file";
+                    file_input.id = "file_input_"+pk;
+                    file_input.name = "file_input_"+pk;
+                    file_input.className = "form-control";
+                    file_input.required = parameter.fields.required;
+                    // ===== LABELS =====
+                    var label_file_title = document.createElement("label");
+                    label_file_title.innerHTML = "<b>"+parameter.fields.name+requiredText+"</b>";
+                    // ===== DIVs =====
+                    var param_div = document.createElement("div");
+                    param_div.className = "form-group";
+                    // appending everything
+                    param_div.appendChild(label_file_title);
+                    param_div.appendChild(file_input);
+                    // appending to the form
+                    f.appendChild(param_div);
+                    break;
+                case "13":
+                    console.log("Creating StorageUnitType (no bands) field");
                     // creating initial divs
                     var tmp_storage = document.createElement("div");
-                    var tmp_bands = document.createElement("div");
-                    tmp_storage.id = "storage_div";
-                    tmp_bands.id = "band_div";
+                    tmp_storage.id = "storage_nb_div";
                     f.appendChild(tmp_storage);
-                    f.appendChild(tmp_bands);
                     //getting the json
                     $.getJSON( "/storage/storage_units", function( su_data ) {
                         // storage_unit_select
@@ -299,7 +440,6 @@ $(document).ready(function () {
                         storage_unit_select.id = "storage_unit_"+pk;
                         storage_unit_select.name = "storage_unit_"+pk;
                         storage_unit_select.className = "form-control";
-                        storage_unit_select.onchange = getBands;
                         // storage_unit_options
                         var storage_unit_option = document.createElement("option");
                         jQuery.each(su_data, function (i, storage_unit_value) {
@@ -310,59 +450,19 @@ $(document).ready(function () {
                             storage_unit_option.text = storage_name;
                             storage_unit_select.appendChild(storage_unit_option);
                         });
-                        // bands_select
-                        var bands_select = document.createElement("select");
-                        bands_select.id = "bands_"+pk;
-                        bands_select.name = "bands_"+pk;
-                        bands_select.className = "form-control";
-                        bands_select.multiple = true;
-                        bands_select.required = parameter.fields.required;
-                        bands_select.size = 8;
                         // ===== LABELS =====
                         var storage_unit_label = document.createElement("label");
                         storage_unit_label.innerHTML = "<b>Posibles unidades de almacenamiento origen"+requiredText+"</b>";
-                        var band_label = document.createElement("label");
-                        band_label.innerHTML = "<b>Bandas de compuesto</b>";
                         // ===== DIVs =====
-                        var storage_unit_param_div = document.getElementById("storage_div");
+                        var storage_unit_param_div = document.getElementById("storage_nb_div");
                         storage_unit_param_div.className = "form-group";
-                        var band_param_div = document.getElementById("band_div");
-                        band_param_div.className = "form-group";
                         // appending everything
                         storage_unit_param_div.appendChild(storage_unit_label);
                         storage_unit_param_div.appendChild(storage_unit_select);
-                        band_param_div.appendChild(band_label);
-                        band_param_div.appendChild(bands_select);
-                        // getting the bands for the storage unit;
-                        getBands(su_data[0].pk, pk);
                     });
                     break;
-                case "4":
-                    console.log("Creating BooleanType field");
-                    var boolean_input = document.createElement("input");
-                    boolean_input.type = "checkbox";
-                    boolean_input.placeholder = parameter.fields.help_text;
-                    boolean_input.id = "boolean_input_"+pk;
-                    boolean_input.name = "boolean_input_"+pk;
-                    // ===== Bold =====
-                    var boolean_name = document.createElement("B");
-                    boolean_name.innerHTML = " <b>"+parameter.fields.name+requiredText+"</b>";
-                    // ===== Paragraphs =====
-                    var boolean_text = document.createElement("p");
-                    boolean_text.innerHTML = parameter.fields.help_text;
-                    boolean_text.className = "help-block";
-                    // ===== DIVs =====
-                    var param_div = document.createElement("div");
-                    param_div.className = "form-group";
-                    // appending everything
-                    param_div.appendChild(boolean_input);
-                    param_div.appendChild(boolean_name);
-                    param_div.appendChild(boolean_text);
-                    // appending to the form
-                    f.appendChild(param_div);
-                    break;
                 default:
-                    console.log("Object not supported");
+                    console.log("Object not supported, " + parameter_type);
             }
         });
         console.log("Creating Send Button");
