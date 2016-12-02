@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block extra_head %}
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+{% endblock %}
+
 {% block content %}
     <!-- breadcrumb start -->
     <!-- ================ -->
@@ -37,7 +41,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">
-                                <table class="table table-striped table-colored">
+                                <table id="execution_table" class="table table-striped table-colored">
                                     <thead>
                                     <tr>
                                         <th>Código</th>
@@ -49,23 +53,23 @@
                                         <th>Acciones</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                    {% for execution in executions %}
-                                        <tr>
-                                            <td>{{ execution.id }}</td>
-                                            <td>{{ execution.version.algorithm.name }}</td>
-                                            <td>{{ execution.get_state_display }}</td>
-                                            <td>{{ execution.created_at }}</td>
-                                            <td>{{ execution.started_at }}</td>
-                                            <td>{{ execution.finished_at }}</td>
-                                            <td><a href="{% url 'execution:detail' execution.id %}" class="btn btn-gray btn-sm"><i
-                                                    class="fa fa-bars"></i> Ver Detalle</a>
-                                                <a href="{% url 'execution:rate_execution' execution.id %}" class="btn btn-gray btn-sm"><i
-                                                    class="fa fa-bars"></i> Calificar</a>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
+{#                                    <tbody>#}
+{#                                    {% for execution in executions %}#}
+{#                                        <tr>#}
+{#                                            <td>{{ execution.id }}</td>#}
+{#                                            <td>{{ execution.version.algorithm.name }}</td>#}
+{#                                            <td>{{ execution.get_state_display }}</td>#}
+{#                                            <td>{{ execution.created_at }}</td>#}
+{#                                            <td>{{ execution.started_at }}</td>#}
+{#                                            <td>{{ execution.finished_at }}</td>#}
+{#                                            <td><a href="{% url 'execution:detail' execution.id %}" class="btn btn-gray btn-sm"><i#}
+{#                                                    class="fa fa-bars"></i> Ver Detalle</a>#}
+{#                                                <a href="{% url 'execution:rate_execution' execution.id %}" class="btn btn-gray btn-sm"><i#}
+{#                                                    class="fa fa-bars"></i> Calificar</a>#}
+{#                                            </td>#}
+{#                                        </tr>#}
+{#                                    {% endfor %}#}
+{#                                    </tbody>#}
                                 </table>
                             </div>
                         </div>
@@ -77,4 +81,64 @@
         </div>
     </section>
     <!-- main-container end -->
+{% endblock %}
+
+{% block extra_body %}
+    <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#execution_table').dataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Spanish.json"
+                },
+                "processing": true,
+                "ajax": {
+                    "processing": true,
+                    "url": "{% url 'execution:as_json' %}",
+                    "dataSrc": ""
+                },
+                "columns": [
+                    {"data": "id"},
+                    {"data": "algorithm_name"},
+                    {"data": "state"},
+                    {
+                        "data": "created_at",
+                        "render": function (data) {
+                            var date = new Date(data);
+                            var month = date.getMonth() + 1 + "";
+                            return date.toLocaleString();
+                        }
+                    },
+                    {
+                        "data": "started_at",
+                        "render": function (data) {
+                            var date = new Date(data);
+                            var month = date.getMonth() + 1 + "";
+                            return date.toLocaleString();
+                        }
+                    },
+                    {
+                        "data": "finished_at",
+                        "render": function (data) {
+                            if(data === null){
+                                return "-";
+                            }
+                            var date = new Date(data);
+                            return date.toLocaleString();
+                        }
+                    },
+                    {
+                        "data": "id",
+                        "searchable": false,
+                        "sortable": false,
+                        "render": function (data) {
+                            var detail_button = "<a href='" + data + "/detail/' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>";
+                            var rate_button = "<a href='" + data + "/rate/' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Calificar</a>";
+                            return detail_button + "\n" + rate_button;
+                        }
+                    },
+                ]
+            });
+        });
+    </script>
 {% endblock %}

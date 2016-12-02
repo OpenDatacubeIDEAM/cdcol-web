@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block extra_head %}
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+{% endblock %}
+
 {% block content %}
     <!-- breadcrumb start -->
     <!-- ================ -->
@@ -37,7 +41,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">
-                                <table class="table table-striped table-colored">
+                                <table id="algorithm_table" class="table table-striped table-colored">
                                     <thead>
                                     <tr>
                                         <th>Código</th>
@@ -49,21 +53,6 @@
                                         <th>Acciones</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                    {% for algorithm in algorithms %}
-                                        <tr>
-                                            <td>{{ algorithm.id }}</td>
-                                            <td>{{ algorithm.name }}</td>
-                                            <td>{{ algorithm.topic.name }}</td>
-                                            <td>{{ algorithm.obtain_versions.count }}</td>
-                                            <td>{{ algorithm.last_version.get_publishing_state_display }}</td>
-                                            <td>{{ algorithm.created_at }}</td>
-                                            <td><a href="{% url 'algorithm:detail' algorithm.id %}" class="btn btn-gray btn-sm"><i
-                                                    class="fa fa-bars"></i> Ver Detalle</a>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -76,4 +65,46 @@
         </div>
     </section>
     <!-- main-container end -->
+{% endblock %}
+
+{% block extra_body %}
+    <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#algorithm_table').dataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Spanish.json"
+                },
+                "processing": true,
+                "ajax": {
+                    "processing": true,
+                    "url": "{% url 'algorithm:as_json' %}",
+                    "dataSrc": ""
+                },
+                "columns": [
+                    {"data": "id"},
+                    {"data": "name"},
+                    {"data": "topic"},
+                    {"data": "version_count"},
+                    {"data": "last_version_status"},
+                    {
+                        "data": "created_at",
+                        "render": function (data) {
+                            var date = new Date(data);
+                            var month = date.getMonth() + 1 + "";
+                            return date.toLocaleString();
+                        }
+                    },
+                    {
+                        "data": "id",
+                        "searchable": false,
+                        "sortable": false,
+                        "render": function (data) {
+                            return "<a href='detail/" + data + "' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>";
+                        }
+                    },
+                ]
+            });
+        });
+    </script>
 {% endblock %}

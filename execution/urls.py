@@ -6,6 +6,8 @@ app_name = 'execution'
 urlpatterns = [
 	# ex: /execution/
 	url(r'^$', views.index, name='index'),
+	# ex /execution/json/
+	url(r'^json/$', views.as_json, name='as_json'),
 	# ex: /execution/detail/11
 	url(r'^(?P<execution_id>[0-9]+)/detail/$', views.detail, name='detail'),
 	# ex: /execution/new

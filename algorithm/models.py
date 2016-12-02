@@ -32,6 +32,12 @@ class Algorithm(models.Model):
 	def last_version(self):
 		return Version.objects.filter(algorithm_id=self.id).last()
 
+	def version_count(self):
+		return self.obtain_versions().count()
+
+	def last_version_status(self):
+		return self.last_version().get_publishing_state_display()
+
 
 class Version(models.Model):
 	DEVELOPED_STATE = '1'

@@ -8,8 +8,28 @@ from django.db.models import Avg
 from algorithm.models import Topic, Algorithm
 from execution.models import *
 from execution.forms import VersionSelectionForm, ReviewForm
+from execution.serializers import ExecutionSerializer
 import datetime
 from storage.models import StorageUnit
+from rest_framework.renderers import JSONRenderer
+
+
+class JSONResponse(HttpResponse):
+	"""
+	An HttpResponse that renders its content into JSON.
+	"""
+
+	def __init__(self, data, **kwargs):
+		content = JSONRenderer().render(data)
+		kwargs['content_type'] = 'application/json'
+		super(JSONResponse, self).__init__(content, **kwargs)
+
+
+def as_json(request):
+	current_user = request.user
+	queryset = Execution.objects.filter(executed_by=current_user)
+	serializer = ExecutionSerializer(queryset, many=True)
+	return JSONResponse(serializer.data)
 
 
 @login_required(login_url='/accounts/login/')

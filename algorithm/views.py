@@ -1,22 +1,39 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
 from algorithm.models import Algorithm, Topic, VersionStorageUnit, Version, Parameter
+from algorithm.serializers import AlgorithmSerializer
 from execution.models import Review
 from storage.models import StorageUnit
 from execution.models import Execution
 from algorithm.forms import AlgorithmForm, AlgorithmUpdateForm, VersionForm, VersionUpdateForm, NewParameterForm
+from rest_framework.renderers import JSONRenderer
+
+
+class JSONResponse(HttpResponse):
+	"""
+	An HttpResponse that renders its content into JSON.
+	"""
+
+	def __init__(self, data, **kwargs):
+		content = JSONRenderer().render(data)
+		kwargs['content_type'] = 'application/json'
+		super(JSONResponse, self).__init__(content, **kwargs)
+
+
+def as_json(request):
+	current_user = request.user
+	queryset = Algorithm.objects.filter(created_by=current_user)
+	serializer = AlgorithmSerializer(queryset, many=True)
+	return JSONResponse(serializer.data)
 
 
 @login_required(login_url='/accounts/login/')
 def index(request):
-	current_user = request.user
-	algorithms = Algorithm.objects.filter(created_by=current_user)
-	context = {'algorithms': algorithms}
-	return render(request, 'algorithm/index.html', context)
+	return render(request, 'algorithm/index.html')
 
 
 @login_required(login_url='/accounts/login/')

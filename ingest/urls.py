@@ -6,8 +6,8 @@ app_name = 'ingest'
 urlpatterns = [
 	# ex: /ingest/
 	url(r'^$', views.index, name='index'),
-	# ex /ingest/json
-	url(r'^json$', views.as_json, name='as_json'),
+	# ex /ingest/json/
+	url(r'^json/$', views.as_json, name='as_json'),
 	# ex /ingest/new
 	url(r'^new/$', views.new, name='new'),
 	# ex /ingest/detail
