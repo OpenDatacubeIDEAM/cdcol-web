@@ -103,8 +103,8 @@
                                 <!-- Código fuente -->
                                 <div class="form-group">
                                     <!-- Errors -->
-                                    {% if version_form.source_code.errors %}
-                                        {% for error in version_form.source_code.errors %}
+                                    {% if version_form.repository_url.errors %}
+                                        {% for error in version_form.repository_url.errors %}
                                             <div class="alert alert-danger">
                                                 <strong>{{ error|escape }}</strong>
                                             </div>
@@ -112,12 +112,12 @@
                                     {% endif %}
                                     <!-- /Errors -->
                                     <label for="sourceCode"><b>Código fuente*</b></label>
-                                    <input name="{{ version_form.source_code.html_name }}"
-                                           id="{{ version_form.source_code.id_for_label }}"
+                                    <input name="{{ version_form.repository_url.html_name }}"
+                                           id="{{ version_form.repository_url.id_for_label }}"
                                            class="form-control"
                                            placeholder="Escribe la url donde se encuentra el algoritmo."
-                                            {% if version_form.source_code.value %}
-                                           value="{{ version_form.source_code.value }}"{% endif %}
+                                            {% if version_form.repository_url.value %}
+                                           value="{{ version_form.repository_url.value }}"{% endif %}
                                            type="text">
                                     <p class="help-block">Coloca la URL del archivo en GitHub, Bitbucket, etc.</p>
                                 </div>

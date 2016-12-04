@@ -11,6 +11,10 @@ from storage.models import StorageUnit
 from execution.models import Execution
 from algorithm.forms import AlgorithmForm, AlgorithmUpdateForm, VersionForm, VersionUpdateForm, NewParameterForm
 from rest_framework.renderers import JSONRenderer
+from django.conf import settings
+import urllib
+from django.core.files import File
+import os
 
 
 class JSONResponse(HttpResponse):
@@ -61,7 +65,7 @@ def new(request):
 				algorithm=new_algorithm,
 				description='Versión por defecto 1.0',
 				number='1.0',
-				source_code='',
+				repository_url='',
 				publishing_state='En Desarrollo',
 				created_by=current_user
 			)
@@ -106,6 +110,24 @@ def detail(request, algorithm_id):
 	return render(request, 'algorithm/detail.html', context)
 
 
+def download_source_code(new_version):
+	# deleting the old file if there is any
+	try:
+		os.remove("{}/{}".format(settings.MEDIA_ROOT, new_version.source_code.name))
+	except:
+		pass
+	try:
+		# getting the file name
+		file_name = new_version.repository_url.split('/')[-1]
+		# downloading and updating the model
+		content = urllib.urlretrieve(new_version.repository_url)
+		new_version.source_code.save(file_name, File(open(content[0])), save=True)
+	except:
+		print "Something went wrong when downloading, {}".format(new_version.repository_url)
+		pass
+
+
+
 @login_required(login_url='/accounts/login/')
 def new_version(request, algorithm_id):
 	current_user = request.user
@@ -125,7 +147,7 @@ def new_version(request, algorithm_id):
 		if version_form.is_valid():
 			description = version_form.cleaned_data['description']
 			version_number = version_form.cleaned_data['number']
-			source_code = version_form.cleaned_data['source_code']
+			repository_url = version_form.cleaned_data['repository_url']
 			field_source_storage_units = version_form.cleaned_data['source_storage_units']
 			# reading the version
 			version_number = new_minor_version_number if version_number == "1" else new_major_version_number
@@ -134,11 +156,12 @@ def new_version(request, algorithm_id):
 				algorithm=algorithm,
 				description=description,
 				number=version_number,
-				source_code=source_code,
+				repository_url=repository_url,
 				publishing_state=Version.DEVELOPED_STATE,
 				created_by=current_user
 			)
 			new_algorithm_version.save()
+			download_source_code(new_algorithm_version)
 			# creating the relation with the storage units
 			for source_storage_unit in field_source_storage_units:
 				new_version_relation = VersionStorageUnit(
@@ -169,12 +192,14 @@ def update_version(request, algorithm_id, version_id):
 		# checking if the form is valid
 		if version_form.is_valid():
 			description = version_form.cleaned_data['description']
-			source_code = version_form.cleaned_data['source_code']
+			repository_url = version_form.cleaned_data['repository_url']
 			field_source_storage_units = version_form.cleaned_data['source_storage_units']
 			# updating with the new information
 			version.description = description
-			version.source_code = source_code
+			version.repository_url = repository_url
 			version.save()
+			# downloading the new file
+			download_source_code(version)
 			# deleting all the source storage units associations
 			version_associations = VersionStorageUnit.objects.filter(version_id=version.id)
 			for association in version_associations:
@@ -191,7 +216,7 @@ def update_version(request, algorithm_id, version_id):
 			version_form.add_error(None, "Favor completar todos los campos marcados.")
 	else:
 		version_form = VersionUpdateForm(initial={'description': version.description,
-		                                          'source_code': version.source_code})
+		                                          'repository_url': version.repository_url})
 	context = {'version_form': version_form, 'version': version, 'selected_storage_units': selected_storage_units,
 	           'source_storage_units': source_storage_units}
 	return render(request, 'algorithm/update_version.html', context)

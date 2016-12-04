@@ -39,6 +39,10 @@ class Algorithm(models.Model):
 		return self.last_version().get_publishing_state_display()
 
 
+def upload_to(new_version, filename):
+	return "uploads/versions/source_code/{}/{}".format(new_version.id, filename)
+
+
 class Version(models.Model):
 	DEVELOPED_STATE = '1'
 	PUBLISHED_STATE = '2'
@@ -53,7 +57,8 @@ class Version(models.Model):
 	source_storage_units = models.ManyToManyField(StorageUnit, through='VersionStorageUnit')
 	description = models.TextField()
 	number = models.CharField(max_length=200)
-	source_code = models.CharField(max_length=200)
+	repository_url = models.CharField(max_length=300)
+	source_code = models.FileField(upload_to=upload_to, blank=True, null=True)
 	publishing_state = models.CharField(max_length=2, choices=VERSION_STATES)
 	created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='version_author')
 	created_at = models.DateTimeField(auto_now_add=True)
