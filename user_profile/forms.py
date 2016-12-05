@@ -31,6 +31,7 @@ class SignupForm(forms.ModelForm):
 		profile.institution = self.cleaned_data['institution']
 		profile.phone = self.cleaned_data['phone']
 		profile.usage = self.cleaned_data['usage']
+		profile.status = UserProfile.WAITING_APPROBATION_STATE
 		profile.save()
 
 

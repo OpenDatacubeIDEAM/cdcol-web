@@ -18,7 +18,6 @@ def index(request):
 		user_form = UserProfileForm(request.POST)
 		# checking if the form is valid
 		if user_form.is_valid():
-			print 'valid'
 			name = user_form.cleaned_data['name']
 			last_name = user_form.cleaned_data['last_name']
 			institution = user_form.cleaned_data['institution']

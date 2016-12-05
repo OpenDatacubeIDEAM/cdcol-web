@@ -17,6 +17,7 @@ class UserProfile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	is_analyst = models.BooleanField(default=False)
 	is_developer = models.BooleanField(default=False)
+	is_data_admin = models.BooleanField(default=False)
 	institution = models.CharField(max_length=200)
 	phone = models.CharField(max_length=200)
 	usage = models.TextField()
