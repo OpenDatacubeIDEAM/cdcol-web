@@ -186,6 +186,27 @@ def create_execution_parameter_objects(parameters, request, execution, current_v
 			new_execution_parameter.save()
 
 
+def send_execution(execution):
+	"""
+	Create a json request and send it to the REST service
+	:param execution: Execution to be send
+	:return:
+	"""
+	parameters = ExecutionParameter.objects.filter(execution=execution)
+	# getting all the values
+	json_parameters = []
+	for parameter in parameters:
+		json_parameters.append(parameter.obtain_json_values())
+	# building the request
+	json_response = {
+		'execution_id': execution.id,
+		'algorithm_name': "{}".format(execution.version.algorithm.name),
+		'version_id': execution.version.id,
+		'parameters': json_parameters
+	}
+	print json_response
+
+
 @login_required(login_url='/accounts/login/')
 @permission_required(('execution.can_create_new_execution', 'execution.can_view_new_execution'), raise_exception=True)
 def new_execution(request, algorithm_id, version_id):
@@ -216,6 +237,8 @@ def new_execution(request, algorithm_id, version_id):
 			new_execution.save()
 
 			create_execution_parameter_objects(parameters, request, new_execution, current_version)
+			# send the execution to the REST service
+			send_execution(new_execution)
 			return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': new_execution.id}))
 	version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id)
 	context = {'topics': topics, 'algorithm': algorithm, 'parameters': parameters,

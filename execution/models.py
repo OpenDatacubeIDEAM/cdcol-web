@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.contrib.auth.models import User
 from django.db import models
 from algorithm.models import Version, Algorithm, Parameter
+import datetime
 
 
 class Execution(models.Model):
@@ -69,6 +70,56 @@ class ExecutionParameter(models.Model):
 			response = "{} - {}".format(self.timeperiodtype.start_date, self.timeperiodtype.end_date)
 		elif parameter_type == "13":
 			response = "{}".format(self.storageunitnobandtype.storage_unit_name)
+		return response
+
+	def obtain_json_values(self):
+		parameter_type = self.parameter.parameter_type
+		response = "Parámetro no soportado"
+		if parameter_type == "1":
+			response = {
+				'function_name': self.parameter.function_name,
+				'value': "{}".format(self.stringtype.value)
+			}
+		elif parameter_type == "2":
+			response = {
+				'function_name': self.parameter.function_name,
+				'value': self.integertype.value
+			}
+		elif parameter_type == "3":
+			response = {
+				'function_name': self.parameter.function_name,
+				'value': self.doubletype.value
+			}
+		elif parameter_type == "4":
+			response = {
+				'function_name': self.parameter.function_name,
+				'value': "{}".format(self.booleantype.value)
+			}
+		elif parameter_type == "7":
+			response = {
+				'function_name': self.parameter.function_name,
+				'latitude_start': self.areatype.latitude_start,
+				'longitude_start': self.areatype.longitude_start,
+				'latitude_end': self.areatype.latitude_end,
+				'longitude_end': self.areatype.longitude_end
+			}
+		elif parameter_type == "8":
+			response = {
+				'function_name': self.parameter.function_name,
+				'storage_unit_name': "{}".format(self.storageunitbandtype.storage_unit_name),
+			    'bands': "{}".format(self.storageunitbandtype.bands)
+			}
+		elif parameter_type == "9":
+			response = {
+				'function_name': self.parameter.function_name,
+				'start_date': "{}".format(self.timeperiodtype.start_date.strftime('%d/%m/%Y')),
+			    'end_date': "{}".format(self.timeperiodtype.end_date.strftime('%d/%m/%Y')),
+			}
+		elif parameter_type == "13":
+			response = {
+				'function_name': self.parameter.function_name,
+				'value': self.storageunitnobandtype.storage_unit_name
+			}
 		return response
 
 	def __unicode__(self):
