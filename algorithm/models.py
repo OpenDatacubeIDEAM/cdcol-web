@@ -38,6 +38,25 @@ class Algorithm(models.Model):
 	def last_version_status(self):
 		return self.last_version().get_publishing_state_display()
 
+	class Meta:
+		permissions = (
+			("can_list_algorithms", "Listar los algoritmos"),
+			("can_create_algorithm", "Crear un algoritmo"),
+			("can_view_algorithm_detail", "Ver detalle de un algoritmo"),
+			("can_edit_algorithm", "Editar algoritmo"),
+			("can_create_new_version", "Crear una nueva versión de un algoritmo"),
+			("can_view_version_detail", "Ver detalle de la versión de un algoritmo"),
+			("can_edit_version", "Editar una versión de un algoritmo"),
+			("can_publish_version", "Publicar versión de un algoritmo"),
+			("can_unpublish_version", "Despublicar versión de un algoritmo"),
+			("can_deprecate_version", "Volver versión de un algoritmo obsoleta"),
+			("can_delete_version", "Eliminar versión de un algoritmo (si no tiene ejecuciones)"),
+			("can_create_parameter", "Crear parámetro para una versión de un algoritmo"),
+			("can_view_parameter_detail", "Ver detalle de un parámetro de una versión de un algoritmo"),
+			("can_edit_parameter", "Editar parámetro de una versión de un algoritmo (tener en cuenta posibles variabilidades por tipo de parámetro)"),
+			("can_view_ratings", "Ver listado de calificaciones de una versión de un algoritmo"),
+		)
+
 
 def upload_to(new_version, filename):
 	return "uploads/versions/source_code/{}/{}".format(new_version.id, filename)

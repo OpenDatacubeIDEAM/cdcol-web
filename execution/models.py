@@ -31,6 +31,17 @@ class Execution(models.Model):
 	def __unicode__(self):
 		return "{} - {} - v{}".format(self.id, self.version.algorithm.name, self.version.number)
 
+	class Meta:
+		permissions = (
+			("can_list_executions", "Ver listado de ejecuciones"),
+			("can_view_execution_detail", "Ver detalle de una ejecución"),
+			("can_download_execution_results", "Descargar los resultados de la ejecución"),
+			("can_rate_execution", "Calificar el resultado de una ejecución"),
+			("can_view_blank_execution", "Ver listado de algoritmos para ejecutar"),
+			("can_create_new_execution", "Registrar la ejecución de un algoritmo"),
+			("can_view_new_execution", "Ver detalle y parámetros de un algoritmo para ejecutar"),
+		)
+
 
 class ExecutionParameter(models.Model):
 	execution = models.ForeignKey(Execution, on_delete=models.CASCADE)

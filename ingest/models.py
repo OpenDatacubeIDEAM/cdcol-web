@@ -33,7 +33,7 @@ class IngestTask(models.Model):
 
 	class Meta:
 		permissions = (
-			("can_list_storage_task", "Ver listado de tareas de ingesta"),
+			("can_list_storage_tasks", "Ver listado de tareas de ingesta"),
 			("can_create_storage_task", "Programar una nueva tarea de ingesta"),
 			("can_view_storage_task_detail", "Ver detalle de una tarea de ingesta"),
 		)

@@ -2,7 +2,7 @@ import os
 import mimetypes
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from template.models import YamlTemplate
 from wsgiref.util import FileWrapper
 from django.utils.encoding import smart_str
@@ -29,12 +29,14 @@ def as_json(request):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('template.can_list_yaml_templates', raise_exception=True)
 def index(request):
 	templates = YamlTemplate.objects.all()
 	context = {'templates': templates}
 	return render(request, 'template/index.html', context)
 
 
+@permission_required('template.can_download_yaml_template', raise_exception=True)
 def download_file(request, template_id):
 	"""
 	Download a file

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import get_object_or_404, render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core import serializers
 from django.core.urlresolvers import reverse
@@ -33,6 +33,7 @@ def as_json(request):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('execution.can_list_executions', raise_exception=True)
 def index(request):
 	current_user = request.user
 	executions = Execution.objects.filter(executed_by=current_user)
@@ -41,6 +42,7 @@ def index(request):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('execution.can_view_execution_detail', raise_exception=True)
 def detail(request, execution_id):
 	execution = get_object_or_404(Execution, id=execution_id)
 	executed_params = ExecutionParameter.objects.filter(execution=execution)
@@ -50,6 +52,7 @@ def detail(request, execution_id):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('execution.can_view_blank_execution', raise_exception=True)
 def new_blank_execution(request):
 	topics = Topic.objects.all()
 	context = {'topics': topics}
@@ -184,6 +187,7 @@ def create_execution_parameter_objects(parameters, request, execution, current_v
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required(('execution.can_create_new_execution', 'execution.can_view_new_execution'), raise_exception=True)
 def new_execution(request, algorithm_id, version_id):
 	current_user = request.user
 	algorithm = get_object_or_404(Algorithm, id=algorithm_id)
@@ -201,17 +205,18 @@ def new_execution(request, algorithm_id, version_id):
 		textarea_name = request.POST.get('textarea_name', False)
 		started_at = datetime.datetime.now()
 
-		new_execution = Execution(
-			version=current_version,
-			description=textarea_name,
-			state=Execution.ENQUEUED_STATE,
-			started_at=started_at,
-			executed_by=current_user
-		)
-		new_execution.save()
+		if current_user.has_perm('execution.can_create_new_execution'):
+			new_execution = Execution(
+				version=current_version,
+				description=textarea_name,
+				state=Execution.ENQUEUED_STATE,
+				started_at=started_at,
+				executed_by=current_user
+			)
+			new_execution.save()
 
-		create_execution_parameter_objects(parameters, request, new_execution, current_version)
-		return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': new_execution.id}))
+			create_execution_parameter_objects(parameters, request, new_execution, current_version)
+			return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': new_execution.id}))
 	version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id)
 	context = {'topics': topics, 'algorithm': algorithm, 'parameters': parameters,
 	           'version_selection_form': version_selection_form, 'version': current_version,
@@ -220,6 +225,7 @@ def new_execution(request, algorithm_id, version_id):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('execution.can_rate_execution', raise_exception=True)
 def rate_execution(request, execution_id):
 	current_user = request.user
 	execution = get_object_or_404(Execution, id=execution_id)
