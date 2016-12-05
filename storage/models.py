@@ -19,6 +19,17 @@ class StorageUnit(models.Model):
 	def __unicode__(self):
 		return "{} - {}".format(self.id, self.name)
 
+	class Meta:
+		permissions = (
+			("can_list_units", "Ver listado de unidades de almacenamiento"),
+			("can_create_units", "Crear unidad de almacenamiento"),
+			("can_view_unit_detail", "Ver detalle de una unidad de almacenamiento"),
+			("can_view_storage_content", "Ver contenido de una unidad de almacenamiento"),
+			("can_download_file", "Descargar un archivo"),
+			("can_view_content_detail", "Ver detalle de un contenido"),
+			("can_download_metadata", "Descargar metadados"),
+		)
+
 
 class Content(models.Model):
 	metadata = models.CharField(max_length=200)

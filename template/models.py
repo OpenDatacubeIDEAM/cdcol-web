@@ -22,3 +22,9 @@ class YamlTemplate(models.Model):
 
 	def __unicode__(self):
 		return "{} - {} - {}".format(self.name, self.get_type_display(), self.created_at)
+
+	class Meta:
+		permissions = (
+			("can_list_yaml_templates", "Ver listado de plantillas de archivos YML"),
+			("can_download_yaml_template", "Descargar plantilla de archivo YML"),
+		)

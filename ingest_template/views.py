@@ -2,7 +2,7 @@ import os
 import mimetypes
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from ingest_template.models import IngestTemplate
 from wsgiref.util import FileWrapper
 from django.utils.encoding import smart_str
@@ -29,12 +29,14 @@ def as_json(request):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('ingest_template.can_list_ingest_templates', raise_exception=True)
 def index(request):
 	ingest_templates = IngestTemplate.objects.all()
 	context = {'ingest_templates': ingest_templates}
 	return render(request, 'ingest_template/index.html', context)
 
 
+@permission_required('ingest_template.can_download_metadata_script', raise_exception=True)
 def download_file(request, ingest_template_id):
 	"""
 	Download a file

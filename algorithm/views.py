@@ -2,8 +2,8 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
-from django.db.models import Avg
+from django.contrib.auth.decorators import login_required, permission_required
+from django.db.models import Avg, Q
 from algorithm.models import Algorithm, Topic, VersionStorageUnit, Version, Parameter
 from algorithm.serializers import AlgorithmSerializer
 from execution.models import Review
@@ -28,19 +28,28 @@ class JSONResponse(HttpResponse):
 		super(JSONResponse, self).__init__(content, **kwargs)
 
 
+def is_data_admin(user):
+	return user.groups.filter(name='DataAdmin').exists()
+
+
 def as_json(request):
 	current_user = request.user
-	queryset = Algorithm.objects.filter(created_by=current_user)
+	if is_data_admin(current_user):
+		queryset = Algorithm.objects.filter()
+	else:
+		queryset = Algorithm.objects.filter(created_by=current_user)
 	serializer = AlgorithmSerializer(queryset, many=True)
 	return JSONResponse(serializer.data)
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('algorithm.can_list_algorithms', raise_exception=True)
 def index(request):
 	return render(request, 'algorithm/index.html')
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('algorithm.can_create_algorithm', raise_exception=True)
 def new(request):
 	current_user = request.user
 	topics = Topic.objects.all()
@@ -66,7 +75,7 @@ def new(request):
 				description='Versión por defecto 1.0',
 				number='1.0',
 				repository_url='',
-				publishing_state='En Desarrollo',
+				publishing_state=Version.DEVELOPED_STATE,
 				created_by=current_user
 			)
 			new_algorithm_version.save()
@@ -80,8 +89,10 @@ def new(request):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('algorithm.can_edit_algorithm', raise_exception=True)
 def update(request, algorithm_id):
-	algorithm = get_object_or_404(Algorithm, id=algorithm_id)
+	current_user = request.user
+	algorithm = get_object_or_404(Algorithm, Q(created_by=current_user), id=algorithm_id)
 	if request.method == 'POST':
 		# getting the form
 		algorithm_form = AlgorithmUpdateForm(request.POST)
@@ -103,8 +114,13 @@ def update(request, algorithm_id):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('algorithm.can_view_algorithm_detail', raise_exception=True)
 def detail(request, algorithm_id):
-	algorithm = get_object_or_404(Algorithm, id=algorithm_id)
+	current_user = request.user
+	if is_data_admin(current_user):
+		algorithm = get_object_or_404(Algorithm, id=algorithm_id)
+	else:
+		algorithm = get_object_or_404(Algorithm, Q(created_by=current_user), id=algorithm_id)
 	versions = Version.objects.filter(algorithm_id=algorithm_id)
 	context = {'algorithm': algorithm, 'versions': versions}
 	return render(request, 'algorithm/detail.html', context)
@@ -129,9 +145,10 @@ def download_source_code(new_version):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('algorithm.can_create_new_version', raise_exception=True)
 def new_version(request, algorithm_id):
 	current_user = request.user
-	algorithm = get_object_or_404(Algorithm, id=algorithm_id)
+	algorithm = get_object_or_404(Algorithm, Q(created_by=current_user), id=algorithm_id)
 	current_version = algorithm.last_version()
 	try:
 		new_minor_version_number = current_version.new_minor_version()
@@ -180,8 +197,10 @@ def new_version(request, algorithm_id):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('algorithm.can_edit_version', raise_exception=True)
 def update_version(request, algorithm_id, version_id):
-	version = get_object_or_404(Version, id=version_id)
+	current_user = request.user
+	version = get_object_or_404(Version, Q(created_by=current_user), id=version_id)
 	selected_storage_units = version.source_storage_units.all()
 	source_storage_units = StorageUnit.objects.all()
 	if request.method == 'POST':
@@ -223,8 +242,13 @@ def update_version(request, algorithm_id, version_id):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('algorithm.can_view_version_detail', raise_exception=True)
 def version_detail(request, algorithm_id, version_id):
-	version = get_object_or_404(Version, id=version_id)
+	current_user = request.user
+	if is_data_admin(current_user):
+		version = get_object_or_404(Version, id=version_id)
+	else:
+		version = get_object_or_404(Version, Q(created_by=current_user), id=version_id)
 	parameters = Parameter.objects.filter(version=version_id).order_by('position')
 	reviews = Review.objects.filter(execution__version=version).order_by('created_at')
 	# getting version executions
@@ -239,6 +263,7 @@ def version_detail(request, algorithm_id, version_id):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('algorithm.can_view_ratings', raise_exception=True)
 def version_rating(request, algorithm_id, version_id):
 	version = get_object_or_404(Version, id=version_id)
 	parameters = Parameter.objects.filter(version=version_id).order_by('position')
@@ -253,8 +278,13 @@ def version_rating(request, algorithm_id, version_id):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('algorithm.can_publish_version', raise_exception=True)
 def publish_version(request, algorithm_id, version_id):
-	version = get_object_or_404(Version, id=version_id)
+	current_user = request.user
+	if is_data_admin(current_user):
+		version = get_object_or_404(Version, id=version_id)
+	else:
+		version = get_object_or_404(Version, Q(created_by=current_user), id=version_id)
 	if request.method == 'GET':
 		if version.publishing_state == Version.DEVELOPED_STATE:
 			version.publishing_state = Version.PUBLISHED_STATE
@@ -266,8 +296,13 @@ def publish_version(request, algorithm_id, version_id):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('algorithm.can_unpublish_version', raise_exception=True)
 def unpublish_version(request, algorithm_id, version_id):
-	version = get_object_or_404(Version, id=version_id)
+	current_user = request.user
+	if is_data_admin(current_user):
+		version = get_object_or_404(Version, id=version_id)
+	else:
+		version = get_object_or_404(Version, Q(created_by=current_user), id=version_id)
 	if request.method == 'GET':
 		execution_count = Execution.objects.filter(version=version).count()
 		if version.publishing_state == Version.PUBLISHED_STATE and execution_count == 0:
@@ -280,8 +315,13 @@ def unpublish_version(request, algorithm_id, version_id):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('algorithm.can_deprecate_version', raise_exception=True)
 def deprecate_version(request, algorithm_id, version_id):
-	version = get_object_or_404(Version, id=version_id)
+	current_user = request.user
+	if is_data_admin(current_user):
+		version = get_object_or_404(Version, id=version_id)
+	else:
+		version = get_object_or_404(Version, Q(created_by=current_user), id=version_id)
 	if request.method == 'GET':
 		if version.publishing_state == Version.PUBLISHED_STATE:
 			version.publishing_state = Version.DEPRECATED_STATE
@@ -293,7 +333,13 @@ def deprecate_version(request, algorithm_id, version_id):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('algorithm.can_delete_version', raise_exception=True)
 def delete_version(request, algorithm_id, version_id):
+	current_user = request.user
+	if is_data_admin(current_user):
+		version = get_object_or_404(Version, id=version_id)
+	else:
+		version = get_object_or_404(Version, Q(created_by=current_user), id=version_id)
 	version = get_object_or_404(Version, id=version_id)
 	if request.method == 'GET':
 		execution_count = Execution.objects.filter(version=version).count()
@@ -307,8 +353,10 @@ def delete_version(request, algorithm_id, version_id):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('algorithm.can_create_parameter', raise_exception=True)
 def new_parameter(request, algorithm_id, version_id):
-	version = get_object_or_404(Version, id=version_id)
+	current_user = request.user
+	version = get_object_or_404(Version, Q(created_by=current_user), id=version_id)
 	if request.method == 'POST':
 		# getting the form
 		new_parameter_form = NewParameterForm(request.POST)
@@ -352,15 +400,23 @@ def new_parameter(request, algorithm_id, version_id):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('algorithm.can_view_parameter_detail', raise_exception=True)
 def view_parameter(request, algorithm_id, version_id, parameter_id):
-	parameter = get_object_or_404(Parameter, id=parameter_id)
+	current_user = request.user
+	if is_data_admin(current_user):
+		parameter = get_object_or_404(Parameter, id=parameter_id)
+	else:
+		parameter = get_object_or_404(Parameter, Q(created_by=current_user), id=parameter_id)
 	context = {'parameter': parameter}
 	return render(request, 'algorithm/parameter_detail.html', context)
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('algorithm.can_edit_parameter', raise_exception=True)
 def update_parameter(request, algorithm_id, version_id, parameter_id):
+	current_user = request.user
 	parameter = get_object_or_404(Parameter, id=parameter_id)
+	version = get_object_or_404(Version, Q(created_by=current_user), id=version_id)
 	if request.method == 'POST':
 		# getting the form
 		parameter_form = NewParameterForm(request.POST)

@@ -30,3 +30,10 @@ class IngestTask(models.Model):
 
 	def __unicode__(self):
 		return "{} - {} - {}".format(self.id, self.storage_unit.name, self.get_state_display())
+
+	class Meta:
+		permissions = (
+			("can_list_storage_tasks", "Ver listado de tareas de ingesta"),
+			("can_create_storage_task", "Programar una nueva tarea de ingesta"),
+			("can_view_storage_task_detail", "Ver detalle de una tarea de ingesta"),
+		)
