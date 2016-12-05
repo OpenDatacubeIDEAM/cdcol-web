@@ -15,3 +15,9 @@ class IngestTemplate(models.Model):
 
 	def __unicode__(self):
 		return "{}".format(self.name)
+
+	class Meta:
+		permissions = (
+			("can_list_ingest_templates", "Ver listado de scritps de generación de metadatos"),
+			("can_download_metadata_script", "Descargar scripts de generación de metadatos (.py)"),
+		)

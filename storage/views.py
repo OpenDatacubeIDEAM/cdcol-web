@@ -4,7 +4,7 @@ import os
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.utils.encoding import smart_str
 from django.core import serializers
 from .forms import StorageUnitForm
@@ -48,10 +48,12 @@ def as_json(request):
 	return JSONResponse(storage_units)
 
 @login_required(login_url='/accounts/login/')
+@permission_required('storage.can_list_units', raise_exception=True)
 def index(request):
 	return render(request, 'storage/index.html')
 
 
+@permission_required('storage.can_download_file', raise_exception=True)
 def download_file(request, file_name):
 	"""
 	Download a file
@@ -70,6 +72,7 @@ def download_file(request, file_name):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('storage.can_view_unit_detail', raise_exception=True)
 def detail(request, storage_unit_id):
 	# searching the storage unit by its id
 	storage_unit = get_object_or_404(StorageUnit, id=storage_unit_id)
@@ -78,6 +81,7 @@ def detail(request, storage_unit_id):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('storage.can_create_units', raise_exception=True)
 def new(request):
 	response = None
 	# obtaining the current user
@@ -142,6 +146,7 @@ def obtain_storage_units(request):
 	return HttpResponse(data, content_type='application/json')
 
 
+@permission_required('storage.can_view_storage_content', raise_exception=True)
 def content_as_json(request, storage_unit_id):
 	path = request.GET.get('path', "/years/")
 	try:
@@ -189,6 +194,7 @@ def content_as_json(request, storage_unit_id):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('storage.can_view_storage_content', raise_exception=True)
 def view_content(request, storage_unit_id):
 	storage_unit = get_object_or_404(StorageUnit, id=storage_unit_id)
 	context = {'storage_unit': storage_unit}
@@ -196,6 +202,7 @@ def view_content(request, storage_unit_id):
 
 
 @login_required(login_url='/accounts/login/')
+@permission_required('storage.can_view_content_detail', raise_exception=True)
 def image_detail(request, storage_unit_id, image_name):
 	url = "{}/api/storage_units/{}/contents/{}/".format(settings.API_URL, storage_unit_id, image_name)
 	fake_url = "http://www.mocky.io/v2/5838bfd6110000a2168fd3cd"
