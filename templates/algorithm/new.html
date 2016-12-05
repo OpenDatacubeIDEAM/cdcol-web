@@ -66,7 +66,12 @@
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for=""><b>Temática*</b></label>
+                                    <label for="">
+                                        <b>
+                                            Temática <span class="text-danger small"> * </span>
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Seleccione la temática a la que pertenece el nuevo algoritmo."></i></a>
+                                        </b>
+                                    </label>
                                     <select name="{{ algorithm_form.topic.html_name }}"
                                             id="{{ algorithm_form.topic.id_for_label }}" class="form-control">
                                         {% for topic in topics %}
@@ -87,13 +92,18 @@
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for=""><b>Nombre*</b></label>
+                                    <label for="">
+                                        <b>
+                                            Nombre <span class="text-danger small"> * </span>
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ingrese el nombre del algoritmo."></i></a>
+                                        </b>
+                                    </label>
                                     <input name="{{ algorithm_form.name.html_name }}"
                                            id="{{ algorithm_form.name.id_for_label }}"
-                                           class="form-control" placeholder="Escribe el nombre el algoritmo."
+                                           class="form-control" placeholder="Escriba el nombre el algoritmo."
                                             {% if algorithm_form.name.value %}
                                            value="{{ algorithm_form.name.value }}"{% endif %}
-                                           type="text">
+                                           type="text" maxlength="50" required>
                                 </div>
                                 <!-- /Nombre -->
 
@@ -108,16 +118,21 @@
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for=""><b>Descripción del algoritmo*</b></label>
+                                    <label for="">
+                                        <b>
+                                            Descripción del algoritmo <span class="text-danger small"> * </span>
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ingrese una descripción completa del objetivo del algoritmo para que los analistas conozcan para qué sirve. Sea lo más específico posible."></i></a>
+                                        </b>
+                                    </label>
                             <textarea name="{{ algorithm_form.description.html_name }}"
                                       id="{{ algorithm_form.description.id_for_label }}"
-                                      class="form-control" rows="3"
-                                      placeholder="Ingresa una descripción que te ayude a identificar el objetivo del análisis que deseas realizar."></textarea>
+                                      class="form-control" rows="10" maxlength="750"
+                                      placeholder="Ingrese una descripción que le ayude a los analistas a conocer para que sirve el algoritmo." required></textarea>
                                 </div>
                                 <!-- /Descripción Algoritmo -->
 
                                 <div class="text-center">
-                                    <button type="submit" class="btn btn-default">Crear Algoritmo</button>
+                                    <button type="submit" class="btn btn-default btn-lg">Crear Algoritmo</button>
                                 </div>
                             </form>
                         </div>
