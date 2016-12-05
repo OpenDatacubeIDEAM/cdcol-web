@@ -19,7 +19,7 @@ class Execution(models.Model):
 		(CANCELED_STATE, "CANCELADA"),
 	)
 	version = models.ForeignKey(Version, on_delete=models.CASCADE)
-	description = models.TextField()
+	description = models.TextField(blank=True, null=True)
 	state = models.CharField(max_length=2, choices=EXECUTION_STATES)
 	started_at = models.DateTimeField()
 	finished_at = models.DateTimeField(blank=True, null=True)

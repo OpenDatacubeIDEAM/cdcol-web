@@ -202,7 +202,7 @@ def new_execution(request, algorithm_id, version_id):
 	executions = Execution.objects.filter(version=current_version)
 	topics = Topic.objects.all()
 	if request.method == 'POST':
-		textarea_name = request.POST.get('textarea_name', False)
+		textarea_name = request.POST.get('textarea_name', None)
 		started_at = datetime.datetime.now()
 
 		if current_user.has_perm('execution.can_create_new_execution'):
