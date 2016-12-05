@@ -47,7 +47,12 @@
                         </tr>
                         <tr>
                             <td>Código fuente:</td>
-                            <td><a href="#" class="btn btn-gray btn-sm"><i class="fa fa-download"></i> Descargar</a></td>
+                            <td><a href="{% url 'algorithm:download_version' version.algorithm.id version.id %}"
+                                   class="btn btn-gray btn-sm"><i class="fa fa-download"></i> Descargar</a></td>
+                        </tr>
+                        <tr>
+                            <td>Repositorio código fuente:</td>
+                            <td><a href="{{ version.repository_url }}" target="_blank" class="btn btn-gray btn-sm">Ir al sitio</a></td>
                         </tr>
                         <tr>
                             <td>Estado:</td>

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import os
+import mimetypes
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
@@ -14,7 +16,8 @@ from rest_framework.renderers import JSONRenderer
 from django.conf import settings
 import urllib
 from django.core.files import File
-import os
+from wsgiref.util import FileWrapper
+from django.utils.encoding import smart_str
 
 
 class JSONResponse(HttpResponse):
@@ -239,6 +242,23 @@ def update_version(request, algorithm_id, version_id):
 	context = {'version_form': version_form, 'version': version, 'selected_storage_units': selected_storage_units,
 	           'source_storage_units': source_storage_units}
 	return render(request, 'algorithm/update_version.html', context)
+
+
+@login_required(login_url='/accounts/login/')
+def download_version(request, algorithm_id, version_id):
+	"""
+	Download a file using the version_id
+	"""
+	version = get_object_or_404(Version, id=version_id)
+	file_name = version.repository_url.split('/')[-1]
+	file_path = "{}/{}".format(settings.MEDIA_ROOT, version.source_code.name)
+	file_wrapper = FileWrapper(file(file_path, 'rb'))
+	file_mimetype = mimetypes.guess_type(file_path)
+	response = HttpResponse(file_wrapper, content_type=file_mimetype)
+	response['X-Sendfile'] = file_path
+	response['Content-Length'] = os.stat(file_path).st_size
+	response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(file_name)
+	return response
 
 
 @login_required(login_url='/accounts/login/')
