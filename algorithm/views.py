@@ -426,7 +426,8 @@ def view_parameter(request, algorithm_id, version_id, parameter_id):
 	if is_data_admin(current_user):
 		parameter = get_object_or_404(Parameter, id=parameter_id)
 	else:
-		parameter = get_object_or_404(Parameter, Q(created_by=current_user), id=parameter_id)
+		version = get_object_or_404(Version, Q(created_by=current_user), id=version_id)
+		parameter = get_object_or_404(Parameter, id=parameter_id)
 	context = {'parameter': parameter}
 	return render(request, 'algorithm/parameter_detail.html', context)
 

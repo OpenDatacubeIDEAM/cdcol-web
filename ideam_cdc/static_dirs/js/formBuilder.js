@@ -36,7 +36,7 @@ $(document).ready(function () {
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 4.1, lng: -72.8},
             zoom: 5,
-            mapTypeId: google.maps.MapTypeId.TERRAIN,
+            mapTypeId: google.maps.MapTypeId.HYBRID,
         });
 
         var bounds = {
@@ -144,7 +144,8 @@ $(document).ready(function () {
         jQuery.each(json, function (i, parameter) {
             var parameter_type = parameter.fields.parameter_type;
             var pk = parameter.pk;
-            var requiredText = (parameter.fields.required ? "*":"");
+            var requiredText = (parameter.fields.required ? " <span class='text-danger small'> *</span>":"");
+            var input_description = " <a class='help-hover hidden-xs hidden-sm hidden-md'><i class='glyphicon glyphicon-exclamation-sign' data-toggle='tooltip' data-placement='right' title='"+parameter.fields.description+"'></i></a>"
             switch (parameter_type) {
                 case "1":
                     console.log("Creating String field");
@@ -158,13 +159,18 @@ $(document).ready(function () {
                     string_input.value = parameter.fields.default_value;
                     // ===== LABELS =====
                     var label_string_title = document.createElement("label");
-                    label_string_title.innerHTML = "<b>"+parameter.fields.name+requiredText+"</b>";
+                    label_string_title.innerHTML = "<b>"+parameter.fields.name+requiredText+input_description+"</b>";
+                    // ===== Paragraphs =====
+                    var string_text = document.createElement("p");
+                    string_text.innerHTML = parameter.fields.help_text;
+                    string_text.className = "help-block";
                     // ===== DIVs =====
                     var param_div = document.createElement("div");
                     param_div.className = "form-group";
                     // appending everything
                     param_div.appendChild(label_string_title);
                     param_div.appendChild(string_input);
+                    param_div.appendChild(string_text);
                     // appending to the form
                     f.appendChild(param_div);
                     break;
@@ -180,13 +186,18 @@ $(document).ready(function () {
                     integer_input.value = parameter.fields.default_value;
                     // ===== LABELS =====
                     var label_integer_title = document.createElement("label");
-                    label_integer_title.innerHTML = "<b>"+parameter.fields.name+requiredText+"</b>";
+                    label_integer_title.innerHTML = "<b>"+parameter.fields.name+requiredText+input_description+"</b>";
+                    // ===== Paragraphs =====
+                    var integer_text = document.createElement("p");
+                    integer_text.innerHTML = parameter.fields.help_text;
+                    integer_text.className = "help-block";
                     // ===== DIVs =====
                     var param_div = document.createElement("div");
                     param_div.className = "form-group";
                     // appending everything
                     param_div.appendChild(label_integer_title);
                     param_div.appendChild(integer_input);
+                    param_div.appendChild(integer_text);
                     // appending to the form
                     f.appendChild(param_div);
                     break;
@@ -203,13 +214,18 @@ $(document).ready(function () {
                     double_input.value = parameter.fields.default_value;
                     // ===== LABELS =====
                     var label_double_title = document.createElement("label");
-                    label_double_title.innerHTML = "<b>"+parameter.fields.name+requiredText+"</b>";
+                    label_double_title.innerHTML = "<b>"+parameter.fields.name+requiredText+input_description+"</b>";
+                    // ===== Paragraphs =====
+                    var double_text = document.createElement("p");
+                    double_text.innerHTML = parameter.fields.help_text;
+                    double_text.className = "help-block";
                     // ===== DIVs =====
                     var param_div = document.createElement("div");
                     param_div.className = "form-group";
                     // appending everything
                     param_div.appendChild(label_double_title);
                     param_div.appendChild(double_input);
+                    param_div.appendChild(double_text);
                     // appending to the form
                     f.appendChild(param_div);
                     break;
@@ -222,7 +238,7 @@ $(document).ready(function () {
                     boolean_input.name = "boolean_input_"+pk;
                     // ===== Bold =====
                     var boolean_name = document.createElement("B");
-                    boolean_name.innerHTML = " <b>"+parameter.fields.name+requiredText+"</b>";
+                    boolean_name.innerHTML = " <b>"+parameter.fields.name+requiredText+input_description+"</b>";
                     // ===== Paragraphs =====
                     var boolean_text = document.createElement("p");
                     boolean_text.innerHTML = parameter.fields.help_text;
@@ -278,7 +294,11 @@ $(document).ready(function () {
                     var label_ne_longitude_2 = document.createElement("label");
                     label_ne_longitude_2.innerHTML = "<b>Longitud NE</b>";
                     var area_title = document.createElement("label");
-                    area_title.innerHTML = "<b>Mapa"+requiredText+"</b>";
+                    area_title.innerHTML = "<b>Mapa"+requiredText+input_description+"</b>";
+                    // ===== Paragraphs =====
+                    var area_text = document.createElement("p");
+                    area_text.innerHTML = parameter.fields.help_text;
+                    area_text.className = "help-block";
                     // ===== DIVs =====
                     var left_div = document.createElement("div");
                     left_div.className = "col-md-6 col-sm-6 col-xs-6";
@@ -301,6 +321,7 @@ $(document).ready(function () {
                     right_div.appendChild(ne_longitude_2);
                     param_div.appendChild(area_title);
                     param_div.appendChild(map_div);
+                    param_div.appendChild(area_text);
                     param_div.appendChild(left_div);
                     param_div.appendChild(right_div);
                     // appending to the form
@@ -344,9 +365,13 @@ $(document).ready(function () {
                         bands_select.size = 8;
                         // ===== LABELS =====
                         var storage_unit_label = document.createElement("label");
-                        storage_unit_label.innerHTML = "<b>Posibles unidades de almacenamiento origen"+requiredText+"</b>";
+                        storage_unit_label.innerHTML = "<b>Posibles unidades de almacenamiento origen"+requiredText+input_description+"</b>";
                         var band_label = document.createElement("label");
                         band_label.innerHTML = "<b>Bandas de compuesto</b>";
+                        // ===== Paragraphs =====
+                        var storage_bands_text = document.createElement("p");
+                        storage_bands_text.innerHTML = parameter.fields.help_text;
+                        storage_bands_text.className = "help-block";
                         // ===== DIVs =====
                         var storage_unit_param_div = document.getElementById("storage_band_div");
                         storage_unit_param_div.className = "form-group";
@@ -357,6 +382,7 @@ $(document).ready(function () {
                         storage_unit_param_div.appendChild(storage_unit_select);
                         band_param_div.appendChild(band_label);
                         band_param_div.appendChild(bands_select);
+                        band_param_div.appendChild(storage_bands_text);
                         // getting the bands for the storage unit;
                         getBands(su_data[0].pk, pk);
                     });
@@ -384,7 +410,7 @@ $(document).ready(function () {
                     end_date_label.innerHTML = "<b>Hasta</b>";
                     // ===== Paragraphs =====
                     var paragraph_title = document.createElement("p");
-                    paragraph_title.innerHTML = "<b>Periodo de consulta"+requiredText+"</b>";
+                    paragraph_title.innerHTML = "<b>Periodo de consulta"+requiredText+input_description+"</b>";
                     var paragraph_text = document.createElement("p");
                     paragraph_text.innerHTML = parameter.fields.help_text;
                     paragraph_text.className = "help-block";
@@ -417,13 +443,18 @@ $(document).ready(function () {
                     file_input.required = parameter.fields.required;
                     // ===== LABELS =====
                     var label_file_title = document.createElement("label");
-                    label_file_title.innerHTML = "<b>"+parameter.fields.name+requiredText+"</b>";
+                    label_file_title.innerHTML = "<b>"+parameter.fields.name+requiredText+input_description+"</b>";
+                    // ===== Paragraphs =====
+                    var file_text = document.createElement("p");
+                    file_text.innerHTML = parameter.fields.help_text;
+                    file_text.className = "help-block";
                     // ===== DIVs =====
                     var param_div = document.createElement("div");
                     param_div.className = "form-group";
                     // appending everything
                     param_div.appendChild(label_file_title);
                     param_div.appendChild(file_input);
+                    param_div.appendChild(file_text);
                     // appending to the form
                     f.appendChild(param_div);
                     break;
@@ -452,13 +483,18 @@ $(document).ready(function () {
                         });
                         // ===== LABELS =====
                         var storage_unit_label = document.createElement("label");
-                        storage_unit_label.innerHTML = "<b>Posibles unidades de almacenamiento origen"+requiredText+"</b>";
+                        storage_unit_label.innerHTML = "<b>Posibles unidades de almacenamiento origen"+requiredText+input_description+"</b>";
+                        // ===== Paragraphs =====
+                        var storage_no_band_text = document.createElement("p");
+                        storage_no_band_text.innerHTML = parameter.fields.help_text;
+                        storage_no_band_text.className = "help-block";
                         // ===== DIVs =====
                         var storage_unit_param_div = document.getElementById("storage_nb_div");
                         storage_unit_param_div.className = "form-group";
                         // appending everything
                         storage_unit_param_div.appendChild(storage_unit_label);
                         storage_unit_param_div.appendChild(storage_unit_select);
+                        storage_unit_param_div.appendChild(storage_no_band_text);
                     });
                     break;
                 default:
