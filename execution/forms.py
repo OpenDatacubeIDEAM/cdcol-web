@@ -23,5 +23,5 @@ class ReviewForm(forms.Form):
 	rating = forms.ChoiceField(
 		widget=forms.Select(attrs={'required': 'true', 'class': 'form-control'}), choices=REVIEW_TYPES, required=True)
 	comments = forms.CharField(widget=forms.Textarea(attrs={'required': 'true', 'rows': 5, 'class': 'form-control',
-	                                                        'placeholder': 'Ingresa detalles de la calidad de los resultados que obtuviste con la ejecución, la descripción del análisis realizaste, sobre qué región lo ejecutaste, etc.'}),
+	                                                        'placeholder': 'Ingrese detalles de la calidad de los resultados que obtuviste con la ejecución, la descripción del análisis realizaste, sobre qué región lo ejecutaste, etc.'}),
 	                           required=True)

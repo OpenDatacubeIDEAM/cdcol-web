@@ -30,7 +30,7 @@
                     <h3 class="page-title">Nueva Tarea de Ingesta</h3>
                     <div class="separator-2"></div>
                     <!-- page-title end -->
-                    <p>Ingrese una descripción que le ayude a identificar la tarea de ingesta que se va a ejecutar sobre la unidad de almacenamiento.</p>
+                    <p>Ingrese la información de la tarea de ingesta que desea programar sobre una unidad de almacenamiento.</p>
                     <!-- Success Messages  -->
                     {% if response %}
                         <div class="alert alert-success">
@@ -66,7 +66,12 @@
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label><b>Unidad de Almacenamiento*</b></label>
+                                    <label>
+                                        <b>
+                                            Unidad de Almacenamiento <span class="text-danger small"> * </span>
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Seleccione la unidad de almacenamiento sobre la cuál desea ejecutar el proceso de ingesta."></i></a>
+                                        </b>
+                                    </label>
                                     {{ ingest_form.storage_unit }}
                                 </div>
                                 <!-- /Unidad de Almacenamiento -->
@@ -82,14 +87,20 @@
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label><b>Observaciones</b></label>
+                                    <label>
+                                        <b>
+                                            Observaciones
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ingrese una descripción o comentario sobre las imágenes que van a ser ingestadas al ejecutar esta tarea de ingesta."></i></a>
+                                        </b>
+                                    </label>
                                     {{ ingest_form.comments }}
                                 </div>
                                 <!-- /Observaciones -->
 
                                 <!-- Nota -->
                                 <div class="form-group">
-                                    <p><b>Nota</b>: Si la únidad aparece con el texto "(Última Tarea con Error)" es importante
+                                    <p>
+                                        <b>Nota</b>: Si la únidad aparece con el texto "(Última Tarea con Error)" es importante
                                         que haya resuelto los problemas antes de programar una nueva tarea para esa
                                         unidad.
                                     </p>

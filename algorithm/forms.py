@@ -17,7 +17,7 @@ class AlgorithmUpdateForm(forms.Form):
 
 class VersionForm(forms.Form):
 	description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control',
-								'placeholder': 'Ingresa una descripción de los cambios o ajustes realizados al algoritmo en esta nueva versión.'}),
+								'placeholder': 'Ingrese una descripción de los cambios o ajustes realizados al algoritmo en esta nueva versión.'}),
 	                            required=True)
 	number = forms.CharField(max_length=200, required=True)
 	repository_url = forms.CharField(max_length=200, required=True)
@@ -26,7 +26,7 @@ class VersionForm(forms.Form):
 
 class VersionUpdateForm(forms.Form):
 	description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control',
-								'placeholder': 'Ingresa una descripción de los cambios o ajustes realizados al algoritmo en esta nueva versión.'}),
+								'placeholder': 'Ingrese una descripción de los cambios o ajustes realizados al algoritmo en esta nueva versión.'}),
 	                            required=True)
 	repository_url = forms.CharField(max_length=200, required=True)
 	source_storage_units = forms.ModelMultipleChoiceField(queryset=StorageUnit.objects.all(), required=True)
@@ -38,10 +38,10 @@ class NewParameterForm(forms.Form):
 	                                   choices=Parameter.PARAMETER_TYPES,
 	                                   required=True)
 	description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control',
-	                              'placeholder': 'Ingresa una descripción del significado de este parámetro en la ejecución del algortimo.'}),
+	                              'placeholder': 'Ingrese una descripción del significado de este parámetro en la ejecución de la versión algortimo.'}),
 	                              required=True)
 	help_text = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control',
-	                              'placeholder': 'Ingresa un texto con las ayudas y consideraciones que deben tener en cuenta por los usuarios al ingresar este parámetro.'}),
+	                              'placeholder': 'Ingrese un texto con las ayudas y consideraciones que deben ser tenidas en cuenta por los usuarios al ingresar este parámetro.'}),
 	                              required=True)
 	position = forms.IntegerField(min_value=0, required=True)
 	required = forms.BooleanField(required=False, initial=True)
