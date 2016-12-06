@@ -38,10 +38,10 @@ class NewParameterForm(forms.Form):
 	                                   choices=Parameter.PARAMETER_TYPES,
 	                                   required=True)
 	description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control',
-	                              'placeholder': 'Ingrese una descripción del significado de este parámetro en la ejecución del algortimo.'}),
+	                              'placeholder': 'Ingrese una descripción del significado de este parámetro en la ejecución de la versión algortimo.'}),
 	                              required=True)
 	help_text = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control',
-	                              'placeholder': 'Ingrese un texto con las ayudas y consideraciones que deben tener en cuenta por los usuarios al ingresar este parámetro.'}),
+	                              'placeholder': 'Ingrese un texto con las ayudas y consideraciones que deben ser tenidas en cuenta por los usuarios al ingresar este parámetro.'}),
 	                              required=True)
 	position = forms.IntegerField(min_value=0, required=True)
 	required = forms.BooleanField(required=False, initial=True)
