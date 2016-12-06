@@ -30,7 +30,7 @@
                     <h3 class="page-title">Nueva Versión</h3>
                     <div class="separator-2"></div>
                     <!-- page-title end -->
-                    <p>Ingresa la siguiente información para subir una nueva versión del algoritmo:</p>
+                    <p>Ingrese la siguiente información de la nueva versión del algoritmo:</p>
                     <!-- Success Messages  -->
                     {% if response %}
                         <div class="alert alert-success">
@@ -57,7 +57,11 @@
 
                                 <!-- Algoritmo -->
                                 <div class="form-group">
-                                    <label for="algorithmName"><b>Algoritmo*</b></label>
+                                    <label for="algorithmName">
+                                        <b>
+                                            Algoritmo
+                                        </b>
+                                    </label>
                                     <input class="form-control" placeholder="Nombre del Algoritmo" disabled=""
                                            type="text" value="{{ algorithm.name }}">
                                 </div>
@@ -74,9 +78,14 @@
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for="versionNumber"><b>Número de la versión*</b></label>
+                                    <label for="versionNumber">
+                                        <b>
+                                            Número de la versión <span class="text-danger small"> * </span>
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Seleccione el número de la versión."></i></a>
+                                        </b>
+                                    </label>
                                     <select name="{{ version_form.number.html_name }}"
-                                            id="{{ version_form.number.id_for_label }}" class="form-control">
+                                            id="{{ version_form.number.id_for_label }}" class="form-control" required>
                                         <option value="1">Versión menor {{ new_minor_version }}</option>
                                         <option value="2">Versión mayor {{ new_major_version }}</option>
                                     </select>
@@ -95,7 +104,12 @@
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for="versionDescription"><b>Descripción de la versión*</b></label>
+                                    <label for="versionDescription">
+                                        <b>
+                                            Descripción de la versión <span class="text-danger small"> * </span>
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ingrese una descripción de la versión. Describa la versión incluyendo ajustes, cambios o mejoras que haya realizado."></i></a>
+                                        </b>
+                                    </label>
                                     {{ version_form.description }}
                                 </div>
                                 <!-- /Descripción de la versión -->
@@ -111,15 +125,20 @@
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for="sourceCode"><b>Código fuente*</b></label>
+                                    <label for="sourceCode">
+                                        <b>
+                                            Código fuente <span class="text-danger small"> * </span>
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ingrese la URL desde donde se debe descargar el script en python (.py) que contiene el código fuente de la versión del algoritmo."></i></a>
+                                        </b>
+                                    </label>
                                     <input name="{{ version_form.repository_url.html_name }}"
                                            id="{{ version_form.repository_url.id_for_label }}"
                                            class="form-control"
-                                           placeholder="Escribe la url donde se encuentra el algoritmo."
+                                           placeholder="Ingrese la url donde se encuentra el algoritmo."
                                             {% if version_form.repository_url.value %}
                                            value="{{ version_form.repository_url.value }}"{% endif %}
-                                           type="text">
-                                    <p class="help-block">Coloca la URL del archivo en GitHub, Bitbucket, etc.</p>
+                                           type="text" required>
+                                    <p class="help-block">Coloque la URL del archivo en python (.py) en GitHub, Bitbucket, etc.</p>
                                 </div>
                                 <!-- /Código fuente -->
 
@@ -134,7 +153,12 @@
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for=""><b>Posibles unidades de almacenamiento origen *</b></label>
+                                    <label for="">
+                                        <b>
+                                            Posibles unidades de almacenamiento origen <span class="text-danger small"> * </span>
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Seleccione la unidades de almacenamiento origen con las que es compatible la versión del algoritmo."></i></a>
+                                        </b>
+                                    </label>
                                     <select name="{{ version_form.source_storage_units.html_name }}"
                                             id="{{ version_form.source_storage_units.id_for_label }}"
                                             multiple="" class="form-control">
