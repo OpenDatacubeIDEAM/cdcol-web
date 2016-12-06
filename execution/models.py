@@ -68,6 +68,8 @@ class ExecutionParameter(models.Model):
 			response = "{}, {}".format(self.storageunitbandtype.storage_unit_name, self.storageunitbandtype.bands)
 		elif parameter_type == "9":
 			response = "{} - {}".format(self.timeperiodtype.start_date, self.timeperiodtype.end_date)
+		elif parameter_type == "12":
+			response = "{}".format(self.filetype.file_name())
 		elif parameter_type == "13":
 			response = "{}".format(self.storageunitnobandtype.storage_unit_name)
 		return response
@@ -114,6 +116,11 @@ class ExecutionParameter(models.Model):
 				'function_name': self.parameter.function_name,
 				'start_date': "{}".format(self.timeperiodtype.start_date.strftime('%d/%m/%Y')),
 			    'end_date': "{}".format(self.timeperiodtype.end_date.strftime('%d/%m/%Y')),
+			}
+		elif parameter_type == "12":
+			response = {
+				'function_name': self.parameter.function_name,
+				'value': "{}".format(self.filetype.file.name)
 			}
 		elif parameter_type == "13":
 			response = {
@@ -185,6 +192,20 @@ class TimePeriodType(ExecutionParameter):
 
 	def __unicode__(self):
 		return "{}".format(self.execution)
+
+
+def get_upload_to(file_type, filename):
+	return "uploads/execution_parameter/file_type/file/{}/{}".format(file_type.execution.id, filename)
+
+
+class FileType(ExecutionParameter):
+	file = models.FileField(upload_to=get_upload_to)
+
+	def file_name(self):
+		return self.file.name.split('/')[-1]
+
+	def __unicode__(self):
+		return "{}".format(self.file.name)
 
 
 class MultipleChoiceListType(ExecutionParameter):

@@ -171,7 +171,15 @@ def create_execution_parameter_objects(parameters, request, execution, current_v
 			new_execution_parameter.save()
 		if parameter.parameter_type == "12":
 			print "Getting elements for File parameter"
-			print request.POST
+			file_name = "file_input_{}".format(parameter.id)
+			file_value = request.FILES.get(file_name, False)
+			# FILE TYPE
+			new_execution_parameter = FileType(
+				execution=execution,
+				parameter=parameter,
+				file=file_value
+			)
+			new_execution_parameter.save()
 		if parameter.parameter_type == "13":
 			print "Getting elements for StorageUnitType (NoBands) parameter"
 			select_name = "storage_unit_{}".format(parameter.id)
