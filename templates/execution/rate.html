@@ -67,7 +67,7 @@
                     <h3 class="page-title">Calificación de la ejecución</h3>
                     <div class="separator-2"></div>
                     <!-- page-title end -->
-                    <p>A continuación puedes calificar en una escala de 1 a 5 la calidad de los resultados que obtuviste con esta ejecución:</p>
+                    <p>A continuación puede calificar en una escala de 1 a 5 la calidad de los resultados que obtuviste con esta ejecución:</p>
                     <div class="section light-gray-bg">
                         <div class="container">
                             <form role="form" class="form-horizontal col-md-5 col-md-offset-1" method="POST"
@@ -88,14 +88,24 @@
                                 <!-- Calificación -->
                                 <div class="form-group">
                                     <!-- /Errors -->
-                                    <label for=""><b>Calificación*</b></label>
+                                    <label for="">
+                                        <b>
+                                            Calificación <span class="text-danger small"> * </span>
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Seleccione en la escala de 1 (peor) a 5 (mejor) cuál es su satisfacción de los resultados generados a través de esta ejecución."></i></a>
+                                        </b>
+                                    </label>
                                     {{ review_form.rating }}
                                 </div>
                                 <!-- /Calificación -->
 
                                 <!-- Comentario -->
                                 <div class="form-group">
-                                    <label for=""><b>Comentarios de la calificación*</b></label>
+                                    <label for="">
+                                        <b>
+                                            Comentarios de la calificación <span class="text-danger small"> * </span>
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Los comentarios que ingrese podrán ser vistos por otros usuarios interesados en utilizar la versión del algoritmo. Es importante que sea muy específico en los resultados que logró obtener."></i></a>
+                                        </b>
+                                    </label>
                                     {{ review_form.comments }}
                                 </div>
                                 <!-- /Comentario -->
