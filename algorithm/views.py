@@ -107,7 +107,7 @@ def update(request, algorithm_id):
 			algorithm.name = field_name
 			algorithm.description = field_description
 			algorithm.save()
-			return HttpResponseRedirect(reverse('algorithm:index'))
+			return HttpResponseRedirect(reverse('algorithm:detail', kwargs={'algorithm_id': algorithm_id}))
 		else:
 			algorithm_form.add_error(None, "Favor completar todos los campos marcados.")
 	else:
@@ -233,7 +233,7 @@ def update_version(request, algorithm_id, version_id):
 					storage_unit=source_storage_unit
 				)
 				new_version_relation.save()
-			return HttpResponseRedirect(reverse('algorithm:detail', kwargs={'algorithm_id': algorithm_id}))
+			return HttpResponseRedirect(reverse('algorithm:version_detail', kwargs={'algorithm_id': algorithm_id, 'version_id': version.id }))
 		else:
 			version_form.add_error(None, "Favor completar todos los campos marcados.")
 	else:
@@ -467,7 +467,7 @@ def update_parameter(request, algorithm_id, version_id, parameter_id):
 			parameter.function_name = function_name
 			parameter.output_included = output_included
 			parameter.save()
-			return HttpResponseRedirect(reverse('algorithm:version_detail', kwargs={'algorithm_id': algorithm_id, 'version_id': version_id}))
+			return HttpResponseRedirect(reverse('algorithm:view_parameter', kwargs={'algorithm_id': algorithm_id, 'version_id': version_id, 'parameter_id': parameter_id}))
 		else:
 			parameter_form.add_error(None, "Favor completar todos los campos marcados.")
 	else:
