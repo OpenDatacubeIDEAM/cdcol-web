@@ -30,7 +30,7 @@
                     <h3 class="title">Información del Algoritmo</h3>
                     <div class="separator-2"></div>
                     <!-- page-title end -->
-                    <p>Esta es la información del algoritmo seleccionado:</p>
+                    <p>La siguiente es la información del algoritmo:</p>
                     <table class="table">
                         <tbody>
                         <tr>
@@ -42,8 +42,9 @@
                             <td>{{ algorithm.topic.name }}</td>
                         </tr>
                         <tr>
-                            <td>Archivo de Descripción:</td>
-                            <td>{{ algorithm.description }}</td>
+                            <td>Descripción:</td>
+                            <td>{{ algorithm.description|linebreaks }}</td>
+
                         </tr>
                         <tr>
                             <td>Fecha de Creación:</td>

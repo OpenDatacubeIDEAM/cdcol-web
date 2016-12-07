@@ -38,12 +38,12 @@
                             <td>{{ version.algorithm.name }}</td>
                         </tr>
                         <tr>
-                            <td>Número:</td>
+                            <td>Número de version:</td>
                             <td>{{ version.number }}</td>
                         </tr>
                         <tr>
                             <td>Descripción:</td>
-                            <td>{{ version.description }}</td>
+                            <td>{{ version.description|linebreaks }}</td>
                         </tr>
                         <tr>
                             <td>Código fuente:</td>
@@ -64,15 +64,15 @@
                         </tr>
                         <tr>
                             <td>Creada por:</td>
-                            <td>{{ version.created_by }}</td>
+                            <td>{{ version.created_by.email }}</td>
                         </tr>
                         </tbody>
                     </table>
 
                     <h3 class="page-title">Posibles Unidades de Almacenamiento Origen</h3>
                     <div class="separator-2"></div>
-                    <p>A continuación se encuentran las posibles unidades de almacenamiento origen definidas para este
-                        algoritmo:</p>
+                    <p>A continuación se encuentran las posibles unidades de almacenamiento origen definidas para esta
+                        versión:</p>
                     <div class="table-responsive">
                         <table class="table table-striped table-colored">
                             <thead>
