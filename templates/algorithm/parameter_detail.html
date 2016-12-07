@@ -30,7 +30,7 @@
                     <h3>Información del parámetro</h3>
                     <div class="separator-2"></div>
                     <!-- page-title end -->
-                    <p>Esta es la información del parámetro seleccionado:</p>
+                    <p>La siguiente es la información del parámetro:</p>
                     <table class="table">
                         <tbody>
                         <tr>
@@ -94,6 +94,28 @@
 
                 </div>
                 <!-- main end -->
+
+                <!-- sidebar start -->
+                <!-- ================ -->
+                <aside class="col-md-4 col-lg-3 col-lg-offset-1">
+                    <div class="sidebar">
+                        <div class="block clearfix">
+                            <h3 class="title">Acciones</h3>
+                            <div class="separator-2"></div>
+                            {% if parameter.version.publishing_state == "1" %}
+                                <nav>
+                                    <a href="{% url 'algorithm:update_parameter' parameter.version.algorithm.id parameter.version.id parameter.id %}"
+                                       class="btn btn-primary btn-md btn-block">Editar Parámetro</a>
+                                </nav>
+                            {% else %}
+                                <nav>
+                                    <a class="btn btn-gray btn-md btn-block" disabled="">No hay acciones disponibles</a>
+                                </nav>
+                            {% endif %}
+                        </div>
+                    </div>
+                </aside>
+                <!-- sidebar end -->
 
             </div>
         </div>
