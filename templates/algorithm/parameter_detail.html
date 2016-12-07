@@ -34,10 +34,6 @@
                     <table class="table">
                         <tbody>
                         <tr>
-                            <td>Código del parámetro:</td>
-                            <td>{{ parameter.id }}</td>
-                        </tr>
-                        <tr>
                             <td>Algoritmo:</td>
                             <td>{{ parameter.name }}</td>
                         </tr>
@@ -55,7 +51,7 @@
                         </tr>
                         <tr>
                             <td>Descripción:</td>
-                            <td>{{ parameter.description }}</td>
+                            <td>{{ parameter.description|linebreaks }}</td>
                         </tr>
                         <tr>
                             <td>Texto de ayuda:</td>
@@ -67,15 +63,15 @@
                         </tr>
                         <tr>
                             <td>Obligatorio:</td>
-                            <td>{{ parameter.required }}</td>
+                            <td>{{ parameter.required|yesno:"Sí,No" }}</td>
                         </tr>
                         <tr>
                             <td>Habilitado:</td>
-                            <td>{{ parameter.enabled }}</td>
+                            <td>{{ parameter.enabled|yesno:"Sí,No" }}</td>
                         </tr>
                         <tr>
                             <td>Se incluye en la salida:</td>
-                            <td>{{ parameter.output_included }}</td>
+                            <td>{{ parameter.output_included|yesno:"Sí,No" }}</td>
                         </tr>
                         <tr>
                             <td>Valor por defecto:</td>

@@ -30,7 +30,7 @@
                     <h3>Editar Parámetro</h3>
                     <div class="separator-2"></div>
                     <!-- page-title end -->
-                    <p>Ingresa la siguiente información del parámetro:</p>
+                    <p>Ingrese la siguiente información del parámetro:</p>
                     <!-- Success Messages  -->
                     {% if response %}
                         <div class="alert alert-success">
@@ -57,7 +57,11 @@
 
                                 <!-- Algoritmo -->
                                 <div class="form-group">
-                                    <label for=""><b>Algoritmo*</b></label>
+                                    <label for="">
+                                        <b>
+                                            Algoritmo
+                                        </b>
+                                    </label>
                                     <input class="form-control" placeholder="{{ parameter.version.algorithm.name }}" disabled=""
                                            type="text">
                                 </div>
@@ -65,7 +69,11 @@
 
                                 <!-- Número de la versión -->
                                 <div class="form-group">
-                                    <label for=""><b>Versión*</b></label>
+                                    <label for="">
+                                        <b>
+                                            Versión
+                                        </b>
+                                    </label>
                                     <input class="form-control" placeholder="{{ parameter.version.number }}" disabled=""
                                            type="text">
                                 </div>
@@ -82,13 +90,18 @@
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for=""><b>Nombre del parámetro*</b></label>
+                                    <label for="">
+                                        <b>
+                                            Nombre del parámetro <span class="text-danger small"> * </span>
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ingrese el nombre del parámetro."></i></a>
+                                        </b>
+                                    </label>
                                     <input name="{{ parameter_form.name.html_name }}"
                                            id="{{ parameter_form.name.id_for_label }}"
                                            class="form-control" placeholder="Escriba el nombre del parámetro"
                                            {% if parameter_form.name.value %}
                                            value="{{ parameter_form.name.value }}"{% endif %}
-                                           type="text">
+                                           type="text" required>
                                 </div>
                                 <!-- /Nombre del parámetro -->
 
@@ -103,7 +116,12 @@
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for=""><b>Tipo de parámetro*</b></label>
+                                    <label for="">
+                                        <b>
+                                            Tipo de parámetro <span class="text-danger small"> * </span>
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Seleccione el tipo de parámetro."></i></a>
+                                        </b>
+                                    </label>
                                     {{ parameter_form.parameter_type }}
                                 </div>
                                 <!-- /Tipo de parámetro -->
@@ -119,7 +137,12 @@
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for=""><b>Descripción del parámetro*</b></label>
+                                    <label for="">
+                                        <b>
+                                            Descripción del parámetro <span class="text-danger small"> * </span>
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ingrese una descripción del parámetro."></i></a>
+                                        </b>
+                                    </label>
                                     {{ parameter_form.description }}
                                 </div>
                                 <!-- /Descripción del parámetro -->
@@ -135,7 +158,12 @@
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for=""><b>Texto de ayuda del parámetro (opcional)</b></label>
+                                    <label for="">
+                                        <b>
+                                            Texto de ayuda del parámetro (opcional)
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Este texto le aparecerá como ayuda a los usuarios al momento de ejecutar la versión del algoritmo."></i></a>
+                                        </b>
+                                    </label>
                                     {{ parameter_form.help_text }}
                                 </div>
                                 <!-- /Texto de ayuda parámetro -->
@@ -151,14 +179,19 @@
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for=""><b>Posición*</b></label>
+                                    <label for="">
+                                        <b>
+                                            Posición <span class="text-danger small"> * </span>
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="La posición indica el orden en el que aparecerá este parámetro al momento de ejecutar la versión del algoritmo."></i></a>
+                                        </b>
+                                    </label>
                                     <input name="{{ parameter_form.position.html_name }}"
                                            id="{{ parameter_form.position.id_for_label }}"
                                            class="form-control"
                                            placeholder="Indica el orden en el que aparecerá el parámetro al momento de ejecutarse el algoritmo."
                                            {% if parameter_form.position.value %}
                                            value="{{ parameter_form.position.value }}"{% endif %}
-                                           type="number">
+                                           type="number" required>
                                 </div>
                                 <!-- /Posición -->
 
@@ -166,7 +199,11 @@
                                 <div class="form-group">
                                     <div class="checkbox">
                                         <label>
-                                            {{ parameter_form.required }}<b>Este parámetro es obligatorio</b>
+                                            {{ parameter_form.required }}
+                                            <b>
+                                                Este parámetro es obligatorio
+                                                <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Si este parámetro debe obligatoriamente ser ingresado por los usuarios, deje esta casilla marcada."></i></a>
+                                            </b>
                                         </label>
                                         <p class="help-block">Si el parámetro es opcional desmarcar esta casilla.</p>
                                     </div>
@@ -178,10 +215,13 @@
                                 <div class="form-group">
                                     <div class="checkbox">
                                         <label>
-                                            {{ parameter_form.enabled}}<b>Este parámetro está habilitado</b>
+                                            {{ parameter_form.enabled}}
+                                            <b>
+                                                Este parámetro está habilitado
+                                                <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Si desea deshabilitar este parámetro para que no se le muestre a los usuarios, deje esta casilla desmarcada."></i></a>
+                                            </b>
                                         </label>
-                                        <p class="help-block">Para deshabilitar este parámetro, desmarcar esta
-                                            casilla.</p>
+                                        <p class="help-block">Para deshabilitar este parámetro, desmarcar esta casilla.</p>
                                     </div>
 
                                 </div>
@@ -191,10 +231,13 @@
                                 <div class="form-group">
                                     <div class="checkbox">
                                         <label>
-                                            {{ parameter_form.output_included}}<b>Se incluye en la salida</b>
+                                            {{ parameter_form.output_included}}
+                                            <b>
+                                                Se incluye en la salida
+                                                <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Si este parámetro debe ser tenido en cuenta al generar el nombre de los archivos de salida de la ejecuciones, deje esta casilla marcada."></i></a>
+                                            </b>
                                         </label>
-                                        <p class="help-block">Para deshabilitar este parámetro, desmarcar esta
-                                            casilla.</p>
+                                        <p class="help-block">Para deshabilitar este parámetro, desmarcar esta casilla.</p>
                                     </div>
 
                                 </div>
@@ -202,7 +245,12 @@
 
                                 <!-- Valor por defecto -->
                                 <div class="form-group">
-                                    <label for=""><b>Valor por defecto (opcional)</b></label>
+                                    <label for="">
+                                        <b>
+                                            Valor por defecto (opcional)
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ingrese el valor por defecto que debe tomar este parámetro."></i></a>
+                                        </b>
+                                    </label>
                                     <input name="{{ parameter_form.default_value.html_name }}"
                                            id="{{ parameter_form.default_value.id_for_label }}"
                                            class="form-control"
@@ -224,14 +272,19 @@
                                         {% endfor %}
                                     {% endif %}
                                     <!-- /Errors -->
-                                    <label for=""><b>Nombre por defecto en la función*</b></label>
+                                    <label for="">
+                                        <b>
+                                            Nombre por defecto en la función <span class="text-danger small"> * </span>
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ingrese el nombre por defecto del parámetro en la función."></i></a>
+                                        </b>
+                                    </label>
                                     <input name="{{ parameter_form.function_name.html_name }}"
                                            id="{{ parameter_form.function_name.id_for_label }}"
                                            class="form-control"
                                            placeholder="Ingresa el nombre del parámetro en la función en Python."
                                            {% if parameter_form.function_name.value %}
                                            value="{{ parameter_form.function_name.value }}"{% endif %}
-                                           type="text">
+                                           type="text" required>
                                 </div>
                                 <!-- /Nombre por defecto de función -->
 
