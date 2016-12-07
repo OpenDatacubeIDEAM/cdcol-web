@@ -156,12 +156,12 @@
                                     <label for="">
                                         <b>
                                             Posibles unidades de almacenamiento origen <span class="text-danger small"> * </span>
-                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Seleccione la unidades de almacenamiento origen con las que es compatible la versión del algoritmo."></i></a>
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Seleccione las unidades de almacenamiento origen con las que es compatible la versión del algoritmo."></i></a>
                                         </b>
                                     </label>
                                     <select name="{{ version_form.source_storage_units.html_name }}"
                                             id="{{ version_form.source_storage_units.id_for_label }}"
-                                            multiple="" class="form-control">
+                                            multiple="" class="form-control" required>
                                         {% for storage_unit in source_storage_units %}
                                             <option value="{{ storage_unit.id }}">{{ storage_unit.name }}</option>
                                         {% endfor %}
