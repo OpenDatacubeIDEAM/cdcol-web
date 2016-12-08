@@ -16,18 +16,16 @@ class AlgorithmUpdateForm(forms.Form):
 
 
 class VersionForm(forms.Form):
-	description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control',
-								'placeholder': 'Ingrese una descripción de los cambios o ajustes realizados al algoritmo en esta nueva versión.'}),
-	                            required=True)
+	description = forms.CharField(widget=forms.Textarea(attrs={'rows': 5, 'class': 'form-control', 'required': 'True',
+								'placeholder': 'Ingrese una descripción de los cambios o ajustes realizados al algoritmo en esta nueva versión.'}))
 	number = forms.CharField(max_length=200, required=True)
 	repository_url = forms.CharField(max_length=200, required=True)
 	source_storage_units = forms.ModelMultipleChoiceField(queryset=StorageUnit.objects.all(), required=True)
 
 
 class VersionUpdateForm(forms.Form):
-	description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control',
-								'placeholder': 'Ingrese una descripción de los cambios o ajustes realizados al algoritmo en esta nueva versión.'}),
-	                            required=True)
+	description = forms.CharField(widget=forms.Textarea(attrs={'rows': 5, 'class': 'form-control', 'required': 'True',
+								'placeholder': 'Ingrese una descripción de los cambios o ajustes realizados al algoritmo en esta nueva versión.'}))
 	repository_url = forms.CharField(max_length=200, required=True)
 	source_storage_units = forms.ModelMultipleChoiceField(queryset=StorageUnit.objects.all(), required=True)
 
@@ -37,10 +35,9 @@ class NewParameterForm(forms.Form):
 	parameter_type = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}),
 	                                   choices=Parameter.PARAMETER_TYPES,
 	                                   required=True)
-	description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control',
-	                              'placeholder': 'Ingrese una descripción del significado de este parámetro en la ejecución de la versión algortimo.'}),
-	                              required=True)
-	help_text = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control',
+	description = forms.CharField(widget=forms.Textarea(attrs={'rows': 5, 'class': 'form-control', 'required': 'True',
+	                              'placeholder': 'Ingrese una descripción del significado de este parámetro en la ejecución de la versión algortimo.'}))
+	help_text = forms.CharField(widget=forms.Textarea(attrs={'rows': 5, 'class': 'form-control',
 	                              'placeholder': 'Ingrese un texto con las ayudas y consideraciones que deben ser tenidas en cuenta por los usuarios al ingresar este parámetro.'}),
 	                              required=True)
 	position = forms.IntegerField(min_value=0, required=True)

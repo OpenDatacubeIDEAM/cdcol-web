@@ -30,7 +30,7 @@
                     <h3>Nuevo Parámetro</h3>
                     <div class="separator-2"></div>
                     <!-- page-title end -->
-                    <p>Ingresa la siguiente información para subir una nueva versión del algoritmo:</p>
+                    <p>Ingrese la siguiente información del parámetro:</p>
                     <!-- Success Messages  -->
                     {% if response %}
                         <div class="alert alert-success">
@@ -236,11 +236,11 @@
                                             {{ new_parameter_form.output_included}}
                                             <b>
                                                 Se incluye en la salida
+                                                <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Si este parámetro debe ser tenido en cuenta al generar el nombre de los archivos de salida de la ejecuciones, deje esta casilla marcada."></i></a>
                                             </b>
                                         </label>
                                         <p class="help-block">
                                             Para no inluir este parámetro en la salida, desmarcar esta casilla.
-                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Si este parámetro debe ser tenido en cuentas al generar el nombre de los archivos de salida de la ejecuciones, deje esta casilla marcada."></i></a>
                                         </p>
                                     </div>
 
