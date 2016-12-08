@@ -1,18 +1,80 @@
 {% extends 'base.html' %}
 {% load public_extras %}
+{% load staticfiles %}
+
+{% block banner_block %}
+    <div class="banner clearfix">
+
+        <!-- slideshow start -->
+        <!-- ================ -->
+        <div class="slideshow">
+
+            <!-- slider revolution start -->
+            <!-- ================ -->
+            <div class="slider-banner-container">
+                <div class="slider-banner-fullwidth">
+                    <ul class="slides">
+                        <!-- slide 1 start -->
+                        <!-- ================ -->
+                        <li data-transition="fade" data-slotamount="1" data-masterspeed="500" data-saveperformance="on"
+                            data-title="CDCOL">
+
+                            <!-- main image -->
+                            <img src="{% static 'images/banner-home.jpg' %}" alt="slidebg2" data-bgposition="center top"
+                                 data-bgrepeat="no-repeat" data-bgfit="cover">
+
+                            <!-- Transparent Background -->
+                            <div class="tp-caption dark-translucent-bg"
+                                 data-x="center"
+                                 data-y="bottom"
+                                 data-speed="600"
+                                 data-start="0">
+                            </div>
+
+                            <!-- LAYER NR. 1 -->
+                            <div class="tp-caption sfb fadeout text-center large_white"
+                                 data-x="center"
+                                 data-y="110"
+                                 data-speed="500"
+                                 data-start="1000"
+                                 data-easing="easeOutQuad">CDCOL
+                            </div>
+
+                            <!-- LAYER NR. 2 -->
+                            <div class="tp-caption sfb fadeout text-center large_white tp-resizeme hidden-xs"
+                                 data-x="center"
+                                 data-y="150"
+                                 data-speed="500"
+                                 data-start="1300"
+                                 data-easing="easeOutQuad">
+                                <div class="separator light"></div>
+                            </div>
+
+                            <!-- LAYER NR. 3 -->
+                            <div class="tp-caption sfb fadeout medium_white text-center hidden-xs"
+                                 data-x="center"
+                                 data-y="180"
+                                 data-speed="500"
+                                 data-start="1300"
+                                 data-easing="easeOutQuad"
+                                 data-endspeed="600">Cubo de Datos de Imágenes de Satélite de Colombia
+                            </div>
+
+                        </li>
+                        <!-- slide 1 end -->
+                    </ul>
+                    <div class="tp-bannertimer"></div>
+                </div>
+            </div>
+            <!-- slider revolution end -->
+
+        </div>
+        <!-- slideshow end -->
+
+    </div>
+{% endblock %}
 
 {% block content %}
-    <!-- breadcrumb start -->
-    <!-- ================ -->
-    <div class="breadcrumb-container">
-        <div class="container">
-            <ol class="breadcrumb">
-                <li><i class="fa fa-home pr-10"></i>Inicio</li>
-            </ol>
-        </div>
-    </div>
-    <!-- breadcrumb end -->
-
     <!-- main-container start -->
     <!-- ================ -->
     <section class="main-container padding-bottom-clear">
@@ -50,7 +112,7 @@
                             <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
                                  data-animation-effect="fadeInDownSmall" data-effect-delay="100">
                                 <span class="icon default-bg circle"><i class="fa fa-diamond"></i></span>
-                                <h3>Almacenamiento</h3>
+                                <h3><a href="{% url 'storage:index' %}">Almacenamiento</a></h3>
                                 <div class="separator clearfix"></div>
                                 <p>Administre la unidades de almacenamiento y explore la información que hay en el cubo
                                     de datos.</p>
@@ -61,7 +123,7 @@
                             <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
                                  data-animation-effect="fadeInDownSmall" data-effect-delay="100">
                                 <span class="icon default-bg circle"><i class="fa fa-connectdevelop"></i></span>
-                                <h3>Tareas de Ingesta</h3>
+                                <h3><a href="{% url 'ingest:index' %}">Tareas de ingesta</a></h3>
                                 <div class="separator clearfix"></div>
                                 <p>Gestione y programe las tareas de ingesta de imágenes que son ejecutadas todos los
                                     días a las 2:00 AM.</p>
@@ -72,7 +134,7 @@
                             <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
                                  data-animation-effect="fadeInDownSmall" data-effect-delay="100">
                                 <span class="icon default-bg circle"><i class="fa fa-connectdevelop"></i></span>
-                                <h3>Plantillas YML</h3>
+                                <h3><a href="{% url 'template:index' %}">Plantillas YAML</a></h3>
                                 <div class="separator clearfix"></div>
                                 <p>Descargue las plantillas de archivos YML necesarios para la descripción e ingesta de
                                     unidades de almacenamiento.</p>
@@ -85,7 +147,7 @@
                             <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
                                  data-animation-effect="fadeInDownSmall" data-effect-delay="100">
                                 <span class="icon default-bg circle"><i class="fa fa-diamond"></i></span>
-                                <h3>Scripts de Metadatos</h3>
+                                <h3><a href="{% url 'ingest_template:index' %}">Script de metadatos</a></h3>
                                 <div class="separator clearfix"></div>
                                 <p>Descargue los scripts requeridos para el proceso de generación de metadatos en la
                                     ingesta de unidades de almacenamiento.</p>
@@ -100,7 +162,7 @@
                             <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
                                  data-animation-effect="fadeInDownSmall" data-effect-delay="100">
                                 <span class="icon default-bg circle"><i class="fa fa-diamond"></i></span>
-                                <h3>Mis Algoritmos</h3>
+                                <h3><a href="{% url 'algorithm:index' %}">Mis algoritmos</a></h3>
                                 <div class="separator clearfix"></div>
                                 <p>Gestione los algoritmos, versiones y parámetros que ha creado en el sistema. para que
                                     los analistas los ejecuten.</p>
@@ -111,7 +173,7 @@
                             <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
                                  data-animation-effect="fadeInDownSmall" data-effect-delay="100">
                                 <span class="icon default-bg circle"><i class="fa fa-connectdevelop"></i></span>
-                                <h3>Algoritmos</h3>
+                                <h3><a href="{% url 'execution:new_blank_execution' %}">Algoritmos</a></h3>
                                 <div class="separator clearfix"></div>
                                 <p>Conozca los algortimos que hay disponibles y utilícelos para ejecutar análisis sobre
                                     las imágenes del cubo.</p>
@@ -122,7 +184,7 @@
                             <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
                                  data-animation-effect="fadeInDownSmall" data-effect-delay="100">
                                 <span class="icon default-bg circle"><i class="fa fa-connectdevelop"></i></span>
-                                <h3>Ejecuciones</h3>
+                                <h3><a href="{% url 'execution:index' %}">Ejecuciones</a></h3>
                                 <div class="separator clearfix"></div>
                                 <p>Monitoree y acceda a los resultados de las ejecuciones que ha realizado sobre las
                                     imágenes del cubo.</p>

@@ -55,7 +55,7 @@ def index(request):
 @permission_required('algorithm.can_create_algorithm', raise_exception=True)
 def new(request):
 	current_user = request.user
-	topics = Topic.objects.all()
+	topics = Topic.objects.filter(enabled=True)
 	if request.method == 'POST':
 		# getting the form
 		algorithm_form = AlgorithmForm(request.POST)
