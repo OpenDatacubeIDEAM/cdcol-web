@@ -54,7 +54,7 @@ def detail(request, execution_id):
 @login_required(login_url='/accounts/login/')
 @permission_required('execution.can_view_blank_execution', raise_exception=True)
 def new_blank_execution(request):
-	topics = Topic.objects.all()
+	topics = Topic.objects.filter(enabled=True)
 	context = {'topics': topics}
 	return render(request, 'execution/new_blank.html', context)
 
@@ -202,9 +202,9 @@ def send_execution(execution):
 	"""
 	parameters = ExecutionParameter.objects.filter(execution=execution)
 	# getting all the values
-	json_parameters = []
+	json_parameters = {}
 	for parameter in parameters:
-		json_parameters.append(parameter.obtain_json_values())
+		json_parameters[parameter.parameter.name] = parameter.obtain_json_values()
 	# building the request
 	json_response = {
 		'execution_id': execution.id,
@@ -229,7 +229,7 @@ def new_execution(request, algorithm_id, version_id):
 	average_rating = Review.objects.filter(version=current_version).aggregate(Avg('rating'))['rating__avg']
 	average_rating = round(average_rating if average_rating is not None else 0, 2)
 	executions = Execution.objects.filter(version=current_version)
-	topics = Topic.objects.all()
+	topics = Topic.objects.filter(enabled=True)
 	if request.method == 'POST':
 		textarea_name = request.POST.get('textarea_name', None)
 		started_at = datetime.datetime.now()

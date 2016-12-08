@@ -26,7 +26,7 @@ $(document).ready(function () {
             var bounds = this.getBounds();
             document.getElementById("sw_latitude").value = Math.ceil(bounds.getSouthWest().lat);
             document.getElementById("sw_longitude").value = Math.floor(bounds.getSouthWest().lng);
-            document.getElementById("ne_latitude").value = Math.floor(bounds.getNorthEast().lat);
+            document.getElementById("ne_latitude").value = Math.ceil(bounds.getNorthEast().lat);
             document.getElementById("ne_longitude").value = Math.ceil(bounds.getNorthEast().lng);
         });
         areaSelect.addTo(mymap);
@@ -65,9 +65,9 @@ $(document).ready(function () {
         var ne = rectangle.getBounds().getNorthEast();
         var sw = rectangle.getBounds().getSouthWest();
 
-        document.getElementById("sw_latitude").value = Math.ceil(sw.lng());
-        document.getElementById("sw_longitude").value = Math.floor(ne.lat());
-        document.getElementById("ne_latitude").value = Math.floor(ne.lat());
+        document.getElementById("sw_latitude").value = Math.floor(ne.lat());
+        document.getElementById("sw_longitude").value = Math.floor(sw.lng());
+        document.getElementById("ne_latitude").value = Math.ceil(ne.lat());
         document.getElementById("ne_longitude").value = Math.ceil(ne.lng());
 
     }
@@ -286,13 +286,13 @@ $(document).ready(function () {
                     ne_longitude_2.required = parameter.fields.required;
                     // ===== LABELS =====
                     var label_sw_latitude_1 = document.createElement("label");
-                    label_sw_latitude_1.innerHTML = "<b>Latitud SW</b>";
+                    label_sw_latitude_1.innerHTML = "<b>Latitud S</b>";
                     var label_sw_longitude_1 = document.createElement("label");
-                    label_sw_longitude_1.innerHTML = "<b>Longitud SW</b>";
+                    label_sw_longitude_1.innerHTML = "<b>Longitud W</b>";
                     var label_ne_latitude_2 = document.createElement("label");
-                    label_ne_latitude_2.innerHTML = "<b>Latitud NE</b>";
+                    label_ne_latitude_2.innerHTML = "<b>Latitud N</b>";
                     var label_ne_longitude_2 = document.createElement("label");
-                    label_ne_longitude_2.innerHTML = "<b>Longitud NE</b>";
+                    label_ne_longitude_2.innerHTML = "<b>Longitud E</b>";
                     var area_title = document.createElement("label");
                     area_title.innerHTML = "<b>Mapa"+requiredText+input_description+"</b>";
                     // ===== Paragraphs =====

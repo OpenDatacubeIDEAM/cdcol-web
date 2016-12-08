@@ -80,52 +80,61 @@ class ExecutionParameter(models.Model):
 		if parameter_type == "1":
 			response = {
 				'function_name': self.parameter.function_name,
-				'value': "{}".format(self.stringtype.value)
+				'value': "{}".format(self.stringtype.value),
+				'type': self.parameter.parameter_type,
 			}
 		elif parameter_type == "2":
 			response = {
 				'function_name': self.parameter.function_name,
-				'value': self.integertype.value
+				'value': self.integertype.value,
+				'type': self.parameter.parameter_type,
 			}
 		elif parameter_type == "3":
 			response = {
 				'function_name': self.parameter.function_name,
-				'value': self.doubletype.value
+				'value': self.doubletype.value,
+				'type': self.parameter.parameter_type,
 			}
 		elif parameter_type == "4":
 			response = {
 				'function_name': self.parameter.function_name,
-				'value': "{}".format(self.booleantype.value)
+				'value': "{}".format(self.booleantype.value),
+				'type': self.parameter.parameter_type,
 			}
 		elif parameter_type == "7":
 			response = {
 				'function_name': self.parameter.function_name,
-				'latitude_start': self.areatype.latitude_start,
-				'longitude_start': self.areatype.longitude_start,
+				'latitude_start': self.areatype.longitude_start,
+				'longitude_start': self.areatype.latitude_start,
 				'latitude_end': self.areatype.latitude_end,
-				'longitude_end': self.areatype.longitude_end
+				'longitude_end': self.areatype.longitude_end,
+				'type': self.parameter.parameter_type,
 			}
 		elif parameter_type == "8":
 			response = {
 				'function_name': self.parameter.function_name,
 				'storage_unit_name': "{}".format(self.storageunitbandtype.storage_unit_name),
-			    'bands': "{}".format(self.storageunitbandtype.bands)
+				'bands': "{}".format(self.storageunitbandtype.bands),
+				'type': self.parameter.parameter_type,
 			}
 		elif parameter_type == "9":
 			response = {
 				'function_name': self.parameter.function_name,
-				'start_date': "{}".format(self.timeperiodtype.start_date.strftime('%d/%m/%Y')),
-			    'end_date': "{}".format(self.timeperiodtype.end_date.strftime('%d/%m/%Y')),
+				'start_date': "{}".format(self.timeperiodtype.start_date.strftime('%Y-%m-%d')),
+				'end_date': "{}".format(self.timeperiodtype.end_date.strftime('%Y-%m-%d')),
+				'type': self.parameter.parameter_type,
 			}
 		elif parameter_type == "12":
 			response = {
 				'function_name': self.parameter.function_name,
-				'value': "{}".format(self.filetype.file.name)
+				'value': "{}".format(self.filetype.file.name),
+				'type': self.parameter.parameter_type,
 			}
 		elif parameter_type == "13":
 			response = {
 				'function_name': self.parameter.function_name,
-				'value': self.storageunitnobandtype.storage_unit_name
+				'storage_unit_name': self.storageunitnobandtype.storage_unit_name,
+				'type': self.parameter.parameter_type,
 			}
 		return response
 
