@@ -104,8 +104,8 @@ class ExecutionParameter(models.Model):
 		elif parameter_type == "7":
 			response = {
 				'function_name': self.parameter.function_name,
-				'latitude_start': self.areatype.latitude_start,
-				'longitude_start': self.areatype.longitude_start,
+				'latitude_start': self.areatype.longitude_start,
+				'longitude_start': self.areatype.latitude_start,
 				'latitude_end': self.areatype.latitude_end,
 				'longitude_end': self.areatype.longitude_end,
 				'type': self.parameter.parameter_type,
