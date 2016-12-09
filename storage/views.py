@@ -124,6 +124,8 @@ def new(request):
 				}
 				header = {'Content-Type': 'application/json'}
 				url = "{}/api/storage_units/".format(settings.API_URL)
+				print url
+				print data
 				r = requests.post(url, data=json.dumps(data), headers=header)
 				if r.status_code == 201:
 					return HttpResponseRedirect(reverse('storage:index'))
