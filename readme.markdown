@@ -18,7 +18,141 @@ Se instalarán las siguientes aplicaciones:
 Para esto se ejecuta los siguientes comandos en Ubuntu
 
     sudo apt-get update
-    sudo apt-get install python-pip python-dev libpq-dev postgresql postgresql-contrib nginx
+    sudo apt-get install python-pip python-dev libpq-dev postgresql postgresql-contrib nginx virtualenv
+
+# Configuración de Ambiente Virtual
+
+Se debe instalar el paquete virtualenv en el directorio donde va a quedar el proyecto
+
+```
+#!python
+pip install virtualenv
+# o también es posible instalarlo mediante el sistema operativo
+sudo apt-get install virtualenv
+# Se crea el entorno virtual
+virtualenv v_ideam
+# Para ingresar al ambiente se puede utilizar . bin/activate ó source bin/activate ingresando a la carpeta v_ideam
+# Crear directorio donde se va a instalar al aplicación
+mkdir projects
+```
+
+## Descargar el proyecto
+
+Se deberá descargar la aplicación mediante el repositorio de git
+
+    # se ingresa a la carpeta de los proyectos
+    cd projects
+    # se clona el repositorio
+    git clone https://Manre@bitbucket.org/ideam20162/web-app.git
+
+
+## Instalación de PostgresSQL
+
+Se deberá instalar PostgreSQL, en Ubuntu el comando sería el siguiente.
+
+```
+#!bash
+sudo apt-get install postgresql postgresql-contrib
+```
+
+**Nota**: Se debe tener en cuenta que antes de ejecutar el comando anterior se deben actualizar el respositorio ya que es posible que se instale una versión anterior.
+
+## Configuración de Postgres
+
+Se deberá crear la base de datos donde se almacenará la información de la web.
+
+    # usuario postgres
+    sudo su - postgres
+    # ingreso a psql
+    psql
+    # se crea la base de datos
+    CREATE DATABASE ideam;
+    # se ingresa a la base de datos
+    \c ideam
+    # se crea usuario en la base de datos
+    CREATE USER cdcol_web with password 'CDCol_web_2016' ;
+    # Configurar postgres para recibir trafico externo
+    sudo nano pg_hba.conf
+    # IPv4 local connections:
+    host    all             all             192.168.106.0/25            md5
+    sudo nano postgresql.conf
+    # cambiar parámetro para escuchar ips
+    listen_addresses = '*'
+
+## Instalación de dependencias
+
+Se deben instalar todas las dependencias para que la aplicación pueda ejecutarse sin inconvenientes.
+
+```
+#!python
+pip install -r /path/requirements.txt
+```
+
+**Nota**: Si al instalar el paquete psycopg2 existen inconvenientes con la ruta se debe exportar una variable de entorno.
+
+```
+#!python
+export PATH=/Applications/Postgres.app/Contents/Versions/9.5/bin:"$PATH"
+```
+
+## Configuración de variables de entorno
+
+Se deberán configurar las siguientes variables de entorno, este archivo dependerá del SO utilizado.
+
+```
+#!bash
+# Buscar el archivo .bash_profile/.bash_rc
+cd
+nano .bash_profile
+# Adicionar las siguientes lineas dentro del archivo
+export IDEAM_DATABASE_URL=""
+export IDEAM_PRODUCTION_DATABASE_URL=""
+export IDEAM_API_URL=""
+export IDEAM_SENDGRID_USERNAME=""
+export IDEAM_SENDGRID_PASSWORD=""
+```
+
+## Despliegue de prueba
+
+Para probar el despliegue sólo es necesario ejecutar el siguiente comando
+
+```
+#!python
+# Realizar migraciones
+python manage migrate
+# Utilizando el puerto por defecto
+python manage.py runserver
+# Utilizando el puerto 8000
+python manage.py runserver 0.0.0.0:8000
+# Creando el superusuario
+python manage.py createsuperuser
+# usuario: superadminuser
+# email: cuboimagenes@ideam.gov.co
+# password: %Pass_18_Cubo%
+# 
+# 
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Configuración Gunicorn como servicio
 
@@ -111,74 +245,13 @@ Dependiendo del SO utilizado, se deberá editar el archivo de configuración si 
 
 
 
-## Configuración Ambiente virtual
-
-Se debe instalar el paquete virtualenv en el directorio donde va a quedar el proyecto
-
-```
-#!python
-pip install virtualenv
-# Se crea el entorno virtual
-virtualenv v_ideam
-# Para ingresar al ambiente se puede utilizar . bin/activate ó source bin/activate ingresando a la carpeta v_ideam
-```
-
-## Instalación de PostgresSQL
-
-Se deberá instalar PostgreSQL, en Ubuntu el comando sería el siguiente.
-
-```
-#!bash
-sudo apt-get install postgresql postgresql-contrib
-```
-
-**Nota**: Se debe tener en cuenta que antes de ejecutar el comando anterior se deben actualizar el respositorio ya que es posible que se instale una versión anterior.
+-----------
 
 
-## Instalación de dependencias
 
-Se deben instalar todas las dependencias para que la aplicación pueda ejecutarse sin inconvenientes.
 
-```
-#!python
-pip install -r /path/requirements.txt
-```
 
-**Nota**: Si al instalar el paquete psycopg2 existen inconvenientes con la ruta se debe exportar una variable de entorno.
 
-```
-#!python
-export PATH=/Applications/Postgres.app/Contents/Versions/9.5/bin:"$PATH"
-```
-
-## Configuración de variables de entorno
-
-Se deberán configurar las siguientes variables de entorno, este archivo dependerá del SO utilizado.
-
-```
-#!bash
-# Buscar el archivo .bash_profile/.bash_rc
-cd
-nano .bash_profile
-# Adicionar las siguientes lineas dentro del archivo
-export IDEAM_STORAGE_UNIT_DIRECTORY_PATH="..."
-export IDEAM_SENDGRID_USERNAME="..."
-export IDEAM_SENDGRID_PASSWORD="..."
-export IDEAM_PRODUCTION_DATABASE_URL="..."
-export IDEAM_DATABASE_URL="..."
-```
-
-## Despliegue de prueba
-
-Para probar el despliegue sólo es necesario ejecutar el siguiente comando
-
-```
-#!python
-# Utilizando el puerto por defecto
-python manage.py runserver
-# Utilizando el puerto 8000
-python manage.py runserver 0.0.0.0:8000
-```
 
 ## Versiones Utilizadas
 

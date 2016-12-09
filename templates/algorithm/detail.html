@@ -104,7 +104,8 @@
                             <h3 class="title">Acciones</h3>
                             <div class="separator-2"></div>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-md btn-block">Ejecutar Algoritmo</a>
+                                <a href="{% url 'execution:new_execution' algorithm.id algorithm.last_version.id %}"
+                                   class="btn btn-primary btn-md btn-block">Ejecutar Algoritmo</a>
                             </nav>
                             <nav>
                                 <a href="{% url 'algorithm:update' algorithm.id %}" class="btn btn-primary btn-md btn-block"><i class="fa fa-edit"></i> Editar
