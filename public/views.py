@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 
 
 def index(request):
-	if request.user.is_authenticated:
+	if request.user.is_authenticated():
 		return render(request, 'public/home.html')
 	return render(request, 'public/index.html')
 
