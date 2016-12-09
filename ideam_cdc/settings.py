@@ -164,7 +164,7 @@ ACCOUNT_ADAPTER = 'user_profile.adapters.MyAccountAdapter'
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = os.environ.get('IDEAM_SENDGRID_USERNAME')
 EMAIL_HOST_PASSWORD = os.environ.get('IDEAM_SENDGRID_PASSWORD')
-EMAIL_PORT = 587
+EMAIL_PORT = os.environ.get('IDEAM_SENDGRID_PORT')
 EMAIL_USE_TLS = True
 
 # CDCOL Parameters
