@@ -204,7 +204,7 @@ def send_execution(execution):
 	# getting all the values
 	json_parameters = {}
 	for parameter in parameters:
-		json_parameters[parameter.parameter.name] = parameter.obtain_json_values()
+		json_parameters[parameter.parameter.function_name] = parameter.obtain_json_values()
 	# building the request
 	json_response = {
 		'execution_id': execution.id,

@@ -20,7 +20,7 @@ Para esto se ejecuta los siguientes comandos en Ubuntu
     sudo apt-get update
     sudo apt-get install python-pip python-dev libpq-dev postgresql postgresql-contrib nginx
 
-# Configuración nginx
+# Configuración Gunicorn como servicio
 
 Se deberá crear un archivo de servicio, para esto.
 
@@ -36,7 +36,58 @@ En este archivo especificaremos la siguiente configuración.
     User=ideam
     Group=www-data
     WorkingDirectory=/home/ideam/Documents/code/v_ideam/projects/ideam_cdc
-    ExecStart=/home/ideam/Documents/code/v_ideam/bin/gunicorn --workers 3 --bind unix:/home/sammy/myproject/myproject.sock myproject.wsgi:application
+    ExecStart=/home/ideam/Documents/code/v_ideam/bin/gunicorn --workers 3 --bind unix:/home/ideam/Documents/code/v_ideam/projects/ideam_cdc/ideam.sock ideam_cdc.wsgi:application
+
+    [Install]
+    WantedBy=multi-user.target
+
+A continuación guardaremos el servicio y procederemos a iniciar el servicio de Gunicorn.
+
+    sudo systemctl start gunicorn
+    sudo systemctl enable gunicorn
+
+# Configuración Nginx
+
+Se deberá crear un archivo el cual contendrá la información relevante al proyecto, para esto.
+
+    sudo nano /etc/nginx/sites-available/ideam
+    # en este archivo se agregará la siguiente configuración
+    server {
+        listen 80;
+        server_name 172.24.99.167;
+
+        location = /favicon.ico { access_log off; log_not_found off; }
+        location /static/ {
+            root /home/ideam/Documents/code/v_ideam/projects/ideam_cdc/ideam_cdc/static_dirs/;
+        }
+
+        location / {
+            include proxy_params;
+            proxy_pass http://unix://home/ideam/Documents/code/v_ideam/projects/ideam_cdc/ideam.sock;
+        }
+    }
+
+Ahora se procede a crear hardlink
+
+    sudo ln -s /etc/nginx/sites-available/ideam /etc/nginx/sites-enabled
+
+Para revisar que la configuración se encuentra correcta se puede ejecutar el comando
+
+    sudo nginx -t
+
+Ahora se procederá a reiniciar el servicio de nginx con el siguiente comando
+
+    sudo systemctl restart nginx
+
+Si existen inconvenientes se deberá revisar el archivo
+
+    sudo tail -f /var/log/nginx/error.log
+
+Si existen problemas de permisos para el archivo .sock se podrán corregir con los siguientes comandos:
+
+    chgrp ideam ideam.sock && chmod g+rw ideam.sock
+    chmod +x /home/ideam /home/ideam/Documents/code/v_ideam/projects/ideam_cdc
+    chmod g+s /home/ideam/Documents/code/v_ideam/projects/ideam_cdc
 
 
 
@@ -51,6 +102,14 @@ Dependiendo del SO utilizado, se deberá editar el archivo de configuración si 
     server{
         listen      80    # cambiar por el puerto deseado
     ...
+
+
+
+
+
+
+
+
 
 ## Configuración Ambiente virtual
 
