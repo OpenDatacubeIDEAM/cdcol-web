@@ -41,7 +41,7 @@ def as_json(request):
 		else:
 			fake_url = "http://www.mocky.io/v2/582e7d81260000c60065efc2"
 			url = "{}/api/storage_units/".format(settings.API_URL)
-		response = requests.get(fake_url)
+		response = requests.get(url)
 		storage_units = response.json()
 	except:
 		storage_units = []
@@ -155,7 +155,7 @@ def content_as_json(request, storage_unit_id):
 		if url.endswith("/years/"):
 			print 'fetching years'
 			fake_url = "http://www.mocky.io/v2/5838bf6511000096168fd3ca"
-			response = requests.get(fake_url)
+			response = requests.get(url)
 			entries = response.json()["years"]
 			for entry in entries:
 				json_object = {
@@ -167,7 +167,7 @@ def content_as_json(request, storage_unit_id):
 		elif re.search('years/([0-9]*)/$', url):
 			print 'fetching coordinates'
 			fake_url = "http://www.mocky.io/v2/5838bf921100009c168fd3cb"
-			response = requests.get(fake_url)
+			response = requests.get(url)
 			entries = response.json()["coordinates"]
 			for entry in entries:
 				json_object = {
@@ -179,7 +179,7 @@ def content_as_json(request, storage_unit_id):
 		else:
 			print 'fetching images'
 			fake_url = "http://www.mocky.io/v2/5838bfb51100009d168fd3cc"
-			response = requests.get(fake_url)
+			response = requests.get(url)
 			entries = response.json()["images"]
 			for entry in entries:
 				json_object = {
@@ -206,7 +206,7 @@ def view_content(request, storage_unit_id):
 def image_detail(request, storage_unit_id, image_name):
 	url = "{}/api/storage_units/{}/contents/{}/".format(settings.API_URL, storage_unit_id, image_name)
 	fake_url = "http://www.mocky.io/v2/5838bfd6110000a2168fd3cd"
-	response = requests.get(fake_url)
+	response = requests.get(url)
 	image_info = response.json()
 	year = image_info["year"]
 	coordinates = image_info["coordinates"]
