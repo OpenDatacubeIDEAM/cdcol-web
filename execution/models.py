@@ -236,3 +236,33 @@ class Review(models.Model):
 
 	def __unicode__(self):
 		return "{} - {}".format(self.execution.id, self.rating)
+
+
+class Task(models.Model):
+	PENDING_STATE = '1'
+	RECEIVED_STATE = '2'
+	STARTED_STATE = '3'
+	SUCCESS_STATE = '4'
+	FAILURE_STATE = '5'
+	REVOKED_STATE = '6'
+	RETRY_STATE = '7'
+	TASK_STATES = (
+		(PENDING_STATE, "PENDIENTE"),
+		(RECEIVED_STATE, "RECIBIDO"),
+		(STARTED_STATE, "INICIADO"),
+		(SUCCESS_STATE, "EXITOSO"),
+		(FAILURE_STATE, "CON FALLO"),
+		(REVOKED_STATE, "ANULADO"),
+		(RETRY_STATE, "REINTENTO"),
+	)
+	execution = models.ForeignKey(Execution, on_delete=models.CASCADE)
+	uuid = models.CharField(max_length=100)
+	start_date = models.DateField()
+	end_date = models.DateField()
+	state = models.CharField(max_length=2, choices=TASK_STATES)
+	state_updated_at = models.DateTimeField()
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+
+	def __unicode__(self):
+		return "{} - {}".format(self.execution.id, self.uuid)
