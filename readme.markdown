@@ -1,6 +1,31 @@
 # README #
 
-A continuación se presentan los pasos para configurar el proyecto.
+A continuación se presentan los pasos para el despliegue del proyecto CDCol
+<!-- 
+https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-16-04
+http://michal.karzynski.pl/blog/2013/06/09/django-nginx-gunicorn-virtualenv-supervisor/
+http://docs.gunicorn.org/en/stable/run.html
+ -->
+
+
+# nginx
+
+## Instalación de nginx
+
+Se deberá ejecutar el siguiente comando en la consola del SO utilizado.
+
+    # OSX
+    brew install nginx
+
+# Configuración de nginx
+
+Dependiendo del SO utilizado, se deberá editar el archivo de configuración si se desea cambiar el puerto por el que se va a escuchar.
+
+    nano /usr/local/etc/nginx/nginx.conf
+    ...
+    server{
+        listen      80    # cambiar por el puerto deseado
+    ...
 
 ## Configuración Ambiente virtual
 
