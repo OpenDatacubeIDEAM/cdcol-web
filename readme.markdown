@@ -7,16 +7,41 @@ http://michal.karzynski.pl/blog/2013/06/09/django-nginx-gunicorn-virtualenv-supe
 http://docs.gunicorn.org/en/stable/run.html
  -->
 
+# Instalación de dependencias
 
-# nginx
+Se instalarán las siguientes aplicaciones:
 
-## Instalación de nginx
+* python
+* postgresql
+* nginx
+
+Para esto se ejecuta los siguientes comandos en Ubuntu
+
+    sudo apt-get update
+    sudo apt-get install python-pip python-dev libpq-dev postgresql postgresql-contrib nginx
+
+# Configuración nginx
+
+Se deberá crear un archivo de servicio, para esto.
+
+    sudo nano /etc/systemd/system/gunicorn.service
+
+En este archivo especificaremos la siguiente configuración.
+
+    [Unit]
+    Description=gunicorn daemon
+    After=network.target
+
+    [Service]
+    User=ideam
+    Group=www-data
+    WorkingDirectory=/home/ideam/Documents/code/v_ideam/projects/ideam_cdc
+    ExecStart=/home/ideam/Documents/code/v_ideam/bin/gunicorn --workers 3 --bind unix:/home/sammy/myproject/myproject.sock myproject.wsgi:application
+
+
+
 
 Se deberá ejecutar el siguiente comando en la consola del SO utilizado.
-
-    # OSX
-    brew install nginx
-
 # Configuración de nginx
 
 Dependiendo del SO utilizado, se deberá editar el archivo de configuración si se desea cambiar el puerto por el que se va a escuchar.
