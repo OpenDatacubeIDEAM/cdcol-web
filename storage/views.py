@@ -18,6 +18,7 @@ import base64
 import json
 from rest_framework.renderers import JSONRenderer
 from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponseNotFound
 
 
 class JSONResponse(HttpResponse):
@@ -47,6 +48,7 @@ def as_json(request):
 		storage_units = []
 	return JSONResponse(storage_units)
 
+
 @login_required(login_url='/accounts/login/')
 @permission_required('storage.can_list_units', raise_exception=True)
 def index(request):
@@ -54,21 +56,80 @@ def index(request):
 
 
 @permission_required('storage.can_download_file', raise_exception=True)
-def download_file(request, file_name):
+def download_file(request, storage_unit_id, download_type):
 	"""
 	Download a file
+	:param request:
+	:param full_file_name:
+	:return:
+	"""
+	storage_unit = get_object_or_404(StorageUnit, id=storage_unit_id)
+	if download_type == "description":
+		full_file_name = storage_unit.description_file
+	elif download_type == "ingest":
+		full_file_name = storage_unit.ingest_file
+	elif download_type == "script":
+		full_file_name = storage_unit.metadata_generation_script
+	else:
+		return HttpResponseBadRequest()
+	try:
+		split_file_name = full_file_name.split('/')
+		file_name = split_file_name[len(split_file_name) - 1]
+		file_path = "{}/{}".format(settings.MEDIA_ROOT, full_file_name)
+		file_wrapper = FileWrapper(file(file_path, 'rb'))
+		file_mimetype = mimetypes.guess_type(file_path)
+		response = HttpResponse(file_wrapper, content_type=file_mimetype)
+		response['X-Sendfile'] = file_path
+		response['Content-Length'] = os.stat(file_path).st_size
+		response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(file_name)
+		return response
+	except:
+		return HttpResponseNotFound('<h1>El archivo no se ha encontrado en el servidor</h1>')
+
+
+@permission_required('storage.can_download_file', raise_exception=True)
+def download_image(request, storage_unit_id, image_name):
+	"""
+	Download an image
 	:param request:
 	:param file_name:
 	:return:
 	"""
-	file_path = file_name
-	file_wrapper = FileWrapper(file(file_path, 'rb'))
-	file_mimetype = mimetypes.guess_type(file_path)
-	response = HttpResponse(file_wrapper, content_type=file_mimetype)
-	response['X-Sendfile'] = file_path
-	response['Content-Length'] = os.stat(file_path).st_size
-	response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(file_name)
-	return response
+	# calling the service
+	url = "{}/api/storage_units/{}/contents/{}/".format(settings.API_URL, storage_unit_id, image_name)
+	fake_url = "http://www.mocky.io/v2/5838bfd6110000a2168fd3cd"
+	response = requests.get(url)
+	image_info = response.json()
+	# downloading the file
+	try:
+		# file_path = "/Users/manre/Documents/code/v_ideam/projects/ideam_cdc/ideam_cdc/media_root/uploads/versions/source_code/2/admin.py"
+		file_path = image_info["image_uri"]
+		file_name = file_path.split('/')[-1]
+		file_wrapper = FileWrapper(file(file_path, 'rb'))
+		file_mimetype = mimetypes.guess_type(file_path)
+		response = HttpResponse(file_wrapper, content_type=file_mimetype)
+		response['X-Sendfile'] = file_path
+		response['Content-Length'] = os.stat(file_path).st_size
+		response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(file_name)
+		return response
+	except:
+		return HttpResponseNotFound('<h1>El archivo no se ha encontrado en el servidor</h1>')
+
+
+@permission_required('storage.can_download_metadata', raise_exception=True)
+def download_metadata(request, storage_unit_id, image_name):
+	"""
+	Download metadata from an image file
+	:param request:
+	:param file_name:
+	:return:
+	"""
+	url = "{}/api/storage_units/{}/contents/{}/".format(settings.API_URL, storage_unit_id, image_name)
+	fake_url = "http://www.mocky.io/v2/5838bfd6110000a2168fd3cd"
+	response = requests.get(url)
+	image_info = response.json()
+	metadata = json.dumps(image_info["metadata"], indent=4, sort_keys=True)
+	return HttpResponse(metadata, content_type='application/json')
 
 
 @login_required(login_url='/accounts/login/')
@@ -124,8 +185,6 @@ def new(request):
 				}
 				header = {'Content-Type': 'application/json'}
 				url = "{}/api/storage_units/".format(settings.API_URL)
-				print url
-				print data
 				r = requests.post(url, data=json.dumps(data), headers=header)
 				if r.status_code == 201:
 					return HttpResponseRedirect(reverse('storage:index'))
@@ -217,5 +276,5 @@ def image_detail(request, storage_unit_id, image_name):
 	thumbnails = image_info["thumbnails"]
 	metadata = json.dumps(image_info["metadata"], indent=4, sort_keys=True)
 	context = {'metadata': metadata, 'thumbnails': thumbnails, 'year': year, 'coordinates': coordinates, 'name': name,
-	           'image_storage_unit': image_storage_unit}
+	           'image_storage_unit': image_storage_unit, 'image_name': image_name, 'storage_unit_id': storage_unit_id}
 	return render(request, 'storage/image_detail.html', context)

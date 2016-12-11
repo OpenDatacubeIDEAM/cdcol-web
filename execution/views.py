@@ -12,6 +12,9 @@ from execution.serializers import ExecutionSerializer
 import datetime
 from storage.models import StorageUnit
 from rest_framework.renderers import JSONRenderer
+from django.conf import settings
+import requests
+import json
 
 
 class JSONResponse(HttpResponse):
@@ -200,6 +203,7 @@ def send_execution(execution):
 	:param execution: Execution to be send
 	:return:
 	"""
+	response = {}
 	parameters = ExecutionParameter.objects.filter(execution=execution)
 	# getting all the values
 	json_parameters = {}
@@ -212,7 +216,19 @@ def send_execution(execution):
 		'version_id': execution.version.id,
 		'parameters': json_parameters
 	}
-	print json_response
+	# sending the request
+	try:
+		header = {'Content-Type': 'application/json'}
+		url = "{}/api/new_execution/".format(settings.API_URL)
+		r = requests.post(url, data=json.dumps(json_response), headers=header)
+		if r.status_code == 201:
+			response = {'status': 'ok', 'description': 'Se envió la ejecución correctamente.'}
+		else:
+			response = {'status': 'error', 'description': 'Ocurrió un error al enviar la ejecución',
+			            'detalle': "{}, {}".format(r.status_code, r.text)}
+	except:
+		print 'Something went wrong when trying to call the REST service'
+	return response
 
 
 @login_required(login_url='/accounts/login/')
@@ -246,7 +262,8 @@ def new_execution(request, algorithm_id, version_id):
 
 			create_execution_parameter_objects(parameters, request, new_execution, current_version)
 			# send the execution to the REST service
-			send_execution(new_execution)
+			response = send_execution(new_execution)
+			print response
 			return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': new_execution.id}))
 	version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id)
 	context = {'topics': topics, 'algorithm': algorithm, 'parameters': parameters,

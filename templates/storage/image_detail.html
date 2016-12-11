@@ -102,10 +102,10 @@
                             <h3 class="title">Acciones</h3>
                             <div class="separator-2"></div>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-md btn-block">Descargar archivo</a>
+                                <a href="{% url 'storage:download_image' storage_unit_id image_name %}" class="btn btn-primary btn-md btn-block">Descargar archivo</a>
                             </nav>
                             <nav>
-                                <a href="#" class="btn btn-primary btn-md btn-block">Descargar metadatos</a>
+                                <a href="{% url 'storage:download_metadata' storage_unit_id image_name %}" target="_blank" class="btn btn-primary btn-md btn-block">Descargar metadatos</a>
                             </nav>
                         </div>
                     </div>

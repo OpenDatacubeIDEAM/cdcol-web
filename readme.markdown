@@ -246,7 +246,7 @@ Dependiendo del SO utilizado, se deberá editar el archivo de configuración si 
 
 
 -----------
-
+## Procedimiento para actualizar el código
 
 
 
