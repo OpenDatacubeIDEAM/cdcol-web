@@ -214,7 +214,7 @@ def send_execution(execution):
 	json_response = {
 		'execution_id': execution.id,
 		'algorithm_name': "{}".format(execution.version.algorithm.name),
-		'version_id': execution.version.id,
+		'version_id': execution.version.number,
 		'parameters': json_parameters
 	}
 	# sending the request
