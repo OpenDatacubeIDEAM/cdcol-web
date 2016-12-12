@@ -117,8 +117,6 @@ $(document).ready(function () {
     });
 
     function getBands(storageUnitSelected, elementId){
-        console.log(elementId);
-        console.log(storageUnitSelected);
         if (typeof(storageUnitSelected) !== 'number'){
             var element = this.id;
             storageUnitSelected = this.options[this.selectedIndex].value;
@@ -126,23 +124,16 @@ $(document).ready(function () {
         }
         $.post("/storage/json", {'storage_unit_id': storageUnitSelected}, function (data) {
             console.log('Getting the bands for the storage unit ' + storageUnitSelected + ' ... ');
-            console.log(data);
-            console.log(elementId);
             $('#bands_'+elementId).empty();
-            console.log('1');
-            var bands = data[0].metadata.measurements;
-            console.log('2');
+            var bands = data.metadata.measurements;
             var bands_select = document.getElementById("bands_"+elementId);
-            console.log('3');
             var band_option = document.createElement("option");
-            console.log('3');
             for (var i = 0 ; i < bands.length ; i++){
                 band_option = document.createElement("option");
                 band_option.value = bands[i].name;
                 band_option.text = bands[i].name;
                 bands_select.appendChild(band_option);
             }
-            console.log('4');
         });
     }
 
