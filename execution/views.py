@@ -15,6 +15,7 @@ from rest_framework.renderers import JSONRenderer
 from django.conf import settings
 import requests
 import json
+import os
 
 
 class JSONResponse(HttpResponse):
@@ -44,13 +45,22 @@ def index(request):
 	return render(request, 'execution/index.html', context)
 
 
+def download_result(request, execution_id, image_name):
+	return False
+
+
 @login_required(login_url='/accounts/login/')
 @permission_required('execution.can_view_execution_detail', raise_exception=True)
 def detail(request, execution_id):
 	execution = get_object_or_404(Execution, id=execution_id)
 	executed_params = ExecutionParameter.objects.filter(execution=execution)
 	review = Review.objects.filter(execution=execution).last()
-	context = {'execution': execution, 'executed_params': executed_params, 'review': review}
+	# getting the files from the filesystem
+	system_path = "/web_storage/results/{}/".format(execution.id)
+	files = []
+	for f in os.listdir(system_path):
+		files.append(f)
+	context = {'execution': execution, 'executed_params': executed_params, 'review': review, 'files': files}
 	return render(request, 'execution/detail.html', context)
 
 
@@ -214,7 +224,7 @@ def send_execution(execution):
 	json_response = {
 		'execution_id': execution.id,
 		'algorithm_name': "{}".format(execution.version.algorithm.name),
-		'version_id': execution.version.number,
+		'version_id': "{}".format(execution.version.number),
 		'parameters': json_parameters
 	}
 	# sending the request

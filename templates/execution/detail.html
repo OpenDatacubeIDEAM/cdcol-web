@@ -95,14 +95,16 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>Nombre_completo_ a_mostrar_al_usuario_del_archivo_X</td>
-                                        <td>22 de Junio 2016 10:00 AM</td>
-                                        <td><a href="" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
-                                            <a href="" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver
-                                                Detalle</a>
-                                        </td>
-                                    </tr>
+                                    {% for file in files %}
+                                        <tr>
+                                            <td>{{ file }}</td>
+                                            <td>22 de Junio 2016 10:00 AM</td>
+                                            <td><a href="" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
+                                                <a href="" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver
+                                                    Detalle</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
