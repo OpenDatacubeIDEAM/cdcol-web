@@ -220,7 +220,11 @@ def send_execution(execution):
 	try:
 		header = {'Content-Type': 'application/json'}
 		url = "{}/api/new_execution/".format(settings.API_URL)
+		print url
+		print json_response
 		r = requests.post(url, data=json.dumps(json_response), headers=header)
+		print r.status_code
+		print r.text
 		if r.status_code == 201:
 			response = {'status': 'ok', 'description': 'Se envió la ejecución correctamente.'}
 		else:
