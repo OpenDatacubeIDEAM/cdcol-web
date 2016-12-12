@@ -23,7 +23,7 @@ def custom_choices():
 
 
 class IngestTaskForm(forms.Form):
-	storage_unit = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}), choices=custom_choices(),
+	storage_unit = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}), choices=custom_choices,
 	                                 required=True)
 	comments = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control',
 	                                                        'placeholder': 'Ingrese una descripción que le ayude a identificar la tarea de ingesta que se va a ejecutar sobre la unidad de almacenamiento'}),
