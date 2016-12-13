@@ -65,14 +65,15 @@ def download_file(request, storage_unit_id, download_type):
 	"""
 	storage_unit = get_object_or_404(StorageUnit, id=storage_unit_id)
 	if download_type == "description":
-		full_file_name = storage_unit.description_file
+		full_file_name = "{}/{}/{}".format(settings.DC_STORAGE_PATH, storage_unit.name, storage_unit.description_file)
 	elif download_type == "ingest":
-		full_file_name = storage_unit.ingest_file
+		full_file_name = "{}/{}/{}".format(settings.DC_STORAGE_PATH, storage_unit.name, storage_unit.ingest_file)
 	elif download_type == "script":
-		full_file_name = storage_unit.metadata_generation_script
+		full_file_name = "{}/{}/{}".format(settings.DC_STORAGE_PATH, storage_unit.name, storage_unit.metadata_generation_script)
 	else:
 		return HttpResponseBadRequest()
 	try:
+		print full_file_name
 		split_file_name = full_file_name.split('/')
 		file_name = split_file_name[len(split_file_name) - 1]
 		file_path = "{}/{}".format(settings.MEDIA_ROOT, full_file_name)

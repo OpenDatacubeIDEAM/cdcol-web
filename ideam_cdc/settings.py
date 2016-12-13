@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '$1%5%5d+d5*zzi!f4h#$rqx@rvzo@h)mnfmze-fsn-6wg(=&tv'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
@@ -170,4 +170,5 @@ EMAIL_USE_TLS = True
 # CDCOL Parameters
 
 STORAGE_UNIT_DIRECTORY_PATH = os.environ.get('IDEAM_STORAGE_UNIT_DIRECTORY_PATH')
+DC_STORAGE_PATH = os.environ.get('IDEAM_DC_STORAGE_PATH')
 API_URL = os.environ.get('IDEAM_API_URL')

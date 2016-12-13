@@ -17,6 +17,7 @@ class Topic(models.Model):
 
 class Algorithm(models.Model):
 	name = models.CharField(max_length=200)
+	display_name = models.CharField(max_length=200, default="")
 	description = models.TextField()
 	topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
 	created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='algorithm_author')
