@@ -11,7 +11,7 @@ urlpatterns = [
 	# ex: /execution/detail/11
 	url(r'^(?P<execution_id>[0-9]+)/detail/$', views.detail, name='detail'),
 	# ex: /execution/11/image/[image_name.nc]/download/
-	url(r'^(?P<execution_id>[0-9]+)/image/(?P<image_name>[0-9]+)/download/$', views.download_result, name='download_result'),
+	url(r'^(?P<execution_id>[0-9]+)/image/(?P<image_name>.+)/download/$', views.download_result, name='download_result'),
 	# ex: /execution/new
 	url(r'^new/$', views.new_blank_execution, name='new_blank_execution'),
 	# # ex: /execution/new/12/version/11
