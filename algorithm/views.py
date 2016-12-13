@@ -63,12 +63,10 @@ def new(request):
 		if algorithm_form.is_valid():
 			field_topic = algorithm_form.cleaned_data['topic']
 			field_name = algorithm_form.cleaned_data['name']
-			field_display_name = algorithm_form.cleaned_data['display_name']
 			field_description = algorithm_form.cleaned_data['description']
 			# creating the new algorithm
 			new_algorithm = Algorithm(
 				name=field_name,
-				display_name=field_display_name,
 				description=field_description,
 				topic=field_topic,
 				created_by=current_user
@@ -104,11 +102,9 @@ def update(request, algorithm_id):
 		# checking if the form is valid
 		if algorithm_form.is_valid():
 			field_name = algorithm_form.cleaned_data['name']
-			field_display_name = algorithm_form.cleaned_data['display_name']
 			field_description = algorithm_form.cleaned_data['description']
 			# update the algorithm
 			algorithm.name = field_name
-			algorithm.display_name = field_display_name
 			algorithm.description = field_description
 			algorithm.save()
 			return HttpResponseRedirect(reverse('algorithm:detail', kwargs={'algorithm_id': algorithm_id}))
