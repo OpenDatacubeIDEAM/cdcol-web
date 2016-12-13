@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required, permission_required
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.core import serializers
 from django.core.urlresolvers import reverse
 from django.db.models import Avg
+from django.utils.encoding import smart_str
 from algorithm.models import Topic, Algorithm
 from execution.models import *
 from execution.forms import VersionSelectionForm, ReviewForm
@@ -16,6 +17,8 @@ from django.conf import settings
 import requests
 import json
 import os
+import mimetypes
+from wsgiref.util import FileWrapper
 
 
 class JSONResponse(HttpResponse):
@@ -46,7 +49,20 @@ def index(request):
 
 
 def download_result(request, execution_id, image_name):
-	return False
+	execution = get_object_or_404(Execution, id=execution_id)
+	try:
+		file_path = "/web_storage/results/{}/{}".format(execution.id, image_name)
+		print file_path
+		file_name = file_path.split('/')[-1]
+		file_wrapper = FileWrapper(file(file_path, 'rb'))
+		file_mimetype = mimetypes.guess_type(file_path)
+		response = HttpResponse(file_wrapper, content_type=file_mimetype)
+		response['X-Sendfile'] = file_path
+		response['Content-Length'] = os.stat(file_path).st_size
+		response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(file_name)
+		return response
+	except:
+		return HttpResponseNotFound('<h1>El archivo no se ha encontrado en el servidor</h1>')
 
 
 @login_required(login_url='/accounts/login/')

@@ -90,7 +90,6 @@
                                     <thead>
                                     <tr>
                                         <th>Nombre</th>
-                                        <th>Fecha de creación</th>
                                         <th>Acciones</th>
                                     </tr>
                                     </thead>
@@ -98,10 +97,8 @@
                                     {% for file in files %}
                                         <tr>
                                             <td>{{ file }}</td>
-                                            <td>22 de Junio 2016 10:00 AM</td>
-                                            <td><a href="" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
-                                                <a href="" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver
-                                                    Detalle</a>
+                                            <td>
+                                                <a href="{% url 'execution:download_result' execution.id file %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
                                             </td>
                                         </tr>
                                     {% endfor %}
