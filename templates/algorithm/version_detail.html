@@ -174,7 +174,7 @@
                             {% if version.publishing_state == "2" and execution_count == 0 %}
                                 <nav>
                                     <a href="{% url 'algorithm:unpublish_version' version.algorithm.id version.id %}"
-                                       class="btn btn-primary btn-md btn-block">Despublicar Versión</a>
+                                       class="btn btn-primary btn-md btn-block">Volver versión a En Desarrollo</a>
                                 </nav>
                             {% endif %}
                             {% if version.publishing_state == "2" %}
