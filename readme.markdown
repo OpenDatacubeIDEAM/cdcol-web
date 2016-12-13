@@ -133,27 +133,6 @@ python manage.py createsuperuser
 # 
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Configuración Gunicorn como servicio
 
 Se deberá crear un archivo de servicio, para esto.
@@ -162,23 +141,42 @@ Se deberá crear un archivo de servicio, para esto.
 
 En este archivo especificaremos la siguiente configuración.
 
+
     [Unit]
     Description=gunicorn daemon
     After=network.target
 
     [Service]
-    User=ideam
-    Group=www-data
-    WorkingDirectory=/home/ideam/Documents/code/v_ideam/projects/ideam_cdc
-    ExecStart=/home/ideam/Documents/code/v_ideam/bin/gunicorn --workers 3 --bind unix:/home/ideam/Documents/code/v_ideam/projects/ideam_cdc/ideam.sock ideam_cdc.wsgi:application
+    User=cubo
+    Group=cubo
+    WorkingDirectory=/home/cubo/Documents/code/v_ideam/projects/ideam_cdc
+    EnvironmentFile=/home/cubo/.ideam.env
+    ExecStart=/home/cubo/Documents/code/v_ideam/bin/gunicorn --bind 0.0.0.0:8080 ideam_cdc.wsgi:application
 
     [Install]
     WantedBy=multi-user.target
+
+También se deberá crear archivo el cual contendrá las variables de entorno para esto.
+
+    pwd
+    /home/cubo
+    nano .ideam.env
+    # se adicionaran las siguientes lineas
+    IDEAM_DATABASE_URL="postgres://cdcol_web:CDCol_web_2016@localhost/ideam"
+    IDEAM_PRODUCTION_DATABASE_URL="postgres://cdcol_web:CDCol_web_2016@localhost/ideam"
+    IDEAM_API_URL="http://192.168.106.10:8000"
+    IDEAM_SENDGRID_USERNAME="cuboimagenes@ideam.gov.co"
+    IDEAM_SENDGRID_PASSWORD="15CuboSatelite20"
+    IDEAM_SENDGRID_PORT="587"
+    IDEAM_DC_STORAGE_PATH="/dc_storage"
+
 
 A continuación guardaremos el servicio y procederemos a iniciar el servicio de Gunicorn.
 
     sudo systemctl start gunicorn
     sudo systemctl enable gunicorn
+    # es posible que sea necesario actualizar los servicios, para esto
+    systemctl daemon-reload
 
 # Configuración Nginx
 
@@ -187,23 +185,20 @@ Se deberá crear un archivo el cual contendrá la información relevante al proy
     sudo nano /etc/nginx/sites-available/ideam
     # en este archivo se agregará la siguiente configuración
     server {
-        listen 80;
-        server_name 172.24.99.167;
+      listen 80;
 
-        location = /favicon.ico { access_log off; log_not_found off; }
-        location /static/ {
-            root /home/ideam/Documents/code/v_ideam/projects/ideam_cdc/ideam_cdc/static_dirs/;
-        }
+      location /web_storage {
+        alias /web_storage;
+      }
 
-        location / {
-            include proxy_params;
-            proxy_pass http://unix://home/ideam/Documents/code/v_ideam/projects/ideam_cdc/ideam.sock;
-        }
+      location / {
+        proxy_pass http://127.0.0.1:8080;
+      }
     }
 
-Ahora se procede a crear hardlink
+Se procede a crear hardlink
 
-    sudo ln -s /etc/nginx/sites-available/ideam /etc/nginx/sites-enabled
+    sudo ln -s /etc/nginx/sites-available/ideam /etc/nginx/sites-enabled/
 
 Para revisar que la configuración se encuentra correcta se puede ejecutar el comando
 
@@ -217,41 +212,21 @@ Si existen inconvenientes se deberá revisar el archivo
 
     sudo tail -f /var/log/nginx/error.log
 
-Si existen problemas de permisos para el archivo .sock se podrán corregir con los siguientes comandos:
-
-    chgrp ideam ideam.sock && chmod g+rw ideam.sock
-    chmod +x /home/ideam /home/ideam/Documents/code/v_ideam/projects/ideam_cdc
-    chmod g+s /home/ideam/Documents/code/v_ideam/projects/ideam_cdc
-
-
-
-
-Se deberá ejecutar el siguiente comando en la consola del SO utilizado.
-# Configuración de nginx
-
-Dependiendo del SO utilizado, se deberá editar el archivo de configuración si se desea cambiar el puerto por el que se va a escuchar.
-
-    nano /usr/local/etc/nginx/nginx.conf
-    ...
-    server{
-        listen      80    # cambiar por el puerto deseado
-    ...
-
-
-
-
-
-
-
-
-
 -----------
-## Procedimiento para actualizar el código
+# Procedimiento para actualizar el código
 
+En caso de necesitar realizar actualización del código, solo es necesario seguir los siguientes pasos.
 
-
-
-
+    # ingresar a la ruta del ambiente
+    cd Documents/code/v_ideam/
+    # activar el ambiente virtual
+    . bin/activate # o source bin/activate
+    # ingresar a la carpeta del proyecto
+    cd projects/ideam_cdc/
+    # obtener los nuevos cambios desde el repositorio
+    git pull
+    # en caso de necesitar migraciones recordar que se debe ejecutar
+    python manage.py migrate
 
 ## Versiones Utilizadas
 
