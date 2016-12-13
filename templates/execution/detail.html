@@ -79,34 +79,36 @@
                         </tbody>
                     </table>
 
-                    <h3 class="page-title">Resultados generados</h3>
-                    <div class="separator-2"></div>
-                    <p>A continuación se encuentran los archivos generados por esta ejecución:</p>
+                    {% if files %}
+                        <h3 class="page-title">Resultados generados</h3>
+                        <div class="separator-2"></div>
+                        <p>A continuación se encuentran los archivos generados por esta ejecución:</p>
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-colored">
-                                    <thead>
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for file in files %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-colored">
+                                        <thead>
                                         <tr>
-                                            <td>{{ file }}</td>
-                                            <td>
-                                                <a href="{% url 'execution:download_result' execution.id file %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
-                                            </td>
+                                            <th>Nombre</th>
+                                            <th>Acciones</th>
                                         </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                        {% for file in files %}
+                                            <tr>
+                                                <td>{{ file }}</td>
+                                                <td>
+                                                    <a href="{% url 'execution:download_result' execution.id file %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    {% endif %}
 
 
                     <h3 class="page-title">Traza de errores</h3>
