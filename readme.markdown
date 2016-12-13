@@ -100,11 +100,13 @@ Se deberán configurar las siguientes variables de entorno, este archivo depende
 cd
 nano .bash_profile
 # Adicionar las siguientes lineas dentro del archivo
-export IDEAM_DATABASE_URL=""
-export IDEAM_PRODUCTION_DATABASE_URL=""
-export IDEAM_API_URL=""
-export IDEAM_SENDGRID_USERNAME=""
-export IDEAM_SENDGRID_PASSWORD=""
+export IDEAM_PRODUCTION_DATABASE_URL="postgres://cdcol_web:CDCol_web_2016@localhost/ideam"
+export IDEAM_API_URL="http://192.168.106.10:8000"
+export IDEAM_MAIL_HOST="mail.ideam.gov.co"
+export IDEAM_MAIL_USER="cuboimagenes@ideam.gov.co"
+export IDEAM_MAIL_PASSWORD="15CuboSatelite20"
+export IDEAM_MAIL_PORT="25"
+export IDEAM_DC_STORAGE_PATH="/dc_storage"
 ```
 
 ## Despliegue de prueba
@@ -158,14 +160,13 @@ También se deberá crear archivo el cual contendrá las variables de entorno pa
     /home/cubo
     nano .ideam.env
     # se adicionaran las siguientes lineas
-    IDEAM_DATABASE_URL="postgres://cdcol_web:CDCol_web_2016@localhost/ideam"
     IDEAM_PRODUCTION_DATABASE_URL="postgres://cdcol_web:CDCol_web_2016@localhost/ideam"
     IDEAM_API_URL="http://192.168.106.10:8000"
-    IDEAM_SENDGRID_USERNAME="cuboimagenes@ideam.gov.co"
-    IDEAM_SENDGRID_PASSWORD="15CuboSatelite20"
-    IDEAM_SENDGRID_PORT="587"
+    IDEAM_MAIL_HOST="mail.ideam.gov.co"
+    IDEAM_MAIL_USER="cuboimagenes@ideam.gov.co"
+    IDEAM_MAIL_PASSWORD="15CuboSatelite20"
+    IDEAM_MAIL_PORT="25"
     IDEAM_DC_STORAGE_PATH="/dc_storage"
-
 
 A continuación guardaremos el servicio y procederemos a iniciar el servicio de Gunicorn.
 

@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '$1%5%5d+d5*zzi!f4h#$rqx@rvzo@h)mnfmze-fsn-6wg(=&tv'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
@@ -161,10 +161,10 @@ ACCOUNT_ADAPTER = 'user_profile.adapters.MyAccountAdapter'
 
 # Sendgrid
 
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = os.environ.get('IDEAM_SENDGRID_USERNAME')
-EMAIL_HOST_PASSWORD = os.environ.get('IDEAM_SENDGRID_PASSWORD')
-EMAIL_PORT = os.environ.get('IDEAM_SENDGRID_PORT')
+EMAIL_HOST = os.environ.get('IDEAM_MAIL_HOST')
+EMAIL_HOST_USER = os.environ.get('IDEAM_MAIL_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('IDEAM_MAIL_PASSWORD')
+EMAIL_PORT = os.environ.get('IDEAM_MAIL_PORT')
 EMAIL_USE_TLS = True
 
 # CDCOL Parameters
