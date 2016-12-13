@@ -134,18 +134,13 @@ def detail(request, algorithm_id):
 
 
 def download_source_code(new_version):
-	# deleting the old file if there is any
-	try:
-		os.remove("{}/{}".format(settings.MEDIA_ROOT, new_version.source_code.name))
-	except:
-		pass
 	try:
 		# getting the file name
 		file_name = new_version.repository_url.split('/')[-1]
 		# downloading and updating the model
 		content = urllib.urlretrieve(new_version.repository_url)
 		new_version.source_code.save(file_name, File(open(content[0])), save=True)
-	except:
+	except Exception as e:
 		print "Something went wrong when downloading, {}".format(new_version.repository_url)
 		pass
 

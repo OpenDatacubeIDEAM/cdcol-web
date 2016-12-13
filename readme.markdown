@@ -228,6 +228,13 @@ En caso de necesitar realizar actualización del código, solo es necesario segu
     sudo systemctl restart gunicorn
     sudo systemctl restart nginx
 
+# Configuración del sitio
+
+Se deberán realizar los siguientes procedimientos manuales en caso de instalar la aplicación desde cero.
+
+1. Cambio de nombre. Se deberá ingresar al portal de administración a aplicación "sitios" en esta se podrá cambiar el nombre de dominio y nombre a mostrar de al aplicación. Esto se visualizará en el correo.
+2. Creación de Topics. Se deberán crear los topics en la aplicación "Topic".
+
 ## Versiones Utilizadas
 
 Se utilizaron las siguientes versiones para el portal.

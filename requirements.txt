@@ -16,9 +16,11 @@ psycopg2==2.6.2
 pyasn1==0.1.9
 pycparser==2.17
 python-openid==2.2.5
+python-slugify==1.2.1
 PyYAML==3.12
 requests==2.10.0
 requests-oauthlib==0.6.2
 six==1.10.0
 static3==0.7.0
+Unidecode==0.4.19
 whitenoise==3.2

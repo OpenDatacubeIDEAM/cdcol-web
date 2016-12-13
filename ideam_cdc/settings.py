@@ -130,8 +130,6 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static_root')
 STATIC_URL = '/static_dirs/'
 
-MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media_root')
-MEDIA_URL = '/static_media_dirs/'
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (
@@ -171,4 +169,10 @@ EMAIL_USE_TLS = True
 
 STORAGE_UNIT_DIRECTORY_PATH = os.environ.get('IDEAM_STORAGE_UNIT_DIRECTORY_PATH')
 DC_STORAGE_PATH = os.environ.get('IDEAM_DC_STORAGE_PATH')
+WEB_STORAGE_PATH = os.environ.get('IDEAM_WEB_STORAGE_PATH')
 API_URL = os.environ.get('IDEAM_API_URL')
+
+# STATIC Files Part 2
+
+MEDIA_ROOT = os.path.join(WEB_STORAGE_PATH, 'media_root')
+MEDIA_URL = '/static_media_dirs/'
