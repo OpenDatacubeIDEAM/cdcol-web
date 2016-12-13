@@ -312,22 +312,30 @@ def rate_execution(request, execution_id):
 		review_form = ReviewForm(request.POST)
 		# checking if the form is valid
 		if review_form.is_valid():
-			rating = review_form.cleaned_data['rating']
-			comments = review_form.cleaned_data['comments']
-			version = execution.version
-			algorithm = version.algorithm
+			# checking if the execution is able to be rated
+			ratings = Review.objects.filter(execution=execution, reviewed_by=current_user)
+			if ratings.count() == 0:
+				if execution.state == Execution.COMPLETED_STATE or execution.state == Execution.ERROR_STATE:
+					rating = review_form.cleaned_data['rating']
+					comments = review_form.cleaned_data['comments']
+					version = execution.version
+					algorithm = version.algorithm
 
-			# creating the review
-			new_review = Review(
-				algorithm=algorithm,
-				version=version,
-				execution=execution,
-				rating=rating,
-				comments=comments,
-				reviewed_by=current_user
-			)
-			new_review.save()
-			return HttpResponseRedirect(reverse('execution:index'))
+					# creating the review
+					new_review = Review(
+						algorithm=algorithm,
+						version=version,
+						execution=execution,
+						rating=rating,
+						comments=comments,
+						reviewed_by=current_user
+					)
+					new_review.save()
+					return HttpResponseRedirect(reverse('execution:index'))
+				else:
+					review_form.add_error(None, "No es posible calificar esta ejecución, la ejecución debe haber terminado.")
+			else:
+				review_form.add_error(None, "No es posible calificar esta ejecución, usted ya ha realizado una calificación a esta.")
 		else:
 			review_form.add_error(None, "Favor completar todos los campos marcados.")
 	else:

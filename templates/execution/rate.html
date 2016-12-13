@@ -76,8 +76,8 @@
                                 {% csrf_token %}
 
                                 <!-- Errors -->
-                                {% if algorithm_form.errors %}
-                                    {% for error in algorithm_form.non_field_errors %}
+                                {% if review_form.errors %}
+                                    {% for error in review_form.non_field_errors %}
                                         <div class="alert alert-danger">
                                             <strong>{{ error|escape }}</strong>
                                         </div>
