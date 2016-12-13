@@ -99,6 +99,31 @@
                                 </div>
                                 <!-- /Nombre -->
 
+                                <!-- Nombre para mostrar -->
+                                <div class="form-group">
+                                    <!-- Errors -->
+                                    {% if algorithm_form.display_name.errors %}
+                                        {% for error in algorithm_form.display_name.errors %}
+                                            <div class="alert alert-danger">
+                                                <strong>{{ error|escape }}</strong>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <!-- /Errors -->
+                                    <label for="">
+                                        <b>
+                                            Nombre para mostrar <span class="text-danger small"> * </span>
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ingrese el nombre para mostrar del algoritmo."></i></a>
+                                        </b>
+                                    </label>
+                                    <input name="{{ algorithm_form.display_name.html_name }}"
+                                           id="{{ algorithm_form.display_name.id_for_label }}"
+                                           class="form-control" placeholder="Escriba el nombre el algoritmo para mostrar."
+                                           value="{{ algorithm.name }}"
+                                           type="text" maxlength="50" required>
+                                </div>
+                                <!-- /Nombre para mostrar -->
+
                                 <!-- Descripción Algoritmo -->
                                 <div class="form-group">
                                     <!-- Errors -->
