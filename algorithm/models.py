@@ -75,7 +75,7 @@ def upload_to(new_version, filename):
 		os.remove(full_url)
 	except:
 		pass
-	return "/web_storage/media_root/algorithms/compuesto-temporal-de-medianasaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/1.0.py"
+	return full_url
 
 
 class Version(models.Model):
@@ -93,7 +93,7 @@ class Version(models.Model):
 	description = models.TextField()
 	number = models.CharField(max_length=200)
 	repository_url = models.CharField(max_length=300)
-	source_code = models.FileField(upload_to=upload_to, blank=True, null=True)
+	source_code = models.FileField(upload_to=upload_to, max_length=1000, blank=True, null=True)
 	publishing_state = models.CharField(max_length=2, choices=VERSION_STATES)
 	created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='version_author')
 	created_at = models.DateTimeField(auto_now_add=True)
