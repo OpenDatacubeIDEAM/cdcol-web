@@ -75,7 +75,7 @@ def upload_to(new_version, filename):
 		os.remove(full_url)
 	except:
 		pass
-	return "/web_storage/media_root/algorithms/compuesto-temporal-de-medianas/1.0.py"
+	return "/web_storage/media_root/algorithms/compuesto-temporal-de-medianasaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/1.0.py"
 
 
 class Version(models.Model):
