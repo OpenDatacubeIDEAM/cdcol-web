@@ -108,6 +108,7 @@ def update(request, algorithm_id):
 			field_description = algorithm_form.cleaned_data['description']
 			# update the algorithm
 			algorithm.name = field_name
+			algorithm.display_name = field_display_name
 			algorithm.description = field_description
 			algorithm.save()
 			return HttpResponseRedirect(reverse('algorithm:detail', kwargs={'algorithm_id': algorithm_id}))
