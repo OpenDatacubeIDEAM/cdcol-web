@@ -74,8 +74,11 @@ def detail(request, execution_id):
 	# getting the files from the filesystem
 	system_path = "/web_storage/results/{}/".format(execution.id)
 	files = []
-	for f in os.listdir(system_path):
-		files.append(f)
+	try:
+		for f in os.listdir(system_path):
+			files.append(f)
+	except:
+		pass
 	context = {'execution': execution, 'executed_params': executed_params, 'review': review, 'files': files}
 	return render(request, 'execution/detail.html', context)
 
