@@ -1,11 +1,6 @@
 # README #
 
 A continuación se presentan los pasos para el despliegue del proyecto CDCol
-<!-- 
-https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-16-04
-http://michal.karzynski.pl/blog/2013/06/09/django-nginx-gunicorn-virtualenv-supervisor/
-http://docs.gunicorn.org/en/stable/run.html
- -->
 
 # Instalación de dependencias
 
@@ -124,12 +119,13 @@ python manage migrate
 python manage.py runserver
 # Utilizando el puerto 8000
 python manage.py runserver 0.0.0.0:8000
+# Archivos estaticos
+python manage.py collectstatic
 # Creando el superusuario
 python manage.py createsuperuser
 # usuario: superadminuser
 # email: cuboimagenes@ideam.gov.co
 # password: %Pass_18_Cubo%
-# 
 # 
 ```
 
@@ -227,6 +223,9 @@ En caso de necesitar realizar actualización del código, solo es necesario segu
     git pull
     # en caso de necesitar migraciones recordar que se debe ejecutar
     python manage.py migrate
+    # es posible que se necesite reiniciar servicios
+    sudo systemctl restart gunicorn
+    sudo systemctl restart nginx
 
 ## Versiones Utilizadas
 
