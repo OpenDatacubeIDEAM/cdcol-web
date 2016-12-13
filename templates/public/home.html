@@ -106,120 +106,102 @@
         <!-- ================ -->
         <section class="light-gray-bg pv-30 padding-bottom-clear clearfix">
             <div class="container">
-                {% if request.user|has_group:"DataAdmin" %}
                     <div class="row">
-                        <div class="col-md-4 ">
-                            <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
-                                 data-animation-effect="fadeInDownSmall" data-effect-delay="100">
-                                <span class="icon default-bg circle"><i class="fa fa-diamond"></i></span>
-                                <h3><a href="{% url 'storage:index' %}">Almacenamiento</a></h3>
-                                <div class="separator clearfix"></div>
-                                <p>Administre la unidades de almacenamiento y explore la información que hay en el cubo
-                                    de datos.</p>
-                                <a href="{% url 'storage:index' %}">Ir al módulo<i class="pl-5 fa fa-angle-double-right"></i></a>
+                        {% if perms.storage.can_list_units %}
+                            <div class="col-md-4 ">
+                                <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
+                                     data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+                                    <span class="icon default-bg circle"><i class="fa fa-diamond"></i></span>
+                                    <h3><a href="{% url 'storage:index' %}">Almacenamiento</a></h3>
+                                    <div class="separator clearfix"></div>
+                                    <p>Administre la unidades de almacenamiento y explore la información que hay en el cubo
+                                        de datos.</p>
+                                    <a href="{% url 'storage:index' %}">Ir al módulo<i class="pl-5 fa fa-angle-double-right"></i></a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-4 ">
-                            <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
-                                 data-animation-effect="fadeInDownSmall" data-effect-delay="100">
-                                <span class="icon default-bg circle"><i class="fa fa-connectdevelop"></i></span>
-                                <h3><a href="{% url 'ingest:index' %}">Tareas de ingesta</a></h3>
-                                <div class="separator clearfix"></div>
-                                <p>Gestione y programe las tareas de ingesta de imágenes que son ejecutadas todos los
-                                    días a las 2:00 AM.</p>
-                                <a href="{% url 'ingest:index' %}">Ir al módulo<i class="pl-5 fa fa-angle-double-right"></i></a>
+                        {% endif %}
+                        {% if perms.ingest.can_list_storage_tasks %}
+                            <div class="col-md-4 ">
+                                <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
+                                     data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+                                    <span class="icon default-bg circle"><i class="fa fa-connectdevelop"></i></span>
+                                    <h3><a href="{% url 'ingest:index' %}">Tareas de ingesta</a></h3>
+                                    <div class="separator clearfix"></div>
+                                    <p>Gestione y programe las tareas de ingesta de imágenes que son ejecutadas todos los
+                                        días a las 2:00 AM.</p>
+                                    <a href="{% url 'ingest:index' %}">Ir al módulo<i class="pl-5 fa fa-angle-double-right"></i></a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-4 ">
-                            <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
-                                 data-animation-effect="fadeInDownSmall" data-effect-delay="100">
-                                <span class="icon default-bg circle"><i class="fa fa-connectdevelop"></i></span>
-                                <h3><a href="{% url 'template:index' %}">Plantillas YAML</a></h3>
-                                <div class="separator clearfix"></div>
-                                <p>Descargue las plantillas de archivos YML necesarios para la descripción e ingesta de
-                                    unidades de almacenamiento.</p>
-                                <a href="{% url 'template:index' %}">Ir al módulo<i class="pl-5 fa fa-angle-double-right"></i></a>
+                        {% endif %}
+                        {% if perms.template.can_list_yaml_templates %}
+                            <div class="col-md-4 ">
+                                <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
+                                     data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+                                    <span class="icon default-bg circle"><i class="fa fa-connectdevelop"></i></span>
+                                    <h3><a href="{% url 'template:index' %}">Plantillas YAML</a></h3>
+                                    <div class="separator clearfix"></div>
+                                    <p>Descargue las plantillas de archivos YML necesarios para la descripción e ingesta de
+                                        unidades de almacenamiento.</p>
+                                    <a href="{% url 'template:index' %}">Ir al módulo<i class="pl-5 fa fa-angle-double-right"></i></a>
+                                </div>
                             </div>
-                        </div>
+                        {% endif %}
+                        {% if perms.ingest_template.can_list_ingest_templates %}
+                            <div class="col-md-4 ">
+                                <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
+                                     data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+                                    <span class="icon default-bg circle"><i class="fa fa-diamond"></i></span>
+                                    <h3><a href="{% url 'ingest_template:index' %}">Script de metadatos</a></h3>
+                                    <div class="separator clearfix"></div>
+                                    <p>Descargue los scripts requeridos para el proceso de generación de metadatos en la
+                                        ingesta de unidades de almacenamiento.</p>
+                                    <a href="{% url 'ingest_template:index' %}">Ir al módulo<i
+                                            class="pl-5 fa fa-angle-double-right"></i></a>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if perms.algorithm.can_list_algorithms %}
+                            <div class="col-md-4 ">
+                                <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
+                                     data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+                                    <span class="icon default-bg circle"><i class="fa fa-diamond"></i></span>
+                                    <h3><a href="{% url 'algorithm:index' %}">Mis algoritmos</a></h3>
+                                    <div class="separator clearfix"></div>
+                                    <p>Gestione los algoritmos, versiones y parámetros que ha creado en el sistema. para
+                                        que
+                                        los analistas los ejecuten.</p>
+                                    <a href="{% url 'algorithm:index' %}">Ir al módulo<i
+                                            class="pl-5 fa fa-angle-double-right"></i></a>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if perms.execution.can_view_blank_execution %}
+                            <div class="col-md-4 ">
+                                <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
+                                     data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+                                    <span class="icon default-bg circle"><i class="fa fa-connectdevelop"></i></span>
+                                    <h3><a href="{% url 'execution:new_blank_execution' %}">Algoritmos</a></h3>
+                                    <div class="separator clearfix"></div>
+                                    <p>Conozca los algortimos que hay disponibles y utilícelos para ejecutar análisis sobre
+                                        las imágenes del cubo.</p>
+                                    <a href="{% url 'execution:new_blank_execution' %}">Ir al módulo<i class="pl-5 fa fa-angle-double-right"></i></a>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if perms.execution.can_list_executions %}
+                            <div class="col-md-4 ">
+                                <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
+                                     data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+                                    <span class="icon default-bg circle"><i class="fa fa-connectdevelop"></i></span>
+                                    <h3>Ejecuciones</h3>
+                                    <div class="separator clearfix"></div>
+                                    <p>Monitoree y acceda a los resultados de las ejeuciones de análisis que ha realizado
+                                        sobre las imágenes del cubo.</p>
+                                    <a href="{% url 'execution:index' %}">Ir al módulo<i class="pl-5 fa fa-angle-double-right"></i></a>
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
-                    <div class="row">
-                        <div class="col-md-4 ">
-                            <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
-                                 data-animation-effect="fadeInDownSmall" data-effect-delay="100">
-                                <span class="icon default-bg circle"><i class="fa fa-diamond"></i></span>
-                                <h3><a href="{% url 'ingest_template:index' %}">Script de metadatos</a></h3>
-                                <div class="separator clearfix"></div>
-                                <p>Descargue los scripts requeridos para el proceso de generación de metadatos en la
-                                    ingesta de unidades de almacenamiento.</p>
-                                <a href="{% url 'ingest_template:index' %}">Ir al módulo<i class="pl-5 fa fa-angle-double-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-                {% if request.user|has_group:"Developer" %}
-                    <div class="row">
-                        <div class="col-md-4 ">
-                            <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
-                                 data-animation-effect="fadeInDownSmall" data-effect-delay="100">
-                                <span class="icon default-bg circle"><i class="fa fa-diamond"></i></span>
-                                <h3><a href="{% url 'algorithm:index' %}">Mis algoritmos</a></h3>
-                                <div class="separator clearfix"></div>
-                                <p>Gestione los algoritmos, versiones y parámetros que ha creado en el sistema. para que
-                                    los analistas los ejecuten.</p>
-                                <a href="{% url 'algorithm:index' %}">Ir al módulo<i class="pl-5 fa fa-angle-double-right"></i></a>
-                            </div>
-                        </div>
-                        <div class="col-md-4 ">
-                            <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
-                                 data-animation-effect="fadeInDownSmall" data-effect-delay="100">
-                                <span class="icon default-bg circle"><i class="fa fa-connectdevelop"></i></span>
-                                <h3><a href="{% url 'execution:new_blank_execution' %}">Algoritmos</a></h3>
-                                <div class="separator clearfix"></div>
-                                <p>Conozca los algortimos que hay disponibles y utilícelos para ejecutar análisis sobre
-                                    las imágenes del cubo.</p>
-                                <a href="{% url 'execution:new_blank_execution' %}">Ir al módulo<i class="pl-5 fa fa-angle-double-right"></i></a>
-                            </div>
-                        </div>
-                        <div class="col-md-4 ">
-                            <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
-                                 data-animation-effect="fadeInDownSmall" data-effect-delay="100">
-                                <span class="icon default-bg circle"><i class="fa fa-connectdevelop"></i></span>
-                                <h3><a href="{% url 'execution:index' %}">Ejecuciones</a></h3>
-                                <div class="separator clearfix"></div>
-                                <p>Monitoree y acceda a los resultados de las ejecuciones que ha realizado sobre las
-                                    imágenes del cubo.</p>
-                                <a href="{% url 'execution:index' %}">Ir al módulo<i class="pl-5 fa fa-angle-double-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-                {% if request.user|has_group:"Analyst" %}
-                    <div class="row">
-                        <div class="col-md-4 ">
-                            <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
-                                 data-animation-effect="fadeInDownSmall" data-effect-delay="100">
-                                <span class="icon default-bg circle"><i class="fa fa-diamond"></i></span>
-                                <h3>Algoritmos</h3>
-                                <div class="separator clearfix"></div>
-                                <p>Conozca los algortimos que hay disponibles y utilícelos para ejecutar análisis sobre
-                                    las imágenes del cubo.</p>
-                                <a href="{% url 'execution:new_blank_execution' %}">Ir al módulo<i class="pl-5 fa fa-angle-double-right"></i></a>
-                            </div>
-                        </div>
-                        <div class="col-md-4 ">
-                            <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
-                                 data-animation-effect="fadeInDownSmall" data-effect-delay="100">
-                                <span class="icon default-bg circle"><i class="fa fa-connectdevelop"></i></span>
-                                <h3>Ejecuciones</h3>
-                                <div class="separator clearfix"></div>
-                                <p>Monitoree y acceda a los resultados de las ejeuciones de análisis que ha realizado
-                                    sobre las imágenes del cubo.</p>
-                                <a href="{% url 'execution:index' %}">Ir al módulo<i class="pl-5 fa fa-angle-double-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                {% endif %}
             </div>
         </section>
         <!-- section end -->
