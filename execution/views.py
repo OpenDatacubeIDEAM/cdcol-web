@@ -19,6 +19,7 @@ import json
 import os
 import mimetypes
 from wsgiref.util import FileWrapper
+from slugify import slugify
 
 
 class JSONResponse(HttpResponse):
@@ -242,7 +243,7 @@ def send_execution(execution):
 	# building the request
 	json_response = {
 		'execution_id': execution.id,
-		'algorithm_name': "{}".format(execution.version.algorithm.name),
+		'algorithm_name': "{}".format(slugify(execution.version.algorithm.name)),
 		'version_id': "{}".format(execution.version.number),
 		'parameters': json_parameters
 	}
