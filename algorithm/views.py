@@ -247,6 +247,7 @@ def download_version(request, algorithm_id, version_id):
 	version = get_object_or_404(Version, id=version_id)
 	file_name = version.repository_url.split('/')[-1]
 	file_path = "{}/{}".format(settings.MEDIA_ROOT, version.source_code.name)
+	print file_path
 	file_wrapper = FileWrapper(file(file_path, 'rb'))
 	file_mimetype = mimetypes.guess_type(file_path)
 	response = HttpResponse(file_wrapper, content_type=file_mimetype)

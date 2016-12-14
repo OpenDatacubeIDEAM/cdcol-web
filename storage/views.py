@@ -73,10 +73,9 @@ def download_file(request, storage_unit_id, download_type):
 	else:
 		return HttpResponseBadRequest()
 	try:
-		print full_file_name
 		split_file_name = full_file_name.split('/')
 		file_name = split_file_name[len(split_file_name) - 1]
-		file_path = "{}/{}".format(settings.MEDIA_ROOT, full_file_name)
+		file_path = full_file_name
 		file_wrapper = FileWrapper(file(file_path, 'rb'))
 		file_mimetype = mimetypes.guess_type(file_path)
 		response = HttpResponse(file_wrapper, content_type=file_mimetype)
