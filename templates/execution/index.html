@@ -53,23 +53,6 @@
                                         <th>Acciones</th>
                                     </tr>
                                     </thead>
-{#                                    <tbody>#}
-{#                                    {% for execution in executions %}#}
-{#                                        <tr>#}
-{#                                            <td>{{ execution.id }}</td>#}
-{#                                            <td>{{ execution.version.algorithm.name }}</td>#}
-{#                                            <td>{{ execution.get_state_display }}</td>#}
-{#                                            <td>{{ execution.created_at }}</td>#}
-{#                                            <td>{{ execution.started_at }}</td>#}
-{#                                            <td>{{ execution.finished_at }}</td>#}
-{#                                            <td><a href="{% url 'execution:detail' execution.id %}" class="btn btn-gray btn-sm"><i#}
-{#                                                    class="fa fa-bars"></i> Ver Detalle</a>#}
-{#                                                <a href="{% url 'execution:rate_execution' execution.id %}" class="btn btn-gray btn-sm"><i#}
-{#                                                    class="fa fa-bars"></i> Calificar</a>#}
-{#                                            </td>#}
-{#                                        </tr>#}
-{#                                    {% endfor %}#}
-{#                                    </tbody>#}
                                 </table>
                             </div>
                         </div>
@@ -97,6 +80,7 @@
                     "url": "{% url 'execution:as_json' %}",
                     "dataSrc": ""
                 },
+                "order": [[ 3, "desc" ]],
                 "columns": [
                     {"data": "id"},
                     {"data": "algorithm_name"},

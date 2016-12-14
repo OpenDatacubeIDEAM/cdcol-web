@@ -63,13 +63,9 @@ class Algorithm(models.Model):
 
 def upload_to(new_version, filename):
 	slug_algorithm_name = slugify(new_version.algorithm.name)
-	print slug_algorithm_name
 	version_name = new_version.number
-	print version_name
 	filename = "{}_{}.py".format(slug_algorithm_name, version_name)
-	print filename
 	full_url = "{}/algorithms/{}/{}".format(settings.MEDIA_ROOT, slug_algorithm_name, filename)
-	print full_url
 	# deleting the old file if there is any to replace when updating
 	try:
 		os.remove(full_url)
