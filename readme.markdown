@@ -1,37 +1,35 @@
 # README #
 
-A continuación se presentan los pasos para el despliegue del proyecto CDCol
+El siguiente documento muestra los pasos necesarios para realizar la instalación de la aplicación CDCol.
 
 # Instalación de dependencias
 
-Se instalarán las siguientes aplicaciones:
+Se instalarán las siguientes aplicaciones.
 
 * python
 * postgresql
 * nginx
+* Virtualenv
+* pip
+* git
 
-Para esto se ejecuta los siguientes comandos en Ubuntu
+Para esto se ejecutan los siguientes comandos en Ubuntu
 
     sudo apt-get update
-    sudo apt-get install python-pip python-dev libpq-dev postgresql postgresql-contrib nginx virtualenv
+    sudo apt-get install python-pip python-dev libpq-dev postgresql postgresql-contrib nginx virtualenv gunicorn git
 
 # Configuración de Ambiente Virtual
 
 Se debe instalar el paquete virtualenv en el directorio donde va a quedar el proyecto
 
-```
-#!python
-pip install virtualenv
-# o también es posible instalarlo mediante el sistema operativo
-sudo apt-get install virtualenv
-# Se crea el entorno virtual
-virtualenv v_ideam
-# Para ingresar al ambiente se puede utilizar . bin/activate ó source bin/activate ingresando a la carpeta v_ideam
-# Crear directorio donde se va a instalar al aplicación
-mkdir projects
-```
+    pip install virtualenv
+    # Se crea el entorno virtual
+    virtualenv v_ideam
+    # Para ingresar al ambiente se puede utilizar . bin/activate ó source bin/activate ingresando a la carpeta v_ideam
+    # Crear directorio donde se va a instalar al aplicación
+    mkdir projects
 
-## Descargar el proyecto
+# Descargar el proyecto
 
 Se deberá descargar la aplicación mediante el repositorio de git
 
@@ -41,20 +39,18 @@ Se deberá descargar la aplicación mediante el repositorio de git
     git clone https://Manre@bitbucket.org/ideam20162/web-app.git
 
 
-## Instalación de PostgresSQL
+# Instalación de PostgresSQL
 
-Se deberá instalar PostgreSQL, en Ubuntu el comando sería el siguiente.
+En caso de no tener PostgreSQL se deberá realizar la instalación con este comando.
 
-```
-#!bash
-sudo apt-get install postgresql postgresql-contrib
-```
+    sudo apt-get install postgresql postgresql-contrib
 
-**Nota**: Se debe tener en cuenta que antes de ejecutar el comando anterior se deben actualizar el respositorio ya que es posible que se instale una versión anterior.
 
-## Configuración de Postgres
+**Nota**: Se debe tener en cuenta que antes de ejecutar el comando anterior es necesario actualizar el repositorio ya que es posible que se instale una versión anterior. Se recomienda el uso de PostgreSQL Version 9.5.4.2 o superior.
 
-Se deberá crear la base de datos donde se almacenará la información de la web.
+# Configuración de Postgres
+
+Se deberá crear la base de datos donde se almacenará la información de la web. Para esto:
 
     # usuario postgres
     sudo su - postgres
@@ -65,71 +61,57 @@ Se deberá crear la base de datos donde se almacenará la información de la web
     # se ingresa a la base de datos
     \c ideam
     # se crea usuario en la base de datos
-    CREATE USER cdcol_web with password 'CDCol_web_2016' ;
+    CREATE USER usuario with password 'CDCol_web_2016' ;
     # Configurar postgres para recibir trafico externo
     sudo nano pg_hba.conf
     # IPv4 local connections:
     host    all             all             192.168.106.0/25            md5
     sudo nano postgresql.conf
-    # cambiar parámetro para escuchar ips
+    # cambiar parámetro para escuchar IPs
     listen_addresses = '*'
 
 ## Instalación de dependencias
 
 Se deben instalar todas las dependencias para que la aplicación pueda ejecutarse sin inconvenientes.
 
-```
-#!python
-pip install -r /path/requirements.txt
-```
+    pip install -r /path/requirements.txt
 
 **Nota**: Si al instalar el paquete psycopg2 existen inconvenientes con la ruta se debe exportar una variable de entorno.
 
-```
-#!python
-export PATH=/Applications/Postgres.app/Contents/Versions/9.5/bin:"$PATH"
-```
+    # ejemplo
+    export PATH=/Applications/Postgres.app/Contents/Versions/9.5/bin:"$PATH"
 
-## Configuración de variables de entorno
+# Configuración de variables de entorno
 
-Se deberán configurar las siguientes variables de entorno, este archivo dependerá del SO utilizado.
+Se deberán configurar las siguientes variables de entorno, recordar que este archivo es posible que dependa del Sistema Operativo utilizado. A continuación se presenta un archivo base el cual debe completarse con los datos de cada variable.
 
-```
-#!bash
-# Buscar el archivo .bash_profile/.bash_rc
-cd
-nano .bash_profile
-# Adicionar las siguientes lineas dentro del archivo
-export IDEAM_PRODUCTION_DATABASE_URL="postgres://cdcol_web:CDCol_web_2016@localhost/ideam"
-export IDEAM_API_URL="http://192.168.106.10:8000"
-export IDEAM_MAIL_HOST="mail.ideam.gov.co"
-export IDEAM_MAIL_USER="cuboimagenes@ideam.gov.co"
-export IDEAM_MAIL_PASSWORD="15CuboSatelite20"
-export IDEAM_MAIL_PORT="25"
-export IDEAM_DC_STORAGE_PATH="/dc_storage"
-```
+    # Buscar el archivo .bash_profile/.bash_rc
+    cd
+    nano .bash_profile
+    # Adicionar las siguientes lineas dentro del archivo
+    export IDEAM_PRODUCTION_DATABASE_URL=""
+    export IDEAM_API_URL="http://192.168.106.10:8000"
+    export IDEAM_MAIL_HOST=""
+    export IDEAM_MAIL_USER=""
+    export IDEAM_MAIL_PASSWORD=""
+    export IDEAM_MAIL_PORT=""
+    export IDEAM_DC_STORAGE_PATH=""
+    export IDEAM_WEB_STORAGE_PATH=""
 
-## Despliegue de prueba
+# Despliegue de prueba
 
-Para probar el despliegue sólo es necesario ejecutar el siguiente comando
+Es possible probar ejecutar el ambiente utilizando los siguientes comandos.
 
-```
-#!python
-# Realizar migraciones
-python manage migrate
-# Utilizando el puerto por defecto
-python manage.py runserver
-# Utilizando el puerto 8000
-python manage.py runserver 0.0.0.0:8000
-# Archivos estaticos
-python manage.py collectstatic
-# Creando el superusuario
-python manage.py createsuperuser
-# usuario: superadminuser
-# email: cuboimagenes@ideam.gov.co
-# password: %Pass_18_Cubo%
-# 
-```
+    # Realizar migraciones
+    python manage.py migrate
+    # Utilizando el puerto por defecto
+    python manage.py runserver
+    # Utilizando el puerto 8000
+    python manage.py runserver 0.0.0.0:8000
+    # Archivos estaticos
+    python manage.py collectstatic
+    # Creando el superusuario
+    python manage.py createsuperuser
 
 # Configuración Gunicorn como servicio
 
@@ -138,7 +120,6 @@ Se deberá crear un archivo de servicio, para esto.
     sudo nano /etc/systemd/system/gunicorn.service
 
 En este archivo especificaremos la siguiente configuración.
-
 
     [Unit]
     Description=gunicorn daemon
@@ -160,13 +141,14 @@ También se deberá crear archivo el cual contendrá las variables de entorno pa
     /home/cubo
     nano .ideam.env
     # se adicionaran las siguientes lineas
-    IDEAM_PRODUCTION_DATABASE_URL="postgres://cdcol_web:CDCol_web_2016@localhost/ideam"
-    IDEAM_API_URL="http://192.168.106.10:8000"
-    IDEAM_MAIL_HOST="mail.ideam.gov.co"
-    IDEAM_MAIL_USER="cuboimagenes@ideam.gov.co"
-    IDEAM_MAIL_PASSWORD="15CuboSatelite20"
-    IDEAM_MAIL_PORT="25"
-    IDEAM_DC_STORAGE_PATH="/dc_storage"
+    IDEAM_PRODUCTION_DATABASE_URL=""
+    IDEAM_API_URL=""
+    IDEAM_MAIL_HOST=""
+    IDEAM_MAIL_USER=""
+    IDEAM_MAIL_PASSWORD=""
+    IDEAM_MAIL_PORT=""
+    IDEAM_DC_STORAGE_PATH=""
+    IDEAM_WEB_STORAGE_PATH=""
 
 A continuación guardaremos el servicio y procederemos a iniciar el servicio de Gunicorn.
 
@@ -192,6 +174,8 @@ Se deberá crear un archivo el cual contendrá la información relevante al proy
         proxy_pass http://127.0.0.1:8080;
       }
     }
+
+**Nota**: Se debe tener en cuenta que es necesario montar la carpeta /web_storage y /dc_storage en los directorios que correspondan.
 
 Se procede a crear hardlink
 
@@ -232,11 +216,6 @@ En caso de necesitar realizar actualización del código, solo es necesario segu
 
 Se deberán realizar los siguientes procedimientos manuales en caso de instalar la aplicación desde cero.
 
-1. Cambio de nombre. Se deberá ingresar al portal de administración a aplicación "sitios" en esta se podrá cambiar el nombre de dominio y nombre a mostrar de al aplicación. Esto se visualizará en el correo.
+1. Cambio de nombre del sitio. Se deberá ingresar al portal de administración a aplicación "sitios" en esta se podrá cambiar el nombre de dominio y nombre a mostrar de la aplicación. Esto se visualizará en el correo.
 2. Creación de Topics. Se deberán crear los topics en la aplicación "Topic".
 
-## Versiones Utilizadas
-
-Se utilizaron las siguientes versiones para el portal.
-
-* PostgreSQL, Version 9.5.4.2 (9.5.4.2)

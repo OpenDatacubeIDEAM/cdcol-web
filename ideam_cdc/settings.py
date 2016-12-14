@@ -176,3 +176,5 @@ API_URL = os.environ.get('IDEAM_API_URL')
 
 MEDIA_ROOT = os.path.join(WEB_STORAGE_PATH, 'media_root')
 MEDIA_URL = '/static_media_dirs/'
+
+DEFAULT_FROM_EMAIL = "cuboimagenes@ideam.gov.co"
