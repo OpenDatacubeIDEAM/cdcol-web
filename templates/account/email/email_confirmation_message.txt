@@ -1,5 +1,14 @@
-Su cuenta ha sido aprobada, confirme su cuenta con el siguiente link para poder iniciar sesión. {{ activate_url }}
+Bienvenid@,
 
-Atentamente,
+Su usuario ha sido aprobado en el portal CDCol.
 
-El equipo de CDCol
+Para confirmar su cuenta de correo electrónico debe dar clic en el siguiente enlace:
+
+{{ activate_url }}
+
+
+Cordialmente,
+
+El equipo CDCol
+
+NOTA: Este correo ha sido generado automáticamente, por favor no lo responda.
