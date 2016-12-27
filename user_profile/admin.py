@@ -66,7 +66,7 @@ class EventAdmin(admin.ModelAdmin):
 	actions = [set_developer_role, set_analyst_role, set_data_admin_role, decline_users]
 
 	def full_name(self, user_profile):
-		return "{} {}".format(user_profile.user.first_name, user_profile.user.last_name)
+		return "{} {}".format(user_profile.user.first_name.encode('utf-8'), user_profile.user.last_name.encode('utf-8'))
 
 	def user_email(self, user_profile):
 		return user_profile.user.email

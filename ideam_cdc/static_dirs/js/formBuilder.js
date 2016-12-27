@@ -286,13 +286,13 @@ $(document).ready(function () {
                     ne_longitude_2.required = parameter.fields.required;
                     // ===== LABELS =====
                     var label_sw_latitude_1 = document.createElement("label");
-                    label_sw_latitude_1.innerHTML = "<b>Latitud S</b>";
+                    label_sw_latitude_1.innerHTML = "<b>Latitud mínima</b>";
                     var label_sw_longitude_1 = document.createElement("label");
-                    label_sw_longitude_1.innerHTML = "<b>Longitud W</b>";
+                    label_sw_longitude_1.innerHTML = "<b>Longitud mínima</b>";
                     var label_ne_latitude_2 = document.createElement("label");
-                    label_ne_latitude_2.innerHTML = "<b>Latitud N</b>";
+                    label_ne_latitude_2.innerHTML = "<b>Latitud máxima</b>";
                     var label_ne_longitude_2 = document.createElement("label");
-                    label_ne_longitude_2.innerHTML = "<b>Longitud E</b>";
+                    label_ne_longitude_2.innerHTML = "<b>Longitud máxima</b>";
                     var area_title = document.createElement("label");
                     area_title.innerHTML = "<b>Mapa"+requiredText+input_description+"</b>";
                     // ===== Paragraphs =====
