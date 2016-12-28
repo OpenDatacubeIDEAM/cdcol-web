@@ -80,7 +80,10 @@ def detail(request, execution_id):
 			files.append(f)
 	except:
 		pass
-	context = {'execution': execution, 'executed_params': executed_params, 'review': review, 'files': files}
+	# getting current executions
+	current_executions = Execution.objects.filter(version=execution.version, state=Execution.ENQUEUED_STATE)
+	context = {'execution': execution, 'executed_params': executed_params, 'review': review, 'files': files,
+	           'current_executions': current_executions}
 	return render(request, 'execution/detail.html', context)
 
 

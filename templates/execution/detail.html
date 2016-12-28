@@ -42,8 +42,16 @@
                             <td>{{ execution.version.algorithm.name }}</td>
                         </tr>
                         <tr>
+                            <td>Versión:</td>
+                            <td>{{ execution.version.number }}</td>
+                        </tr>
+                        <tr>
                             <td>Estado:</td>
-                            <td>{{ execution.get_state_display }}</td>
+                            {% if execution.state == '1' and current_executions.count > 0 %}
+                                <td>{{ execution.get_state_display }} ({{ current_executions.count }} ejecuciones en espera)</td>
+                            {% else %}
+                                <td>{{ execution.get_state_display }}</td>
+                            {% endif %}
                         </tr>
                         <tr>
                             <td>Fecha de Creación:</td>
