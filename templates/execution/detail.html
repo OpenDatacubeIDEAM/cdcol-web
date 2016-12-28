@@ -1,5 +1,16 @@
 {% extends 'base.html' %}
 
+{% block extra_head %}
+    <script type="text/javascript">
+        {% if execution.state == '1' %}
+            function timedRefresh(timeoutPeriod) {
+                setTimeout("location.reload(true);", timeoutPeriod);
+            }
+            window.onload = timedRefresh({{ temporizer_value }});
+        {% endif %}
+    </script>
+{% endblock %}
+
 {% block content %}
     <!-- breadcrumb start -->
     <!-- ================ -->
