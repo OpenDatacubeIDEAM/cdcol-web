@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% load public_extras %}
+{% load staticfiles %}
+
+{% block banner_block %}
+    <img class="overlay" src="{% static 'images/banner-home.jpg' %}">
+{% endblock %}
 
 {% block content %}
     <!-- breadcrumb start -->
