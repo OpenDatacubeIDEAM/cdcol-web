@@ -92,7 +92,18 @@
                 "columns": [
                     {"data": "id"},
                     {"data": "algorithm_name"},
-                    {"data": "state"},
+                    {
+                        "data": "state",
+                        "render": function(data, type, full, meta){
+                            var current_executions = full['current_executions']
+                            if (data == "EN ESPERA" || data == "EN EJECUCIÓN"){
+                                return '<span data-toggle="tooltip" title="Hay ' + current_executions +' ejecuciones antes de esta esperando su ejecución">' + data + '</span>';
+                            }
+                            else{
+                                return data;
+                            }
+                        }
+                    },
                     {
                         "data": "created_at",
                         "render": function (data) {
