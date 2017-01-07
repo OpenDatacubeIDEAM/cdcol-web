@@ -2,6 +2,14 @@
 
 {% block extra_head %}
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+    <script type="text/javascript">
+        {% if executions.count > 0 %}
+            function timedRefresh(timeoutPeriod) {
+                setTimeout("location.reload(true);", timeoutPeriod);
+            }
+            window.onload = timedRefresh({{ temporizer_value }});
+        {% endif %}
+    </script>
 {% endblock %}
 
 {% block content %}

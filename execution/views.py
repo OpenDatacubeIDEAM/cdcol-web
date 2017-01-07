@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.core import serializers
 from django.core.urlresolvers import reverse
-from django.db.models import Avg
+from django.db.models import Avg, Q
 from django.utils.encoding import smart_str
 from algorithm.models import Topic, Algorithm
 from execution.models import *
@@ -44,8 +44,10 @@ def as_json(request):
 @permission_required('execution.can_list_executions', raise_exception=True)
 def index(request):
 	current_user = request.user
-	executions = Execution.objects.filter(executed_by=current_user)
-	context = {'executions': executions}
+	executions = Execution.objects.filter(Q(executed_by=current_user), Q(state=Execution.ENQUEUED_STATE) | Q(state=Execution.EXECUTING_STATE))
+	# getting temporizer value
+	temporizer_value = settings.IDEAM_TEMPORIZER
+	context = {'executions': executions, 'temporizer_value': temporizer_value}
 	return render(request, 'execution/index.html', context)
 
 
