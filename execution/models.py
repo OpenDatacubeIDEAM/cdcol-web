@@ -32,6 +32,9 @@ class Execution(models.Model):
 	def __unicode__(self):
 		return "{} - {} - v{}".format(self.id, self.version.algorithm.name, self.version.number)
 
+	def can_rate(self):
+		return False if Review.objects.filter(execution=self, reviewed_by=self.executed_by).count() > 0 else True
+
 	class Meta:
 		permissions = (
 			("can_list_executions", "Ver listado de ejecuciones"),
