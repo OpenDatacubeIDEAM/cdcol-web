@@ -142,10 +142,13 @@ $(document).ready(function () {
         var f = document.getElementById("mainForm");
         // iterating over the parameters
         jQuery.each(json, function (i, parameter) {
+            var input_description = "";
             var parameter_type = parameter.fields.parameter_type;
             var pk = parameter.pk;
             var requiredText = (parameter.fields.required ? " <span class='text-danger small'> *</span>":"");
-            var input_description = " <a class='help-hover hidden-xs hidden-sm hidden-md'><i class='glyphicon glyphicon-exclamation-sign' data-toggle='tooltip' data-placement='right' title='"+parameter.fields.description+"'></i></a>"
+            if (parameter.fields.description !== ""){
+                input_description = " <a class='help-hover hidden-xs hidden-sm hidden-md'><i class='glyphicon glyphicon-exclamation-sign' data-toggle='tooltip' data-placement='right' title='"+parameter.fields.description+"'></i></a>"
+            }
             switch (parameter_type) {
                 case "1":
                     console.log("Creating String field");

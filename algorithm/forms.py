@@ -35,11 +35,10 @@ class NewParameterForm(forms.Form):
 	parameter_type = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}),
 	                                   choices=Parameter.PARAMETER_TYPES,
 	                                   required=True)
-	description = forms.CharField(widget=forms.Textarea(attrs={'rows': 5, 'class': 'form-control', 'required': 'True',
+	description = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 5, 'class': 'form-control',
 	                              'placeholder': 'Ingrese una descripción del significado de este parámetro en la ejecución de la versión algortimo.'}))
-	help_text = forms.CharField(widget=forms.Textarea(attrs={'rows': 5, 'class': 'form-control',
-	                              'placeholder': 'Ingrese un texto con las ayudas y consideraciones que deben ser tenidas en cuenta por los usuarios al ingresar este parámetro.'}),
-	                              required=True)
+	help_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 5, 'class': 'form-control',
+	                              'placeholder': 'Ingrese un texto con las ayudas y consideraciones que deben ser tenidas en cuenta por los usuarios al ingresar este parámetro.'}))
 	position = forms.IntegerField(min_value=0, required=True)
 	required = forms.BooleanField(required=False, initial=True)
 	enabled = forms.BooleanField(required=False, initial=True)
