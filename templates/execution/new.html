@@ -3,6 +3,7 @@
 {% load execution_extras %}
 
 {% block extra_head %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-datepicker.min.css' %}" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
     <link href="{% static 'css/leaflet-areaselect.css' %}" rel="stylesheet">
     <style>
@@ -176,6 +177,10 @@
                                                 class="form-control" rows="3"></textarea>
                                     </div>
 
+                                    <div class="form-group">
+                                        <input class="datepicker">
+                                    </div>
+
                                 </form>
                             </div>
                         </div>
@@ -218,6 +223,8 @@
 {% endblock %}
 
 {% block extra_body %}
+    <script src="{% static 'bootstrap/js/bootstrap-datepicker.min.js' %}"></script>
+    <script src="{% static 'bootstrap/locales/bootstrap-datepicker.es.min.js' %}"></script>
     <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
     <script src={% static "js/leaflet-areaselect.js" %}></script>
     <script defer

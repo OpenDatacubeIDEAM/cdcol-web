@@ -394,17 +394,15 @@ $(document).ready(function () {
                     console.log("Creating TimePeriod field");
                     // start date
                     var start_date_input = document.createElement("input");
-                    start_date_input.type = "date";
                     start_date_input.id = "start_date_"+pk;
                     start_date_input.name = "start_date_"+pk;
-                    start_date_input.className = "form-control";
+                    start_date_input.className = "form-control datepicker";
                     start_date_input.required = parameter.fields.required;
                     // end date
                     var end_date_input = document.createElement("input");
-                    end_date_input.type = "date";
                     end_date_input.id = "end_date_"+pk;
                     end_date_input.name = "end_date_"+pk;
-                    end_date_input.className = "form-control";
+                    end_date_input.className = "form-control datepicker";
                     end_date_input.required = parameter.fields.required;
                     // ===== LABELS =====
                     var start_date_label = document.createElement("label");
@@ -503,6 +501,13 @@ $(document).ready(function () {
                 default:
                     console.log("Object not supported, " + parameter_type);
             }
+        });
+        console.log("Configuring datepicker");
+        $('.datepicker').datepicker({
+            format: "dd/mm/yyyy",
+            language: "es",
+            autoclose: true,
+            todayHighlight: true
         });
         console.log("Creating Send Button");
         var send_button = document.createElement("button");
