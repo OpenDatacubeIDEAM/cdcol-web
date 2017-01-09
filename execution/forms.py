@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
+from django.db.models import Q
 from algorithm.models import Version
 
 
@@ -8,8 +9,12 @@ class VersionSelectionForm(forms.Form):
 
 	def __init__(self, *args, **kwargs):
 		self.algorithm_id = kwargs.pop('algorithm_id')
+		self.current_user = kwargs.pop('current_user')
 		super(VersionSelectionForm, self).__init__(*args, **kwargs)
-		self.fields['version'].queryset = Version.objects.filter(algorithm__id=self.algorithm_id)
+		self.fields['version'].queryset = Version.objects.filter(
+			Q(algorithm__id=self.algorithm_id) &
+			(Q(publishing_state=Version.PUBLISHED_STATE) | Q(created_by=self.current_user))
+		)
 
 
 class ReviewForm(forms.Form):

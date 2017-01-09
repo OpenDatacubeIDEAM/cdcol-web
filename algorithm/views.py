@@ -124,7 +124,7 @@ def detail(request, algorithm_id):
 		algorithm = get_object_or_404(Algorithm, id=algorithm_id)
 	else:
 		algorithm = get_object_or_404(Algorithm, Q(created_by=current_user), id=algorithm_id)
-	versions = Version.objects.filter(algorithm_id=algorithm_id)
+	versions = Version.objects.filter(algorithm_id=algorithm_id, created_by=current_user)
 	context = {'algorithm': algorithm, 'versions': versions}
 	return render(request, 'algorithm/detail.html', context)
 

@@ -96,7 +96,7 @@ class Version(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 
 	def __unicode__(self):
-		return "{} - {} {}".format(self.id, self.algorithm.name, self.number)
+		return "{} - {} - {}".format(self.id, self.algorithm.name, self.number)
 
 	def new_minor_version(self):
 		current_version = self.algorithm.last_version().number

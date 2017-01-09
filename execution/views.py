@@ -303,7 +303,7 @@ def new_execution(request, algorithm_id, version_id):
 			response = send_execution(new_execution)
 			print response
 			return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': new_execution.id}))
-	version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id)
+	version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id, current_user=current_user)
 	context = {'topics': topics, 'algorithm': algorithm, 'parameters': parameters,
 	           'version_selection_form': version_selection_form, 'version': current_version,
 	           'reviews': reviews, 'average_rating': average_rating, 'executions': executions}
