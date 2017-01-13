@@ -68,6 +68,28 @@ def download_result(request, execution_id, image_name):
 		return HttpResponseNotFound('<h1>El archivo no se ha encontrado en el servidor</h1>')
 
 
+def generate_geotiff(request, execution_id, image_name):
+	execution = get_object_or_404(Execution, id=execution_id)
+	# creating the json request
+	json_request = {
+		'execution_id': execution.id,
+		'image_name': image_name
+	}
+	# sending the request
+	try:
+		header = {'Content-Type': 'application/json'}
+		url = "{}/api/new_execution/".format(settings.API_URL)
+		r = requests.post(url, data=json.dumps(json_request), headers=header)
+		if r.status_code == 201:
+			response = {'status': 'ok', 'description': 'Se envió la ejecución correctamente.'}
+		else:
+			response = {'status': 'error', 'description': 'Ocurrió un error al enviar la ejecución',
+			            'detalle': "{}, {}".format(r.status_code, r.text)}
+		return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': execution.id}))
+	except:
+		return HttpResponseNotFound('<h1>Ha ocurrido un error en la conversión</h1>')
+
+
 @login_required(login_url='/accounts/login/')
 @permission_required('execution.can_view_execution_detail', raise_exception=True)
 def detail(request, execution_id):
