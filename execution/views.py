@@ -86,8 +86,14 @@ def detail(request, execution_id):
 	current_executions = Execution.objects.filter(version=execution.version, state=Execution.ENQUEUED_STATE)
 	# getting temporizer value
 	temporizer_value = settings.IDEAM_TEMPORIZER
+	# getting the delete time
+	delete_hours = int(settings.DAYS_ELAPSED_TO_DELETE_EXECUTION_RESULTS) * 24
+	if execution.finished_at:
+		delete_time = execution.finished_at + datetime.timedelta(hours=delete_hours)
+	else:
+		delete_time = None
 	context = {'execution': execution, 'executed_params': executed_params, 'review': review, 'files': files,
-	           'current_executions': current_executions, 'temporizer_value': temporizer_value}
+	           'current_executions': current_executions, 'temporizer_value': temporizer_value, 'delete_time': delete_time}
 	return render(request, 'execution/detail.html', context)
 
 
