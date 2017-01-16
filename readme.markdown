@@ -97,6 +97,8 @@ Se deberán configurar las siguientes variables de entorno, recordar que este ar
     export IDEAM_MAIL_PORT=""
     export IDEAM_DC_STORAGE_PATH=""
     export IDEAM_WEB_STORAGE_PATH=""
+    export IDEAM_TEMPORIZER=""
+    export IDEAM_DAYS_ELAPSED_TO_DELETE_EXECUTION_RESULTS=""
 
 # Despliegue de prueba
 
@@ -149,6 +151,8 @@ También se deberá crear archivo el cual contendrá las variables de entorno pa
     IDEAM_MAIL_PORT=""
     IDEAM_DC_STORAGE_PATH=""
     IDEAM_WEB_STORAGE_PATH=""
+    IDEAM_TEMPORIZER=""
+    IDEAM_DAYS_ELAPSED_TO_DELETE_EXECUTION_RESULTS=""
 
 A continuación guardaremos el servicio y procederemos a iniciar el servicio de Gunicorn.
 
