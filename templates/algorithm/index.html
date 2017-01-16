@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block banner_block %}
-    <img class="overlay" src="{% static 'images/banner-home.jpg' %}">
+    <img class="overlay" src="{% static 'images/small-banner-home.jpg' %}">
 {% endblock %}
 
 {% block extra_head %}
@@ -86,7 +86,7 @@
                     "url": "{% url 'algorithm:as_json' %}",
                     "dataSrc": ""
                 },
-                "order": [[ 1, "desc" ]],
+                "order": [[ 1, "asc" ]],
                 "columns": [
                     {"data": "id"},
                     {"data": "name"},
