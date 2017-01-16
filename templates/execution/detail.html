@@ -59,7 +59,7 @@
                         <tr>
                             <td>Estado:</td>
                             {% if execution.state == '1' and current_executions.count > 0 %}
-                                <td>{{ execution.get_state_display }} ({{ current_executions.count }} ejecuciones en espera)</td>
+                                <td>{{ execution.get_state_display }} <span class="label label-danger" data-toggle="tooltip" data-placement="right">{{ current_executions.count }}</span></td>
                             {% else %}
                                 <td>{{ execution.get_state_display }}</td>
                             {% endif %}

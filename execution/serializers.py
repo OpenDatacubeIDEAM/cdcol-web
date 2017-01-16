@@ -24,7 +24,7 @@ class ExecutionSerializer(serializers.ModelSerializer):
 		return obj.get_state_display()
 
 	def get_current_executions(self, obj):
-		return Execution.objects.filter(Q(state=Execution.ENQUEUED_STATE) | Q(state=Execution.EXECUTING_STATE)).count()
+		return Execution.objects.filter(Q(state=Execution.ENQUEUED_STATE)).count()
 
 	def get_can_rate(self, obj):
 		return obj.can_rate()
