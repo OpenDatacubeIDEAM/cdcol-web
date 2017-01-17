@@ -301,7 +301,10 @@ def send_execution(execution):
 	# sending the request
 	try:
 		header = {'Content-Type': 'application/json'}
-		url = "{}/api/new_execution/".format(settings.API_URL)
+		if execution.id == int(settings.IDEAM_ID_ALGORITHM_FOR_CUSTOM_SERVICE):
+			url = "{}/api/new_custom_execution/".format(settings.API_URL)
+		else:
+			url = "{}/api/new_execution/".format(settings.API_URL)
 		r = requests.post(url, data=json.dumps(json_response), headers=header)
 		if r.status_code == 201:
 			response = {'status': 'ok', 'description': 'Se envió la ejecución correctamente.'}

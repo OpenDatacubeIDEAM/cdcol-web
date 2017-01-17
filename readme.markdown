@@ -99,6 +99,7 @@ Se deberán configurar las siguientes variables de entorno, recordar que este ar
     export IDEAM_WEB_STORAGE_PATH=""
     export IDEAM_TEMPORIZER=""
     export IDEAM_DAYS_ELAPSED_TO_DELETE_EXECUTION_RESULTS=""
+    export IDEAM_ID_ALGORITHM_FOR_CUSTOM_SERVICE=""
 
 # Despliegue de prueba
 
@@ -153,6 +154,7 @@ También se deberá crear archivo el cual contendrá las variables de entorno pa
     IDEAM_WEB_STORAGE_PATH=""
     IDEAM_TEMPORIZER=""
     IDEAM_DAYS_ELAPSED_TO_DELETE_EXECUTION_RESULTS=""
+    IDEAM_ID_ALGORITHM_FOR_CUSTOM_SERVICE=""
 
 A continuación guardaremos el servicio y procederemos a iniciar el servicio de Gunicorn.
 
