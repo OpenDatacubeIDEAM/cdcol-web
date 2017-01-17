@@ -102,7 +102,7 @@
                         "render": function(data, type, full, meta){
                             var current_executions = full['current_executions']
                             if (data == "EN ESPERA"){
-                                return '<span>' + data + '</span> ' + '<span class="label label-danger" data-toggle="tooltip" data-placement="right" title="Hay ' + current_executions +' ejecuciones antes de esta esperando su ejecución">' + current_executions +'</span>';
+                                return '<span>' + data + '</span> ' + '<span class="label label-danger" data-toggle="tooltip" data-placement="right" title="Hay ' + current_executions +' ejecuciones en espera antes de que esta comience su ejecución ">' + current_executions +'</span>';
                             }
                             else{
                                 return data;
@@ -143,7 +143,7 @@
                             var canRate = full['can_rate'];
                             var detail_button = "<a href='" + data + "/detail/' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>";
                             if (canRate === true){
-                                var rate_button = "<a href='" + data + "/rate/' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Calificar</a>";
+                                var rate_button = "<a href='" + data + "/rate/#rating' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Calificar</a>";
                                 return detail_button + "\n" + rate_button;
                             }
                             return detail_button;

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
 from execution.models import Execution
-from django.db.models import Avg, Q
+from django.db.models import Q
 
 
 class ExecutionSerializer(serializers.ModelSerializer):
@@ -24,7 +24,7 @@ class ExecutionSerializer(serializers.ModelSerializer):
 		return obj.get_state_display()
 
 	def get_current_executions(self, obj):
-		return Execution.objects.filter(Q(state=Execution.ENQUEUED_STATE)).count()
+		return obj.pending_executions().count()
 
 	def get_can_rate(self, obj):
 		return obj.can_rate()

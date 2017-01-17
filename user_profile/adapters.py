@@ -16,7 +16,7 @@ class MyAccountAdapter(DefaultAccountAdapter):
 			return "/profile/pending/"
 
 	def clean_password(self, password):
-		if re.match(r'^(?=.*?\d)(?=.*?[A-Z])(?=.*?[a-z])[A-Za-z\d]{8,}$', password):
+		if re.match(r'^(?=.*?\d)(?=.*?[A-Z])(?=.*?[a-z])[\S]{8,}$', password):
 			return password
 		else:
 			raise ValidationError("La contraseña debe tener mínimo 8 caracteres, contener minúsculas y mayúsculas.")

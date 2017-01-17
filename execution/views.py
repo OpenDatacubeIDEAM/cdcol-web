@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.core import serializers
+from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.db.models import Avg, Q
 from django.utils.encoding import smart_str
@@ -44,7 +45,7 @@ def as_json(request):
 @permission_required('execution.can_list_executions', raise_exception=True)
 def index(request):
 	current_user = request.user
-	executions = Execution.objects.filter(Q(executed_by=current_user), Q(state=Execution.ENQUEUED_STATE) | Q(state=Execution.EXECUTING_STATE))
+	executions = Execution.objects.filter(Q(executed_by=current_user), Q(state=Execution.ENQUEUED_STATE))
 	# getting temporizer value
 	temporizer_value = settings.IDEAM_TEMPORIZER
 	context = {'executions': executions, 'temporizer_value': temporizer_value}
@@ -54,8 +55,7 @@ def index(request):
 def download_result(request, execution_id, image_name):
 	execution = get_object_or_404(Execution, id=execution_id)
 	try:
-		file_path = "/web_storage/results/{}/{}".format(execution.id, image_name)
-		print file_path
+		file_path = "{}/results/{}/{}".format(settings.WEB_STORAGE_PATH, execution.id, image_name)
 		file_name = file_path.split('/')[-1]
 		file_wrapper = FileWrapper(file(file_path, 'rb'))
 		file_mimetype = mimetypes.guess_type(file_path)
@@ -68,44 +68,21 @@ def download_result(request, execution_id, image_name):
 		return HttpResponseNotFound('<h1>El archivo no se ha encontrado en el servidor</h1>')
 
 
-def generate_geotiff(request, execution_id, image_name):
-	execution = get_object_or_404(Execution, id=execution_id)
-	# creating the json request
-	json_request = {
-		'execution_id': execution.id,
-		'image_name': image_name
-	}
-	# sending the request
-	try:
-		header = {'Content-Type': 'application/json'}
-		url = "{}/api/new_execution/".format(settings.API_URL)
-		r = requests.post(url, data=json.dumps(json_request), headers=header)
-		if r.status_code == 201:
-			response = {'status': 'ok', 'description': 'Se envió la ejecución correctamente.'}
-		else:
-			response = {'status': 'error', 'description': 'Ocurrió un error al enviar la ejecución',
-			            'detalle': "{}, {}".format(r.status_code, r.text)}
-		return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': execution.id}))
-	except:
-		return HttpResponseNotFound('<h1>Ha ocurrido un error en la conversión</h1>')
-
-
-@login_required(login_url='/accounts/login/')
-@permission_required('execution.can_view_execution_detail', raise_exception=True)
-def detail(request, execution_id):
+def get_detail_context(execution_id):
 	execution = get_object_or_404(Execution, id=execution_id)
 	executed_params = ExecutionParameter.objects.filter(execution=execution)
 	review = Review.objects.filter(execution=execution).last()
 	# getting the files from the filesystem
-	system_path = "/web_storage/results/{}/".format(execution.id)
+	system_path = "{}/results/{}/".format(settings.WEB_STORAGE_PATH, execution.id)
 	files = []
 	try:
 		for f in os.listdir(system_path):
-			files.append(f)
+			if ".tiff" not in f:
+				files.append(f)
 	except:
 		pass
 	# getting current executions
-	current_executions = Execution.objects.filter(version=execution.version, state=Execution.ENQUEUED_STATE)
+	current_executions = execution.pending_executions
 	# getting temporizer value
 	temporizer_value = settings.IDEAM_TEMPORIZER
 	# getting the delete time
@@ -116,6 +93,45 @@ def detail(request, execution_id):
 		delete_time = None
 	context = {'execution': execution, 'executed_params': executed_params, 'review': review, 'files': files,
 	           'current_executions': current_executions, 'temporizer_value': temporizer_value, 'delete_time': delete_time}
+	return context
+
+
+def generate_geotiff(request, execution_id, image_name):
+	execution = get_object_or_404(Execution, id=execution_id)
+	file_path = "{}/results/{}/{}".format(settings.WEB_STORAGE_PATH, execution.id, image_name)
+	# creating the json request
+	json_request = {
+		'file_path': file_path
+	}
+	# sending the request
+	try:
+		response_message = None
+		header = {'Content-Type': 'application/json'}
+		url = "{}/api/download_geotiff/".format(settings.API_URL)
+		# url = "http://www.mocky.io/v2/587e480e100000c114987d96" # 200
+		# url = "http://www.mocky.io/v2/587e47b2100000ca14987d95" # 400
+		r = requests.post(url, data=json.dumps(json_request), headers=header)
+		json_response = r.json()
+		if r.status_code == 200:
+			response_file_path = json_response["file_path"]
+			if response_file_path:
+				file_name = response_file_path.split('/')[-1]
+				return download_result(request, execution_id, file_name)
+		else:
+			response_message = json_response["message"]
+		# setting all the context
+		context = get_detail_context(execution_id)
+		context['response_message'] = response_message
+		return render(request, 'execution/detail.html', context)
+	except Exception, e:
+		print e
+		return HttpResponseNotFound('<h1>Ha ocurrido un error en la conversión</h1>')
+
+
+@login_required(login_url='/accounts/login/')
+@permission_required('execution.can_view_execution_detail', raise_exception=True)
+def detail(request, execution_id):
+	context = get_detail_context(execution_id)
 	return render(request, 'execution/detail.html', context)
 
 

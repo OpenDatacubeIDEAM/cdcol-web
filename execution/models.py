@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.contrib.auth.models import User
 from django.db import models
 from algorithm.models import Version, Algorithm, Parameter
+from django.db.models import Q
 import datetime
 
 
@@ -37,6 +38,9 @@ class Execution(models.Model):
 
 	def can_rate(self):
 		return False if Review.objects.filter(execution=self, reviewed_by=self.executed_by).count() > 0 else True
+
+	def pending_executions(self):
+		return Execution.objects.filter(Q(state=Execution.ENQUEUED_STATE) & Q(created_at__lt=self.created_at))
 
 	class Meta:
 		permissions = (

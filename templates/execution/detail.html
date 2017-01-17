@@ -58,8 +58,8 @@
                         </tr>
                         <tr>
                             <td>Estado:</td>
-                            {% if execution.state == '1' and current_executions.count > 0 %}
-                                <td>{{ execution.get_state_display }} <span class="label label-danger" data-toggle="tooltip" data-placement="right">{{ current_executions.count }}</span></td>
+                            {% if execution.state == '1' and current_executions.count >= 0 %}
+                                <td>{{ execution.get_state_display }} <span class="label label-danger" data-toggle="tooltip" title="Hay {{ current_executions.count }} ejecuciones en espera antes de que esta comience su ejecución" data-placement="right">{{ current_executions.count }}</span></td>
                             {% else %}
                                 <td>{{ execution.get_state_display }}</td>
                             {% endif %}
@@ -101,7 +101,7 @@
                     {% if execution.results_deleted_at %}
                         <h3 class="page-title">Resultados generados</h3>
                         <div class="separator-2"></div>
-                        <p>Los archivos fueron eliminados el {{ execution.results_deleted_at }}</p>
+                        <p><span class="label label-danger">Los archivos fueron eliminados el {{ execution.results_deleted_at }}</span></p>
                     {% else %}
                         {% if files %}
                             <h3 class="page-title">Resultados generados</h3>
@@ -109,7 +109,10 @@
                             <p>A continuación se encuentran los archivos generados por esta ejecución:</p>
 
                             {% if delete_time %}
-                                <p>Estos archivos serán borrados el {{ delete_time }}</p>
+                                <p><span class="label label-warning">Estos archivos serán borrados el {{ delete_time }}</span></p>
+                            {% endif %}
+                            {% if response_message %}
+                                <p><span class="label label-danger">{{ response_message }}</span></p>
                             {% endif %}
                             <div class="row">
                                 <div class="col-md-12">
@@ -127,7 +130,7 @@
                                                     <td>{{ file }}</td>
                                                     <td>
                                                         <a href="{% url 'execution:download_result' execution.id file %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
-                                                        <a href="{% url 'execution:generate_geotiff' execution.id file %}" class="btn btn-gray btn-sm"><i class="fa fa-file-image-o"></i> Generar Geotiff</a>
+                                                        <a href="{% url 'execution:generate_geotiff' execution.id file %}" class="btn btn-gray btn-sm"><i class="fa fa-file-image-o"></i> Descargar Geotiff</a>
                                                     </td>
                                                 </tr>
                                             {% endfor %}
@@ -161,7 +164,7 @@
                                 </nav>
                             {% else %}
                                 <nav>
-                                    <a href="{% url 'execution:rate_execution' execution.id %}" class="btn btn-primary btn-md btn-block">Calificar Resultados de la
+                                    <a href="{% url 'execution:rate_execution' execution.id %}#rating" class="btn btn-primary btn-md btn-block">Calificar Resultados de la
                                         Ejecución</a>
                                 </nav>
                             {% endif %}
