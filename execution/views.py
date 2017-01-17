@@ -301,7 +301,7 @@ def send_execution(execution):
 	# sending the request
 	try:
 		header = {'Content-Type': 'application/json'}
-		if execution.id == int(settings.IDEAM_ID_ALGORITHM_FOR_CUSTOM_SERVICE):
+		if execution.version.algorithm.id == int(settings.IDEAM_ID_ALGORITHM_FOR_CUSTOM_SERVICE):
 			url = "{}/api/new_custom_execution/".format(settings.API_URL)
 		else:
 			url = "{}/api/new_execution/".format(settings.API_URL)
