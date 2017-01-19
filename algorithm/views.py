@@ -64,11 +64,15 @@ def new(request):
 			field_topic = algorithm_form.cleaned_data['topic']
 			field_name = algorithm_form.cleaned_data['name']
 			field_description = algorithm_form.cleaned_data['description']
+			field_generate_mosaic = algorithm_form.cleaned_data['generate_mosaic']
+			field_multitemporal = algorithm_form.cleaned_data['multitemporal']
 			# creating the new algorithm
 			new_algorithm = Algorithm(
 				name=field_name,
 				description=field_description,
 				topic=field_topic,
+				generate_mosaic=field_generate_mosaic,
+				multitemporal=field_multitemporal,
 				created_by=current_user
 			)
 			new_algorithm.save()
@@ -103,15 +107,21 @@ def update(request, algorithm_id):
 		if algorithm_form.is_valid():
 			field_name = algorithm_form.cleaned_data['name']
 			field_description = algorithm_form.cleaned_data['description']
+			field_generate_mosaic = algorithm_form.cleaned_data['generate_mosaic']
+			field_multitemporal = algorithm_form.cleaned_data['multitemporal']
 			# update the algorithm
 			algorithm.name = field_name
 			algorithm.description = field_description
+			algorithm.generate_mosaic = field_generate_mosaic
+			algorithm.multitemporal = field_multitemporal
 			algorithm.save()
 			return HttpResponseRedirect(reverse('algorithm:detail', kwargs={'algorithm_id': algorithm_id}))
 		else:
 			algorithm_form.add_error(None, "Favor completar todos los campos marcados.")
 	else:
-		algorithm_form = AlgorithmUpdateForm()
+		algorithm_form = AlgorithmUpdateForm(
+			initial={'generate_mosaic': algorithm.generate_mosaic, 'multitemporal': algorithm.multitemporal})
+	print algorithm_form
 	context = {'algorithm_form': algorithm_form, 'algorithm': algorithm}
 	return render(request, 'algorithm/update.html', context)
 

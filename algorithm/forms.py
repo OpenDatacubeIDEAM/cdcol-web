@@ -8,11 +8,15 @@ class AlgorithmForm(forms.Form):
 	topic = forms.ModelChoiceField(queryset=Topic.objects.filter(enabled=True), required=True)
 	name = forms.CharField(max_length=200, required=True)
 	description = forms.CharField(widget=forms.Textarea, required=True)
+	generate_mosaic = forms.BooleanField(required=False)
+	multitemporal = forms.BooleanField(required=False)
 
 
 class AlgorithmUpdateForm(forms.Form):
 	name = forms.CharField(max_length=200, required=True)
 	description = forms.CharField(widget=forms.Textarea, required=True)
+	generate_mosaic = forms.BooleanField(required=False)
+	multitemporal = forms.BooleanField(required=False)
 
 
 class VersionForm(forms.Form):
