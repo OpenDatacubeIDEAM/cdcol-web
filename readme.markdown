@@ -225,3 +225,13 @@ Se deberán realizar los siguientes procedimientos manuales en caso de instalar 
 1. Cambio de nombre del sitio. Se deberá ingresar al portal de administración a aplicación "sitios" en esta se podrá cambiar el nombre de dominio y nombre a mostrar de la aplicación. Esto se visualizará en el correo.
 2. Creación de Topics. Se deberán crear los topics en la aplicación "Topic".
 
+# Configuración cron de envío de correos
+
+Para configurar este cron se realizará el siguiente procedimiento
+
+    # verificar permisos en el archivo que se ejecutará
+    chmod u+x run.sh
+    # ingresar a la lista de tareas de crontab
+    crontab -e
+    # agregar linea nueva (se ejecuta cada 5 minutos)
+    */5 * * * * /home/cubo/Documents/code/v_ideam/projects/ideam_cdc/run.sh >> /home/cubo/email_notifier.log 2>> /home/cubo/email_notifier_error.log
