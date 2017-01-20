@@ -112,13 +112,18 @@ def generate_geotiff(request, execution_id, image_name):
 		# url = "http://www.mocky.io/v2/587e480e100000c114987d96" # 200
 		# url = "http://www.mocky.io/v2/587e47b2100000ca14987d95" # 400
 		r = requests.post(url, data=json.dumps(json_request), headers=header)
+		print r #delete
 		json_response = r.json()
+		print json_response #delete
 		if r.status_code == 200:
+			print '200...' # delete
 			response_file_path = json_response["file_path"]
+			print response_file_path
 			if response_file_path:
 				file_name = response_file_path.split('/')[-1]
 				return download_result(request, execution_id, file_name)
 		else:
+			print '400...'
 			response_message = json_response["message"]
 		# setting all the context
 		context = get_detail_context(execution_id)
