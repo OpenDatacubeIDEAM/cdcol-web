@@ -136,7 +136,9 @@
                                                         <td>{{ file }}</td>
                                                         <td>
                                                             <a href="{% url 'execution:download_result' execution.id file %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
-                                                            <a href="{% url 'execution:generate_geotiff' execution.id file %}" class="btn btn-gray btn-sm"><i class="fa fa-file-image-o"></i> Descargar Geotiff</a>
+                                                            {% if not execution.version.algorithm.multitemporal %}
+                                                                <a href="{% url 'execution:generate_geotiff' execution.id file %}" class="btn btn-gray btn-sm"><i class="fa fa-file-image-o"></i> Descargar Geotiff</a>
+                                                            {% endif %}
                                                         </td>
                                                     {% endif %}
                                                     
