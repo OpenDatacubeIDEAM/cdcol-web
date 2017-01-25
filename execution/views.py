@@ -302,15 +302,15 @@ def send_execution(execution):
 		'execution_id': execution.id,
 		'algorithm_name': "{}".format(slugify(execution.version.algorithm.name)),
 		'version_id': "{}".format(execution.version.number),
-		'parameters': json_parameters
+		'parameters': json_parameters,
+		'is_gif': False
 	}
 	# sending the request
 	try:
 		header = {'Content-Type': 'application/json'}
 		if execution.version.algorithm.id == int(settings.IDEAM_ID_ALGORITHM_FOR_CUSTOM_SERVICE):
-			url = "{}/api/new_custom_execution/".format(settings.API_URL)
-		else:
-			url = "{}/api/new_execution/".format(settings.API_URL)
+			json_response['is_gif'] = True
+		url = "{}/api/new_execution/".format(settings.API_URL)
 		r = requests.post(url, data=json.dumps(json_response), headers=header)
 		if r.status_code == 201:
 			response = {'status': 'ok', 'description': 'Se envió la ejecución correctamente.'}
