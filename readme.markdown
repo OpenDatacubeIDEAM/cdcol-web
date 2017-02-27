@@ -199,6 +199,19 @@ Si existen inconvenientes se deberá revisar el archivo
 
     sudo tail -f /var/log/nginx/error.log
 
+Si se desea aumentar la capacidad para servir archivos de nginx es necesario modificar el archivo de configuración, para esto.
+
+    cd /etc/nginx
+    sudo nano nginx.conf
+    # buscar y modificar el parámetro 'client_max_body_size'
+    http {
+        ....
+        client_max_body_size 2G;
+        ...
+    }
+    # reiniciar nginx
+    sudo systemctl restart nginx
+
 -----------
 # Procedimiento para actualizar el código
 
