@@ -12,7 +12,7 @@ idna==2.1
 ipaddress==1.0.17
 Markdown==2.6.7
 oauthlib==1.1.2
-psycopg2==2.6.2
+psycopg2>=2.6.2
 pyasn1==0.1.9
 pycparser==2.17
 python-http-client==2.2.1
