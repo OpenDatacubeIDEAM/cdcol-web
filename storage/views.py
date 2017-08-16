@@ -181,7 +181,7 @@ def new(request):
 					"description_file": encoded_description,
 					"ingest_file": encoded_ingest,
 					"metadata_generation_script": encoded_metadata_script,
-					"created_by": 1
+					"created_by": current_user.id
 				}
 				header = {'Content-Type': 'application/json'}
 				url = "{}/api/storage_units/".format(settings.API_URL)
@@ -190,7 +190,7 @@ def new(request):
 					return HttpResponseRedirect(reverse('storage:index'))
 				else:
 					print r.status_code, r.text
-					form.add_error(None, "Ha ocurrido un error con el envÃ­o de la informaciÃ³n, por favor vuelve a intentarlo.")
+					form.add_error(None, "Ha ocurrido un error con el envío de la información, por favor vuelve a intentarlo.")
 			except:
 				print 'Something went wrong when trying to call the REST service'
 		else:
