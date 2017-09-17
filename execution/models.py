@@ -214,12 +214,12 @@ class TimePeriodType(ExecutionParameter):
 
 
 def get_upload_to(file_type, filename):
-	return "uploads/execution_parameter/file_type/file/{}/{}".format(file_type.execution.id, filename)
+	return "input/{}/{}/{}".format(file_type.execution.id, file_type.parameter.name, filename)
 
 
 class FileType(ExecutionParameter):
 	file = models.FileField(upload_to=get_upload_to)
-
+ 
 	def file_name(self):
 		return self.file.name.split('/')[-1]
 
