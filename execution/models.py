@@ -5,7 +5,7 @@ from django.db import models
 from algorithm.models import Version, Algorithm, Parameter
 from django.db.models import Q
 import datetime
-
+from django.core.exceptions import ValidationError
 
 class Execution(models.Model):
 	ENQUEUED_STATE = '1'
@@ -212,14 +212,18 @@ class TimePeriodType(ExecutionParameter):
 	def __unicode__(self):
 		return "{}".format(self.execution)
 
+def validate_file_extension(archivo):
+	valid_extensions = ('.zip',)
+	if not archivo.name.endswith(valid_extensions) in valid_extensions:
+		raise ValidationError(u'Unsupported file extension.')
 
-def get_upload_to(file_type, filename):
-	return "input/{}/{}/{}".format(file_type.execution.id, file_type.parameter.name, filename)
+def get_upload_to(instance, filename):
+	return "input/{}/{}/{}".format(instance.execution.id, instance.parameter.name, filename)
 
 
 class FileType(ExecutionParameter):
 	file = models.FileField(upload_to=get_upload_to)
- 
+
 	def file_name(self):
 		return self.file.name.split('/')[-1]
 
@@ -276,3 +280,4 @@ class Task(models.Model):
 
 	def __unicode__(self):
 		return "{} - {}".format(self.execution.id, self.uuid)
+
