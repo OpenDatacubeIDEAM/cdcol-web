@@ -355,7 +355,7 @@ def new_execution(request, algorithm_id, version_id):
 			# send the execution to the REST service
 			response = send_execution(new_execution)
 			# Unzip uploaded parameters
-			execution_directory = "/".join(settings.MEDIA_ROOT, 'input', new_execution.id)
+			execution_directory = "/".join( [ settings.MEDIA_ROOT, 'input', new_execution.id ] )
 			directories_of_file_parameters = [ directory for directory in os.listdir(execution_directory) if os.path.isdir(directory)]
 
 			for directory in directories_of_file_parameters:
