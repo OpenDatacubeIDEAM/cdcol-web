@@ -352,17 +352,18 @@ def new_execution(request, algorithm_id, version_id):
 			new_execution.save()
 
 			create_execution_parameter_objects(parameters, request, new_execution, current_version)
-
+			execution_directory = "/web_storage/media_root_input/8"
 			# Unzip uploaded parameters
 			execution_directory = "/".join( [ settings.MEDIA_ROOT, 'input', str(new_execution.id) ] )
-			directories_of_file_parameters = [ directory for directory in os.listdir(execution_directory) if os.path.isdir(directory)]
 
-			for directory in directories_of_file_parameters:
-				zip_file = os.listdir(directory)[0]
-				if zip_file.endswith('.zip'):
-					with ZipFile(zip_file) as file_to_unzip:
-						file_to_unzip.extractall()
-					os.remove(zip_file)
+			for root, dirs, files in os.walk(execution_directory):
+
+				for file in files:
+					zip_file = "/".join( [ root, file ] )
+					if zip_file.endswith('.zip') and root != execution_directory:
+						with zipfile.ZipFile(zip_file) as file_to_unzip:
+							file_to_unzip.extractall(root)
+						os.remove(zip_file)
 
 			# send the execution to the REST service
 			response = send_execution(new_execution)
