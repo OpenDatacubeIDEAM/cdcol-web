@@ -352,7 +352,7 @@ def new_execution(request, algorithm_id, version_id):
 			new_execution.save()
 
 			create_execution_parameter_objects(parameters, request, new_execution, current_version)
-			execution_directory = "/web_storage/media_root_input/8"
+
 			# Unzip uploaded parameters
 			execution_directory = "/".join( [ settings.MEDIA_ROOT, 'input', str(new_execution.id) ] )
 
