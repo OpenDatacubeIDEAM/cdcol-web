@@ -79,7 +79,7 @@ class ExecutionParameter(models.Model):
 		elif parameter_type == "9":
 			response = "{} - {}".format(self.timeperiodtype.start_date, self.timeperiodtype.end_date)
 		elif parameter_type == "12":
-			response = "{}".format(self.filetype.file_name())
+			response = "{}".format(self.filetype.file_dir())
 		elif parameter_type == "13":
 			response = "{}".format(self.storageunitnobandtype.storage_unit_name)
 		return response
@@ -137,7 +137,7 @@ class ExecutionParameter(models.Model):
 		elif parameter_type == "12":
 			response = {
 				'function_name': self.parameter.function_name,
-				'value': "{}".format(self.filetype.file.name),
+				'value': "{}".format(self.filetype.file_dir()),
 				'type': self.parameter.parameter_type,
 			}
 		elif parameter_type == "13":
@@ -226,6 +226,11 @@ class FileType(ExecutionParameter):
 
 	def file_name(self):
 		return self.file.name.split('/')[-1]
+
+	def file_dir(self):
+		separated_route = self.file.name.split('/')
+		file_directory = "/".join(separated_route[:-1])
+		return file_directory
 
 	def __unicode__(self):
 		return "{}".format(self.file.name)
