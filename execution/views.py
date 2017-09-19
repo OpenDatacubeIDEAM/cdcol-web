@@ -321,6 +321,16 @@ def send_execution(execution):
 		print 'Something went wrong when trying to call the REST service'
 	return response
 
+def unzip_every_file_in_directory(directory):
+	""" Unzip every .zip under the directory, saves its contents in the same directory the .zip was and then eliminates de .zip file."""
+	for root, dirs, files in os.walk(execution_directory):
+		for file in files:
+			zip_file = "/".join( [ root, file ] )
+			if zip_file.endswith('.zip') and root != execution_directory:
+				with zipfile.ZipFile(zip_file) as file_to_unzip:
+					file_to_unzip.extractall(root)
+				os.remove(zip_file)
+
 
 @login_required(login_url='/accounts/login/')
 @permission_required(('execution.can_create_new_execution', 'execution.can_view_new_execution'), raise_exception=True)
@@ -355,15 +365,7 @@ def new_execution(request, algorithm_id, version_id):
 
 			# Unzip uploaded parameters
 			execution_directory = "/".join( [ settings.MEDIA_ROOT, 'input', str(new_execution.id) ] )
-
-			for root, dirs, files in os.walk(execution_directory):
-
-				for file in files:
-					zip_file = "/".join( [ root, file ] )
-					if zip_file.endswith('.zip') and root != execution_directory:
-						with zipfile.ZipFile(zip_file) as file_to_unzip:
-							file_to_unzip.extractall(root)
-						os.remove(zip_file)
+			unzip_every_file_in_directory(execution_directory)
 
 			# send the execution to the REST service
 			response = send_execution(new_execution)
