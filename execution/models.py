@@ -6,6 +6,7 @@ from algorithm.models import Version, Algorithm, Parameter
 from django.db.models import Q
 import datetime
 from django.core.exceptions import ValidationError
+from django.conf import settings
 
 class Execution(models.Model):
 	ENQUEUED_STATE = '1'
@@ -229,6 +230,7 @@ class FileType(ExecutionParameter):
 
 	def file_dir(self):
 		separated_route = self.file.name.split('/')
+		separated_route.insert(0,settings.MEDIA_ROOT)
 		file_directory = "/".join(separated_route[:-1])
 		return file_directory
 
