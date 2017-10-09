@@ -52,11 +52,9 @@ def index(request):
 	return render(request, 'execution/index.html', context)
 
 
-def download_result(request, execution_id, image_name):
-	execution = get_object_or_404(Execution, id=execution_id)
-	try:
-		file_path = "{}/results/{}/{}".format(settings.WEB_STORAGE_PATH, execution.id, image_name)
-		file_name = file_path.split('/')[-1]
+def download(file_path):
+	try:	
+		file_name = file_path.split('/')[-1]	
 		file_wrapper = FileWrapper(file(file_path, 'rb'))
 		file_mimetype = mimetypes.guess_type(file_path)
 		response = HttpResponse(file_wrapper, content_type=file_mimetype)
@@ -66,6 +64,20 @@ def download_result(request, execution_id, image_name):
 		return response
 	except:
 		return HttpResponseNotFound('<h1>El archivo no se ha encontrado en el servidor</h1>')
+
+
+	
+def download_result(request, execution_id, image_name):
+	execution = get_object_or_404(Execution, id=execution_id)
+	file_path = "{}/results/{}/{}".format(settings.WEB_STORAGE_PATH, execution.id, image_name)
+	return download(file_path)
+	
+
+	
+def download_parameter_file(request, execution_id, parameter_name, file_name):
+	execution = get_object_or_404(Execution, id=execution_id)	
+	file_path = "{}/input/{}/{}/{}".format(settings.MEDIA_ROOT, execution.id, parameter_name, file_name)
+	return download(file_path)
 
 
 def get_detail_context(execution_id):
