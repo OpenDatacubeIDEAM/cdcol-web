@@ -329,7 +329,6 @@ def unzip_every_file_in_directory(directory):
 			if zip_file.endswith('.zip') and root != execution_directory:
 				with zipfile.ZipFile(zip_file) as file_to_unzip:
 					file_to_unzip.extractall(root)
-				os.remove(zip_file)
 
 
 @login_required(login_url='/accounts/login/')
