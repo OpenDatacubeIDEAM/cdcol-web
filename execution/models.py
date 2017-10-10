@@ -5,7 +5,8 @@ from django.db import models
 from algorithm.models import Version, Algorithm, Parameter
 from django.db.models import Q
 import datetime
-
+from django.core.exceptions import ValidationError
+from django.conf import settings
 
 class Execution(models.Model):
 	ENQUEUED_STATE = '1'
@@ -137,7 +138,7 @@ class ExecutionParameter(models.Model):
 		elif parameter_type == "12":
 			response = {
 				'function_name': self.parameter.function_name,
-				'value': "{}".format(self.filetype.file.name),
+				'value': "{}".format(self.filetype.file_dir()),
 				'type': self.parameter.parameter_type,
 			}
 		elif parameter_type == "13":
@@ -212,9 +213,13 @@ class TimePeriodType(ExecutionParameter):
 	def __unicode__(self):
 		return "{}".format(self.execution)
 
+def validate_file_extension(archivo):
+	valid_extensions = ('.zip',)
+	if not archivo.name.endswith(valid_extensions) in valid_extensions:
+		raise ValidationError(u'Unsupported file extension.')
 
-def get_upload_to(file_type, filename):
-	return "uploads/execution_parameter/file_type/file/{}/{}".format(file_type.execution.id, filename)
+def get_upload_to(instance, filename):
+	return "input/{}/{}/{}".format(instance.execution.id, instance.parameter.name, filename)
 
 
 class FileType(ExecutionParameter):
@@ -222,6 +227,12 @@ class FileType(ExecutionParameter):
 
 	def file_name(self):
 		return self.file.name.split('/')[-1]
+
+	def file_dir(self):
+		separated_route = self.file.name.split('/')
+		separated_route.insert(0,settings.MEDIA_ROOT)
+		file_directory = "/".join(separated_route[:-1])
+		return file_directory
 
 	def __unicode__(self):
 		return "{}".format(self.file.name)
@@ -276,3 +287,4 @@ class Task(models.Model):
 
 	def __unicode__(self):
 		return "{} - {}".format(self.execution.id, self.uuid)
+
