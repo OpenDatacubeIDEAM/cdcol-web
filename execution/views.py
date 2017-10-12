@@ -333,7 +333,7 @@ def send_execution(execution):
 		print 'Something went wrong when trying to call the REST service'
 	return response
 
-def unzip_every_file_in_directory(directory):
+def unzip_every_file_in_directory(execution_directory):
 	""" Unzip every .zip under the directory, saves its contents in the same directory the .zip was and then eliminates de .zip file."""
 	for root, dirs, files in os.walk(execution_directory):
 		for file in files:
