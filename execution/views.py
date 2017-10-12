@@ -376,7 +376,8 @@ def new_execution(request, algorithm_id, version_id):
 
 			# Unzip uploaded parameters
 			execution_directory = "/".join( [ settings.MEDIA_ROOT, 'input', str(new_execution.id) ] )
-			unzip_every_file_in_directory(execution_directory)
+			if os.path.isdir(execution_directory):
+				unzip_every_file_in_directory(execution_directory)
 
 			# send the execution to the REST service
 			response = send_execution(new_execution)
