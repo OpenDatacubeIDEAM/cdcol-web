@@ -442,6 +442,7 @@ $(document).ready(function () {
                     file_input.name = "file_input_"+pk;
                     file_input.className = "form-control";
                     file_input.required = parameter.fields.required;
+                    file_input.accept = ".zip";
                     // ===== LABELS =====
                     var label_file_title = document.createElement("label");
                     label_file_title.innerHTML = "<b>"+parameter.fields.name+requiredText+input_description+"</b>";
