@@ -223,7 +223,7 @@ def get_upload_to(instance, filename):
 
 
 class FileType(ExecutionParameter):
-	file = models.FileField(upload_to=get_upload_to)
+	file = models.FileField(upload_to=get_upload_to, validators=[validate_file_extension])
 
 	def file_name(self):
 		return self.file.name.split('/')[-1]
