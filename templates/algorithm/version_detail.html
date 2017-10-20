@@ -99,11 +99,15 @@
                     <h3 class="page-title">Parámetros de la versión</h3>
                     <div class="separator-2"></div>
                     {% if version.publishing_state == "1" %}
-                        <div class="pull-right">
-                            <a href="#"><a href="{% url 'algorithm:new_parameter' version.algorithm.id version.id %}"
-                                           class="btn btn-default btn-md"><i class="fa fa-plus-circle"></i> Nuevo
-                                Parámetro</a></a>
-                        </div>
+                        {% if user.is_authenticated %}
+                            {% if perms.algorithm.can_create_parameter %}
+                                <div class="pull-right">
+                                    <a href="#"><a href="{% url 'algorithm:new_parameter' version.algorithm.id version.id %}"
+                                                   class="btn btn-default btn-md"><i class="fa fa-plus-circle"></i> Nuevo
+                                        Parámetro</a></a>
+                                </div>
+                            {% endif %}
+                        {% endif %}
                     {% endif %}
                     <p>A continuación se encuentran los parámetros de esta versión::</p>
                     <br/>
