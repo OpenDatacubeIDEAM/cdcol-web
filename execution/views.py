@@ -17,7 +17,7 @@ from rest_framework.renderers import JSONRenderer
 from django.conf import settings
 import requests
 import json
-import os
+import os , zipfile
 import mimetypes
 from wsgiref.util import FileWrapper
 from slugify import slugify
@@ -38,6 +38,7 @@ def as_json(request):
 	current_user = request.user
 	queryset = Execution.objects.filter(executed_by=current_user)
 	serializer = ExecutionSerializer(queryset, many=True)
+	serializer.data[-1]["can_rate"] = current_user.has_perm('execution.can_rate_execution')
 	return JSONResponse(serializer.data)
 
 
@@ -52,11 +53,9 @@ def index(request):
 	return render(request, 'execution/index.html', context)
 
 
-def download_result(request, execution_id, image_name):
-	execution = get_object_or_404(Execution, id=execution_id)
-	try:
-		file_path = "{}/results/{}/{}".format(settings.WEB_STORAGE_PATH, execution.id, image_name)
-		file_name = file_path.split('/')[-1]
+def download(file_path):
+	try:	
+		file_name = file_path.split('/')[-1]	
 		file_wrapper = FileWrapper(file(file_path, 'rb'))
 		file_mimetype = mimetypes.guess_type(file_path)
 		response = HttpResponse(file_wrapper, content_type=file_mimetype)
@@ -66,6 +65,20 @@ def download_result(request, execution_id, image_name):
 		return response
 	except:
 		return HttpResponseNotFound('<h1>El archivo no se ha encontrado en el servidor</h1>')
+
+
+	
+def download_result(request, execution_id, image_name):
+	execution = get_object_or_404(Execution, id=execution_id)
+	file_path = "{}/results/{}/{}".format(settings.WEB_STORAGE_PATH, execution.id, image_name)
+	return download(file_path)
+	
+
+	
+def download_parameter_file(request, execution_id, parameter_name, file_name):
+	execution = get_object_or_404(Execution, id=execution_id)	
+	file_path = "{}/input/{}/{}/{}".format(settings.MEDIA_ROOT, execution.id, parameter_name, file_name)
+	return download(file_path)
 
 
 def get_detail_context(execution_id):
@@ -321,6 +334,15 @@ def send_execution(execution):
 		print 'Something went wrong when trying to call the REST service'
 	return response
 
+def unzip_every_file_in_directory(execution_directory):
+	""" Unzip every .zip under the directory, saves its contents in the same directory the .zip was and then eliminates de .zip file."""
+	for root, dirs, files in os.walk(execution_directory):
+		for file in files:
+			zip_file = "/".join( [ root, file ] )
+			if zip_file.endswith('.zip') and root != execution_directory:
+				with zipfile.ZipFile(zip_file) as file_to_unzip:
+					file_to_unzip.extractall(root)
+
 
 @login_required(login_url='/accounts/login/')
 @permission_required(('execution.can_create_new_execution', 'execution.can_view_new_execution'), raise_exception=True)
@@ -352,8 +374,15 @@ def new_execution(request, algorithm_id, version_id):
 			new_execution.save()
 
 			create_execution_parameter_objects(parameters, request, new_execution, current_version)
+
+			# Unzip uploaded parameters
+			execution_directory = "/".join( [ settings.MEDIA_ROOT, 'input', str(new_execution.id) ] )
+			if os.path.isdir(execution_directory):
+				unzip_every_file_in_directory(execution_directory)
+
 			# send the execution to the REST service
 			response = send_execution(new_execution)
+
 			print response
 			return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': new_execution.id}))
 	version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id, current_user=current_user)

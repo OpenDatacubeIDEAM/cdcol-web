@@ -93,6 +93,11 @@
                             <tr>
                                 <td>{{ param.parameter.name }}</td>
                                 <td>{{ param.obtain_value }}</td>
+                                {% if param.parameter.parameter_type == 12 %}
+			                        <td>            
+				                        <a href="{% url 'execution:download_parameter_file' execution.id param.parameter.name param.filetype.file_name %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
+			                        </td>
+                        	 	{% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -175,8 +180,14 @@
                                 </nav>
                             {% else %}
                                 <nav>
-                                    <a href="{% url 'execution:rate_execution' execution.id %}#rating" class="btn btn-primary btn-md btn-block">Calificar Resultados de la
-                                        Ejecución</a>
+                                    {% if user.is_authenticated %}
+                                        {% if perms.execution.can_rate_execution %}
+                                            <a href="{% url 'execution:rate_execution' execution.id %}#rating" class="btn btn-primary btn-md btn-block">Calificar Resultados de la
+                                                Ejecución</a>
+                                        {% else %}
+                                            <a href="#" class="btn btn-gray btn-md btn-block">No hay acciones disponibles</a>
+                                        {% endif %}
+                                    {% endif %}
                                 </nav>
                             {% endif %}
 

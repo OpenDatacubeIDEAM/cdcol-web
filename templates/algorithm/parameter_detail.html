@@ -104,8 +104,14 @@
                             <div class="separator-2"></div>
                             {% if parameter.version.publishing_state == "1" %}
                                 <nav>
-                                    <a href="{% url 'algorithm:update_parameter' parameter.version.algorithm.id parameter.version.id parameter.id %}"
-                                       class="btn btn-primary btn-md btn-block">Editar Parámetro</a>
+                                    {% if user.is_authenticated %}
+                                        {% if perms.algorithm.can_edit_parameter %}
+                                            <a href="{% url 'algorithm:update_parameter' parameter.version.algorithm.id parameter.version.id parameter.id %}"
+                                                class="btn btn-primary btn-md btn-block">Editar Parámetro</a>
+                                        {% else %}
+                                            <a class="btn btn-gray btn-md btn-block" disabled="">No hay acciones disponibles</a>
+                                        {% endif %}
+                                    {% endif %}
                                 </nav>
                             {% else %}
                                 <nav>

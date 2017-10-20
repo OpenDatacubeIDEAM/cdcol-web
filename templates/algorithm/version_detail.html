@@ -99,11 +99,15 @@
                     <h3 class="page-title">Parámetros de la versión</h3>
                     <div class="separator-2"></div>
                     {% if version.publishing_state == "1" %}
-                        <div class="pull-right">
-                            <a href="#"><a href="{% url 'algorithm:new_parameter' version.algorithm.id version.id %}"
-                                           class="btn btn-default btn-md"><i class="fa fa-plus-circle"></i> Nuevo
-                                Parámetro</a></a>
-                        </div>
+                        {% if user.is_authenticated %}
+                            {% if perms.algorithm.can_create_parameter %}
+                                <div class="pull-right">
+                                    <a href="#"><a href="{% url 'algorithm:new_parameter' version.algorithm.id version.id %}"
+                                                   class="btn btn-default btn-md"><i class="fa fa-plus-circle"></i> Nuevo
+                                        Parámetro</a></a>
+                                </div>
+                            {% endif %}
+                        {% endif %}
                     {% endif %}
                     <p>A continuación se encuentran los parámetros de esta versión::</p>
                     <br/>
@@ -133,8 +137,12 @@
                                             <a href="{% url 'algorithm:view_parameter' param.version.algorithm.id param.version.id param.id %}"
                                                class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a>
                                             {% if version.publishing_state == "1" %}
-                                                <a href="{% url 'algorithm:update_parameter' param.version.algorithm.id param.version.id param.id %}"
-                                                   class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a>
+                                                {% if user.is_authenticated %}
+                                                    {% if perms.algorithm.can_edit_parameter %}
+                                                        <a href="{% url 'algorithm:update_parameter' param.version.algorithm.id param.version.id param.id %}"
+                                                            class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a>
+                                                    {% endif %}
+                                                {% endif %}
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -160,10 +168,14 @@
                                 </nav>
                             {% endif %}
                             {% if version.publishing_state == "1" %}
-                                <nav>
-                                    <a href="{% url 'algorithm:update_version' version.algorithm.id version.id %}"
-                                       class="btn btn-primary btn-md btn-block">Editar Versión</a>
-                                </nav>
+                                {% if user.is_authenticated %}
+                                    {% if perms.algorithm.can_edit_version %}
+                                        <nav>
+                                            <a href="{% url 'algorithm:update_version' version.algorithm.id version.id %}"
+                                               class="btn btn-primary btn-md btn-block">Editar Versión</a>
+                                        </nav>
+                                    {% endif %}
+                                {% endif %}
                             {% endif %}
                             {% if version.publishing_state == "1" %}
                                 <nav>
