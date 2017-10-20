@@ -97,7 +97,11 @@
                                     <td>{{ version.created_at }}</td>
                                     <td><a href="{% url 'algorithm:version_detail' algorithm_id=version.algorithm.id version_id=version.id %}"
                                            class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a>
-                                        <a href="{% url 'algorithm:update_version' version.algorithm.id version.id %}" class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a>
+                                        {% if user.is_authenticated %}
+                                            {% if perms.algorithm.can_edit_parameter %}
+                                                <a href="{% url 'algorithm:update_version' version.algorithm.id version.id %}" class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a>
+                                            {% endif %}
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}
