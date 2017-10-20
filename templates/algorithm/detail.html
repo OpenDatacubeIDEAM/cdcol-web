@@ -68,8 +68,12 @@
                     <h3 class="page-title">Versiones del algoritmo</h3>
                     <div class="separator-2"></div>
                     <div class="pull-right">
-                        <a href="{% url 'algorithm:new_version' algorithm.id %}" class="btn btn-default btn-md"><i
-                                class="fa fa-plus-circle"></i> Crear nueva versión</a>
+                        {% if user.is_authenticated %}
+                            {% if perms.algorithm.can_ecreate_new_version %}
+                                <a href="{% url 'algorithm:new_version' algorithm.id %}" class="btn btn-default btn-md"><i
+                                    class="fa fa-plus-circle"></i> Crear nueva versión</a>
+                            {% endif %}
+                        {% endif %}
                     </div>
                     <p>A continuación se encuentran las versiones del algoritmo:</p>
                     <br/>
