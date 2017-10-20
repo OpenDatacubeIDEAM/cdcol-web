@@ -180,8 +180,14 @@
                                 </nav>
                             {% else %}
                                 <nav>
-                                    <a href="{% url 'execution:rate_execution' execution.id %}#rating" class="btn btn-primary btn-md btn-block">Calificar Resultados de la
-                                        Ejecución</a>
+                                    {% if user.is_authenticated %}
+                                        {% if perms.execution.can_rate_execution %}
+                                            <a href="{% url 'execution:rate_execution' execution.id %}#rating" class="btn btn-primary btn-md btn-block">Calificar Resultados de la
+                                                Ejecución</a>
+                                        {% else %}
+                                            <a href="#" class="btn btn-gray btn-md btn-block">No hay acciones disponibles</a>
+                                        {% endif %}
+                                    {% endif %}
                                 </nav>
                             {% endif %}
 
