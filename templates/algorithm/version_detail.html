@@ -168,10 +168,14 @@
                                 </nav>
                             {% endif %}
                             {% if version.publishing_state == "1" %}
-                                <nav>
-                                    <a href="{% url 'algorithm:update_version' version.algorithm.id version.id %}"
-                                       class="btn btn-primary btn-md btn-block">Editar Versión</a>
-                                </nav>
+                                {% if user.is_authenticated %}
+                                    {% if perms.algorithm.can_edit_version %}
+                                        <nav>
+                                            <a href="{% url 'algorithm:update_version' version.algorithm.id version.id %}"
+                                               class="btn btn-primary btn-md btn-block">Editar Versión</a>
+                                        </nav>
+                                    {% endif %}
+                                {% endif %}
                             {% endif %}
                             {% if version.publishing_state == "1" %}
                                 <nav>
