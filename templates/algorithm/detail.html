@@ -69,7 +69,7 @@
                     <div class="separator-2"></div>
                     <div class="pull-right">
                         {% if user.is_authenticated %}
-                            {% if perms.algorithm.can_ecreate_new_version %}
+                            {% if perms.algorithm.can_create_new_version %}
                                 <a href="{% url 'algorithm:new_version' algorithm.id %}" class="btn btn-default btn-md"><i
                                     class="fa fa-plus-circle"></i> Crear nueva versión</a>
                             {% endif %}
