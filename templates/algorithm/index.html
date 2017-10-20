@@ -37,8 +37,12 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="pull-right" style="margin-bottom: 10px;">
-                                <a href="{% url 'algorithm:new' %}" class="btn btn-default btn-md"><i
-                                        class="fa fa-plus-circle"></i> Nuevo Algoritmo</a>
+                                {% if user.is_authenticated %}
+                                    {% if perms.algorithm.can_create_algorithm %}
+                                        <a href="{% url 'algorithm:new' %}" class="btn btn-default btn-md"><i
+                                                class="fa fa-plus-circle"></i> Nuevo Algoritmo</a>
+                                    {% endif %}
+                                {% endif %}
                             </div>
                         </div>
                     </div>
