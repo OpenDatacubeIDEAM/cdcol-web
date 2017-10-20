@@ -137,8 +137,12 @@
                                             <a href="{% url 'algorithm:view_parameter' param.version.algorithm.id param.version.id param.id %}"
                                                class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a>
                                             {% if version.publishing_state == "1" %}
-                                                <a href="{% url 'algorithm:update_parameter' param.version.algorithm.id param.version.id param.id %}"
-                                                   class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a>
+                                                {% if user.is_authenticated %}
+                                                    {% if perms.algorithm.can_edit_parameter %}
+                                                        <a href="{% url 'algorithm:update_parameter' param.version.algorithm.id param.version.id param.id %}"
+                                                            class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a>
+                                                    {% endif %}
+                                                {% endif %}
                                             {% endif %}
                                         </td>
                                     </tr>
