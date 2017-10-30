@@ -40,8 +40,8 @@ $(document).ready(function () {
         });
 
         var bounds = {
-            north: 4.0,
-            south: 8.0,
+            north: 8.0,
+            south: 4.0,
             east: -70.0,
             west: -75.7
         };
@@ -58,6 +58,9 @@ $(document).ready(function () {
 
         // Add an event listener on the rectangle.
         rectangle.addListener('bounds_changed', showNewRect);
+        
+        //Assign default values to the latitude and longitude inputs
+        showNewRect(undefined);
     }
 
     /** @this {google.maps.Rectangle} */
@@ -71,6 +74,17 @@ $(document).ready(function () {
         document.getElementById("ne_longitude").value = Math.ceil(ne.lng());
 
     }
+    
+    function changeRectBounds(){
+        var bounds = {
+            north: Math.floor(document.getElementById("ne_latitude").value),
+            south: Math.floor(document.getElementById("sw_latitude").value),
+            east: Math.floor(document.getElementById("ne_longitude").value),
+            west: Math.floor(document.getElementById("sw_longitude").value)
+        };
+        rectangle.setBounds(bounds);
+    }
+    
     
     // Getting the version id from the url and selecting it
 
@@ -266,6 +280,7 @@ $(document).ready(function () {
                     sw_latitude_1.name = "sw_latitude";
                     sw_latitude_1.className = "form-control";
                     sw_latitude_1.required = parameter.fields.required;
+                    sw_latitude_1.addEventListener("change",function(){changeRectBounds()});
                     // sw longitude point
                     var sw_longitude_1 = document.createElement("input");
                     sw_longitude_1.type = "text";
@@ -273,6 +288,7 @@ $(document).ready(function () {
                     sw_longitude_1.name = "sw_longitude";
                     sw_longitude_1.className = "form-control";
                     sw_longitude_1.required = parameter.fields.required;
+                    sw_longitude_1.addEventListener("change",function(){changeRectBounds()});
                     // ne latitude point
                     var ne_latitude_2 = document.createElement("input");
                     ne_latitude_2.type = "text";
@@ -280,6 +296,7 @@ $(document).ready(function () {
                     ne_latitude_2.name = "ne_latitude";
                     ne_latitude_2.className = "form-control";
                     ne_latitude_2.required = parameter.fields.required;
+                    ne_latitude_2.addEventListener("change",function(){changeRectBounds()});
                     // ne longitude point
                     var ne_longitude_2 = document.createElement("input");
                     ne_longitude_2.type = "text";
@@ -287,6 +304,7 @@ $(document).ready(function () {
                     ne_longitude_2.name = "ne_longitude";
                     ne_longitude_2.className = "form-control";
                     ne_longitude_2.required = parameter.fields.required;
+                    ne_longitude_2.addEventListener("change",function(){changeRectBounds()});
                     // ===== LABELS =====
                     var label_sw_latitude_1 = document.createElement("label");
                     label_sw_latitude_1.innerHTML = "<b>Latitud mínima</b>";
