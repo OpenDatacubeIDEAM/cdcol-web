@@ -13,7 +13,7 @@ class IngestTask(models.Model):
 	# All the states
 	INGEST_STATES = (
 		(SCHEDULED_STATE, "PROGRAMADA"),
-		(EXECUTING_STATE, "EN EJECUCIÃ“N"),
+		(EXECUTING_STATE, "EN EJECUCIÓN"),
 		(FAILED_STATED, "CON FALLO"),
 		(COMPLETED_STATE, "COMPLETADA"),
 	)
@@ -22,8 +22,8 @@ class IngestTask(models.Model):
 	comments = models.TextField()
 	error_messages = models.TextField()
 	logs = models.TextField()
-	start_execution_date = models.DateField(null=True, blank=True)
-	end_execution_date = models.DateField(null=True, blank=True)
+	start_execution_date = models.DateTimeField(null=True, blank=True)
+	end_execution_date = models.DateTimeField(null=True, blank=True)
 	created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ingest_author')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
