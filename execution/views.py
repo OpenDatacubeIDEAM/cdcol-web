@@ -38,8 +38,8 @@ def as_json(request):
 	current_user = request.user
 	queryset = Execution.objects.filter(executed_by=current_user)
 	serializer = ExecutionSerializer(queryset, many=True)
-	if serializer.data:
-		serializer.data[-1]["can_rate"] = current_user.has_perm('execution.can_rate_execution')
+	for execution in serializer.data:
+		execution["can_rate"] = current_user.has_perm('execution.can_rate_execution')
 	return JSONResponse(serializer.data)
 
 
