@@ -275,7 +275,7 @@ $(document).ready(function () {
                     // ===== INPUTS =====
                     // sw latitude point
                     var sw_latitude_1 = document.createElement("input");
-                    sw_latitude_1.type = "text";
+                    sw_latitude_1.type = "number";
                     sw_latitude_1.id = "sw_latitude";
                     sw_latitude_1.name = "sw_latitude";
                     sw_latitude_1.className = "form-control";
@@ -283,7 +283,7 @@ $(document).ready(function () {
                     sw_latitude_1.addEventListener("change",function(){changeRectBounds()});
                     // sw longitude point
                     var sw_longitude_1 = document.createElement("input");
-                    sw_longitude_1.type = "text";
+                    sw_longitude_1.type = "number";
                     sw_longitude_1.id = "sw_longitude";
                     sw_longitude_1.name = "sw_longitude";
                     sw_longitude_1.className = "form-control";
@@ -291,7 +291,7 @@ $(document).ready(function () {
                     sw_longitude_1.addEventListener("change",function(){changeRectBounds()});
                     // ne latitude point
                     var ne_latitude_2 = document.createElement("input");
-                    ne_latitude_2.type = "text";
+                    ne_latitude_2.type = "number";
                     ne_latitude_2.id = "ne_latitude";
                     ne_latitude_2.name = "ne_latitude";
                     ne_latitude_2.className = "form-control";
@@ -299,7 +299,7 @@ $(document).ready(function () {
                     ne_latitude_2.addEventListener("change",function(){changeRectBounds()});
                     // ne longitude point
                     var ne_longitude_2 = document.createElement("input");
-                    ne_longitude_2.type = "text";
+                    ne_longitude_2.type = "number";
                     ne_longitude_2.id = "ne_longitude";
                     ne_longitude_2.name = "ne_longitude";
                     ne_longitude_2.className = "form-control";
