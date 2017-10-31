@@ -113,7 +113,7 @@
                             <div class="separator-2"></div>
                             <div class="pull-right">
                                 <a href="{% url 'execution:delete_result' execution.id 'all' %}" onclick="return confirm('¿Está seguro de eliminar todos los resultados de la ejecución?')" class="btn btn-danger btn-md"><i
-                                    class="fa fa-plus-circle"></i> Eliminar todo</a>
+                                    class="fa fa-trash-o"></i> Eliminar todo</a>
                             </div>
                             <p>A continuación se encuentran los archivos generados por esta ejecución:</p>
 
@@ -140,7 +140,7 @@
                                                         <td><img src="{{ system_path }}{{ file }}"></td>
                                                         <td>
                                                             <a href="{% url 'execution:download_result' execution.id file %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
-                                                            <a href="{% url 'execution:delete_result' execution.id file %}" onclick="return confirm('¿Está seguro de eliminar este archivo?')" class="btn btn-danger btn-sm"><i class="fa fa-plus-circle"></i> Borrar</a>
+                                                            <a href="{% url 'execution:delete_result' execution.id file %}" onclick="return confirm('¿Está seguro de eliminar este archivo?')" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> Borrar</a>
                                                         </td>
                                                     {% else %}
                                                         <td>{{ file }}</td>
@@ -149,7 +149,7 @@
                                                             {% if not execution.version.algorithm.multitemporal %}
                                                                 <a href="{% url 'execution:generate_geotiff' execution.id file %}" class="btn btn-gray btn-sm"><i class="fa fa-file-image-o"></i> Descargar Geotiff</a>
                                                             {% endif %}
-                                                            <a href="{% url 'execution:delete_result' execution.id file %}" onclick="return confirm('¿Está seguro de eliminar este archivo?')" class="btn btn-danger btn-sm"><i class="fa fa-plus-circle"></i> Borrar</a>
+                                                            <a href="{% url 'execution:delete_result' execution.id file %}" onclick="return confirm('¿Está seguro de eliminar este archivo?')" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> Borrar</a>
                                                         </td>
                                                     {% endif %}
                                                     
