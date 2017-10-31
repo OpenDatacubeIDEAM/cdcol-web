@@ -21,6 +21,7 @@ import os , zipfile
 import mimetypes
 from wsgiref.util import FileWrapper
 from slugify import slugify
+import subprocess
 
 
 class JSONResponse(HttpResponse):
@@ -437,17 +438,18 @@ def rate_execution(request, execution_id):
 	
 @login_required(login_url='/accounts/login/')
 def delete_result(request, execution_id, image_name):
-	if image_name == "all":
-		file_path = "{}/results/{}/{}".format(settings.WEB_STORAGE_PATH, execution_id, "*")
-	else:
-		splitted_image_name = image_name.split(".")
-		splitted_image_name[-1] = "*"
-		image_name = ".".join(splitted_image_name)
-		file_path = "{}/results/{}/{}".format(settings.WEB_STORAGE_PATH, execution_id, image_name)
-		file_path = file_path.replace("(", "\(")
-		file_path = file_path.replace(")", "\)")
-	if os.path.isdir("{}/results/{}".format(settings.WEB_STORAGE_PATH, execution_id)):
-		subprocess.Popen("rm %s" % file_path, shell=True)
-
-	context = get_detail_context(execution_id)
-	return render(request, 'execution/detail.html', context)
+        if image_name == "all":
+                file_path = "{}/results/{}/{}".format(settings.WEB_STORAGE_PATH, execution_id, "")
+        else:
+                splitted_image_name = image_name.split(".")
+                splitted_image_name[-1] = "*"
+                image_name = ".".join(splitted_image_name)
+                file_path = "{}/results/{}/{}".format(settings.WEB_STORAGE_PATH, execution_id, image_name)
+        for file in glob.glob(file_path):
+                file = file.replace("(","\(")
+                file = file.replace(")","\)")
+                subprocess.Popen("rm -rf %s" % file, shell=True)
+        while glob.glob(file_path):
+                time.sleep(0.5)
+        context = get_detail_context(execution_id)
+        return render(request, 'execution/detail.html', context)
