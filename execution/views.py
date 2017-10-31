@@ -433,3 +433,21 @@ def rate_execution(request, execution_id):
 		review_form = ReviewForm()
 	context = {'review_form': review_form, 'execution': execution}
 	return render(request, 'execution/rate.html', context)
+	
+	
+@login_required(login_url='/accounts/login/')
+def delete_result(request, execution_id, image_name):
+	if image_name == "all":
+		file_path = "{}/results/{}/{}".format(settings.WEB_STORAGE_PATH, execution_id, "*")
+	else:
+		splitted_image_name = image_name.split(".")
+		splitted_image_name[-1] = "*"
+		image_name = ".".join(splitted_image_name)
+		file_path = "{}/results/{}/{}".format(settings.WEB_STORAGE_PATH, execution_id, image_name)
+		file_path = file_path.replace("(", "\(")
+		file_path = file_path.replace(")", "\)")
+	if os.path.isdir("{}/results/{}".format(settings.WEB_STORAGE_PATH, execution_id)):
+		subprocess.Popen("rm %s" % file_path, shell=True)
+
+	context = get_detail_context(execution_id)
+	return render(request, 'execution/detail.html', context)

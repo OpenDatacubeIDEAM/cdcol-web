@@ -12,6 +12,8 @@ urlpatterns = [
 	url(r'^(?P<execution_id>[0-9]+)/detail/$', views.detail, name='detail'),
 	# ex: /execution/11/image/[image_name.nc]/download/
 	url(r'^(?P<execution_id>[0-9]+)/image/(?P<image_name>.+)/download/$', views.download_result, name='download_result'),
+	# ex: /execution/11/image/[image_name.nc]/delete/
+	url(r'^(?P<execution_id>[0-9]+)/image/(?P<image_name>.+)/delete/$', views.delete_result, name='delete_result'),
 	# ex: /execution/11/zip/[parameter_name]/[file_name]/download/
 	url(r'^(?P<execution_id>[0-9]+)/zip/(?P<parameter_name>.+)/(?P<file_name>.+)/download$', views.download_parameter_file, name='download_parameter_file'),
 	# ex: /execution/11/image/[image_name.nc]/geotiff/
