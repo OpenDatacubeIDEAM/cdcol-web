@@ -280,7 +280,8 @@ $(document).ready(function () {
                     sw_latitude_1.name = "sw_latitude";
                     sw_latitude_1.className = "form-control";
                     sw_latitude_1.required = parameter.fields.required;
-                    sw_latitude_1.addEventListener("change",function(){changeRectBounds()});
+                    sw_latitude_1.addEventListener("mouseup",function(){changeRectBounds()});
+                    sw_latitude_1.addEventListener("keyup",function(){changeRectBounds()});	
                     // sw longitude point
                     var sw_longitude_1 = document.createElement("input");
                     sw_longitude_1.type = "number";
@@ -288,7 +289,8 @@ $(document).ready(function () {
                     sw_longitude_1.name = "sw_longitude";
                     sw_longitude_1.className = "form-control";
                     sw_longitude_1.required = parameter.fields.required;
-                    sw_longitude_1.addEventListener("change",function(){changeRectBounds()});
+                    sw_longitude_1.addEventListener("mouseup",function(){changeRectBounds()});
+                    sw_longitude_1.addEventListener("keyup", function(){changeRectBounds()});
                     // ne latitude point
                     var ne_latitude_2 = document.createElement("input");
                     ne_latitude_2.type = "number";
@@ -296,7 +298,8 @@ $(document).ready(function () {
                     ne_latitude_2.name = "ne_latitude";
                     ne_latitude_2.className = "form-control";
                     ne_latitude_2.required = parameter.fields.required;
-                    ne_latitude_2.addEventListener("change",function(){changeRectBounds()});
+                    ne_latitude_2.addEventListener("mouseup",function(){changeRectBounds()});
+                    ne_latitude_2.addEventListener("keyup", function(){changeRectBounds()});
                     // ne longitude point
                     var ne_longitude_2 = document.createElement("input");
                     ne_longitude_2.type = "number";
@@ -304,7 +307,8 @@ $(document).ready(function () {
                     ne_longitude_2.name = "ne_longitude";
                     ne_longitude_2.className = "form-control";
                     ne_longitude_2.required = parameter.fields.required;
-                    ne_longitude_2.addEventListener("change",function(){changeRectBounds()});
+                    ne_longitude_2.addEventListener("mouseup",function(){changeRectBounds()});
+                    ne_longitude_2.addEventListener("keyup", function(){changeRectBounds()});
                     // ===== LABELS =====
                     var label_sw_latitude_1 = document.createElement("label");
                     label_sw_latitude_1.innerHTML = "<b>Latitud mínima</b>";
