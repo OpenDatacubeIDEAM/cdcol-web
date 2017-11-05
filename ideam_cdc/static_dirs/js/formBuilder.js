@@ -166,9 +166,9 @@ $(document).ready(function () {
                 var param = executed_params[i];
                 console.log("parametro: ");
                 console.log(param);
+                console.log(param.obtain_value);
                 console.log(param.parameter.name);
                 console.log(param.parameter.parameter_type);
-                console.log(param.obtain_value);
             }
             if (parameter.fields.description !== ""){
                 input_description = " <a class='help-hover hidden-xs hidden-sm hidden-md'><i class='glyphicon glyphicon-exclamation-sign' data-toggle='tooltip' data-placement='right' title='"+parameter.fields.description+"'></i></a>"
