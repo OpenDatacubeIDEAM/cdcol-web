@@ -169,7 +169,8 @@ $(document).ready(function () {
                 console.log("parametro: ");
                 console.log(param);
                 console.log(param.obtain_value);
-                console.log(param.parameter.name);
+                console.log(param.fields.parameter);
+                console.log(param.fields.parameter.name);
                 console.log(param.parameter.parameter_type);
             }
             if (parameter.fields.description !== ""){
