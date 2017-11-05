@@ -161,18 +161,6 @@ $(document).ready(function () {
             var parameter_type = parameter.fields.parameter_type;
             var pk = parameter.pk;
             var requiredText = (parameter.fields.required ? " <span class='text-danger small'> *</span>":"");
-            executed_params = JSON.parse(executed_params);
-            console.log(executed_params);
-            for(var i = 0, length = executed_params.length; i< length; i++)
-            {
-                var param = executed_params[i];
-                console.log("parametro: ");
-                console.log(param);
-                console.log(param.obtain_value);
-                console.log(param.fields.parameter);
-                console.log(param.fields.parameter.name);
-                console.log(param.parameter.parameter_type);
-            }
             if (parameter.fields.description !== ""){
                 input_description = " <a class='help-hover hidden-xs hidden-sm hidden-md'><i class='glyphicon glyphicon-exclamation-sign' data-toggle='tooltip' data-placement='right' title='"+parameter.fields.description+"'></i></a>"
             }
@@ -545,6 +533,46 @@ $(document).ready(function () {
             autoclose: true,
             todayHighlight: true
         });
+        executed_params = JSON.parse(executed_params);
+        console.log(executed_params);
+        for(var i = 0, length = executed_params.length; i< length; i++)
+        {
+            var param = executed_params[i];
+            console.log("parametro: ");
+            console.log(param);
+            switch(param.parameter_type)
+            {
+                case "1":
+                    document.getElementById("string_input_"+param.parameter_pk).value = param.value;
+                    break;
+                case "2":
+                    document.getElementById("integer_input_"+param.parameter_pk).value = param.value;
+                    break;
+                case "3":
+                    document.getElementById("double_input_"+param.parameter_pk).value = param.value;
+                    break;
+                case "4":
+                    document.getElementById("boolean_input_"+param.parameter_pk).checked = param.value == "True"
+                    break;
+                case "7":
+                    document.getElementById("sw_latitude").value = param.latitude_start
+                    // document.getElementById("sw_longitude")
+                    // document.getElementById("ne_latitude")
+                    // document.getElementById("ne_longitude")
+                    break;
+                case "8":
+                    break;
+                case "9":
+                    break;
+                case "12":
+                    break;
+                case "13":
+                    break;
+                default:
+                    break;
+            }
+        }
+
         console.log("Creating Send Button");
         var send_button = document.createElement("button");
         send_button.type = "submit";
