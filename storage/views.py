@@ -190,7 +190,7 @@ def new(request):
 					return HttpResponseRedirect(reverse('storage:index'))
 				else:
 					print r.status_code, r.text
-					form.add_error(None, "Ha ocurrido un error con el envío de la información, por favor vuelve a intentarlo.")
+					form.add_error(None, "Ha ocurrido un error con el envÃ­o de la informaciÃ³n, por favor vuelve a intentarlo.")
 			except:
 				print 'Something went wrong when trying to call the REST service'
 		else:

@@ -79,7 +79,7 @@ def new(request):
 			# creating the base version
 			new_algorithm_version = Version(
 				algorithm=new_algorithm,
-				description='Versión por defecto 1.0',
+				description='VersiÃ³n por defecto 1.0',
 				number='1.0',
 				repository_url='',
 				publishing_state=Version.DEVELOPED_STATE,
@@ -215,7 +215,7 @@ def update_version(request, algorithm_id, version_id):
 		# getting the form
 		version_form = VersionUpdateForm(request.POST)
 		if version.publishing_state != Version.DEVELOPED_STATE:
-			version_form.add_error(None, "Solo es posible actualizar una versión si esta se encuentra en estado 'En Desarrollo'.")
+			version_form.add_error(None, "Solo es posible actualizar una versiÃ³n si esta se encuentra en estado 'En Desarrollo'.")
 		# checking if the form is valid
 		if version_form.is_valid():
 			description = version_form.cleaned_data['description']
@@ -387,7 +387,7 @@ def new_parameter(request, algorithm_id, version_id):
 		# getting the form
 		new_parameter_form = NewParameterForm(request.POST)
 		if version.publishing_state != Version.DEVELOPED_STATE:
-			new_parameter_form.add_error(None, "Solo es posible agregar parámetros a versiones en estado 'En Desarrollo'.")
+			new_parameter_form.add_error(None, "Solo es posible agregar parÃ¡metros a versiones en estado 'En Desarrollo'.")
 		# checking if the form is valid
 		if new_parameter_form.is_valid():
 			name = new_parameter_form.cleaned_data['name']
@@ -448,7 +448,7 @@ def update_parameter(request, algorithm_id, version_id, parameter_id):
 		# getting the form
 		parameter_form = NewParameterForm(request.POST)
 		if parameter.version.publishing_state != Version.DEVELOPED_STATE:
-			parameter_form.add_error(None, "Solo es posible actualizar parámetros a versiones en estado 'En Desarrollo'.")
+			parameter_form.add_error(None, "Solo es posible actualizar parÃ¡metros a versiones en estado 'En Desarrollo'.")
 		# checking if the form is valid
 		if parameter_form.is_valid():
 			name = parameter_form.cleaned_data['name']
