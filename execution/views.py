@@ -349,9 +349,11 @@ def unzip_every_file_in_directory(execution_directory):
 @login_required(login_url='/accounts/login/')
 @permission_required(('execution.can_create_new_execution', 'execution.can_view_new_execution'), raise_exception=True)
 def new_execution(request, algorithm_id, version_id, copy_execution_id=10):
-    executed_params = {}
+    executed_params = []
     if copy_execution_id:
+        print copy_execution_id
         executed_params = get_detail_context(copy_execution_id)['executed_params']
+        print executed_params
 	current_user = request.user
 	algorithm = get_object_or_404(Algorithm, id=algorithm_id)
 	current_version = None
