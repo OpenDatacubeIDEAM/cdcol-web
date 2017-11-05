@@ -176,6 +176,9 @@
                                                 placeholder="Ingrese una descripción que te ayude a identificar el objetivo del análisis que deseas realizar"
                                                 class="form-control" rows="3"></textarea>
                                     </div>
+                                    {% for param in executed_params %}
+                                    {{param}}
+                                    {% endfor %}
 
                                 </form>
                             </div>
