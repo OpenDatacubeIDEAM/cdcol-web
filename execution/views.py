@@ -348,7 +348,10 @@ def unzip_every_file_in_directory(execution_directory):
 
 @login_required(login_url='/accounts/login/')
 @permission_required(('execution.can_create_new_execution', 'execution.can_view_new_execution'), raise_exception=True)
-def new_execution(request, algorithm_id, version_id):
+def new_execution(request, algorithm_id, version_id, copy_execution_id=None):
+    executed_params = {}
+    if copy_execution_id:
+        executed_params = get_detail_context(copy_execution_id)['executed_params']
 	current_user = request.user
 	algorithm = get_object_or_404(Algorithm, id=algorithm_id)
 	current_version = None
@@ -390,7 +393,8 @@ def new_execution(request, algorithm_id, version_id):
 	version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id, current_user=current_user)
 	context = {'topics': topics, 'algorithm': algorithm, 'parameters': parameters,
 	           'version_selection_form': version_selection_form, 'version': current_version,
-	           'reviews': reviews, 'average_rating': average_rating, 'executions': executions}
+	           'reviews': reviews, 'average_rating': average_rating, 'executions': executions,
+               'executed_params': executed_params}
 	return render(request, 'execution/new.html', context)
 
 
