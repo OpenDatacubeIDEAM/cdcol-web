@@ -218,7 +218,7 @@
 {% endblock %}
 
 {% block extra_body %}
-    <script type="text/javascript">var executed_params = "{{executed_params}}";</script>
+    <script type="text/javascript">var executed_params = "{{executed_params|escapejs}}";</script>
     <script src="{% static 'bootstrap/js/bootstrap-datepicker.min.js' %}"></script>
     <script src="{% static 'bootstrap/locales/bootstrap-datepicker.es.min.js' %}"></script>
     <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
