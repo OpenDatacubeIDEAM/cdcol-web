@@ -125,6 +125,7 @@ $(document).ready(function () {
         dataType: 'json',
         success: function (data) {
             console.log("Loading parameters for version " + versionValue + " of the algorithm.");
+            console.log(data);
             createForm(data);
         },
         type: 'GET'
