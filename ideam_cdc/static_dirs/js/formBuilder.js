@@ -161,13 +161,13 @@ $(document).ready(function () {
             var pk = parameter.pk;
             var requiredText = (parameter.fields.required ? " <span class='text-danger small'> *</span>":"");
             console.log(executed_params);
-            executed_params.forEach(function(param)
-                                    {
-                                        console.log("parametro: " + param);
-                                        console.log(param.parameter.name);
-                                        console.log(param.parameter.parameter_type);
-                                        console.log(param.obtain_value);
-                                    });
+            for( var param in executed_params)
+            {
+                console.log("parametro: " + param);
+                console.log(param.parameter.name);
+                console.log(param.parameter.parameter_type);
+                console.log(param.obtain_value);
+            });
             if (parameter.fields.description !== ""){
                 input_description = " <a class='help-hover hidden-xs hidden-sm hidden-md'><i class='glyphicon glyphicon-exclamation-sign' data-toggle='tooltip' data-placement='right' title='"+parameter.fields.description+"'></i></a>"
             }
