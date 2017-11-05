@@ -161,6 +161,7 @@ $(document).ready(function () {
             var parameter_type = parameter.fields.parameter_type;
             var pk = parameter.pk;
             var requiredText = (parameter.fields.required ? " <span class='text-danger small'> *</span>":"");
+            console.log(executed_params);
             executed_params = JSON.parse(executed_params);
             console.log(executed_params);
             for(var i = 0, length = executed_params.length; i< length; i++)
