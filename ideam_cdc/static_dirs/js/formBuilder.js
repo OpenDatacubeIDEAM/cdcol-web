@@ -556,9 +556,9 @@ $(document).ready(function () {
                     break;
                 case "7":
                     document.getElementById("sw_latitude").value = param.latitude_start;
-                    // document.getElementById("sw_longitude")
+                    document.getElementById("sw_longitude").value = param.longitude_start;
                     document.getElementById("ne_latitude").value = param.latitude_end;
-                    // document.getElementById("ne_longitude")
+                    document.getElementById("ne_longitude").value = param.longitude_end;
                     break;
                 case "8":
                     break;
