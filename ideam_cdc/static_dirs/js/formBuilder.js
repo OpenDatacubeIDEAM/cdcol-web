@@ -552,12 +552,12 @@ $(document).ready(function () {
                     document.getElementById("double_input_"+param.parameter_pk).value = param.value;
                     break;
                 case "4":
-                    document.getElementById("boolean_input_"+param.parameter_pk).checked = param.value == "True"
+                    document.getElementById("boolean_input_"+param.parameter_pk).checked = param.value == "True";
                     break;
                 case "7":
-                    document.getElementById("sw_latitude").value = param.latitude_start
+                    document.getElementById("sw_latitude").value = param.latitude_start;
                     // document.getElementById("sw_longitude")
-                    // document.getElementById("ne_latitude")
+                    document.getElementById("ne_latitude").value = param.latitude_end;
                     // document.getElementById("ne_longitude")
                     break;
                 case "8":
