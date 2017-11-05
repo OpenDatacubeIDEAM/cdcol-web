@@ -161,8 +161,9 @@ $(document).ready(function () {
             var pk = parameter.pk;
             var requiredText = (parameter.fields.required ? " <span class='text-danger small'> *</span>":"");
             console.log(executed_params);
-            for( var param in executed_params)
+            for( var i in executed_params)
             {
+                var param = executed_params[i];
                 console.log("parametro: " + param);
                 console.log(param.parameter.name);
                 console.log(param.parameter.parameter_type);
