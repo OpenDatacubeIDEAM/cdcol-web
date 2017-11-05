@@ -559,6 +559,7 @@ $(document).ready(function () {
                     document.getElementById("sw_longitude").value = param.longitude_start;
                     document.getElementById("ne_latitude").value = param.latitude_end;
                     document.getElementById("ne_longitude").value = param.longitude_end;
+                    changeRectBounds();
                     break;
                 case "8":
                     break;
