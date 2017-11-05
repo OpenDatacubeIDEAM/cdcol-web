@@ -164,7 +164,8 @@ $(document).ready(function () {
             for( var i in executed_params)
             {
                 var param = executed_params[i];
-                console.log("parametro: " + param);
+                console.log("parametro: ")
+                console.log(param);
                 console.log(param.parameter.name);
                 console.log(param.parameter.parameter_type);
                 console.log(param.obtain_value);
