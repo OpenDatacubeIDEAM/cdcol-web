@@ -147,6 +147,7 @@ class ExecutionParameter(models.Model):
 				'storage_unit_name': self.storageunitnobandtype.storage_unit_name,
 				'type': self.parameter.parameter_type,
 			}
+		response['parameter_pk'] = self.parameter.pk
 		return response
 
 	def __unicode__(self):

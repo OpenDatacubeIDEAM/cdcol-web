@@ -352,7 +352,7 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id=10):
     executed_params = []
     if copy_execution_id:
         print copy_execution_id
-        executed_params = get_detail_context(copy_execution_id)['executed_params']
+        executed_params = map(lambda param: param.obtain_json_values(),get_detail_context(copy_execution_id)['executed_params'])
         executed_params = serializers.serialize("json", executed_params)
         print executed_params
 	current_user = request.user
