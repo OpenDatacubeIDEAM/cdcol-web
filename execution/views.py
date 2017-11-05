@@ -353,8 +353,7 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id=10):
     if copy_execution_id:
         print copy_execution_id
         executed_params = get_detail_context(copy_execution_id)['executed_params']
-        json_serializer = serializers.get_serializer("json")()
-        executed_params = json_serializer.serialize(executed_params)
+        executed_params = serializers.serialize("json", executed_params)
         print executed_params
 	current_user = request.user
 	algorithm = get_object_or_404(Algorithm, id=algorithm_id)
