@@ -148,6 +148,7 @@ class ExecutionParameter(models.Model):
 				'type': self.parameter.parameter_type,
 			}
 		response['parameter_pk'] = self.parameter.pk
+		response['parameter_type'] = self.parameter.parameter_type
 		return response
 
 	def __unicode__(self):
