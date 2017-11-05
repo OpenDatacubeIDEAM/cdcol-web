@@ -534,6 +534,20 @@ $(document).ready(function () {
             autoclose: true,
             todayHighlight: true
         });
+
+        console.log("Creating Send Button");
+        var send_button = document.createElement("button");
+        send_button.type = "submit";
+        send_button.className = "btn btn-default";
+        send_button.innerHTML = "Ejecutar Algoritmo";
+        var param_div = document.createElement("div");
+        param_div.className = "text-center";
+        // appending the button
+        param_div.appendChild(send_button);
+        f.appendChild(param_div);
+        // appending the custom form
+        $("mainForm").append(f);
+
         executed_params = JSON.parse(executed_params);
         console.log(executed_params);
         for(var i = 0, length = executed_params.length; i< length; i++)
@@ -586,18 +600,5 @@ $(document).ready(function () {
                     break;
             }
         }
-
-        console.log("Creating Send Button");
-        var send_button = document.createElement("button");
-        send_button.type = "submit";
-        send_button.className = "btn btn-default";
-        send_button.innerHTML = "Ejecutar Algoritmo";
-        var param_div = document.createElement("div");
-        param_div.className = "text-center";
-        // appending the button
-        param_div.appendChild(send_button);
-        f.appendChild(param_div);
-        // appending the custom form
-        $("mainForm").append(f);
     };
 });
