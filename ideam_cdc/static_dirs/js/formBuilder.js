@@ -562,6 +562,18 @@ $(document).ready(function () {
                     changeRectBounds();
                     break;
                 case "8":
+                    var storage_unit_selector = document.getElementById("storage_unit_"+param.parameter_pk);
+                    for(var i = 0,
+                            length = storage_unit_selector.length,
+                            notFinished = true,
+                            options = storage_unit_selector.options; i < length && notFinished; i++)
+                    {
+                        if(options[i].text === param.storage_unit_name)
+                        {
+                            storage_unit_selector.selectedIndex = i;
+                            notFinished = false;
+                        }
+                    }
                     break;
                 case "9":
                     break;
