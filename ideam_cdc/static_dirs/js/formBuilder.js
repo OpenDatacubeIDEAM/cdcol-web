@@ -163,7 +163,7 @@ $(document).ready(function () {
             console.log(executed_params);
             for(var i = 0, length = executed_params.length; i< length; i++)
             {
-                var param = executed_params[key];
+                var param = executed_params[i];
                 console.log("parametro: ");
                 console.log(param);
                 console.log(param.parameter.name);
