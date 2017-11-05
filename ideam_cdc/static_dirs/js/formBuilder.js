@@ -410,7 +410,8 @@ $(document).ready(function () {
                         band_param_div.appendChild(bands_select);
                         band_param_div.appendChild(storage_bands_text);
                         // getting the bands for the storage unit;
-                        getBands(su_data[0].pk, pk);
+                        if(!executed_params)
+                            getBands(su_data[0].pk, pk);
                     });
                     break;
                 case "9":
