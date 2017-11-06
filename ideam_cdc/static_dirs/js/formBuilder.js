@@ -386,7 +386,7 @@ $(document).ready(function () {
                             storage_unit_option.value = storage_pk;
                             storage_unit_option.text = storage_name;
                             storage_unit_select.appendChild(storage_unit_option);
-                            if(storage_name === "LS7_ETM_LEDAPS")//storage_unit_executed_param.storage_unit_name)
+                            if(storage_name === storage_unit_executed_param.storage_unit_name)
                             {
                                 storage_unit_select.value = storage_pk;
                             }
