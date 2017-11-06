@@ -623,6 +623,7 @@ $(document).ready(function () {
                 //     break;
                 case "9":
                     document.getElementById("start_date_"+param.parameter_pk).value = param.start_date;
+                    document.getElementById("end_date_"+param.parameter_pk).value = param.end_date;
                     break;
                 case "12":
                     break;
