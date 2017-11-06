@@ -22,6 +22,7 @@ import mimetypes
 from wsgiref.util import FileWrapper
 from slugify import slugify
 import subprocess
+import glob
 
 
 class JSONResponse(HttpResponse):
