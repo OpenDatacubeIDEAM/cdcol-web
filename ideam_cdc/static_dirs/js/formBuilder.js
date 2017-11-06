@@ -571,7 +571,7 @@ $(document).ready(function () {
                                 notFinished = true,
                                 options = storage_unit_selector.options; i < length && notFinished; i++)
                             {
-                                if(options[i].text === param.storage_unit_name)
+                                if(options[i].text === "LS7_ETM_LEDAPS")//param.storage_unit_name)
                                 {
                                     storage_unit_selector.selectedIndex = i;
                                     notFinished = false;
