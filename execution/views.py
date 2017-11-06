@@ -265,8 +265,8 @@ def create_execution_parameter_objects(parameters, request, execution, current_v
             start_date_value = request.POST.get(start_date_name, False)
             end_date_value = request.POST.get(end_date_name, False)
             # parsing dates
-            start_date_value = datetime.datetime.strptime(start_date_value, "%d/%m/%Y")
-            end_date_value = datetime.datetime.strptime(end_date_value, "%d/%m/%Y")
+            start_date_value = datetime.datetime.strptime(start_date_value, "%d-%m-%Y")
+            end_date_value = datetime.datetime.strptime(end_date_value, "%d-%m-%Y")
             # TIME PERIOD TYPE
             new_execution_parameter = TimePeriodType(
                 execution=execution,
