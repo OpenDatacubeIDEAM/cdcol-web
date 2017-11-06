@@ -153,6 +153,8 @@ $(document).ready(function () {
     }
 
     function createForm(json) {
+        executed_params = JSON.parse(executed_params);
+        console.log(executed_params);
         // obtaining the form
         var f = document.getElementById("mainForm");
         // iterating over the parameters
@@ -373,6 +375,7 @@ $(document).ready(function () {
                         storage_unit_select.onchange = getBands;
                         // storage_unit_options
                         var storage_unit_option = document.createElement("option");
+                        var storage_unit_executed_param = getExecutedParam(pk);
                         jQuery.each(su_data, function (i, storage_unit_value) {
                             var storage_pk = storage_unit_value.pk;
                             var storage_name = storage_unit_value.fields.name;
@@ -380,6 +383,10 @@ $(document).ready(function () {
                             storage_unit_option.value = storage_pk;
                             storage_unit_option.text = storage_name;
                             storage_unit_select.appendChild(storage_unit_option);
+                            if(storage_name === storage_unit_executed_param.storage_unit_name)
+                            {
+                                storage_unit_select.value = storage_pk;
+                            }
                         });
                         // bands_select
                         var bands_select = document.createElement("select");
@@ -533,8 +540,22 @@ $(document).ready(function () {
             autoclose: true,
             todayHighlight: true
         });
-        executed_params = JSON.parse(executed_params);
-        console.log(executed_params);
+        console.log("Creating Send Button");
+        var send_button = document.createElement("button");
+        send_button.type = "submit";
+        send_button.className = "btn btn-default";
+        send_button.innerHTML = "Ejecutar Algoritmo";
+        var param_div = document.createElement("div");
+        param_div.className = "text-center";
+        // appending the button
+        param_div.appendChild(send_button);
+        f.appendChild(param_div);
+        // appending the custom form
+        $("mainForm").append(f);
+    };
+
+    function setExecutedParameters()
+    {
         for(var i = 0, length = executed_params.length; i< length; i++)
         {
             var param = executed_params[i];
@@ -562,24 +583,18 @@ $(document).ready(function () {
                     changeRectBounds();
                     break;
                 case "8":
-                    var intervalId = setInterval(function(){
-                        var storage_unit_selector = document.getElementById("storage_unit_"+param.parameter_pk);
-                        if(storage_unit_selector)
+                    var storage_unit_selector = document.getElementById("storage_unit_"+param.parameter_pk);
+                    for(var i = 0,
+                            length = storage_unit_selector.length,
+                            notFinished = true,
+                            options = storage_unit_selector.options; i < length && notFinished; i++)
+                    {
+                        if(options[i].text === param.storage_unit_name)
                         {
-                            for(var i = 0,
-                                length = storage_unit_selector.length,
-                                notFinished = true,
-                                options = storage_unit_selector.options; i < length && notFinished; i++)
-                            {
-                                if(options[i].text === "LS7_ETM_LEDAPS")//param.storage_unit_name)
-                                {
-                                    storage_unit_selector.selectedIndex = i;
-                                    notFinished = false;
-                                }
-                            }
-                            clearInterval(intervalId);
+                            storage_unit_selector.selectedIndex = i;
+                            notFinished = false;
                         }
-                    }, 100);
+                    }
                     break;
                 case "9":
                     break;
@@ -591,18 +606,16 @@ $(document).ready(function () {
                     break;
             }
         }
-
-        console.log("Creating Send Button");
-        var send_button = document.createElement("button");
-        send_button.type = "submit";
-        send_button.className = "btn btn-default";
-        send_button.innerHTML = "Ejecutar Algoritmo";
-        var param_div = document.createElement("div");
-        param_div.className = "text-center";
-        // appending the button
-        param_div.appendChild(send_button);
-        f.appendChild(param_div);
-        // appending the custom form
-        $("mainForm").append(f);
-    };
+    }
+    function getExecutedParam(param_pk)
+    {
+        for(var i = 0, length = executed_params.length; i< length; i++)
+        {
+            if(executed_params[i].parameter_pk == param_pk)
+            {
+                return executed_params[i];
+            }
+        }
+        return null;
+    }
 });
