@@ -183,6 +183,7 @@
                             {% if review %}
                                 <nav>
                                     <a href="#" class="btn btn-gray btn-md btn-block">No hay acciones disponibles</a>
+                                    <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.number execution.id" class="btn btn-gray btn-md btn-block">Replicar ejecución</a>
                                 </nav>
                             {% else %}
                                 <nav>
@@ -192,6 +193,7 @@
                                                 Ejecución</a>
                                         {% else %}
                                             <a href="#" class="btn btn-gray btn-md btn-block">No hay acciones disponibles</a>
+                                            <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.number execution.id" class="btn btn-gray btn-md btn-block">Replicar ejecución</a>
                                         {% endif %}
                                     {% endif %}
                                 </nav>
