@@ -630,10 +630,10 @@ $(document).ready(function () {
                     document.getElementById("start_date_"+param.parameter_pk).value = param.start_date;
                     document.getElementById("end_date_"+param.parameter_pk).value = param.end_date;
                     break;
-                case "12":
-                    break;
-                case "13":
-                    break;
+                // case "12":
+                //     break;
+                // // case "13":
+                // //     break;
                 default:
                     break;
             }
