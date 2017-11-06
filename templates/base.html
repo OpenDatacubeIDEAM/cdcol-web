@@ -148,7 +148,9 @@
                                                 <!-- mega-menu start -->
                                                 {% if user.is_authenticated %}
                                                     {% if perms.storage.can_list_units %}
-                                                        <a href="{% url 'storage:index' %}">Almacenamiento</a>
+                                                        <li >
+                                                            <a href="{% url 'storage:index' %}">Almacenamiento</a>
+                                                        </li>
                                                     {% endif %}
                                                     {% if perms.algorithm.can_list_algorithms %}
                                                         <li class="dropdown ">
