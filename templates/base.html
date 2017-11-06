@@ -174,8 +174,8 @@
                                                                         </li>
                                                                     {% endif %}
                                                                     {% if perms.ingest_template.can_list_ingest_templates %}
-                                                                        <li class="dropdown ">
-                                                                            <a class="dropdown-toggle" data-toggle="dropdown" href="{% url 'ingest_template:index' %}">Scripts de generación de metadatos</a>
+                                                                        <li>
+                                                                            <a href="{% url 'ingest_template:index' %}">Scripts de generación de metadatos</a>
                                                                         </li>
                                                                     {% endif %}
                                                                 </li>
@@ -192,13 +192,11 @@
                                                            href="">Bienvenido</a>
                                                         <ul class="dropdown-menu">
                                                             <li class="dropdown ">
-                                                            <li class="dropdown ">
-                                                                <a class="dropdown-toggle" data-toggle="dropdown"
-                                                                   href="{% url 'profile:index' %}">Mi Perfil</a>
+                                                            <li>
+                                                                <a href="{% url 'profile:index' %}">Mi Perfil</a>
                                                             </li>
-                                                            <li class="dropdown ">
-                                                                <a class="dropdown-toggle" data-toggle="dropdown"
-                                                                   href="#"
+                                                            <li>
+                                                                <a href="#"
                                                                    onclick="document.getElementById('logout_form').submit();">Cerrar
                                                                     Sesión</a>
                                                                 <form id="logout_form" method="post"
