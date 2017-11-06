@@ -169,8 +169,8 @@
                                                             <ul class="dropdown-menu">
                                                                 <li class="dropdown ">
                                                                     {% if perms.template.can_list_yaml_templates %}
-                                                                        <li class="dropdown ">
-                                                                            <a class="dropdown-toggle" data-toggle="dropdown" href="{% url 'template:index' %}">YAML de descripción e ingesta</a>
+                                                                        <li>
+                                                                            <a href="{% url 'template:index' %}">YAML de descripción e ingesta</a>
                                                                         </li>
                                                                     {% endif %}
                                                                     {% if perms.ingest_template.can_list_ingest_templates %}
@@ -183,9 +183,8 @@
                                                         </li>
                                                     {% endif %}
                                                     {% if perms.ingest.can_list_storage_tasks %}
-                                                        <li class="dropdown ">
-                                                            <a class="dropdown-toggle" data-toggle="dropdown"
-                                                               href="{% url 'ingest:index' %}">Ingesta</a>
+                                                        <li>
+                                                            <a href="{% url 'ingest:index' %}">Ingesta</a>
                                                         </li>
                                                     {% endif %}
                                                     <li class="dropdown ">
