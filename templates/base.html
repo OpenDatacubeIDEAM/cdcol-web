@@ -149,7 +149,7 @@
                                                 {% if user.is_authenticated %}
                                                     {% if perms.storage.can_list_units %}
                                                         <li class="">
-                                                            <a class="" data-toggle="dropdown"
+                                                            <a class="dropdown-toggle" data-toggle="dropdown"
                                                                href="{% url 'storage:index' %}">Almacenamiento</a>
                                                         </li>
                                                     {% endif %}
@@ -400,7 +400,7 @@
 <script type="text/javascript" src={% static "plugins/jquery.browser.js" %}></script>
 <script type="text/javascript" src={% static "plugins/SmoothScroll.js" %}></script>
 <!-- Initialization of Plugins -->
-<!--<script type="text/javascript" src={% static "js/template.js" %}></script>-->
+<script type="text/javascript" src={% static "js/template.js" %}></script>
 <!-- Custom Scripts -->
 <script type="text/javascript" src={% static "js/custom.js" %}></script>
 {% block extra_body %}
