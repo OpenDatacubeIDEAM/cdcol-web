@@ -417,7 +417,7 @@ $(document).ready(function () {
                         band_param_div.appendChild(bands_select);
                         band_param_div.appendChild(storage_bands_text);
                         // getting the bands for the storage unit;
-                        getBands(storage_unit_select.value, pk);
+                        getBands(parseFloat(storage_unit_select.value), pk);
                     });
                     break;
                 case "9":
