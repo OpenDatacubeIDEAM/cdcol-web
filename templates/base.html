@@ -148,7 +148,7 @@
                                                 <!-- mega-menu start -->
                                                 {% if user.is_authenticated %}
                                                     {% if perms.storage.can_list_units %}
-                                                        <li class="">
+                                                        <li class="" href="{% url 'storage:index' %}">
                                                             <a class="dropdown-toggle" data-toggle="dropdown"
                                                                href="{% url 'storage:index' %}">Almacenamiento</a>
                                                         </li>
