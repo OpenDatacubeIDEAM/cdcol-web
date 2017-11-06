@@ -95,7 +95,7 @@
                             var date = new Date(data);
                             var month = date.getMonth() + 1 + "";
 
-                            return date.getDay()+"-"+date.getMonth()+"-"+date.getFullYear()+" "+date.getHours()+":"+date.getMinutes();
+                            return ('0'+date.getDay()).slice(-2)+"-"+date.getMonth()+"-"+date.getFullYear()+" "+date.getHours()+":"+date.getMinutes();
                         }
                     },
                     {"data": "created_by"},
