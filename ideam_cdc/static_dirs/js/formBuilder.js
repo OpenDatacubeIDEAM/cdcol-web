@@ -527,6 +527,7 @@ $(document).ready(function () {
                         storage_unit_select.id = "storage_unit_"+pk;
                         storage_unit_select.name = "storage_unit_"+pk;
                         storage_unit_select.className = "form-control";
+                        var storage_unit_executed_param = getExecutedParam(pk);
                         // storage_unit_options
                         var storage_unit_option = document.createElement("option");
                         jQuery.each(su_data, function (i, storage_unit_value) {
@@ -536,6 +537,10 @@ $(document).ready(function () {
                             storage_unit_option.value = storage_pk;
                             storage_unit_option.text = storage_name;
                             storage_unit_select.appendChild(storage_unit_option);
+                            if(storage_name === storage_unit_executed_param.storage_unit_name)
+                            {
+                                storage_unit_select.value = storage_pk;
+                            }
                         });
                         // ===== LABELS =====
                         var storage_unit_label = document.createElement("label");
