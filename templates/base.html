@@ -148,20 +148,20 @@
                                                 <!-- mega-menu start -->
                                                 {% if user.is_authenticated %}
                                                     {% if perms.storage.can_list_units %}
-                                                        <li class="" href="{% url 'storage:index' %}">
-                                                            <a class="" data-toggle="dropdown"
+                                                        <li class="dropdown ">
+                                                            <a class="dropdown-toggle" data-toggle="dropdown"
                                                                href="{% url 'storage:index' %}">Almacenamiento</a>
                                                         </li>
                                                     {% endif %}
                                                     {% if perms.algorithm.can_list_algorithms %}
-                                                        <li class="">
-                                                        <a class="" data-toggle="dropdown"
+                                                        <li class="dropdown ">
+                                                        <a class="dropdown-toggle" data-toggle="dropdown"
                                                            href="{% url 'algorithm:index' %}">Mis Algoritmos</a>
                                                     </li>
                                                     {% endif %}
                                                     {% if perms.execution.can_list_executions %}
-                                                        <li class="">
-                                                            <a class="" data-toggle="dropdown"
+                                                        <li class="dropdown ">
+                                                            <a class="dropdown-toggle" data-toggle="dropdown"
                                                                href="{% url 'execution:index' %}">Ejecuciones</a>
                                                         </li>
                                                     {% endif %}
@@ -172,13 +172,13 @@
                                                             <ul class="dropdown-menu">
                                                                 <li class="dropdown ">
                                                                     {% if perms.template.can_list_yaml_templates %}
-                                                                        <li class="">
-                                                                            <a class="" data-toggle="dropdown" href="{% url 'template:index' %}">YAML de descripción e ingesta</a>
+                                                                        <li class="dropdown ">
+                                                                            <a class="dropdown-toggle" data-toggle="dropdown" href="{% url 'template:index' %}">YAML de descripción e ingesta</a>
                                                                         </li>
                                                                     {% endif %}
                                                                     {% if perms.ingest_template.can_list_ingest_templates %}
-                                                                        <li class="">
-                                                                            <a class="" data-toggle="dropdown" href="{% url 'ingest_template:index' %}">Scripts de generación de metadatos</a>
+                                                                        <li class="dropdown ">
+                                                                            <a class="dropdown-toggle" data-toggle="dropdown" href="{% url 'ingest_template:index' %}">Scripts de generación de metadatos</a>
                                                                         </li>
                                                                     {% endif %}
                                                                 </li>
@@ -186,8 +186,8 @@
                                                         </li>
                                                     {% endif %}
                                                     {% if perms.ingest.can_list_storage_tasks %}
-                                                        <li class="">
-                                                            <a class="" data-toggle="dropdown"
+                                                        <li class="dropdown ">
+                                                            <a class="dropdown-toggle" data-toggle="dropdown"
                                                                href="{% url 'ingest:index' %}">Ingesta</a>
                                                         </li>
                                                     {% endif %}
@@ -195,13 +195,13 @@
                                                         <a class="dropdown-toggle" data-toggle="dropdown"
                                                            href="">Bienvenido</a>
                                                         <ul class="dropdown-menu">
-                                                            <li class="dropdown">
-                                                            <li class="">
-                                                                <a class="" data-toggle="dropdown"
+                                                            <li class="dropdown ">
+                                                            <li class="dropdown ">
+                                                                <a class="dropdown-toggle" data-toggle="dropdown"
                                                                    href="{% url 'profile:index' %}">Mi Perfil</a>
                                                             </li>
-                                                            <li class="">
-                                                                <a class="" data-toggle="dropdown"
+                                                            <li class="dropdown ">
+                                                                <a class="dropdown-toggle" data-toggle="dropdown"
                                                                    href="#"
                                                                    onclick="document.getElementById('logout_form').submit();">Cerrar
                                                                     Sesión</a>
