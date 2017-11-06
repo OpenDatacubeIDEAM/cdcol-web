@@ -209,13 +209,11 @@
                                                         </ul>
                                                     </li>
                                                 {% else %}
-                                                    <li class="dropdown ">
-                                                        <a class="dropdown-toggle" data-toggle="dropdown"
-                                                           href="{% url 'account_signup' %}">Registro</a>
+                                                    <li>
+                                                        <a href="{% url 'account_signup' %}">Registro</a>
                                                     </li>
-                                                    <li class="dropdown ">
-                                                        <a class="dropdown-toggle" data-toggle="dropdown"
-                                                           href="{% url 'account_login' %}">Iniciar Sesión</a>
+                                                    <li>
+                                                        <a href="{% url 'account_login' %}">Iniciar Sesión</a>
                                                     </li>
 
                                                 {% endif %}
