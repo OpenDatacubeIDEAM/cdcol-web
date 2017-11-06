@@ -427,7 +427,7 @@ $(document).ready(function () {
                                 var options = bands_select.options;
                                 for(var i = 0, length = options.length; i< length; i++)
                                 {
-                                    if(options[i].value in bands)
+                                    if(bands.contains(options[i].value))
                                     {
                                         options[i].selected = true;
                                     }
