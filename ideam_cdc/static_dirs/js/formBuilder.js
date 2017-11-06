@@ -131,7 +131,7 @@ $(document).ready(function () {
         type: 'GET'
     });
 
-    function getBands(storageUnitSelected, elementId){
+    function getBands(storageUnitSelected, elementId, callback){
         if (typeof(storageUnitSelected) !== 'number'){
             var element = this.id;
             storageUnitSelected = this.options[this.selectedIndex].value;
@@ -148,6 +148,9 @@ $(document).ready(function () {
                 band_option.value = bands[i].name;
                 band_option.text = bands[i].name;
                 bands_select.appendChild(band_option);
+            }
+            if(typeof callback === 'function') {
+                callback();
             }
         });
     }
@@ -417,7 +420,28 @@ $(document).ready(function () {
                         band_param_div.appendChild(bands_select);
                         band_param_div.appendChild(storage_bands_text);
                         // getting the bands for the storage unit;
-                        getBands(parseFloat(storage_unit_select.value), pk);
+                        if(storage_unit_executed_param)
+                        {
+                            getBands(parseFloat(storage_unit_select.value), pk, function(){
+                                var bands = storage_unit_executed_param.bands.split(",");
+                                var options = bands_select.options;
+                                for(var i = 0, length = options.length; i< length; i++)
+                                {
+                                    if(options[i].value in bands)
+                                    {
+                                        options[i].selected = true;
+                                    }
+                                    else
+                                    {
+                                        options[i].selected = false;
+                                    }
+                                }
+                            });
+                        }
+                        else
+                        {
+                            getBands(parseFloat(storage_unit_select.value), pk);
+                        }
                     });
                     break;
                 case "9":
