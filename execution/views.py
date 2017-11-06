@@ -348,7 +348,7 @@ def unzip_every_file_in_directory(execution_directory):
 
 @login_required(login_url='/accounts/login/')
 @permission_required(('execution.can_create_new_execution', 'execution.can_view_new_execution'), raise_exception=True)
-def new_execution(request, algorithm_id, version_id, copy_execution_id=10):
+def new_execution(request, algorithm_id, version_id, copy_execution_id):
     executed_params = []
     if copy_execution_id:
         print copy_execution_id
