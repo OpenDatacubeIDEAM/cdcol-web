@@ -183,7 +183,7 @@
                             {% if review %}
                                 <nav>
                                     <a href="#" class="btn btn-gray btn-md btn-block">No hay acciones disponibles</a>
-                                    <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.number execution.id" class="btn btn-primary btn-md btn-block">Replicar ejecución</a>
+                                    <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.id execution.id" class="btn btn-primary btn-md btn-block">Replicar ejecución</a>
                                 </nav>
                             {% else %}
                                 <nav>
@@ -191,7 +191,7 @@
                                         {% if perms.execution.can_rate_execution %}
                                             <a href="{% url 'execution:rate_execution' execution.id %}#rating" class="btn btn-primary btn-md btn-block">Calificar Resultados de la
                                                 Ejecución</a>
-                                            <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.number execution.id %}#rating" class="btn btn-primary btn-md btn-block">Replicar ejecución</a>
+                                            <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.id execution.id %}#rating" class="btn btn-primary btn-md btn-block">Replicar ejecución</a>
                                         {% else %}
                                             <a href="#" class="btn btn-gray btn-md btn-block">No hay acciones disponibles</a>
                                             <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.id execution.id" class="btn btn-primary btn-md btn-block">Replicar ejecución</a>
