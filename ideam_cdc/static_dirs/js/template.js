@@ -1737,9 +1737,9 @@
 		if ($("#offcanvas").length>0) {
 			$('#offcanvas [data-toggle=dropdown]').on('click', function(event) {
 			// Avoid following the href location when clicking
-			event.preventDefault();
+			// event.preventDefault();
 			// Avoid having the menu to close when clicking
-			event.stopPropagation();
+			// event.stopPropagation();
 			// close all the siblings
 			$(this).parent().siblings().removeClass('open');
 			// close all the submenus of siblings
