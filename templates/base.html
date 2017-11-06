@@ -143,15 +143,12 @@
                                         <!-- Collect the nav links, forms, and other content for toggling -->
                                         <div class="collapse navbar-collapse pull-right" style="padding-right: 0px;" id="navbar-collapse-1">
                                             <!-- main-menu -->
-                                            <ul class="nav navbar-nav">
+                                            <nav class="nav navbar-nav">
 
                                                 <!-- mega-menu start -->
                                                 {% if user.is_authenticated %}
                                                     {% if perms.storage.can_list_units %}
-                                                        <li class="dropdown ">
-                                                            <a class="dropdown-toggle" data-toggle="dropdown"
-                                                               href="{% url 'storage:index' %}">Almacenamiento</a>
-                                                        </li>
+                                                        <a href="{% url 'storage:index' %}">Almacenamiento</a>
                                                     {% endif %}
                                                     {% if perms.algorithm.can_list_algorithms %}
                                                         <li class="dropdown ">
@@ -226,7 +223,7 @@
 
                                                 {% endif %}
                                                 <!-- mega-menu end -->
-                                            </ul>
+                                            </nav>
                                             <!-- main-menu end -->
                                         </div>
 
