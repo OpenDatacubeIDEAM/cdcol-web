@@ -1704,7 +1704,7 @@
 							$('html,body').animate({
 								scrollTop: target.offset().top-63
 							}, 1000);
-							return false;
+							// return false;
 						}
 					}
 				});
