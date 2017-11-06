@@ -194,7 +194,7 @@
                                             <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.number execution.id %}#rating" class="btn btn-primary btn-md btn-block">Replicar ejecución</a>
                                         {% else %}
                                             <a href="#" class="btn btn-gray btn-md btn-block">No hay acciones disponibles</a>
-                                            <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id int(execution.version.number) execution.id" class="btn btn-primary btn-md btn-block">Replicar ejecución</a>
+                                            <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.id execution.id" class="btn btn-primary btn-md btn-block">Replicar ejecución</a>
                                         {% endif %}
                                     {% endif %}
                                 </nav>
