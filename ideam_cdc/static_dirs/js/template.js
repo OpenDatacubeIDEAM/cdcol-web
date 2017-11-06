@@ -1196,7 +1196,7 @@
 					$(this).parent().addClass("active");
 					$container.isotope({ filter: filterValue });
 					$container_fitrows.isotope({ filter: filterValue });
-					return false;
+					// return false;
 				});
 			});
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -1704,7 +1704,7 @@
 							$('html,body').animate({
 								scrollTop: target.offset().top-63
 							}, 1000);
-							return false;
+							// return false;
 						}
 					}
 				});
@@ -1717,7 +1717,7 @@
 							$('html,body').animate({
 								scrollTop: target.offset().top
 							}, 1000);
-							return false;
+							// return false;
 						}
 					}
 				});
@@ -1805,7 +1805,7 @@
 						x: 20
 					}
 				});
-				return false;
+				// return false;
 			});
 		};
 
