@@ -95,7 +95,11 @@
                             var date = new Date(data);
                             var month = date.getMonth() + 1 + "";
 
-                            return ('0'+date.getDay()).slice(-2)+"-"+date.getMonth()+"-"+date.getFullYear()+" "+date.getHours()+":"+date.getMinutes();
+                            return ('0'+date.getDay()).slice(-2)+"-"+
+                                   ('0'+date.getMonth()).slice(-2)+"-"+
+                                   date.getFullYear()+" "+
+                                   ('0'+date.getHours()).slice(-2)+":"+
+                                   ('0'+date.getMinutes()).slice(-2);
                         }
                     },
                     {"data": "created_by"},
