@@ -33,7 +33,7 @@
                 <div class="main col-md-12">
                     <h3 class="title">Unidades de Almacenamiento</h3>
                     <div class="separator-2"></div>
-                    <p>A continuación se presentan las unidades de almacenamiento actuales</p>
+                    <p>A continuaciÃ³n se presentan las unidades de almacenamiento actuales</p>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="pull-right" style="margin-bottom: 10px;">
@@ -53,7 +53,7 @@
                                     <thead>
                                     <tr>
                                         <th>Nombre</th>
-                                        <th>Fecha de Creación</th>
+                                        <th>Fecha de CreaciÃ³n</th>
                                         <th>Creada por</th>
                                         <th>Acciones</th>
                                     </tr>
@@ -94,7 +94,12 @@
                         "render": function (data) {
                             var date = new Date(data);
                             var month = date.getMonth() + 1 + "";
-                            return date.toLocaleString();
+
+                            return ('0'+date.getDay()).slice(-2)+"-"+
+                                   ('0'+date.getMonth()).slice(-2)+"-"+
+                                   date.getFullYear()+" "+
+                                   ('0'+date.getHours()).slice(-2)+":"+
+                                   ('0'+date.getMinutes()).slice(-2);
                         }
                     },
                     {"data": "created_by"},
