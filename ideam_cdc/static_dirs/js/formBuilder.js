@@ -125,12 +125,13 @@ $(document).ready(function () {
         dataType: 'json',
         success: function (data) {
             console.log("Loading parameters for version " + versionValue + " of the algorithm.");
+            console.log(data);
             createForm(data);
         },
         type: 'GET'
     });
 
-    function getBands(storageUnitSelected, elementId){
+    function getBands(storageUnitSelected, elementId, callback){
         if (typeof(storageUnitSelected) !== 'number'){
             var element = this.id;
             storageUnitSelected = this.options[this.selectedIndex].value;
@@ -148,10 +149,15 @@ $(document).ready(function () {
                 band_option.text = bands[i].name;
                 bands_select.appendChild(band_option);
             }
+            if(typeof callback === 'function') {
+                callback();
+            }
         });
     }
 
     function createForm(json) {
+        executed_params = JSON.parse(executed_params);
+        console.log(executed_params);
         // obtaining the form
         var f = document.getElementById("mainForm");
         // iterating over the parameters
@@ -372,6 +378,7 @@ $(document).ready(function () {
                         storage_unit_select.onchange = getBands;
                         // storage_unit_options
                         var storage_unit_option = document.createElement("option");
+                        var storage_unit_executed_param = getExecutedParam(pk);
                         jQuery.each(su_data, function (i, storage_unit_value) {
                             var storage_pk = storage_unit_value.pk;
                             var storage_name = storage_unit_value.fields.name;
@@ -379,6 +386,10 @@ $(document).ready(function () {
                             storage_unit_option.value = storage_pk;
                             storage_unit_option.text = storage_name;
                             storage_unit_select.appendChild(storage_unit_option);
+                            if(storage_unit_executed_param && storage_name === storage_unit_executed_param.storage_unit_name)
+                            {
+                                storage_unit_select.value = storage_pk;
+                            }
                         });
                         // bands_select
                         var bands_select = document.createElement("select");
@@ -409,7 +420,28 @@ $(document).ready(function () {
                         band_param_div.appendChild(bands_select);
                         band_param_div.appendChild(storage_bands_text);
                         // getting the bands for the storage unit;
-                        getBands(su_data[0].pk, pk);
+                        if(storage_unit_executed_param)
+                        {
+                            getBands(parseFloat(storage_unit_select.value), pk, function(){
+                                var bands = storage_unit_executed_param.bands.split(",");
+                                var options = bands_select.options;
+                                for(var i = 0, length = options.length; i< length; i++)
+                                {
+                                    if(bands.includes(options[i].value))
+                                    {
+                                        options[i].selected = true;
+                                    }
+                                    else
+                                    {
+                                        options[i].selected = false;
+                                    }
+                                }
+                            });
+                        }
+                        else
+                        {
+                            getBands(parseFloat(storage_unit_select.value), pk);
+                        }
                     });
                     break;
                 case "9":
@@ -495,6 +527,7 @@ $(document).ready(function () {
                         storage_unit_select.id = "storage_unit_"+pk;
                         storage_unit_select.name = "storage_unit_"+pk;
                         storage_unit_select.className = "form-control";
+                        var storage_unit_executed_param = getExecutedParam(pk);
                         // storage_unit_options
                         var storage_unit_option = document.createElement("option");
                         jQuery.each(su_data, function (i, storage_unit_value) {
@@ -504,6 +537,10 @@ $(document).ready(function () {
                             storage_unit_option.value = storage_pk;
                             storage_unit_option.text = storage_name;
                             storage_unit_select.appendChild(storage_unit_option);
+                            if(storage_unit_executed_param && storage_name === storage_unit_executed_param.storage_unit_name)
+                            {
+                                storage_unit_select.value = storage_pk;
+                            }
                         });
                         // ===== LABELS =====
                         var storage_unit_label = document.createElement("label");
@@ -527,7 +564,7 @@ $(document).ready(function () {
         });
         console.log("Configuring datepicker");
         $('.datepicker').datepicker({
-            format: "dd/mm/yyyy",
+            format: "dd-mm-yyyy",
             language: "es",
             autoclose: true,
             todayHighlight: true
@@ -544,5 +581,73 @@ $(document).ready(function () {
         f.appendChild(param_div);
         // appending the custom form
         $("mainForm").append(f);
+        setExecutedParameters();
     };
+
+    function setExecutedParameters()
+    {
+        for(var i = 0, length = executed_params.length; i< length; i++)
+        {
+            var param = executed_params[i];
+            console.log("parametro: ");
+            console.log(param);
+            switch(param.parameter_type)
+            {
+                case "1":
+                    document.getElementById("string_input_"+param.parameter_pk).value = param.value;
+                    break;
+                case "2":
+                    document.getElementById("integer_input_"+param.parameter_pk).value = param.value;
+                    break;
+                case "3":
+                    document.getElementById("double_input_"+param.parameter_pk).value = param.value;
+                    break;
+                case "4":
+                    document.getElementById("boolean_input_"+param.parameter_pk).checked = param.value == "True";
+                    break;
+                case "7":
+                    document.getElementById("sw_latitude").value = param.latitude_start;
+                    document.getElementById("sw_longitude").value = param.longitude_start;
+                    document.getElementById("ne_latitude").value = param.latitude_end;
+                    document.getElementById("ne_longitude").value = param.longitude_end;
+                    changeRectBounds();
+                    break;
+                // case "8":
+                //     var storage_unit_selector = document.getElementById("storage_unit_"+param.parameter_pk);
+                //     for(var i = 0,
+                //             length = storage_unit_selector.length,
+                //             notFinished = true,
+                //             options = storage_unit_selector.options; i < length && notFinished; i++)
+                //     {
+                //         if(options[i].text === param.storage_unit_name)
+                //         {
+                //             storage_unit_selector.selectedIndex = i;
+                //             notFinished = false;
+                //         }
+                //     }
+                //     break;
+                case "9":
+                    document.getElementById("start_date_"+param.parameter_pk).value = param.start_date;
+                    document.getElementById("end_date_"+param.parameter_pk).value = param.end_date;
+                    break;
+                // case "12":
+                //     break;
+                // // case "13":
+                // //     break;
+                default:
+                    break;
+            }
+        }
+    }
+    function getExecutedParam(param_pk)
+    {
+        for(var i = 0, length = executed_params.length; i< length; i++)
+        {
+            if(executed_params[i].parameter_pk == param_pk)
+            {
+                return executed_params[i];
+            }
+        }
+        return null;
+    }
 });
