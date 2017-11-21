@@ -564,7 +564,7 @@ $(document).ready(function () {
         });
         console.log("Configuring datepicker");
         $('.datepicker').datepicker({
-            format: "dd-mm-yyyy",
+            format: "yyyy-mm-dd",
             language: "es",
             autoclose: true,
             todayHighlight: true
