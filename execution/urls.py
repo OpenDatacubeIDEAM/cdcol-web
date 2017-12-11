@@ -11,11 +11,11 @@ urlpatterns = [
 	# ex: /execution/detail/11
 	url(r'^(?P<execution_id>[0-9]+)/detail/$', views.detail, name='detail'),
 	# ex: /execution/11/image/[image_name.nc]/download/
-	url(r'^(?P<execution_id>[0-9]+)/image/(?P<image_name>.+)/download/$', views.download_result, name='download_result'),
+	url(r'^download/image/(?P<execution_id>[0-9]+)/(?P<image_name>.+)$', views.download_result, name='download_result'),
 	# ex: /execution/11/image/[image_name.nc]/delete/
 	url(r'^(?P<execution_id>[0-9]+)/image/(?P<image_name>.+)/delete/$', views.delete_result, name='delete_result'),
 	# ex: /execution/11/zip/[parameter_name]/[file_name]/download/
-	url(r'^(?P<execution_id>[0-9]+)/zip/(?P<parameter_name>.+)/(?P<file_name>.+)/download$', views.download_parameter_file, name='download_parameter_file'),
+	url(r'^download/zip/(?P<execution_id>[0-9]+)/(?P<parameter_name>.+)/(?P<file_name>.+)$', views.download_parameter_file, name='download_parameter_file'),
 	# ex: /execution/11/image/[image_name.nc]/geotiff/
 	url(r'^(?P<execution_id>[0-9]+)/image/(?P<image_name>.+)/geotiff/$', views.generate_geotiff, name='generate_geotiff'),
 	# ex: /execution/new

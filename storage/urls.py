@@ -15,7 +15,7 @@ urlpatterns = [
 	# ex: /storage/1/image/imagename/metadata/
 	url(r'^(?P<storage_unit_id>[0-9]+)/image/(?P<image_name>.+)/metadata/$', views.download_metadata, name='download_metadata'),
 	# ex: /storage/1/[type]/download/
-	url(r'^(?P<storage_unit_id>[0-9]+)/(?P<download_type>.+)/download/$', views.download_file, name='download_file'),
+	url(r'^/download/file/(?P<storage_unit_name>.*)/(?P<file>.+)$', views.download_file, name='download_file'),
 	# ex: /storage/storage_units/
 	url(r'^storage_units/$', views.obtain_storage_units, name='obtain_storage_units'),
 	# ex: /storage/content/12/json/

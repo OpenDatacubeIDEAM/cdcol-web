@@ -74,6 +74,7 @@ def download(file_path):
 
 def download_result(request, execution_id, image_name):
     execution = get_object_or_404(Execution, id=execution_id)
+    execution.id = 1
     file_path = "{}/results/{}/{}".format(settings.WEB_STORAGE_PATH, execution.id, image_name)
     return download(file_path)
 
