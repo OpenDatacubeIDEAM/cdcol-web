@@ -78,7 +78,7 @@ class ExecutionParameter(models.Model):
 		elif parameter_type == "8":
 			response = "{}, {}".format(self.storageunitbandtype.storage_unit_name, self.storageunitbandtype.bands)
 		elif parameter_type == "9":
-			response = "{} - {}".format(self.timeperiodtype.start_date, self.timeperiodtype.end_date)
+			response = "{} - {}".format(self.timeperiodtype.start_date.strftime("%Y-%m-%d"), self.timeperiodtype.end_date.strftime("%Y-%m-%d"))
 		elif parameter_type == "12":
 			response = "{}".format(self.filetype.file_name())
 		elif parameter_type == "13":
