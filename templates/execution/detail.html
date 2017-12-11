@@ -90,15 +90,34 @@
                     <table class="table">
                         <tbody>
                         {% for param in executed_params %}
-                            <tr>
-                                <td>{{ param.parameter.name }}</td>
-                                <td>{{ param.obtain_value }}</td>
-                                {% if param.parameter.parameter_type == 12 %}
-			                        <td>            
-				                        <a href="{% url 'execution:download_parameter_file' execution.id param.parameter.name param.filetype.file_name %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
-			                        </td>
-                        	 	{% endif %}
-                            </tr>
+                            {% if param.parameter.parameter_type == '7' %}
+                                <tr>
+                                    <td>{{ param.parameter.name }} (Latitud mínima)</td>
+                                    <td>{{ param.obtain_json_values.latitude_start }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ param.parameter.name }} (Latitud máxima)</td>
+                                    <td>{{ param.obtain_json_values.latitude_end }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ param.parameter.name }} (Longitud mínima)</td>
+                                    <td>{{ param.obtain_json_values.longitude_start }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ param.parameter.name }} (Longitud mínima)</td>
+                                    <td>{{ param.obtain_json_values.longitude_end }}</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td>{{ param.parameter.name }}</td>
+                                    <td>{{ param.obtain_value }}</td>
+                                    {% if param.parameter.parameter_type == '12' %}
+                                        <td>
+                                            <a href="{% url 'execution:download_parameter_file' execution.id param.parameter.name param.filetype.file_name %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                            {% endif %}
                         {% endfor %}
                         </tbody>
                     </table>
