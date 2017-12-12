@@ -140,7 +140,7 @@
                                 return "<a href='" + newUrl + "' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>";
                             }
                             else{
-                                var option1 = "<a href='/storage/{{ storage_unit.id }}/image/" + pathName + "/download/' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Descargar</a>";
+                                var option1 = "<a href='/storage/download/image/{{ storage_unit.name }}/" + pathName + "' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Descargar</a>";
                                 var option2 = "<a href='/storage/{{ storage_unit.id }}/image/" + pathName + "/detail/' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>";
                                 return option1 + "\n" + option2;
                             }

@@ -117,8 +117,13 @@
                         "data": "created_at",
                         "render": function (data) {
                             var date = new Date(data);
-                            var datestring = ("0" + date.getDate()).slice(-2) + "-" + ("0"+(date.getMonth()+1)).slice(-2) + "-" +
-                                    date.getFullYear() + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
+                            date.setUTCHours(1);
+                            var day = ("0" + date.getDate()).slice(-2);
+                            var month = ("0"+(date.getMonth()+1)).slice(-2);
+                            var year = date.getFullYear();
+                            var hours = ("0" + date.getHours()).slice(-2);
+                            var minutes = ("0" + date.getMinutes()).slice(-2);
+                            var datestring = day + "-" + month + "-" + year + " " + hours + ":" + minutes;
                             return datestring;
                         }
                     },
@@ -126,8 +131,13 @@
                         "data": "started_at",
                         "render": function (data) {
                             var date = new Date(data);
-                            var datestring = ("0" + date.getDate()).slice(-2) + "-" + ("0"+(date.getMonth()+1)).slice(-2) + "-" +
-                                    date.getFullYear() + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
+                            date.setUTCHours(1);
+                            var day = ("0" + date.getDate()).slice(-2);
+                            var month = ("0"+(date.getMonth()+1)).slice(-2);
+                            var year = date.getFullYear();
+                            var hours = ("0" + date.getHours()).slice(-2);
+                            var minutes = ("0" + date.getMinutes()).slice(-2);
+                            var datestring = day + "-" + month + "-" + year + " " + hours + ":" + minutes;
                             return datestring;
                         }
                     },
@@ -138,8 +148,13 @@
                                 return "-";
                             }
                             var date = new Date(data);
-                            var datestring = ("0" + date.getDate()).slice(-2) + "-" + ("0"+(date.getMonth()+1)).slice(-2) + "-" +
-                                    date.getFullYear() + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
+                            date.setUTCHours(1);
+                            var day = ("0" + date.getDate()).slice(-2);
+                            var month = ("0"+(date.getMonth()+1)).slice(-2);
+                            var year = date.getFullYear();
+                            var hours = ("0" + date.getHours()).slice(-2);
+                            var minutes = ("0" + date.getMinutes()).slice(-2);
+                            var datestring = day + "-" + month + "-" + year + " " + hours + ":" + minutes;
                             return datestring;
                         }
                     },

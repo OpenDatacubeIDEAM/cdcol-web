@@ -29,7 +29,7 @@ urlpatterns = [
 	# ex: /algorithm/11/version/12
 	url(r'^(?P<algorithm_id>[0-9]+)/version/(?P<version_id>[0-9]+)$', views.version_detail, name='version_detail'),
 	# ex: /algorithm/11/version/12/download
-	url(r'^(?P<algorithm_id>[0-9]+)/version/(?P<version_id>[0-9]+)/download/$', views.download_version, name='download_version'),
+	url(r'^version/download/sourcecode/(?P<source_code_route>.*)', views.download_version, name='download_version'),
 	# ex: /algorithm/11/version/12/ratings
 	url(r'^(?P<algorithm_id>[0-9]+)/version/(?P<version_id>[0-9]+)/ratings$', views.version_rating, name='version_rating'),
 	# ==== Params ====

@@ -39,17 +39,17 @@
                         </tr>
                         <tr>
                             <td>Archivo de Descripción:</td>
-                            <td><a href="{% url 'storage:download_file' storage_unit.id 'description' %}"
+                            <td><a href="{% url 'storage:download_file' storage_unit.name storage_unit.description_file %}"
                                    class="btn btn-gray btn-sm"><i class="fa fa-download"></i> Descargar</a></td>
                         </tr>
                         <tr>
                             <td>Archivo de Ingesta:</td>
-                            <td><a href="{% url 'storage:download_file' storage_unit.id 'ingest' %}"
+                            <td><a href="{% url 'storage:download_file' storage_unit.name storage_unit.ingest_file %}"
                                class="btn btn-gray btn-sm"><i class="fa fa-download"></i> Descargar</a></td>
                         </tr>
                         <tr>
                             <td>Script de generación de metadatos::</td>
-                            <td><a href="{% url 'storage:download_file' storage_unit.id 'script' %}"
+                            <td><a href="{% url 'storage:download_file' storage_unit.name storage_unit.metadata_generation_script %}"
                                class="btn btn-gray btn-sm"><i class="fa fa-download"></i> Descargar</a></td>
                         </tr>
                         <tr>

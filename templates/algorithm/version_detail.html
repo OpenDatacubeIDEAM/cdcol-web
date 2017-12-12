@@ -47,7 +47,7 @@
                         </tr>
                         <tr>
                             <td>Código fuente:</td>
-                            <td><a href="{% url 'algorithm:download_version' version.algorithm.id version.id %}"
+                            <td><a href="{% url 'algorithm:download_version' version.source_code.name|slice:'35:' %}"
                                    class="btn btn-gray btn-sm"><i class="fa fa-download"></i> Descargar</a></td>
                         </tr>
                         <tr>
