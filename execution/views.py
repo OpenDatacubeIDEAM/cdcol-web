@@ -24,7 +24,7 @@ from slugify import slugify
 import subprocess
 import glob
 import time
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 
 class JSONResponse(HttpResponse):
@@ -100,8 +100,10 @@ def get_detail_context(execution_id):
                 try:
                     convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f)
                     f.state = convertion_task.state
-                except:
+                except ObjectDoesNotExist:
                     pass
+                except MultipleObjectsReturned:
+                    FileConvertionTask.objects.filter(execution=execution, filename=f).delete()
                 files.append(f)
     except:
         pass
