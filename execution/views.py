@@ -477,4 +477,4 @@ def generate_geotiff_task(request, execution_id, image_name):
         state = FileConvertionTask.SCHEDULED_STATE
     )
     new_file_convertion.save()
-    return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id':execution_id}))
+    return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': execution_id}))
