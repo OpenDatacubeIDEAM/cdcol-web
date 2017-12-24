@@ -167,11 +167,11 @@
                                                             <a href="{% url 'execution:download_result' execution.id file %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
                                                             {% if not execution.version.algorithm.multitemporal %}
                                                                 <a href="{% url 'execution:generate_geotiff_task' execution.id file %}" class="btn btn-gray btn-sm">
-                                                                    {% if file.state == '3' %}
+                                                                    {% if states[file] == '3' %}
                                                                         <i class="fa fa-file-image-o"></i> Descargar Geotiff
-                                                                    {% elif file.state == '4' %}
+                                                                    {% elif states[file] == '4' %}
                                                                         <i class="fa fa-file-image-o"></i> Error Geotiff
-                                                                    {% elif file.state %}
+                                                                    {% elif states[file] %}
                                                                         <i class="fa fa-spinner fa-spin"></i> Generando Geotiff
                                                                     {% else %}
                                                                         <i class="fa fa-play" aria-hidden="true"> Generar Geotiff
