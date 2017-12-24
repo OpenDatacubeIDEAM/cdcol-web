@@ -99,7 +99,7 @@ def get_detail_context(execution_id):
                 try:
                     convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f)
                     f.state = convertion_task.state
-                except ObjectDoesNotExist:
+                except:
                     pass
                 files.append(f)
     except:
@@ -473,7 +473,7 @@ def generate_geotiff_task(request, execution_id, image_name):
     execution = get_object_or_404(Execution, id = execution_id)
     new_file_convertion = FileConvertionTask(
         execution = execution,
-        file_name = image_name,
+        filename = image_name,
         state = FileConvertionTask.SCHEDULED_STATE,
     )
     new_file_convertion.save()
