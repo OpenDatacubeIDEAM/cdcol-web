@@ -297,15 +297,15 @@ class FileConvertionTask(models.Model):
 	FAILED_STATED = '3'
 	COMPLETED_STATE = '4'
 	# All the states
-	INGEST_STATES = (
+	CONVERTION_STATES = (
 		(SCHEDULED_STATE, "PROGRAMADA"),
 		(EXECUTING_STATE, "EN EJECUCIÓN"),
 		(FAILED_STATED, "CON FALLO"),
 		(COMPLETED_STATE, "COMPLETADA"),
 	)
-	execution_id = models.ForeignKey(Execution, on_delete=models.CASCADE, related_name='execution')
+	execution = models.ForeignKey(Execution, on_delete=models.CASCADE, related_name='execution')
 	filename = models.TextField()
-	state = models.CharField(max_length=2, choices=INGEST_STATES)
+	state = models.CharField(max_length=2, choices=CONVERTION_STATES)
 	error_messages = models.TextField()
 	logs = models.TextField()
 	start_execution_date = models.DateTimeField(null=True, blank=True)
