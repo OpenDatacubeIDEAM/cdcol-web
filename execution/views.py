@@ -93,15 +93,15 @@ def get_detail_context(execution_id):
     # getting the files from the filesystem
     system_path = "{}/results/{}/".format(settings.WEB_STORAGE_PATH, execution.id)
     files = []
-    states = {}
     try:
         for f in os.listdir(system_path):
             if ".tiff" not in f:
+                f = { 'file': f, 'state': False}
                 try:
                     convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f)
-                    states[f] = convertion_task.state
+                    f.state = convertion_task.state
                 except:
-                    states[f] = False
+                    pass
                 files.append(f)
     except:
         pass
@@ -117,7 +117,7 @@ def get_detail_context(execution_id):
         delete_time = None
     context = {'execution': execution, 'executed_params': executed_params, 'review': review, 'files': files,
                'current_executions': current_executions, 'temporizer_value': temporizer_value, 'delete_time': delete_time,
-               'system_path': system_path, 'states': states}
+               'system_path': system_path}
     return context
 
 
