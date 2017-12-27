@@ -96,7 +96,7 @@ def get_detail_context(execution_id):
     try:
         for f in os.listdir(system_path):
             if ".tiff" not in f:
-                f = { 'file': f, 'state': False}
+                f = {'file': f, 'state': False}
                 try:
                     convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f)
                     f.state = convertion_task.state
