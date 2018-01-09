@@ -98,12 +98,12 @@ def get_detail_context(execution_id):
             if ".tiff" not in f:
                 f = {'file': f, 'state': False}
                 try:
-                    convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f)
-                    f.state = convertion_task.state
+                    convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
+                    f['state'] = convertion_task.state
                 except ObjectDoesNotExist:
                     pass
                 except MultipleObjectsReturned:
-                    FileConvertionTask.objects.filter(execution=execution, filename=f).delete()
+                    FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
                 files.append(f)
     except:
         pass
