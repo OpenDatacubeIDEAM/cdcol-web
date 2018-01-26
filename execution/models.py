@@ -290,3 +290,28 @@ class Task(models.Model):
 	def __unicode__(self):
 		return "{} - {}".format(self.execution.id, self.uuid)
 
+
+class FileConvertionTask(models.Model):
+	SCHEDULED_STATE = '1'
+	EXECUTING_STATE = '2'
+	FAILED_STATED = '3'
+	COMPLETED_STATE = '4'
+	# All the states
+	CONVERTION_STATES = (
+		(SCHEDULED_STATE, "PROGRAMADA"),
+		(EXECUTING_STATE, "EN EJECUCIÓN"),
+		(FAILED_STATED, "CON FALLO"),
+		(COMPLETED_STATE, "COMPLETADA"),
+	)
+	execution = models.ForeignKey(Execution, on_delete=models.CASCADE, related_name='execution')
+	filename = models.TextField()
+	state = models.CharField(max_length=2, choices=CONVERTION_STATES)
+	error_messages = models.TextField()
+	logs = models.TextField()
+	start_execution_date = models.DateTimeField(null=True, blank=True)
+	end_execution_date = models.DateTimeField(null=True, blank=True)
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+
+	class Meta:
+		unique_together = ('execution', 'filename')

@@ -24,6 +24,7 @@ from slugify import slugify
 import subprocess
 import glob
 import time
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 
 class JSONResponse(HttpResponse):
@@ -95,6 +96,14 @@ def get_detail_context(execution_id):
     try:
         for f in os.listdir(system_path):
             if ".tiff" not in f:
+                f = {'file': f, 'state': False, 'tiff_file': f.replace('.nc', '.tiff')}
+                try:
+                    convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
+                    f['state'] = convertion_task.state
+                except ObjectDoesNotExist:
+                    pass
+                except MultipleObjectsReturned:
+                    FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
                 files.append(f)
     except:
         pass
@@ -462,3 +471,13 @@ def delete_result(request, execution_id, image_name):
                 time.sleep(0.5)
         context = get_detail_context(execution_id)
         return render(request, 'execution/detail.html', context)
+
+def generate_geotiff_task(request, execution_id, image_name):
+    execution = get_object_or_404(Execution, id = execution_id)
+    new_file_convertion = FileConvertionTask(
+        execution = execution,
+        filename = image_name,
+        state = FileConvertionTask.SCHEDULED_STATE
+    )
+    new_file_convertion.save()
+    return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': execution_id}))

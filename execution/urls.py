@@ -18,6 +18,7 @@ urlpatterns = [
 	url(r'^download/zip/(?P<execution_id>[0-9]+)/(?P<parameter_name>.+)/(?P<file_name>.+)$', views.download_parameter_file, name='download_parameter_file'),
 	# ex: /execution/11/image/[image_name.nc]/geotiff/
 	url(r'^(?P<execution_id>[0-9]+)/image/(?P<image_name>.+)/geotiff/$', views.generate_geotiff, name='generate_geotiff'),
+	url(r'^generate_geotiff/(?P<execution_id>[0-9]+)/(?P<image_name>.+)$', views.generate_geotiff_task, name='generate_geotiff_task'),
 	# ex: /execution/new
 	url(r'^new/$', views.new_blank_execution, name='new_blank_execution'),
 	# # ex: /execution/new/12/version/11
