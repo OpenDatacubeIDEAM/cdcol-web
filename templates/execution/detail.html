@@ -219,6 +219,7 @@
                                 <nav>
                                     <!--<a href="#" class="btn btn-gray btn-md btn-block">No hay acciones disponibles</a>-->
                                     <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.id execution.id %}" class="btn btn-primary btn-md btn-block">Replicar ejecución</a>
+                                    <a href="" class="btn btn-error btn-md btn-block">Cancelar ejecución</a>
                                 </nav>
                             {% else %}
                                 <nav>
@@ -227,9 +228,11 @@
                                             <a href="{% url 'execution:rate_execution' execution.id %}#rating" class="btn btn-primary btn-md btn-block">Calificar Resultados de la
                                                 Ejecución</a>
                                             <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.id execution.id %}" class="btn btn-primary btn-md btn-block">Replicar ejecución</a>
+                                            <a href="" class="btn btn-error btn-md btn-block">Cancelar ejecución</a>
                                         {% else %}
                                             <!--<a href="#" class="btn btn-gray btn-md btn-block">No hay acciones disponibles</a>-->
                                             <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.id execution.id %}" class="btn btn-primary btn-md btn-block">Replicar ejecución</a>
+                                            <a href="" class="btn btn-error btn-md btn-block">Cancelar ejecución</a>
                                         {% endif %}
                                     {% endif %}
                                 </nav>
@@ -240,8 +243,7 @@
                             <div class="block clearfix">
                                 <h3 class="title">Calificación realizada</h3>
                                 <div class="separator-2"></div>
-                                <p>La calificación que realizaste de los resultados de esta ejecución es la
-                                    siguiente:</p>
+                                <p>La calificación que realizaste de los resultados de esta ejecución es la siguiente:</p>
                                 <nav>
                                     <ul>
                                         <li>Calificación: {{ review.rating }}</li>
