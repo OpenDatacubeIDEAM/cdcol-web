@@ -27,6 +27,8 @@ urlpatterns = [
 	url(r'^new/(?P<algorithm_id>[0-9]+)/version/(?P<version_id>[0-9]+)/id/(?P<copy_execution_id>[0-9]+)$', views.new_execution, name='new_copied_execution'),
 	# ex: /execution/parameters/11
 	url(r'^parameters/(?P<version_id>[0-9]+)/$', views.obtain_parameters, name='obtain_parameters'),
-	# # ex: /execution/12/rate
+	# ex: /execution/12/rate
 	url(r'^(?P<execution_id>[0-9]+)/rate/$', views.rate_execution, name='rate_execution'),
+	# ex: /execution/detail/12
+	url(r'^(?P<execution_id>[0-9]+)/detail/$', views.cancel_execution, name='cancel_execution'),
 ]
