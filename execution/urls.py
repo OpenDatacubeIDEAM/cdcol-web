@@ -29,6 +29,6 @@ urlpatterns = [
 	url(r'^parameters/(?P<version_id>[0-9]+)/$', views.obtain_parameters, name='obtain_parameters'),
 	# ex: /execution/12/rate
 	url(r'^(?P<execution_id>[0-9]+)/rate/$', views.rate_execution, name='rate_execution'),
-	# ex: /execution/detail/12
-	url(r'^(?P<execution_id>[0-9]+)/detail/$', views.cancel_execution, name='cancel_execution'),
+	# ex: /execution/cancel/12
+	url(r'^(?P<execution_id>[0-9]+)/cancel/$', views.cancel_execution, name='cancel_execution'),
 ]
