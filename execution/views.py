@@ -487,8 +487,10 @@ def cancel_execution(request, execution_id):
     json_request = {
         'execution_id': execution_id
     }
-
+    print 'Este es el id de ejecución {}'.format(execution_id)
     try:
+        print
+        'ENTRO ejecución {}'.format(execution_id)
         header = {'Content-Type': 'application/json'}
         url = "{}/api/cancel_execution/".format(settings.API_URL)
         r = requests.post(url, data=json.dumps(json_request), headers=header)
