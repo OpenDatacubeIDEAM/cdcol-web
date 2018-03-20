@@ -219,7 +219,9 @@
                                 <nav>
                                     <!--<a href="#" class="btn btn-gray btn-md btn-block">No hay acciones disponibles</a>-->
                                     <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.id execution.id %}" class="btn btn-primary btn-md btn-block">Replicar ejecución</a>
-                                    <a href="{% url 'execution:cancel_execution' execution.id %}" class="btn btn-primary btn-md btn-block">Cancelar ejecución</a>
+                                    {% if execution.state == 4 %}
+                                        <a href="{% url 'execution:cancel_execution' execution.id %}" class="btn btn-primary btn-md btn-block">Cancelar ejecución</a>
+                                    {% endif %}
                                 </nav>
                             {% else %}
                                 <nav>
@@ -227,10 +229,11 @@
                                         {% if perms.execution.can_rate_execution %}
                                             <a href="{% url 'execution:rate_execution' execution.id %}#rating" class="btn btn-primary btn-md btn-block">Calificar Resultados de laEjecución</a>
                                             <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.id execution.id %}" class="btn btn-primary btn-md btn-block">Replicar ejecución</a>
-                                            <a href="{% url 'execution:cancel_execution' execution.id %}" class="btn btn-primary btn-md btn-block">Cancelar ejecución</a>
                                         {% else %}
                                             <!--<a href="#" class="btn btn-gray btn-md btn-block">No hay acciones disponibles</a>-->
                                             <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.id execution.id %}" class="btn btn-primary btn-md btn-block">Replicar ejecución</a>
+                                        {% endif %}
+                                        {% if execution.state == 4 %}
                                             <a href="{% url 'execution:cancel_execution' execution.id %}" class="btn btn-primary btn-md btn-block">Cancelar ejecución</a>
                                         {% endif %}
                                     {% endif %}
