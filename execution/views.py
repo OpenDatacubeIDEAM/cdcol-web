@@ -381,6 +381,8 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
     if request.method == 'POST':
         textarea_name = request.POST.get('textarea_name', None)
         checkbox_generate_mosaic = request.POST.get('checkbox_generate_mosaic', None)
+        if checkbox_generate_mosaic is None :
+            checkbox_generate_mosaic = false;
         started_at = datetime.datetime.now()
 
         if current_user.has_perm('execution.can_create_new_execution'):
