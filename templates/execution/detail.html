@@ -94,9 +94,8 @@
                     <table class="table">
                         <tbody>
                         <tr>
-                            {% if algorithm.generate_mosaic %}
-                                <td>Genera Mosaico</td>
-                                <td>{{ execution.generate_mosaic }}</td>
+                            <td>Genera Mosaico</td>
+                            <td>{{ execution.generate_mosaic }}</td>
                             {% endif %}
                         </tr>
                         {% for param in executed_params %}
@@ -110,7 +109,7 @@
                                     <td>{{ param.obtain_json_values.latitude_end }}</td>
                                 </tr>
                                 <tr>
-                                    <td>{{ param.parameter.name }} (Longitud mínima)</td>
+                                    <td>{{ param.parameter.name }} (Longitud  mínima)</td>
                                     <td>{{ param.obtain_json_values.longitude_start }}</td>
                                 </tr>
                                 <tr>
