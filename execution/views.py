@@ -481,3 +481,26 @@ def generate_geotiff_task(request, execution_id, image_name):
     )
     new_file_convertion.save()
     return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': execution_id}))
+
+@login_required(login_url='/accounts/login/')
+def cancel_execution(request, execution_id):
+    json_request = {
+        'execution_id': execution_id
+    }
+    print 'Este es el id de ejecución {}'.format(execution_id)
+    try:
+        print
+        'ENTRO ejecución {}'.format(execution_id)
+        header = {'Content-Type': 'application/json'}
+        url = "{}/api/cancel_execution/".format(settings.API_URL)
+        r = requests.post(url, data=json.dumps(json_request), headers=header)
+        if r.status_code == 200:
+            response = {'status': 'ok', 'description': 'Se canceló la ejecución'}
+        else:
+            response = {'status': 'error', 'description': 'Ocurrió un error al cancelar la ejecución',
+                        'detalle': "{}, {}".format(r.status_code, r.text)}
+    except:
+        print 'Something went wrong when trying to call the REST service'
+
+    context = get_detail_context(execution_id)
+    return render(request, 'execution/detail.html', context)
