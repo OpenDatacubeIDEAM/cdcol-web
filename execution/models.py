@@ -33,7 +33,7 @@ class Execution(models.Model):
 	executed_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='execution_author')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
-	generate_mosaic = models.BooleanField(default=False)
+	generate_mosaic = models.BooleanField(default=True, blank=True, null=True)
 
 
 	def __unicode__(self):
