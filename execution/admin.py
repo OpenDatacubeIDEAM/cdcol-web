@@ -4,6 +4,14 @@ from execution.models import *
 from execution.views import cancel_execution
 from django.core.exceptions import PermissionDenied
 
+
+def cancel_execution(self, request, queryset):
+	for execution in queryset:
+		cancel_execution(execution.id)
+
+cancel_execution.short_description ="Cancelar ejecución"
+
+
 class ExecutionAdmin(admin.ModelAdmin):
 	list_display = (
 	'version', 'state', 'created_at', 'results_available', 'results_deleted_at', 'email_sent', 'started_at',
@@ -11,6 +19,7 @@ class ExecutionAdmin(admin.ModelAdmin):
 	ordering = ('-created_at',)
 	list_filter = ('state', 'results_available', 'created_at', 'email_sent', 'started_at', 'finished_at')
 	actions = [cancel_execution]
+
 	def save_model(self, request, obj, form, change):
                 obj.user = request.user
                 raise PermissionDenied
