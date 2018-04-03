@@ -93,6 +93,10 @@
                     <p>Los parámetros de la ejecución son los siguientes:</p>
                     <table class="table">
                         <tbody>
+                        <tr>
+                            <td>Genera Mosaico</td>
+                            <td>{{ execution.generate_mosaic }}</td>
+                        </tr>
                         {% for param in executed_params %}
                             {% if param.parameter.parameter_type == '7' %}
                                 <tr>
