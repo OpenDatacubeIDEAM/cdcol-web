@@ -33,6 +33,8 @@ class Execution(models.Model):
 	executed_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='execution_author')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+	generate_mosaic = models.BooleanField(default=True)
+
 
 	def __unicode__(self):
 		return "{} - {} - v{}".format(self.id, self.version.algorithm.name, self.version.number)

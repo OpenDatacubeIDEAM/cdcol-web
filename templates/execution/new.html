@@ -97,6 +97,10 @@
                                             <td>Creada por:</td>
                                             <td>{{ algorithm.created_by.email }}</td>
                                         </tr>
+                                        <tr>
+                                            <td>Descripción:</td>
+                                            <td>{{ algorithm.description | linebreaks }}</td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -176,6 +180,12 @@
                                                 placeholder="Ingrese una descripción que te ayude a identificar el objetivo del análisis que deseas realizar"
                                                 class="form-control" rows="3"></textarea>
                                     </div>
+                                    {% if algorithm.generate_mosaic %}
+                                        <div class="form-group">
+                                            <b>Generar Mosaico</b>
+                                            <input type="checkbox" id="checkbox_id" name="checkbox_generate_mosaic" placeholder="Generar Mosaico" checked >
+                                        </div>
+                                    {% endif %}
                                 </form>
                             </div>
                         </div>
