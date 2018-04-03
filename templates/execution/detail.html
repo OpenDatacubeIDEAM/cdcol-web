@@ -229,11 +229,11 @@
                                         {% if perms.execution.can_rate_execution %}
                                             <a href="{% url 'execution:rate_execution' execution.id %}#rating" class="btn btn-primary btn-md btn-block">Calificar Resultados de la Ejecución</a>
                                         {% endif %}
-                                        <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.id execution.id %}" class="btn btn-default btn-md btn-block">
+                                        <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.id execution.id %}" class="btn btn-default btn-md btn-block">Replicar ejecución</a>
                                         {% if execution.state == '2' or execution.state == '1'%}
                                             <a href="{% url 'execution:cancel_execution' execution.id %}" class="btn btn-danger btn-md btn-block">Cancelar ejecución</a>
                                         {% endif %}
-                                        Replicar ejecución</a>
+
 
 
 
