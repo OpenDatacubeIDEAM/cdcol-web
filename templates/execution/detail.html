@@ -94,8 +94,10 @@
                     <table class="table">
                         <tbody>
                         <tr>
-                            <td>Genera Mosaico</td>
-                            <td>{{ execution.generate_mosaic }}</td>
+                            {% if algorithm.generate_mosaic %}
+                                <td>Genera Mosaico</td>
+                                <td>{{ execution.generate_mosaic }}</td>
+                            {% endif %}
                         </tr>
                         {% for param in executed_params %}
                             {% if param.parameter.parameter_type == '7' %}
