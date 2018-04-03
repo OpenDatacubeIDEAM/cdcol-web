@@ -271,7 +271,7 @@ $(document).ready(function () {
                     param_div.className = "form-group";
                     // appending everything
                     param_div.appendChild(boolean_name);
-                    param_div.appendChild(boolean_input)
+                    param_div.appendChild(boolean_input);
                     param_div.appendChild(boolean_text);
                     // appending to the form
                     f.appendChild(param_div);
