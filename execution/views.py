@@ -486,7 +486,6 @@ def generate_geotiff_task(request, execution_id, image_name):
     new_file_convertion.save()
     return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': execution_id}))
 
-@login_required(login_url='/accounts/login/')
 def cancel_execution(request, execution_id):
     json_request = {
         'execution_id': execution_id
