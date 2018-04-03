@@ -380,6 +380,7 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
     topics = Topic.objects.filter(enabled=True)
     if request.method == 'POST':
         textarea_name = request.POST.get('textarea_name', None)
+        checkbox_generate_mosaic = request.POST.get('checkbox_generate_mosaic', None)
         started_at = datetime.datetime.now()
 
         if current_user.has_perm('execution.can_create_new_execution'):
@@ -388,7 +389,8 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
                 description=textarea_name,
                 state=Execution.ENQUEUED_STATE,
                 started_at=started_at,
-                executed_by=current_user
+                executed_by=current_user,
+                generate_mosaic= checkbox_generate_mosaic
             )
             new_execution.save()
 
