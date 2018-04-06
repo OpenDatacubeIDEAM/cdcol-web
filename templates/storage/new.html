@@ -55,6 +55,18 @@
                                 {% endif %}
                                 <!-- /Errors -->
 
+                                <!-- Alias -->
+                                <div class="form-group">
+                                    <label for="nameUnitIngestFile">
+                                        <b>
+                                            Alias <span class="text-danger small"> * </span>
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Alias de preferencias para la unidad de almacenamiento."></i></a>
+                                        </b>
+                                    </label>
+                                    <input name="{{ form.alias.html_name }}" id="{{ form.alias.id_for_label }}" type="text" class="form-control" placeholder="Alias de la Unidad de Almacenamiento">
+                                </div>
+
+
                                 <!-- Archivo de ingesta -->
                                 <div class="form-group">
                                     <!-- Errors -->

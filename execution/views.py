@@ -265,7 +265,7 @@ def create_execution_parameter_objects(parameters, request, execution, current_v
             new_execution_parameter = StorageUnitBandType(
                 execution=execution,
                 parameter=parameter,
-                storage_unit_name=select_value.name,
+                storage_unit_name=select_value.alias,
                 bands=bands
             )
             new_execution_parameter.save()
@@ -485,6 +485,7 @@ def generate_geotiff_task(request, execution_id, image_name):
     )
     new_file_convertion.save()
     return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': execution_id}))
+
 
 def cancel_execution(request, execution_id):
     json_request = {

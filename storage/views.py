@@ -153,6 +153,7 @@ def new(request):
 		# checking if the form is valid
 		if form.is_valid():
 			# getting all the fields
+			alias = form.cleaned_data['alias']
 			name = form.cleaned_data['name']
 			description = form.cleaned_data['description']
 			description_file = request.FILES['description_file']
@@ -176,6 +177,7 @@ def new(request):
 				print 'Something went wrong when encoding the files'
 			try:
 				data = {
+					"alias":alias,
 					"name": name,
 					"description": description,
 					"description_file": encoded_description,
@@ -272,9 +274,26 @@ def image_detail(request, storage_unit_id, image_name):
 	year = image_info["year"]
 	coordinates = image_info["coordinates"]
 	name = image_info["image_name"]
-	image_storage_unit = image_info["storage_unit"]
+	image_storage_unit = image_info["storage_unit_alias"]
 	thumbnails = image_info["thumbnails"]
 	metadata = json.dumps(image_info["metadata"], indent=4, sort_keys=True)
 	context = {'metadata': metadata, 'thumbnails': thumbnails, 'year': year, 'coordinates': coordinates, 'name': name,
 	           'image_storage_unit': image_storage_unit, 'image_name': image_name, 'storage_unit_id': storage_unit_id}
 	return render(request, 'storage/image_detail.html', context)
+
+@login_required(login_url='/accounts/login')
+def update(request, storage_unit_id):
+	current_user=request.user
+	storage=get_object_or_404(StorageUnit, Q(created_by=current_user),id=storage_unit_id)
+	if request.method == 'POST':
+		storage_form=StorageUnitUpdateForm(request.POST)
+		if storage_form.is_valid():
+			field_alias = storage_form.cleaned_data['alias']
+			storage.alias = field_alias
+			storage.save()
+			return HttpResponseRedirect(reverse('storage.detail', kwargs={'storage_unit_id': storage_unit_id}))
+		else:
+			storage_form.add_error(None, "Favor completar todos los campos marcados.")
+		print storage_form
+	context = {'storage_form': storage_form, 'algorithm': storage}
+	return render(request, 'storage/update.html', context)

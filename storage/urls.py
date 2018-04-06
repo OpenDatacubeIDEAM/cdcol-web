@@ -26,4 +26,6 @@ urlpatterns = [
 	url(r'^(?P<storage_unit_id>[0-9]+)/image/(?P<image_name>.+)/detail/$', views.image_detail, name='image_detail'),
 	# ex /storage/content_as_json
 	url(r'^json$', views.as_json, name='as_json'),
+	# ex: /storage/update/11
+	url(r'^update/(?P<storage_unit_id>[0-9]+)/$', views.update, name='update'),
 ]

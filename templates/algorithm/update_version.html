@@ -162,9 +162,9 @@
                                         {% for storage_unit in source_storage_units %}
                                             {% if storage_unit in selected_storage_units %}
                                                 <option selected
-                                                        value="{{ storage_unit.id }}">{{ storage_unit.name }}</option>
+                                                        value="{{ storage_unit.id }}">{{ storage_unit.alias }}</option>
                                             {% else %}
-                                                <option value="{{ storage_unit.id }}">{{ storage_unit.name }}</option>
+                                                <option value="{{ storage_unit.id }}">{{ storage_unit.alias }}</option>
                                             {% endif %}
                                         {% endfor %}
                                     </select>
