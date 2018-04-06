@@ -147,11 +147,6 @@
 
                                                 <!-- mega-menu start -->
                                                 {% if user.is_authenticated %}
-                                                    {% if perms.storage.can_list_units %}
-                                                        <li>
-                                                            <a href="{% url 'storage:index' %}">Almacenamiento</a>
-                                                        </li>
-                                                    {% endif %}
                                                     {% if perms.algorithm.can_list_algorithms %}
                                                         <li>
                                                         <a href="{% url 'algorithm:index' %}">Mis Algoritmos</a>
@@ -160,6 +155,11 @@
                                                     {% if perms.execution.can_list_executions %}
                                                         <li>
                                                             <a href="{% url 'execution:index' %}">Ejecuciones</a>
+                                                        </li>
+                                                    {% endif %}
+                                                    {% if perms.storage.can_list_units %}
+                                                        <li>
+                                                            <a href="{% url 'storage:index' %}">Almacenamiento</a>
                                                         </li>
                                                     {% endif %}
                                                     {% if perms.template.can_list_yaml_templates or perms.ingest_template.can_list_ingest_templates %}
@@ -187,11 +187,14 @@
                                                         </li>
                                                     {% endif %}
                                                     <li class="dropdown ">
-                                                        <a class="dropdown-toggle" data-toggle="dropdown">Bienvenido</a>
+                                                        <a class="dropdown-toggle" data-toggle="dropdown">Mi cuenta</a>
                                                         <ul class="dropdown-menu">
                                                             <li class="dropdown ">
                                                             <li>
                                                                 <a href="{% url 'profile:index' %}">Mi Perfil</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="">Manual de Ayuda</a>
                                                             </li>
                                                             <li>
                                                                 <a href="#"
