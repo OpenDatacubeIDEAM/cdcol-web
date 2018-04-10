@@ -5,7 +5,7 @@ from django.db import models
 
 
 class StorageUnit(models.Model):
-	alias = models.CharField(max_length=200, unique=True, blank=True, null=True)
+	alias = models.CharField(max_length=200, default="Unidad")
 	name = models.CharField(max_length=200, unique=True)
 	description = models.TextField()
 	description_file = models.CharField(max_length=200)
