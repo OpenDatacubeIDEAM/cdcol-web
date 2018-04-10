@@ -5,7 +5,7 @@ from django.db import models
 
 
 class StorageUnit(models.Model):
-	alias = models.CharField(max_length=200, unique=True)
+	alias = models.CharField(max_length=200, unique=True, blank=True, null=True)
 	name = models.CharField(max_length=200, unique=True)
 	description = models.TextField()
 	description_file = models.CharField(max_length=200)
@@ -19,6 +19,11 @@ class StorageUnit(models.Model):
 
 	def __unicode__(self):
 		return "{} - {}".format(self.id, self.name)
+
+	def save(self, *args, **kwargs):
+		if not self.alias:
+			self.alias = self.name
+		super(StorageUnit, self).save(*args, **kwargs);
 
 
 	class Meta:
