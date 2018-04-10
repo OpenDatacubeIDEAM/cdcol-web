@@ -383,14 +383,13 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
         checkbox_generate_mosaic = request.POST.get('checkbox_generate_mosaic', None)
         if checkbox_generate_mosaic is None :
             checkbox_generate_mosaic = False;
-        started_at = datetime.datetime.now()
+       # started_at = datetime.datetime.now()
 
         if current_user.has_perm('execution.can_create_new_execution'):
             new_execution = Execution(
                 version=current_version,
                 description=textarea_name,
                 state=Execution.ENQUEUED_STATE,
-                started_at=started_at,
                 executed_by=current_user,
                 generate_mosaic= checkbox_generate_mosaic
             )

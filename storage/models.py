@@ -20,6 +20,7 @@ class StorageUnit(models.Model):
 	def __unicode__(self):
 		return "{} - {}".format(self.id, self.name)
 
+
 	class Meta:
 		permissions = (
 			("can_list_units", "Ver listado de unidades de almacenamiento"),
