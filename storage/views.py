@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.encoding import smart_str
 from django.core import serializers
 from .forms import StorageUnitForm
+from .forms import StorageUnitUpdateForm
 from storage.models import StorageUnit
 from wsgiref.util import FileWrapper
 from django.conf import settings
