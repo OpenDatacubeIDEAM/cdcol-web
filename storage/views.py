@@ -284,7 +284,7 @@ def image_detail(request, storage_unit_id, image_name):
 @login_required(login_url='/accounts/login')
 def update(request, storage_unit_id):
 	current_user=request.user
-	storage=get_object_or_404(StorageUnit, Q(created_by=current_user),id=storage_unit_id)
+	storage=get_object_or_404(StorageUnit, id=storage_unit_id)
 	if request.method == 'POST':
 		storage_form=StorageUnitUpdateForm(request.POST)
 		if storage_form.is_valid():
