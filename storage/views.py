@@ -274,11 +274,12 @@ def image_detail(request, storage_unit_id, image_name):
 	year = image_info["year"]
 	coordinates = image_info["coordinates"]
 	name = image_info["image_name"]
-	image_storage_unit = image_info["storage_unit_alias"]
+	storage_unit_alias = image_info["storage_unit_alias"]
+	image_storage_unit = image_info["storage_unit"]
 	thumbnails = image_info["thumbnails"]
 	metadata = json.dumps(image_info["metadata"], indent=4, sort_keys=True)
 	context = {'metadata': metadata, 'thumbnails': thumbnails, 'year': year, 'coordinates': coordinates, 'name': name,
-	           'image_storage_unit': image_storage_unit, 'image_name': image_name, 'storage_unit_id': storage_unit_id}
+	           'image_storage_unit': image_storage_unit, 'storage_unit_alias': storage_unit_alias,'image_name': image_name, 'storage_unit_id': storage_unit_id}
 	return render(request, 'storage/image_detail.html', context)
 
 @login_required(login_url='/accounts/login')
@@ -294,6 +295,5 @@ def update(request, storage_unit_id):
 			return HttpResponseRedirect(reverse('storage.detail', kwargs={'storage_unit_id': storage_unit_id}))
 		else:
 			storage_form.add_error(None, "Favor completar todos los campos marcados.")
-		print storage_form
 	context = {'storage_form': storage_form, 'algorithm': storage}
 	return render(request, 'storage/update.html', context)
