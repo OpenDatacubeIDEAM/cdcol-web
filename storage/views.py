@@ -295,5 +295,8 @@ def update(request, storage_unit_id):
 			return HttpResponseRedirect(reverse('storage.detail', kwargs={'storage_unit_id': storage_unit_id}))
 		else:
 			storage_form.add_error(None, "Favor completar todos los campos marcados.")
+	else:
+		storage_form = StorageUnitUpdateForm()
+
 	context = {'storage_form': storage_form, 'algorithm': storage}
 	return render(request, 'storage/update.html', context)
