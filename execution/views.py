@@ -25,7 +25,7 @@ import subprocess
 import glob
 import time
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-from django.utils import dateformat
+
 
 
 class JSONResponse(HttpResponse):
@@ -102,9 +102,9 @@ def get_detail_context(execution_id):
     executed_params = ExecutionParameter.objects.filter(execution=execution)
     review = Review.objects.filter(execution=execution).last()
     # Setting seconds to date
-    execution.created_at = localize(execution.created_at)
-    execution.started_at = localize(execution.started_at)
-    execution.finished_at = localize(execution.finished_at)
+    # execution.created_at = localize(execution.created_at)
+    # execution.started_at = localize(execution.started_at)
+    # execution.finished_at = localize(execution.finished_at)
     # getting the files from the filesystem
     system_path = "{}/results/{}/".format(settings.WEB_STORAGE_PATH, execution.id)
     files = []
