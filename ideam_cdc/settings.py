@@ -122,6 +122,12 @@ USE_L10N = True
 
 USE_TZ = True
 
+DATE_FORMAT = 'j \d\e F,Y'
+
+DATETIME_FORMAT = 'j \d\e F,Y H:i:s'
+
+TIME_FORMAT = 'H:i:s'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
