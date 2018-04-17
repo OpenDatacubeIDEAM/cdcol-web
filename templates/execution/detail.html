@@ -228,7 +228,7 @@
                                     <!--<a href="#" class="btn btn-gray btn-md btn-block">No hay acciones disponibles</a>-->
                                     <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.id execution.id %}" class="btn btn-default btn-md btn-block">Replicar ejecución</a>
                                     {% if execution.state == '2' or execution.state == '1' %}
-                                        <a href="{% url 'execution:cancel_execution' execution.id %}" onclick="return confirm('¿Está seguro de cancelar esta ejecución?')" class="btn btn-danger btn-md btn-block">Cancelar ejecución</a>
+                                        <a href="{% url 'execution:cancel_execution' execution.id %}" class="btn btn-danger btn-md btn-block">Cancelar ejecución</a>
                                     {% endif %}
                                 </nav>
                             {% else %}
@@ -239,7 +239,7 @@
                                         {% endif %}
                                         <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.id execution.id %}" class="btn btn-default btn-md btn-block">Replicar ejecución</a>
                                         {% if execution.state == '2' or execution.state == '1'%}
-                                            <a href="{% url 'execution:cancel_execution' execution.id %}" onclick="return confirm('¿Está seguro de cancelar esta ejecución?')" class="btn btn-danger btn-md btn-block">Cancelar ejecución</a>
+                                            <a href="{% url 'execution:cancel_execution' execution.id %}" class="btn btn-danger btn-md btn-block">Cancelar ejecución</a>
                                         {% endif %}
 
 
