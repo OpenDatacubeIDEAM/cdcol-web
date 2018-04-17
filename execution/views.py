@@ -265,7 +265,7 @@ def create_execution_parameter_objects(parameters, request, execution, current_v
             new_execution_parameter = StorageUnitBandType(
                 execution=execution,
                 parameter=parameter,
-                storage_unit_name=select_value.alias,
+                storage_unit_name=select_value.name,
                 bands=bands
             )
             new_execution_parameter.save()
