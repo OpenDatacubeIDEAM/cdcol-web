@@ -25,6 +25,7 @@ import subprocess
 import glob
 import time
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.utils import dateformat
 
 
 class JSONResponse(HttpResponse):
@@ -86,6 +87,7 @@ def download_parameter_file(request, execution_id, parameter_name, file_name):
     return download(file_path)
 
 def localize(value):
+
     if settings.USE_L10N:
         if isinstance(value, datetime.datetime):
             return date_format(value, 'DATETIME_FORMAT')
