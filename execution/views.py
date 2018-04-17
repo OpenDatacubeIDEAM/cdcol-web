@@ -502,8 +502,8 @@ def generate_geotiff_task(request, execution_id, image_name):
 
 @login_required(login_url='/accounts/login/')
 def cancel_execution(request, execution_id):
-    now = datetime.datetime.now
-    Execution.objects.filter(id=execution_id).update(state='5', finished_at=now)
+
+    Execution.objects.filter(id=execution_id).update(state='5', finished_at=datetime.datetime.now())
     json_request = {
         'execution_id': execution_id
     }
