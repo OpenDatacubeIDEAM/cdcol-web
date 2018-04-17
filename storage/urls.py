@@ -10,6 +10,8 @@ urlpatterns = [
 	url(r'^detail/(?P<storage_unit_id>[0-9]+)/$', views.detail, name='detail'),
 	# ex: /storage/new
 	url(r'^new/$', views.new, name='new'),
+	# ex: /storage/update/11
+	url(r'^update/(?P<storage_unit_id>[0-9]+)/$', views.update, name='update'),
 	# ex: /storage/1/image/imagename/download/
 	url(r'^download/image/(?P<storage_unit_name>.*)/(?P<image_name>.+)$', views.download_image, name='download_image'),
 	# ex: /storage/1/image/imagename/metadata/
@@ -26,6 +28,5 @@ urlpatterns = [
 	url(r'^(?P<storage_unit_id>[0-9]+)/image/(?P<image_name>.+)/detail/$', views.image_detail, name='image_detail'),
 	# ex /storage/content_as_json
 	url(r'^json$', views.as_json, name='as_json'),
-	# ex: /storage/update/11
-	url(r'^update/(?P<storage_unit_id>[0-9]+)/$', views.update, name='update'),
+
 ]
