@@ -293,7 +293,7 @@ def update(request, storage_unit_id):
 			field_alias = storage_form.cleaned_data['alias']
 			storage.alias = field_alias
 			storage.save()
-			return return HttpResponseRedirect(reverse('storage:index'))
+			return HttpResponseRedirect(reverse('storage:index'))
 		else:
 			storage_form.add_error(None, "Favor completar todos los campos marcados.")
 	else:
