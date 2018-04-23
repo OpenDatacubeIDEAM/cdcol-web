@@ -17,7 +17,7 @@ class ExecutionAdmin(admin.ModelAdmin):
 	'finished_at')
 	ordering = ('-created_at',)
 	list_filter = ('state', 'results_available', 'created_at', 'email_sent', 'started_at', 'finished_at')
-
+	actions = [cancel_execution]
 	def save_model(self, request, obj, form, change):
                 obj.user = request.user
                 raise PermissionDenied
