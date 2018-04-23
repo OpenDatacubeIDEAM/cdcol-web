@@ -28,6 +28,7 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 
 
+
 class JSONResponse(HttpResponse):
     """
     An HttpResponse that renders its content into JSON.
@@ -504,6 +505,7 @@ def generate_geotiff_task(request, execution_id, image_name):
 def cancel_execution(request, execution_id):
 
     Execution.objects.filter(id=execution_id).update(state='5', finished_at=datetime.datetime.now())
+    Task.objects.filter(execution_id=execution_id).update(state='6', state_updated_at=now, end_date=now)
     json_request = {
         'execution_id': execution_id
     }
