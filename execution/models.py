@@ -64,6 +64,7 @@ class ExecutionParameter(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
+
 	def obtain_value(self):
 		parameter_type = self.parameter.parameter_type
 		response = "Parámetro no soportado"
@@ -79,7 +80,7 @@ class ExecutionParameter(models.Model):
 			response = "{}, {} - {}, {}".format(self.areatype.latitude_start, self.areatype.longitude_start,
 			                                    self.areatype.latitude_end, self.areatype.longitude_end)
 		elif parameter_type == "8":
-			response = "{}, {}".format(StorageUnit.objects.filter(name=self.storageunitbandtype.storage_unit_name).alias, self.storageunitbandtype.bands)
+			response = "{}, {}".format(self.storageunitbandtype.storage_unit_name, self.storageunitbandtype.bands)
 		elif parameter_type == "9":
 			response = "{} - {}".format(self.timeperiodtype.start_date.strftime("%Y-%m-%d"), self.timeperiodtype.end_date.strftime("%Y-%m-%d"))
 		elif parameter_type == "12":
@@ -87,6 +88,8 @@ class ExecutionParameter(models.Model):
 		elif parameter_type == "13":
 			response = "{}".format(self.storageunitnobandtype.storage_unit_name)
 		return response
+
+
 
 	def obtain_json_values(self):
 		parameter_type = self.parameter.parameter_type
