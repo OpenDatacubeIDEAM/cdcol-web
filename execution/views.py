@@ -505,22 +505,29 @@ def generate_geotiff_task(request, execution_id, image_name):
 def cancel_execution(request, execution_id):
 
     Execution.objects.filter(id=execution_id).update(state='5', finished_at=datetime.datetime.now())
-    Task.objects.filter(execution_id=execution_id).update(state='6', state_updated_at=datetime.datetime.now(), end_date=datetime.datetime.now())
+    tasks= Task.objects.filter(execution_id=execution_id)
+    tasks.update(state='6', state_updated_at=datetime.datetime.now(), end_date=datetime.datetime.now())
     json_request = {
         'execution_id': execution_id
     }
     print 'Este es el id de ejecución {}'.format(execution_id)
     try:
-        print
-        'ENTRO ejecución {}'.format(execution_id)
-        header = {'Content-Type': 'application/json'}
-        url = "{}/api/cancel_execution/".format(settings.API_URL)
-        r = requests.post(url, data=json.dumps(json_request), headers=header)
-        if r.status_code == 200:
-            response = {'status': 'ok', 'description': 'Se canceló la ejecución'}
-        else:
-            response = {'status': 'error', 'description': 'Ocurrió un error al cancelar la ejecución',
-                        'detalle': "{}, {}".format(r.status_code, r.text)}
+        for t in tasks:
+            header = {'Content-Type': 'application/json'}
+            url = "{}/api/task/revoke/{}?terminate=true".format("localhost:8082",t.uuid)
+            r = requests.post(url, None, headers=header)
+            if r.status_code == 200:
+                response = {'status': 'ok', 'description': 'Se canceló la ejecución'}
+            else:
+                response = {'status': 'error', 'description': 'Ocurrió un error al cancelar la ejecución', 'detalle': "{}, {}".format(r.status_code, r.text)}
+        # header = {'Content-Type': 'application/json'}
+        # url = "{}/api/cancel_execution/".format(settings.API_URL)
+        # r = requests.post(url, data=json.dumps(json_request), headers=header)
+        # if r.status_code == 200:
+        #     response = {'status': 'ok', 'description': 'Se canceló la ejecución'}
+        # else:
+        #     response = {'status': 'error', 'description': 'Ocurrió un error al cancelar la ejecución',
+        #                 'detalle': "{}, {}".format(r.status_code, r.text)}
     except:
         print 'Something went wrong when trying to call the REST service'
 
