@@ -28,7 +28,7 @@ def get_storage_unit(value):
 		alias = StorageUnit.objects.get(name="value").alias
 	else:
 		unit_and_bands=value.split(",", 1)
-		alias = StorageUnit.objects.get(name=unit_and_bands[0]).alias
+		alias = "{} ({})".format(StorageUnit.objects.get(name=unit_and_bands[0]).alias, name=unit_and_bands[1])
 
 	return alias
 
