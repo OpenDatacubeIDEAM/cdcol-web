@@ -117,7 +117,7 @@
                                 </tr>
                             {% elif param.parameter.parameter_type == '8' or param.parameter.parameter_type == '13' %}
                                 <td>{{ param.parameter.name }}</td>
-                                <td>{{ param.obtain_value}}</td>
+                                <td>{{ param.obtain_value | get_storage_unit}}</td>
                             {% else %}
                                 <tr>
                                     <td>{{ param.parameter.name }}</td>

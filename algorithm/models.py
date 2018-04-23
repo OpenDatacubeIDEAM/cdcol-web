@@ -92,7 +92,7 @@ class Version(models.Model):
 	number = models.CharField(max_length=200)
 	repository_url = models.CharField(max_length=300)
 	source_code = models.FileField(upload_to=upload_to, max_length=1000, blank=True, null=True)
-	publishi0ng_state = models.CharField(max_length=2, choices=VERSION_STATES)
+	publishing_state = models.CharField(max_length=2, choices=VERSION_STATES)
 	created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='version_author')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
