@@ -7,6 +7,7 @@ from django.db.models import Q
 import datetime
 from django.core.exceptions import ValidationError
 from django.conf import settings
+from storage.models import StorageUnit
 
 class Execution(models.Model):
 	ENQUEUED_STATE = '1'
@@ -78,7 +79,7 @@ class ExecutionParameter(models.Model):
 			response = "{}, {} - {}, {}".format(self.areatype.latitude_start, self.areatype.longitude_start,
 			                                    self.areatype.latitude_end, self.areatype.longitude_end)
 		elif parameter_type == "8":
-			response = "{}, {}".format(self.storageunitbandtype.storage_unit_name, self.storageunitbandtype.bands)
+			response = "{}, {}".format(StorageUnit.objects.filter(name=self.storageunitbandtype.storage_unit_name).alias, self.storageunitbandtype.bands)
 		elif parameter_type == "9":
 			response = "{} - {}".format(self.timeperiodtype.start_date.strftime("%Y-%m-%d"), self.timeperiodtype.end_date.strftime("%Y-%m-%d"))
 		elif parameter_type == "12":
