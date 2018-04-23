@@ -8,4 +8,8 @@
  * File Description: Place here your custom scripts
  */
 console.log("Hola");
-document.getElementById("bubble-image").style.visibility = "hidden";
+
+$(document).ready(function(){
+// your code
+    document.getElementById("bubble-image").style.visibility = "hidden";
+});
