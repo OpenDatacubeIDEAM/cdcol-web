@@ -115,6 +115,9 @@
                                     <td>{{ param.parameter.name }} (Longitud máxima)</td>
                                     <td>{{ param.obtain_json_values.longitude_end }}</td>
                                 </tr>
+                            {% elif param.parameter.parameter_type == '8' %}
+                                <tr>{{ param.parameter.name }}</tr>
+                                <tr></tr>
                             {% else %}
                                 <tr>
                                     <td>{{ param.parameter.name }}</td>
