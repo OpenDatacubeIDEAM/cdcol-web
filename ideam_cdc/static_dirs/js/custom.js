@@ -7,3 +7,5 @@
  * License URI:http://support.wrapbootstrap.com/
  * File Description: Place here your custom scripts
  */
+console.log("Hola");
+document.getElementById("bubble-image").style.visibility = "hidden";
