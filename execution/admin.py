@@ -5,7 +5,7 @@ from execution.views import cancel_execution as cancel
 from django.core.exceptions import PermissionDenied
 
 
-def cancel_execution(queryset, request):
+def cancel_execution(self, request, queryset):
 	for execution in queryset:
 		cancel(request, execution.id)
 
