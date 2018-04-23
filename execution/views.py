@@ -514,7 +514,7 @@ def cancel_execution(request, execution_id):
     try:
         for t in tasks:
             header = {'Content-Type': 'application/json'}
-            url = "{}/api/task/revoke/{}?terminate=true".format("localhost:8082",t.uuid)
+            url = "{}/api/task/revoke/{}?terminate=true".format("http://34.235.222.79:8082",t.uuid)
             r = requests.post(url, None, headers=header)
             if r.status_code == 200:
                 response = {'status': 'ok', 'description': 'Se canceló la ejecución'}
