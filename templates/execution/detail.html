@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load execution_extras %}
 {% block extra_head %}
     <script type="text/javascript">
         {% if execution.state == '1' or execution.state == '2' %}
