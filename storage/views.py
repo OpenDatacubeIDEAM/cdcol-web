@@ -284,6 +284,7 @@ def image_detail(request, storage_unit_id, image_name):
 	return render(request, 'storage/image_detail.html', context)
 
 @login_required(login_url='/accounts/login')
+@permission_required('storage.can_edit_units', raise_exception=True)
 def update(request, storage_unit_id):
 	current_user=request.user
 	storage=get_object_or_404(StorageUnit, id=storage_unit_id)

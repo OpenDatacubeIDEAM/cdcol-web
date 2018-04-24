@@ -35,4 +35,5 @@ class StorageUnit(models.Model):
 			("can_download_file", "Descargar un archivo"),
 			("can_view_content_detail", "Ver detalle de un contenido"),
 			("can_download_metadata", "Descargar metadados"),
+			("can_edit_units", "Editar unidad de almacenamiento")
 		)

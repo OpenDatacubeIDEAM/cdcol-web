@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.db.models import Avg, Q
 from django.utils.encoding import smart_str
-from algorithm.models import Topic, Algorithm
+from algorithm.models import Topic, Algorithm, VersionStorageUnit
 from execution.models import *
 from execution.forms import VersionSelectionForm, ReviewForm
 from execution.serializers import ExecutionSerializer
@@ -388,6 +388,7 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
     if version_id:
         current_version = get_object_or_404(Version, id=version_id)
     parameters = Parameter.objects.filter(version=current_version, enabled=True).order_by('position')
+    allowed_storage_units = VersionStorageUnit.objects.filter(version=current_version)
     reviews = Review.objects.filter(version=current_version)
     # getting the average rating
     average_rating = Review.objects.filter(version=current_version).aggregate(Avg('rating'))['rating__avg']
