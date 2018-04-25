@@ -66,15 +66,27 @@
                         </tr>
                         <tr>
                             <td>Fecha de Creación:</td>
-                            <td>{{ execution.created_at}}</td>
+                            {% if execution.created_at %}
+                                <td>{{ execution.created_at}}</td>
+                            {% else %}
+                                <td>---</td>
+                            {% endif %}
                         </tr>
                         <tr>
                             <td>Inicio ejecución:</td>
-                            <td>{{ execution.started_at }}</td>
+                            {% if execution.started_at %}
+                                <td>{{ execution.started_at }}</td>
+                            {% else %}
+                                <td>---</td>
+                            {% endif %}
                         </tr>
                         <tr>
                             <td>Fin ejecución:</td>
-                            <td>{{ execution.finished_at }}</td>
+                            {% if execution.finished_at %}
+                                 <td>{{ execution.finished_at }}</td>
+                            {% else %}
+                                <td>---</td>
+                            {% endif %}
                         </tr>
                         <tr>
                             <td>Creada por:</td>
