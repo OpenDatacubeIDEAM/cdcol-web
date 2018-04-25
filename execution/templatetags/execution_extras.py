@@ -8,7 +8,9 @@ register = template.Library()
 @register.filter(name="get_algorithms")
 def get_algorithms(value):
 	"""Returns all the algorithms belonging to a certain topic"""
-	return Algorithm.objects.filter(topic=value)
+
+	#return Algorithm.objects.filter(topic=value)
+	return Algorithm.objects,raw('SELECT * FROM algoritm_algorithm AS alg LEFT JOIN algorithm_version AS ver ON alg.id = ver.id');
 
 register.filter('get_algorithms', get_algorithms)
 

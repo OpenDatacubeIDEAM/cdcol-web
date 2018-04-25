@@ -185,7 +185,7 @@ def detail(request, execution_id):
 
 @login_required(login_url='/accounts/login/')
 @permission_required('execution.can_view_blank_execution', raise_exception=True)
-def new_blank_execution(request):
+def  new_blank_execution(request):
     topics = Topic.objects.filter(enabled=True)
     context = {'topics': topics}
     return render(request, 'execution/new_blank.html', context)
