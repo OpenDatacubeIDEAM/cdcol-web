@@ -10,7 +10,7 @@ def get_algorithms(value):
 	"""Returns all the algorithms belonging to a certain topic"""
 
 	#return Algorithm.objects.filter(topic=value)
-	return Algorithm.objects.raw('SELECT * FROM algorithm_algorithm AS alg LEFT JOIN algorithm_version AS ver ON alg.id = ver.id');
+	return Algorithm.objects.raw('SELECT * FROM algorithm_algorithm AS alg LEFT JOIN algorithm_version AS ver ON alg.id = ver.id WHERE (ver.publishing_state=1 OR ver.publishing_state=2) and alg.topic_id='+value.id);
 
 register.filter('get_algorithms', get_algorithms)
 
