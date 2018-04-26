@@ -261,7 +261,7 @@ $(document).ready(function () {
                     boolean_input.name = "boolean_input_"+pk;
                     // ===== Bold =====
                     var boolean_name = document.createElement("B");
-                    boolean_name.innerHTML = " <b>"+parameter.fields.name+requiredText+input_description+"</b>";
+                    boolean_name.innerHTML = " <b>"+parameter.fields.name+requiredText+input_description+"</b>   ";
                     // ===== Paragraphs =====
                     var boolean_text = document.createElement("p");
                     boolean_text.innerHTML = parameter.fields.help_text;
@@ -270,8 +270,8 @@ $(document).ready(function () {
                     var param_div = document.createElement("div");
                     param_div.className = "form-group";
                     // appending everything
-                    param_div.appendChild(boolean_input);
                     param_div.appendChild(boolean_name);
+                    param_div.appendChild(boolean_input);
                     param_div.appendChild(boolean_text);
                     // appending to the form
                     f.appendChild(param_div);
@@ -384,7 +384,7 @@ $(document).ready(function () {
                             var storage_name = storage_unit_value.fields.name;
                             storage_unit_option = document.createElement("option");
                             storage_unit_option.value = storage_pk;
-                            storage_unit_option.text = storage_name;
+                            storage_unit_option.text = storage_unit_value.fields.alias;
                             storage_unit_select.appendChild(storage_unit_option);
                             if(storage_unit_executed_param && storage_name === storage_unit_executed_param.storage_unit_name)
                             {

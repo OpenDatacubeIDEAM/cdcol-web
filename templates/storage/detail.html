@@ -34,7 +34,11 @@
                     <table class="table">
                         <tbody>
                         <tr>
-                            <td>Nombre:</td>
+                            <td>Alias:</td>
+                            <td>{{ storage_unit.alias }}</td>
+                        </tr>
+                        <tr>
+                             <td>Nombre:</td>
                             <td>{{ storage_unit.name }}</td>
                         </tr>
                         <tr>
@@ -72,6 +76,13 @@
                         <div class="block clearfix">
                             <h3 class="title">Acciones</h3>
                             <div class="separator-2"></div>
+                            {% if user.is_authenticated %}
+                                {% if perms.storage.can_edit_units %}
+                                    <nav>
+                                        <a href="{% url 'storage:update' storage_unit.id %}" class="btn btn-info btn-md btn-block">Editar unidad</a>
+                                    </nav>
+                                {% endif %}
+                            {% endif %}
                             <nav>
                                 <a href="{% url 'storage:view_content' storage_unit.id %}?path=/years/" class="btn btn-primary btn-md btn-block">Ver contenido de la unidad</a>
                             </nav>

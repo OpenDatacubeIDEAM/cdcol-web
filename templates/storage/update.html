@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <!-- breadcrumb start -->
+    <!-- ================ -->
+    <div class="breadcrumb-container">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
+                <li><a href="{% url 'storage:index' %}">Unidades de Almacenamiento</a></li>
+                <li class="active">Editar</li>
+            </ol>
+        </div>
+    </div>
+    <!-- breadcrumb end -->
+
+    <!-- main-container start -->
+    <!-- ================ -->
+    <section class="main-container">
+    <div class="container">
+            <div class="row">
+
+                <!-- main start -->
+                <!-- ================ -->
+                <div class="main col-md-12">
+
+                    <!-- page-title start -->
+                    <!-- ================ -->
+                    <h1 class="page-title">Editar Unidad de Almacenamiento</h1>
+                    <div class="separator-2"></div>
+                    <!-- page-title end -->
+                    <p>Edita la información de la unidad de almacenamiento:</p>
+                    <!-- Success Messages  -->
+                    {% if response %}
+                        <div class="alert alert-success">
+                            {{ response.message|escape }}
+                        </div>
+                    {% endif %}
+                    <!-- /Success Messages -->
+
+                    <div class="section light-gray-bg">
+                        <div class="container">
+                            <form role="form" class="form-horizontal col-md-6 col-md-offset-3" method="POST"
+                                  action="{% url 'storage:update' storage.id %}"
+                                  enctype="multipart/form-data">
+                                {% csrf_token %}
+
+                                <!-- Errors -->
+                                {% if storage_form.errors %}
+                                    {% for error in storage_form.non_field_errors %}
+                                        <div class="alert alert-danger">
+                                            <strong>{{ error|escape }}</strong>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                <!-- /Errors -->
+
+
+                                <!-- Alias -->
+                                <div class="form-group">
+                                    <!-- Errors -->
+                                    {% if storage_form.alias.errors %}
+                                        {% for error in storage_form.alias.errors %}
+                                            <div class="alert alert-danger">
+                                                <strong>{{ error|escape }}</strong>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <!-- /Errors -->
+                                    <label for="">
+                                        <b>
+                                            Alias <span class="text-danger small"> * </span>
+                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ingrese el nombre del algoritmo."></i></a>
+                                        </b>
+                                    </label>
+                                    <input name="{{ storage_form.alias.html_name }}"
+                                           id="{{ storage_form.alias.id_for_label }}"
+                                           class="form-control" placeholder="Escriba el alias de la unidad de almacenamiento."
+                                           value="{{ storage.alias }}"
+                                           type="text" maxlength="50" required>
+                                </div>
+                                <!-- /Alias -->
+
+                                <!-- Nombre -->
+                                <div class="form-group">
+                                    <!-- Errors -->
+                                    {% if storage_form.name.errors %}
+                                        {% for error in storage_form.name.errors %}
+                                            <div class="alert alert-danger">
+                                                <strong>{{ error|escape }}</strong>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <!-- /Errors -->
+                                    <label for="">
+                                        <b>
+                                            Nombre
+                                        </b>
+                                    </label>
+                                    <input name="{{ storage_form.name.html_name }}"
+                                           id="{{ storage_form.name.id_for_label }}"
+                                           class="form-control" placeholder="Escriba el nombre de la unidad de almacenamiento."
+                                           value="{{ storage.name }}"
+                                           type="text" maxlength="50" disabled>
+                                </div>
+                                <!-- /Nombre -->
+
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-default btn-lg">Actualizar Unidad</button>
+                                </div>
+
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <!-- main end -->
+            </div>
+        </div>
+    </section>
+ <!-- main-container end -->
+{% endblock %}

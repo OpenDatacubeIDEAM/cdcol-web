@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.db.models import Avg, Q
 from django.utils.encoding import smart_str
-from algorithm.models import Topic, Algorithm
+from algorithm.models import Topic, Algorithm, VersionStorageUnit
 from execution.models import *
 from execution.forms import VersionSelectionForm, ReviewForm
 from execution.serializers import ExecutionSerializer
@@ -25,6 +25,8 @@ import subprocess
 import glob
 import time
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+
+
 
 
 class JSONResponse(HttpResponse):
@@ -85,11 +87,25 @@ def download_parameter_file(request, execution_id, parameter_name, file_name):
     file_path = "{}/input/{}/{}/{}".format(settings.MEDIA_ROOT, execution.id, parameter_name, file_name)
     return download(file_path)
 
+def localize(value):
+
+    if settings.USE_L10N:
+        if isinstance(value, datetime.datetime):
+            return date_format(value, 'DATETIME_FORMAT')
+        elif isinstance(value, datetime.date):
+            return date_format(value, 'DATE_FORMAT')
+        elif isinstance(value, datetime.time):
+            return time_format(value, 'TIME_FORMAT')
+    return value;
 
 def get_detail_context(execution_id):
     execution = get_object_or_404(Execution, id=execution_id)
     executed_params = ExecutionParameter.objects.filter(execution=execution)
     review = Review.objects.filter(execution=execution).last()
+    # Setting seconds to date
+    # execution.created_at = localize(execution.created_at)
+    # execution.started_at = localize(execution.started_at)
+    # execution.finished_at = localize(execution.finished_at)
     # getting the files from the filesystem
     system_path = "{}/results/{}/".format(settings.WEB_STORAGE_PATH, execution.id)
     files = []
@@ -169,7 +185,7 @@ def detail(request, execution_id):
 
 @login_required(login_url='/accounts/login/')
 @permission_required('execution.can_view_blank_execution', raise_exception=True)
-def new_blank_execution(request):
+def  new_blank_execution(request):
     topics = Topic.objects.filter(enabled=True)
     context = {'topics': topics}
     return render(request, 'execution/new_blank.html', context)
@@ -372,6 +388,7 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
     if version_id:
         current_version = get_object_or_404(Version, id=version_id)
     parameters = Parameter.objects.filter(version=current_version, enabled=True).order_by('position')
+    allowed_storage_units = VersionStorageUnit.objects.filter(version=current_version)
     reviews = Review.objects.filter(version=current_version)
     # getting the average rating
     average_rating = Review.objects.filter(version=current_version).aggregate(Avg('rating'))['rating__avg']
@@ -380,15 +397,18 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
     topics = Topic.objects.filter(enabled=True)
     if request.method == 'POST':
         textarea_name = request.POST.get('textarea_name', None)
-        started_at = datetime.datetime.now()
+        checkbox_generate_mosaic = request.POST.get('checkbox_generate_mosaic', None)
+        if checkbox_generate_mosaic is None :
+            checkbox_generate_mosaic = False;
+       # started_at = datetime.datetime.now()
 
         if current_user.has_perm('execution.can_create_new_execution'):
             new_execution = Execution(
                 version=current_version,
                 description=textarea_name,
                 state=Execution.ENQUEUED_STATE,
-                started_at=started_at,
-                executed_by=current_user
+                executed_by=current_user,
+                generate_mosaic= checkbox_generate_mosaic
             )
             new_execution.save()
 
@@ -481,3 +501,36 @@ def generate_geotiff_task(request, execution_id, image_name):
     )
     new_file_convertion.save()
     return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': execution_id}))
+
+@login_required(login_url='/accounts/login/')
+def cancel_execution(request, execution_id):
+
+    Execution.objects.filter(id=execution_id).update(state='5', finished_at=datetime.datetime.now())
+    tasks= Task.objects.filter(execution_id=execution_id)
+    tasks.update(state='6', state_updated_at=datetime.datetime.now(), end_date=datetime.datetime.now())
+    json_request = {
+        'execution_id': execution_id
+    }
+    print 'Este es el id de ejecución {}'.format(execution_id)
+    try:
+        for t in tasks:
+            header = {'Content-Type': 'application/json'}
+            url = "{}/api/task/revoke/{}?terminate=true".format("http://34.235.222.79:8082",t.uuid)
+            r = requests.post(url, None, headers=header)
+            if r.status_code == 200:
+                response = {'status': 'ok', 'description': 'Se canceló la ejecución'}
+            else:
+                response = {'status': 'error', 'description': 'Ocurrió un error al cancelar la ejecución', 'detalle': "{}, {}".format(r.status_code, r.text)}
+        # header = {'Content-Type': 'application/json'}
+        # url = "{}/api/cancel_execution/".format(settings.API_URL)
+        # r = requests.post(url, data=json.dumps(json_request), headers=header)
+        # if r.status_code == 200:
+        #     response = {'status': 'ok', 'description': 'Se canceló la ejecución'}
+        # else:
+        #     response = {'status': 'error', 'description': 'Ocurrió un error al cancelar la ejecución',
+        #                 'detalle': "{}, {}".format(r.status_code, r.text)}
+    except:
+        print 'Something went wrong when trying to call the REST service'
+
+    context = get_detail_context(execution_id)
+    return render(request, 'execution/detail.html', context)

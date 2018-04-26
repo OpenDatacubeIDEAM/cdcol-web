@@ -85,7 +85,7 @@
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/plug-ins/1.10.13/sorting/datetime-moment.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $.fn.dataTable.moment('DD-MM-YYYY HH:mm');
+            $.fn.dataTable.moment('DD-MM-YYYY HH:mm:ss');
 
             $('#execution_table').dataTable({
                 "language": {
@@ -116,46 +116,61 @@
                     {
                         "data": "created_at",
                         "render": function (data) {
-                            var date = new Date(data);
-                            date.setHours(date.getHours()-5);
-                            var day = ("0" + date.getDate()).slice(-2);
-                            var month = ("0"+(date.getMonth()+1)).slice(-2);
-                            var year = date.getFullYear();
-                            var hours = ("0" + date.getHours()).slice(-2);
-                            var minutes = ("0" + date.getMinutes()).slice(-2);
-                            var datestring = day + "-" + month + "-" + year + " " + hours + ":" + minutes;
-                            return datestring;
+                            if(data){
+                                var date = new Date(data);
+                                date.setHours(date.getHours()-5);
+                                var day = ("0" + date.getDate()).slice(-2);
+                                var month = ("0"+(date.getMonth()+1)).slice(-2);
+                                var year = date.getFullYear();
+                                var hours = ("0" + date.getHours()).slice(-2);
+                                var minutes = ("0" + date.getMinutes()).slice(-2);
+                                var seconds = ("0" + date.getSeconds()).slice(-2);
+                                var datestring = day + "-" + month + "-" + year + " " + hours + ":" + minutes + ":" + seconds;
+                                return datestring;
+                            }else{
+                                return "---";
+                            }
+
                         }
                     },
                     {
                         "data": "started_at",
                         "render": function (data) {
-                            var date = new Date(data);
-                            date.setHours(date.getHours()-5);
-                            var day = ("0" + date.getDate()).slice(-2);
-                            var month = ("0"+(date.getMonth()+1)).slice(-2);
-                            var year = date.getFullYear();
-                            var hours = ("0" + date.getHours()).slice(-2);
-                            var minutes = ("0" + date.getMinutes()).slice(-2);
-                            var datestring = day + "-" + month + "-" + year + " " + hours + ":" + minutes;
-                            return datestring;
+                            if(data){
+                                var date = new Date(data);
+                                date.setHours(date.getHours()-5);
+                                var day = ("0" + date.getDate()).slice(-2);
+                                var month = ("0"+(date.getMonth()+1)).slice(-2);
+                                var year = date.getFullYear();
+                                var hours = ("0" + date.getHours()).slice(-2);
+                                var minutes = ("0" + date.getMinutes()).slice(-2);
+                                var seconds = ("0" + date.getSeconds()).slice(-2);
+                                var datestring = day + "-" + month + "-" + year + " " + hours + ":" + minutes + ":" + seconds;
+                                return datestring;
+                            }else{
+                                return "---";
+                            }
+
                         }
                     },
                     {
                         "data": "finished_at",
                         "render": function (data) {
-                            if(data === null){
-                                return "-";
+                            if(data){
+                                var date = new Date(data);
+                                date.setHours(date.getHours()-5);
+                                var day = ("0" + date.getDate()).slice(-2);
+                                var month = ("0"+(date.getMonth()+1)).slice(-2);
+                                var year = date.getFullYear();
+                                var hours = ("0" + date.getHours()).slice(-2);
+                                var minutes = ("0" + date.getMinutes()).slice(-2);
+                                var seconds = ("0" + date.getSeconds()).slice(-2);
+                                var datestring = day + "-" + month + "-" + year + " " + hours + ":" + minutes + ":" + seconds;
+                                return datestring;
+                            } else{
+                                return "---";
                             }
-                            var date = new Date(data);
-                            date.setHours(date.getHours()-5);
-                            var day = ("0" + date.getDate()).slice(-2);
-                            var month = ("0"+(date.getMonth()+1)).slice(-2);
-                            var year = date.getFullYear();
-                            var hours = ("0" + date.getHours()).slice(-2);
-                            var minutes = ("0" + date.getMinutes()).slice(-2);
-                            var datestring = day + "-" + month + "-" + year + " " + hours + ":" + minutes;
-                            return datestring;
+
                         }
                     },
                     {

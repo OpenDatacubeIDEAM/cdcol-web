@@ -37,6 +37,9 @@ class Algorithm(models.Model):
 	def last_version(self):
 		return Version.objects.filter(algorithm_id=self.id).last()
 
+	def last_version_no_obsolete(self):
+		return Version.objects.filter(algorithm_id=self.id).exists()
+
 	def version_count(self):
 		return self.obtain_versions().count()
 
