@@ -5,6 +5,7 @@ from django.db import models
 
 
 class StorageUnit(models.Model):
+	alias = models.CharField(max_length=200, unique=True)
 	name = models.CharField(max_length=200, unique=True)
 	description = models.TextField()
 	description_file = models.CharField(max_length=200)
@@ -19,6 +20,12 @@ class StorageUnit(models.Model):
 	def __unicode__(self):
 		return "{} - {}".format(self.id, self.name)
 
+	def save(self, *args, **kwargs):
+		if not self.alias:
+			self.alias = self.name
+		super(StorageUnit, self).save(*args, **kwargs);
+
+
 	class Meta:
 		permissions = (
 			("can_list_units", "Ver listado de unidades de almacenamiento"),
@@ -28,4 +35,5 @@ class StorageUnit(models.Model):
 			("can_download_file", "Descargar un archivo"),
 			("can_view_content_detail", "Ver detalle de un contenido"),
 			("can_download_metadata", "Descargar metadados"),
+			("can_edit_units", "Editar unidad de almacenamiento"),
 		)

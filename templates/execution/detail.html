@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load execution_extras %}
 {% block extra_head %}
     <script type="text/javascript">
         {% if execution.state == '1' or execution.state == '2' %}
@@ -66,19 +66,35 @@
                         </tr>
                         <tr>
                             <td>Fecha de Creación:</td>
-                            <td>{{ execution.created_at }}</td>
+                            {% if execution.created_at %}
+                                <td>{{ execution.created_at}}</td>
+                            {% else %}
+                                <td>---</td>
+                            {% endif %}
                         </tr>
                         <tr>
                             <td>Inicio ejecución:</td>
-                            <td>{{ execution.started_at }}</td>
+                            {% if execution.started_at %}
+                                <td>{{ execution.started_at }}</td>
+                            {% else %}
+                                <td>---</td>
+                            {% endif %}
                         </tr>
                         <tr>
                             <td>Fin ejecución:</td>
-                            <td>{{ execution.finished_at }}</td>
+                            {% if execution.finished_at %}
+                                 <td>{{ execution.finished_at }}</td>
+                            {% else %}
+                                <td>---</td>
+                            {% endif %}
                         </tr>
                         <tr>
                             <td>Creada por:</td>
                             <td>{{ execution.executed_by.email }}</td>
+                        </tr>
+                        <tr>
+                            <td>Descripción:</td>
+                            <td>{{ execution.description | linebreaks }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -89,6 +105,10 @@
                     <p>Los parámetros de la ejecución son los siguientes:</p>
                     <table class="table">
                         <tbody>
+                        <tr>
+                            <td>Genera Mosaico</td>
+                            <td>{{ execution.generate_mosaic }}</td>
+                        </tr>
                         {% for param in executed_params %}
                             {% if param.parameter.parameter_type == '7' %}
                                 <tr>
@@ -100,17 +120,20 @@
                                     <td>{{ param.obtain_json_values.latitude_end }}</td>
                                 </tr>
                                 <tr>
-                                    <td>{{ param.parameter.name }} (Longitud mínima)</td>
+                                    <td>{{ param.parameter.name }} (Longitud  mínima)</td>
                                     <td>{{ param.obtain_json_values.longitude_start }}</td>
                                 </tr>
                                 <tr>
                                     <td>{{ param.parameter.name }} (Longitud máxima)</td>
                                     <td>{{ param.obtain_json_values.longitude_end }}</td>
                                 </tr>
+                            {% elif param.parameter.parameter_type == '8' or param.parameter.parameter_type == '13' %}
+                                <td>{{ param.parameter.name }}</td>
+                                <td>{{ param.obtain_value | get_storage_unit}}</td>
                             {% else %}
                                 <tr>
                                     <td>{{ param.parameter.name }}</td>
-                                    <td>{{ param.obtain_value }}</td>
+                                    <td>{{ param.obtain_value}}</td>
                                     {% if param.parameter.parameter_type == '12' %}
                                         <td>
                                             <a href="{% url 'execution:download_parameter_file' execution.id param.parameter.name param.filetype.file_name %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
@@ -218,19 +241,25 @@
                             {% if review %}
                                 <nav>
                                     <!--<a href="#" class="btn btn-gray btn-md btn-block">No hay acciones disponibles</a>-->
-                                    <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.id execution.id %}" class="btn btn-primary btn-md btn-block">Replicar ejecución</a>
+                                    <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.id execution.id %}" class="btn btn-default btn-md btn-block">Replicar ejecución</a>
+                                    {% if execution.state == '2' or execution.state == '1' %}
+                                        <a href="{% url 'execution:cancel_execution' execution.id %}" onclick="return confirm('¿Está seguro de cancelar esta ejecución?')" class="btn btn-danger btn-md btn-block">Cancelar ejecución</a>
+                                    {% endif %}
                                 </nav>
                             {% else %}
                                 <nav>
                                     {% if user.is_authenticated %}
                                         {% if perms.execution.can_rate_execution %}
-                                            <a href="{% url 'execution:rate_execution' execution.id %}#rating" class="btn btn-primary btn-md btn-block">Calificar Resultados de la
-                                                Ejecución</a>
-                                            <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.id execution.id %}" class="btn btn-primary btn-md btn-block">Replicar ejecución</a>
-                                        {% else %}
-                                            <!--<a href="#" class="btn btn-gray btn-md btn-block">No hay acciones disponibles</a>-->
-                                            <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.id execution.id %}" class="btn btn-primary btn-md btn-block">Replicar ejecución</a>
+                                            <a href="{% url 'execution:rate_execution' execution.id %}#rating" class="btn btn-primary btn-md btn-block">Calificar Resultados de la Ejecución</a>
                                         {% endif %}
+                                        <a href="{% url 'execution:new_copied_execution' execution.version.algorithm.id execution.version.id execution.id %}" class="btn btn-default btn-md btn-block">Replicar ejecución</a>
+                                        {% if execution.state == '2' or execution.state == '1'%}
+                                            <a href="{% url 'execution:cancel_execution' execution.id %}" onclick="return confirm('¿Está seguro de cancelar esta ejecución?')" class="btn btn-danger btn-md btn-block">Cancelar ejecución</a>
+                                        {% endif %}
+
+
+
+
                                     {% endif %}
                                 </nav>
                             {% endif %}
@@ -240,8 +269,7 @@
                             <div class="block clearfix">
                                 <h3 class="title">Calificación realizada</h3>
                                 <div class="separator-2"></div>
-                                <p>La calificación que realizaste de los resultados de esta ejecución es la
-                                    siguiente:</p>
+                                <p>La calificación que realizaste de los resultados de esta ejecución es la siguiente:</p>
                                 <nav>
                                     <ul>
                                         <li>Calificación: {{ review.rating }}</li>

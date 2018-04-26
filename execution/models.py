@@ -7,6 +7,7 @@ from django.db.models import Q
 import datetime
 from django.core.exceptions import ValidationError
 from django.conf import settings
+from storage.models import StorageUnit
 
 class Execution(models.Model):
 	ENQUEUED_STATE = '1'
@@ -24,7 +25,7 @@ class Execution(models.Model):
 	version = models.ForeignKey(Version, on_delete=models.CASCADE)
 	description = models.TextField(blank=True, null=True)
 	state = models.CharField(max_length=2, choices=EXECUTION_STATES)
-	started_at = models.DateTimeField()
+	started_at = models.DateTimeField(blank=True, null=True)
 	finished_at = models.DateTimeField(blank=True, null=True)
 	trace_error = models.TextField(blank=True, null=True)
 	results_available = models.BooleanField(default=False)
@@ -33,6 +34,8 @@ class Execution(models.Model):
 	executed_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='execution_author')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+	generate_mosaic = models.BooleanField(default=True)
+
 
 	def __unicode__(self):
 		return "{} - {} - v{}".format(self.id, self.version.algorithm.name, self.version.number)
@@ -61,6 +64,7 @@ class ExecutionParameter(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
+
 	def obtain_value(self):
 		parameter_type = self.parameter.parameter_type
 		response = "Parámetro no soportado"
@@ -84,6 +88,8 @@ class ExecutionParameter(models.Model):
 		elif parameter_type == "13":
 			response = "{}".format(self.storageunitnobandtype.storage_unit_name)
 		return response
+
+
 
 	def obtain_json_values(self):
 		parameter_type = self.parameter.parameter_type
