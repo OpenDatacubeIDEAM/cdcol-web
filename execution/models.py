@@ -73,7 +73,7 @@ class ExecutionParameter(models.Model):
 
 	def obtain_time_range_file(self):
 		if self.parameter.parameter_type == "7":
-			return "{} - {}".format(self.timeperiodtype.start_date.strftime("%Y-%m-%d"), self.timeperiodtype.end_date.strftime("%Y-%m-%d"))
+			return "u{}u{}".format(self.timeperiodtype.start_date.strftime("%d-%m-%Y"), self.timeperiodtype.end_date.strftime("%d-%m-%Y"))
 		else:
 			return ""
 

@@ -102,13 +102,12 @@ def get_detail_context(execution_id):
     system_path = "{}/results/{}/".format(settings.WEB_STORAGE_PATH, execution.id)
     files = []
     try:
-        # for i in range(area_param.lat_start, area_param.long_end):
-        #     for j in range(area_param.long_start, area_param.long_end):
-        #         f = {'lat':i, 'long':j, 'file': '{}_{}_{}_{}_output.nc'.format(execution.version.algorithm.name, execution.version.number, lat, long), 'state': False, 'tiff_file': f.replace('.nc', '.tiff')}
-        #         files.append(f)
-        for f in os.listdir(system_path):
-            if ".tiff" not in f:
-                f = {'file': f, 'state': False, 'tiff_file': f.replace('.nc', '.tiff')}
+        algorithm_name= execution.version.algorithm.name.lower().replace(" ", "_")
+        for i in range(area_param.lat_start, area_param.long_end):
+            for j in range(area_param.long_start, area_param.long_end):
+                f = {'lat':i, 'long':j,
+                    'file': '{}_{}_{}_{}_({})_output.nc'.format(algorithm_name, execution.version.number, lat, long, time_period_param),
+                    'state': False,'tiff_file': f.replace('.nc', '.tiff')}
                 try:
                     convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
                     f['state'] = convertion_task.state
@@ -117,6 +116,18 @@ def get_detail_context(execution_id):
                 except MultipleObjectsReturned:
                     FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
                 files.append(f)
+
+        # for f in os.listdir(system_path):
+        #     if ".tiff" not in f:
+        #         f = {'file': f, 'state': False, 'tiff_file': f.replace('.nc', '.tiff')}
+        #         try:
+        #             convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
+        #             f['state'] = convertion_task.state
+        #         except ObjectDoesNotExist:
+        #             pass
+        #         except MultipleObjectsReturned:
+        #             FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
+        #         files.append(f)
     except:
         pass
     # getting current executions
