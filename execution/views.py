@@ -92,7 +92,7 @@ def get_detail_context(execution_id):
     execution = get_object_or_404(Execution, id=execution_id)
     executed_params = ExecutionParameter.objects.filter(execution=execution)
     area_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter_type=Parameter.AREA_TYPE).obtain_area()
-    time_period_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter__type=Parameter.TIME_PERIOD_TYPE).obtain_time_range_file
+    time_period_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter_type=Parameter.TIME_PERIOD_TYPE).obtain_time_range_file
     review = Review.objects.filter(execution=execution).last()
     # Setting seconds to date
     # execution.created_at = localize(execution.created_at)
