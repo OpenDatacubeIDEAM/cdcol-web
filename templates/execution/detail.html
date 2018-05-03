@@ -188,8 +188,8 @@
                                                         </td>
                                                     {% else %}
                                                         <td>{{ file.file }}</td>
-                                                        <td>{{ area_param.obtain_area.lat_start}}</td>
-                                                        <td>{{ time_period_param.obtain_time_range_file }}</td>
+                                                        <td>{{ file.lat}}</td>
+                                                        <td>{{ file.long }}</td>
                                                         <td>
                                                             <a href="{% url 'execution:download_result' execution.id file.file %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
                                                             {% if not execution.version.algorithm.multitemporal %}
