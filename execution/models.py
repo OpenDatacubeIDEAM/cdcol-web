@@ -65,12 +65,16 @@ class ExecutionParameter(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 
 	def obtain_area(self):
-		parameter_type = self.parameter.parameter_type
-		if parameter_type == "7":
-			return self.areatype.latitude_start
-			#return [self.areatype.latitude_start, self.areatype.longitude_start,self.areatype.latitude_end, self.areatype.longitude_end]
+		if self.parameter.parameter_type == "7":
+			return {'lat_start':self.areatype.latitude_start, 'lat_end':self.areatype.latitude_end, 'long_start': self.areatype.longitude_start, 'long_end': self.areatype.longitude_end}
 		else:
-			return []
+			return {}
+
+	def obtain_time_range_file(self):
+		if self.parameter.parameter_type == "7":
+			return "{} - {}".format(self.timeperiodtype.start_date.strftime("%Y-%m-%d"), self.timeperiodtype.end_date.strftime("%Y-%m-%d"))
+		else:
+			return ""
 
 	def obtain_value(self):
 		parameter_type = self.parameter.parameter_type
