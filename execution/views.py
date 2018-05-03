@@ -108,8 +108,9 @@ def get_detail_context(execution_id):
         # for i in range(int(area_param.obtain_area.lat_start), int(area_param.obtain_area.lat_end)):
         #     for j in range(int(area_param.obtain_area.long_start), int(area_param.obtain_area.long_end)):
                 f = {'lat':i, 'long':j,
-                    'file': '{}_{}_{}_{}_({})_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_param.obtain_time_range_file),
-                    'state': False,'tiff_file': f.replace('.nc', '.tiff')}
+                    # 'file': '{}_{}_{}_{}_({})_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_param.obtain_time_range_file),
+                     'file':'nnn.nc',
+                    'state': False,'tiff_file': f.replace('.nc', '.tiff'),}
                 try:
                     convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
                     f['state'] = convertion_task.state
