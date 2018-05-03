@@ -91,7 +91,7 @@ def download_parameter_file(request, execution_id, parameter_name, file_name):
 def get_detail_context(execution_id):
     execution = get_object_or_404(Execution, id=execution_id)
     executed_params = ExecutionParameter.objects.filter(execution=execution)
-    area_param = executed_params.filter(parameter__parameter_type=Parameter.AREA_TYPE).obtain_area()
+    area_param = executed_params.get(parameter__parameter_type=Parameter.AREA_TYPE).obtain_area()
     review = Review.objects.filter(execution=execution).last()
     # Setting seconds to date
     # execution.created_at = localize(execution.created_at)
