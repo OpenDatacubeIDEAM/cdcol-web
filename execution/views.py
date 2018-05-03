@@ -91,8 +91,8 @@ def download_parameter_file(request, execution_id, parameter_name, file_name):
 def get_detail_context(execution_id):
     execution = get_object_or_404(Execution, id=execution_id)
     executed_params = ExecutionParameter.objects.filter(execution=execution)
-    area_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter_type=Parameter.AREA_TYPE).obtain_value
-    time_period_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter_type=Parameter.TIME_PERIOD_TYPE).obtain_time_range_file
+    area_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter_type=Parameter.AREA_TYPE)
+    time_period_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter_type=Parameter.TIME_PERIOD_TYPE)
     review = Review.objects.filter(execution=execution).last()
     # Setting seconds to date
     # execution.created_at = localize(execution.created_at)
@@ -103,10 +103,10 @@ def get_detail_context(execution_id):
     files = []
     try:
         # algorithm_name= execution.version.algorithm.name.lower().replace(" ", "_")
-        # for i in range(area_param.lat_start, area_param.long_end):
-        #     for j in range(area_param.long_start, area_param.long_end):
+        # for i in range(area_param.obtain_area.lat_start, area_param.obtain_area.lat_start):
+        #     for j in range(area_param.obtain_area.long_start, area_param.obtain_area.long_end):
         #         f = {'lat':i, 'long':j,
-        #             'file': '{}_{}_{}_{}_({})_output.nc'.format(algorithm_name, execution.version.number, lat, long, time_period_param),
+        #             'file': '{}_{}_{}_{}_({})_output.nc'.format(algorithm_name, execution.version.number, lat, long, time_period_param.obtain_time_range_file),
         #             'state': False,'tiff_file': f.replace('.nc', '.tiff')}
         #         try:
         #             convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
@@ -142,7 +142,7 @@ def get_detail_context(execution_id):
         delete_time = None
     context = {'execution': execution, 'executed_params': executed_params, 'review': review, 'files': files,
                'current_executions': current_executions, 'temporizer_value': temporizer_value, 'delete_time': delete_time,
-               'system_path': system_path, 'area_param':area_param.lat_start, 'time_period_param':time_period_param}
+               'system_path': system_path, 'area_param':area_param, 'time_period_param':time_period_param}
     return context
 
 

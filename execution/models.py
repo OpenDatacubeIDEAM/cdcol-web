@@ -67,9 +67,9 @@ class ExecutionParameter(models.Model):
 	def obtain_area(self):
 		if self.parameter.parameter_type == "7":
 			#return self.areatype.latitude_start
-			return {'lat_start':self.areatype.latitude_start, 'lat_end':self.areatype.latitude_end, 'long_start': self.areatype.longitude_start, 'long_end': self.areatype.longitude_end,}
+			return {'lat_start':int(self.areatype.latitude_start), 'lat_end':self.areatype.latitude_end, 'long_start': self.areatype.longitude_start, 'long_end': self.areatype.longitude_end,}
 		else:
-			return {}
+			return {'lat_start':0, 'lat_end':0, 'long_start': 0, 'long_end': 0,}
 
 	def obtain_time_range_file(self):
 		if self.parameter.parameter_type == "7":
