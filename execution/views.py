@@ -101,6 +101,7 @@ def localize(value):
 def get_detail_context(execution_id):
     execution = get_object_or_404(Execution, id=execution_id)
     executed_params = ExecutionParameter.objects.filter(execution=execution)
+    area_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter_type="7").obtain_value()
     review = Review.objects.filter(execution=execution).last()
     # Setting seconds to date
     # execution.created_at = localize(execution.created_at)
