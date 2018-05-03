@@ -142,7 +142,7 @@ def get_detail_context(execution_id):
         delete_time = None
     context = {'execution': execution, 'executed_params': executed_params, 'review': review, 'files': files,
                'current_executions': current_executions, 'temporizer_value': temporizer_value, 'delete_time': delete_time,
-               'system_path': system_path, 'area_param':area_param}
+               'system_path': system_path, 'area_param':area_param, 'time_period_param':time_period_param}
     return context
 
 
