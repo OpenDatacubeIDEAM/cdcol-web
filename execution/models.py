@@ -64,6 +64,13 @@ class ExecutionParameter(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
+	def obtain_area(self):
+		parameter_type = self.parameter.parameter_type
+		if parameter_type == "7":
+			return self.areatype.latitude_start
+			#return [self.areatype.latitude_start, self.areatype.longitude_start,self.areatype.latitude_end, self.areatype.longitude_end]
+		else:
+			return []
 
 	def obtain_value(self):
 		parameter_type = self.parameter.parameter_type

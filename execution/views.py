@@ -87,21 +87,11 @@ def download_parameter_file(request, execution_id, parameter_name, file_name):
     file_path = "{}/input/{}/{}/{}".format(settings.MEDIA_ROOT, execution.id, parameter_name, file_name)
     return download(file_path)
 
-def localize(value):
-
-    if settings.USE_L10N:
-        if isinstance(value, datetime.datetime):
-            return date_format(value, 'DATETIME_FORMAT')
-        elif isinstance(value, datetime.date):
-            return date_format(value, 'DATE_FORMAT')
-        elif isinstance(value, datetime.time):
-            return time_format(value, 'TIME_FORMAT')
-    return value;
 
 def get_detail_context(execution_id):
     execution = get_object_or_404(Execution, id=execution_id)
     executed_params = ExecutionParameter.objects.filter(execution=execution)
-    area_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter_type="7").obtain_value()
+    area_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter_type=Parameter.AREA_TYPE).obtain_area()
     review = Review.objects.filter(execution=execution).last()
     # Setting seconds to date
     # execution.created_at = localize(execution.created_at)
@@ -136,7 +126,7 @@ def get_detail_context(execution_id):
         delete_time = None
     context = {'execution': execution, 'executed_params': executed_params, 'review': review, 'files': files,
                'current_executions': current_executions, 'temporizer_value': temporizer_value, 'delete_time': delete_time,
-               'system_path': system_path}
+               'system_path': system_path, 'area_param':area_param}
     return context
 
 
