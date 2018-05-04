@@ -106,7 +106,14 @@ def get_detail_context(execution_id):
                 f = {'file': file_name, 'lat': i, 'long': j, 'task_state': '', 'result_state': os.path.exists(system_path+file_name), 'state': False, 'tiff_file': file_name.replace('.nc', '.tiff')}
                 if f['result_state']:
                     f['task_state'] = 'Finalizado'
-
+                elif os.path.exists(system_path+"{}_{}_no_data.lock".format(i,j)):
+                    f['task_state'] = 'Sin datos'
+                elif execution.state == Execution.ENQUEUED_STATE:
+                    f['task_state'] = 'En espera'
+                elif execution.state == Execution.EXECUTING_STATE:
+                    f['task_state'] = 'En ejecución'
+                elif execution.state == Execution.ERROR_STATE:
+                    f['task_state'] = 'Falló'
                 try:
                     convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
                     f['state'] = convertion_task.state
