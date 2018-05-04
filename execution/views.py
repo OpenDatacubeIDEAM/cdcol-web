@@ -111,13 +111,13 @@ def get_detail_context(execution_id):
                     # 'file': '{}_{}_{}_{}_({})_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_param.obtain_time_range_file),
                      'file':'nnn.nc',
                     'state': False,'tiff_file': f.replace('.nc', '.tiff'),}
-                try:
-                    convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
-                    f['state'] = convertion_task.state
-                except ObjectDoesNotExist:
-                    pass
-                except MultipleObjectsReturned:
-                    FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
+                # try:
+                #     convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
+                #     f['state'] = convertion_task.state
+                # except ObjectDoesNotExist:
+                #     pass
+                # except MultipleObjectsReturned:
+                #     FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
                 files.append(f)
 
         # for f in os.listdir(system_path):
