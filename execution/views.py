@@ -103,25 +103,21 @@ def get_detail_context(execution_id):
     files = []
     try:
         algorithm_name= execution.version.algorithm.name.lower().replace(" ", "_")
-        # for i in range(int(area_param.obtain_area.lat_start), int(area_param.obtain_area.lat_end)):
-        #     for j in range(int(area_param.obtain_area.long_start), int(area_param.obtain_area.long_end)):
-        #         file_name= '{}_{}_{}_{}_({})_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_param.obtain_time_range_file)
-        #         f = {'lat':i, 'long':j,
-        #             'file': file_name,
-        #             'state': False,'tiff_file': file_name.replace('.nc', '.tiff'),}
-        #         # try:
-        #         #     convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
-        #         #     f['state'] = convertion_task.state
-        #         # except ObjectDoesNotExist:
-        #         #     pass
-        #         # except MultipleObjectsReturned:
-        #         #     FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
-        #         files.append(f)
         for i in range(int(area_param.areatype.latitude_start), int(area_param.areatype.latitude_end)):
             for j in range(int(area_param.areatype.longitude_start), int(area_param.areatype.longitude_end)):
                 file_name= '{}_{}_{}_{}_(u{}u{})_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_param.timeperiodtype.start_date.strftime("%d-%m-%Y"), time_period_param.timeperiodtype.end_date.strftime("%d-%m-%Y"))
                 f = {'file': file_name, 'lat': i, 'long': j, 'state': False, 'tiff_file': file_name.replace('.nc', '.tiff')}
+                try:
+                    convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
+                    f['state'] = convertion_task.state
+                    if f['state'] == '3'
+                        tiff_message='Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
+                except ObjectDoesNotExist:
+                    pass
+                except MultipleObjectsReturned:
+                    FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
                 files.append(f)
+
         # for f in os.listdir(system_path):
         #     if ".tiff" not in f:
         #         f = {'file': f, 'lat':0, 'long':0, 'state': False, 'tiff_file': f.replace('.nc', '.tiff')}
@@ -147,7 +143,7 @@ def get_detail_context(execution_id):
         delete_time = None
     context = {'execution': execution, 'executed_params': executed_params, 'review': review, 'files': files,
                'current_executions': current_executions, 'temporizer_value': temporizer_value, 'delete_time': delete_time,
-               'system_path': system_path, 'area_param':area_param, 'time_period_param':time_period_param}
+               'system_path': system_path, 'area_param':area_param, 'time_period_param':time_period_param, 'tiff_message':tiff_message}
     return context
 
 

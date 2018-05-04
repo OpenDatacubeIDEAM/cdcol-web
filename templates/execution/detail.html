@@ -178,9 +178,11 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <script>
-                                                alert('HOLA');
-                                            </script>
+                                            {% if tiff_message %}
+                                                <script>
+                                                    alert({{ tiff_message }});
+                                                </script>
+                                            {% endif %}
                                             {% for file in files %}
                                                 <tr>
                                                     {% if ".gif" in file.file %}
