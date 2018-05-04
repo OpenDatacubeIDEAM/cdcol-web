@@ -117,11 +117,10 @@ def get_detail_context(execution_id):
         #         # except MultipleObjectsReturned:
         #         #     FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
         #         files.append(f)
-        area = area_param.obtain_area
         for i in range(0, 3):
             for j in range(0, 3):
                 file_name= '{}_{}_{}_{}_({})_output.nc'.format(algorithm_name, execution.version.number, i, j, '01-03')
-                f = {'file': file_name, 'lat': area['lat_start'], 'long': j, 'state': False, 'tiff_file': file_name.replace('.nc', '.tiff')}
+                f = {'file': file_name, 'lat': area_param.areatype.latitude_start, 'long': j, 'state': False, 'tiff_file': file_name.replace('.nc', '.tiff')}
                 files.append(f)
         # for f in os.listdir(system_path):
         #     if ".tiff" not in f:
