@@ -102,7 +102,7 @@ def get_detail_context(execution_id):
     system_path = "{}/results/{}/".format(settings.WEB_STORAGE_PATH, execution.id)
     files = []
     try:
-        # algorithm_name= execution.version.algorithm.name.lower().replace(" ", "_")
+        algorithm_name= execution.version.algorithm.name.lower().replace(" ", "_")
         # for i in range(int(area_param.obtain_area.lat_start), int(area_param.obtain_area.lat_end)):
         #     for j in range(int(area_param.obtain_area.long_start), int(area_param.obtain_area.long_end)):
         #         file_name= '{}_{}_{}_{}_({})_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_param.obtain_time_range_file)
@@ -119,7 +119,7 @@ def get_detail_context(execution_id):
         #         files.append(f)
         for i in range(0, 3):
             for j in range(0, 3):
-                f = {'file': 'nnn.nc', 'lat': i, 'long': j, 'state': False, 'tiff_file': 'nnn.tiff'}
+                f = {'file': algorithm_name+'.nc', 'lat': i, 'long': j, 'state': False, 'tiff_file': 'nnn.tiff'}
                 files.append(f)
         # for f in os.listdir(system_path):
         #     if ".tiff" not in f:
