@@ -127,6 +127,27 @@ def get_detail_context(execution_id):
                     tiff_message = 'Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
                     FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
                 files.append(f)
+            other_files = []
+            for f in os.listdir(system_path):
+                if ".gif" in f :
+                    f = {'file': f, 'state':False}
+                    other_files.append(f)
+                elif "mosaic" in f and ".nc" in f:
+                    f = {'file': f, 'state': False}
+                    try:
+                        convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
+                        f['state'] = convertion_task.state
+                        if f['state'] == '3':
+                            tiff_message = 'Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
+                        elif f['state'] == True:
+                            generating_tiff = '1'
+                    except ObjectDoesNotExist:
+                        pass
+                    except MultipleObjectsReturned:
+                        tiff_message = 'Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
+                        FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
+                    other_files.append(f)
+
 
         # for f in os.listdir(system_path):
         #     if ".tiff" not in f:
@@ -151,7 +172,7 @@ def get_detail_context(execution_id):
         delete_time = execution.finished_at + datetime.timedelta(hours=delete_hours)
     else:
         delete_time = None
-    context = {'execution': execution, 'executed_params': executed_params, 'review': review, 'files': files,
+    context = {'execution': execution, 'executed_params': executed_params, 'review': review, 'files': files, 'other_files': other_files,
                'current_executions': current_executions, 'temporizer_value': temporizer_value, 'delete_time': delete_time,
                'system_path': system_path, 'area_param':area_param, 'time_period_param':time_period_param, 'tiff_message':tiff_message, 'generating_tiff': generating_tiff}
     return context
