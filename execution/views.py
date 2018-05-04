@@ -112,6 +112,8 @@ def get_detail_context(execution_id):
                     f['state'] = convertion_task.state
                     if f['state'] == '3':
                         tiff_message='Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
+                    else:
+                        tiff_message=None
                 except ObjectDoesNotExist:
                     pass
                 except MultipleObjectsReturned:
