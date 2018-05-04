@@ -102,35 +102,35 @@ def get_detail_context(execution_id):
     system_path = "{}/results/{}/".format(settings.WEB_STORAGE_PATH, execution.id)
     files = []
     try:
-        algorithm_name= execution.version.algorithm.name.lower().replace(" ", "_")
-        for i in range(0,3):
-            for j in range(0, 3):
-        # for i in range(int(area_param.obtain_area.lat_start), int(area_param.obtain_area.lat_end)):
-        #     for j in range(int(area_param.obtain_area.long_start), int(area_param.obtain_area.long_end)):
-                f = {'lat':i, 'long':j,
-                    # 'file': '{}_{}_{}_{}_({})_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_param.obtain_time_range_file),
-                     'file':'nnn.nc',
-                    'state': False,'tiff_file': f.replace('.nc', '.tiff'),}
-                # try:
-                #     convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
-                #     f['state'] = convertion_task.state
-                # except ObjectDoesNotExist:
-                #     pass
-                # except MultipleObjectsReturned:
-                #     FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
-                files.append(f)
-
-        # for f in os.listdir(system_path):
-        #     if ".tiff" not in f:
-        #         f = {'file': f, 'state': False, 'tiff_file': f.replace('.nc', '.tiff')}
-        #         try:
-        #             convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
-        #             f['state'] = convertion_task.state
-        #         except ObjectDoesNotExist:
-        #             pass
-        #         except MultipleObjectsReturned:
-        #             FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
+        # algorithm_name= execution.version.algorithm.name.lower().replace(" ", "_")
+        # for i in range(0,3):
+        #     for j in range(0, 3):
+        # # for i in range(int(area_param.obtain_area.lat_start), int(area_param.obtain_area.lat_end)):
+        # #     for j in range(int(area_param.obtain_area.long_start), int(area_param.obtain_area.long_end)):
+        #         f = {'lat':i, 'long':j,
+        #             # 'file': '{}_{}_{}_{}_({})_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_param.obtain_time_range_file),
+        #              'file':'nnn.nc',
+        #             'state': False,'tiff_file': f.replace('.nc', '.tiff'),}
+        #         # try:
+        #         #     convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
+        #         #     f['state'] = convertion_task.state
+        #         # except ObjectDoesNotExist:
+        #         #     pass
+        #         # except MultipleObjectsReturned:
+        #         #     FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
         #         files.append(f)
+
+        for f in os.listdir(system_path):
+            if ".tiff" not in f:
+                f = {'file': f, 'lat':0, 'long':0, 'state': False, 'tiff_file': f.replace('.nc', '.tiff')}
+                try:
+                    convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
+                    f['state'] = convertion_task.state
+                except ObjectDoesNotExist:
+                    pass
+                except MultipleObjectsReturned:
+                    FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
+                files.append(f)
     except:
         pass
     # getting current executions
