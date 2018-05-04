@@ -119,7 +119,7 @@ def get_detail_context(execution_id):
         #         files.append(f)
         for i in range(0, 3):
             for j in range(0, 3):
-                file_name= '{}_{}_{}_{}_{}_output.nc'.format(algorithm_name, execution.version.number, i, j, '01-03')
+                file_name= '{}_{}_{}_{}_{}_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_param.obtain_time_range_file)
                 f = {'file': file_name, 'lat': i, 'long': j, 'state': False, 'tiff_file': 'nnn.tiff'}
                 files.append(f)
         # for f in os.listdir(system_path):
