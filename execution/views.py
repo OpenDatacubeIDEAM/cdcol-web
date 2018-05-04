@@ -103,7 +103,7 @@ def get_detail_context(execution_id):
         for i in range(int(area_param.areatype.latitude_start), int(area_param.areatype.latitude_end)):
             for j in range(int(area_param.areatype.longitude_start), int(area_param.areatype.longitude_end)):
                 file_name= '{}_{}_{}_{}_(u{}u{})_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_param.timeperiodtype.start_date.strftime("%d-%m-%Y"), time_period_param.timeperiodtype.end_date.strftime("%d-%m-%Y"))
-                f = {'file': file_name, 'lat': i, 'long': j, 'state': False, 'tiff_file': file_name.replace('.nc', '.tiff')}
+                f = {'file': file_name, 'lat': i, 'long': j, 'task_state': '00', 'result_state': os._exists(system_path+file_name), 'state': False, 'tiff_file': file_name.replace('.nc', '.tiff')}
                 try:
                     convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
                     f['state'] = convertion_task.state
@@ -111,10 +111,10 @@ def get_detail_context(execution_id):
                         tiff_message='Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
                     elif f['state'] == True:
                         generating_tiff = '1'
-
                 except ObjectDoesNotExist:
                     pass
                 except MultipleObjectsReturned:
+                    tiff_message = 'Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
                     FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
                 files.append(f)
 

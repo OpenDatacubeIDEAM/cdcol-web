@@ -178,6 +178,7 @@
                                             <tr>
                                                 <th>Latitud</th>
                                                 <th>Longitud</th>
+                                                <th>Estado</th>
                                                 <th>Acciones</th>
                                             </tr>
                                             </thead>
@@ -194,6 +195,7 @@
                                                     {% else %}
                                                         <td>{{ file.lat}}</td>
                                                         <td>{{ file.long }}</td>
+                                                        <td>{{ file.task_state }}</td>
                                                         <td>
                                                             <a href="{% url 'execution:download_result' execution.id file.file %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
                                                             {% if not execution.version.algorithm.multitemporal %}
@@ -210,7 +212,7 @@
                                                                         <i class="fa fa-spinner fa-spin"></i> Generando Geotiff
                                                                     </a>
                                                                 {% else %}
-                                                                    <a href="{% url 'execution:generate_geotiff_task' execution.id file.file %}" class="btn btn-gray btn-sm">
+                                                                    <a href="{% url 'execution:generate_geotiff_task' execution.id file.file %}" class="btn btn-gray btn-sm" onclick="alert('El archivo .tiff se está generando. Por favor, espere un momento')">
                                                                         <i class="fa fa-play" aria-hidden="true"></i> Generar Geotiff
                                                                     </a>
                                                                 {% endif %}
