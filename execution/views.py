@@ -110,7 +110,7 @@ def get_detail_context(execution_id):
                 try:
                     convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
                     f['state'] = convertion_task.state
-                    if f['state'] == '3'
+                    if f['state'] == '3':
                         tiff_message='Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
                 except ObjectDoesNotExist:
                     pass
