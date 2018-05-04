@@ -122,6 +122,7 @@ def get_detail_context(execution_id):
         for i in range(0, 3):
             for j in range(0, 3):
                 f = {'file': 'nnn.nc', 'lat': 0, 'long': 0, 'state': False, 'tiff_file': 'nnn.tiff'}
+                files.append(f)
         # for f in os.listdir(system_path):
         #     if ".tiff" not in f:
         #         f = {'file': f, 'lat':0, 'long':0, 'state': False, 'tiff_file': f.replace('.nc', '.tiff')}
