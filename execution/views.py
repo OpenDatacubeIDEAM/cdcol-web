@@ -94,15 +94,11 @@ def get_detail_context(execution_id):
     area_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter_type=Parameter.AREA_TYPE)
     time_period_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter_type=Parameter.TIME_PERIOD_TYPE)
     review = Review.objects.filter(execution=execution).last()
-    # Setting seconds to date
-    # execution.created_at = localize(execution.created_at)
-    # execution.started_at = localize(execution.started_at)
-    # execution.finished_at = localize(execution.finished_at)
-    # getting the files from the filesystem
     system_path = "{}/results/{}/".format(settings.WEB_STORAGE_PATH, execution.id)
     files = []
     try:
         algorithm_name= execution.version.algorithm.name.lower().replace(" ", "_")
+        tiff_message = None
         for i in range(int(area_param.areatype.latitude_start), int(area_param.areatype.latitude_end)):
             for j in range(int(area_param.areatype.longitude_start), int(area_param.areatype.longitude_end)):
                 file_name= '{}_{}_{}_{}_(u{}u{})_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_param.timeperiodtype.start_date.strftime("%d-%m-%Y"), time_period_param.timeperiodtype.end_date.strftime("%d-%m-%Y"))
@@ -112,8 +108,6 @@ def get_detail_context(execution_id):
                     f['state'] = convertion_task.state
                     if f['state'] == '3':
                         tiff_message='Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
-                    else:
-                        tiff_message=None
                 except ObjectDoesNotExist:
                     pass
                 except MultipleObjectsReturned:
