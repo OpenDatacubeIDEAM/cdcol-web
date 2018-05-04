@@ -157,7 +157,7 @@
                                 <a href="{% url 'execution:delete_result' execution.id 'all' %}" onclick="return confirm('¿Está seguro de eliminar todos los resultados de la ejecución?')" class="btn btn-danger btn-md"><i
                                     class="fa fa-trash-o"></i> Eliminar todo</a>
                             </div>
-                            <p>A continuación se encuentran los archivos generados por esta ejecución:</p>
+                            <p>A continuación se encuentran los resultados de esta ejecución:</p>
 
                             {% if delete_time %}
                                 <p><span class="label label-warning">Estos archivos serán borrados el {{ delete_time }}</span></p>
@@ -197,6 +197,7 @@
                                                         <td>{{ file.long }}</td>
                                                         <td>{{ file.task_state }}</td>
                                                         <td>
+                                                        {% if file.result_state %}
                                                             <a href="{% url 'execution:download_result' execution.id file.file %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
                                                             {% if not execution.version.algorithm.multitemporal %}
                                                                 {% if file.state == '4' %}
@@ -212,12 +213,13 @@
                                                                         <i class="fa fa-spinner fa-spin"></i> Generando Geotiff
                                                                     </a>
                                                                 {% else %}
-                                                                    <a href="{% url 'execution:generate_geotiff_task' execution.id file.file %}" class="btn btn-gray btn-sm" onclick="alert('El archivo .tiff se está generando. Por favor, espere un momento')">
+                                                                    <a href="{% url 'execution:generate_geotiff_task' execution.id file.file %}" class="btn btn-gray btn-sm" onclick="alert('El archivo Geotiff se está generando. Por favor, espere un momento')">
                                                                         <i class="fa fa-play" aria-hidden="true"></i> Generar Geotiff
                                                                     </a>
                                                                 {% endif %}
                                                             {% endif %}
                                                             <a href="{% url 'execution:delete_result' execution.id file.file %}" onclick="return confirm('¿Está seguro de eliminar este archivo?')" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> Borrar</a>
+                                                        {% endif %}
                                                         </td>
                                                     {% endif %}
                                                     
