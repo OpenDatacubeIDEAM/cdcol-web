@@ -2,7 +2,7 @@
 {% load execution_extras %}
 {% block extra_head %}
     <script type="text/javascript">
-        {% if execution.state == '1' or execution.state == '2' or generating_tiff %}
+        {% if execution.state == '1' or execution.state == '2' or generating_tiff == '1' %}
             function timedRefresh(timeoutPeriod) {
                 setTimeout("location.reload(true);", timeoutPeriod);
             }
@@ -166,23 +166,23 @@
                                 <p><span class="label label-danger">{{ response_message }}</span></p>
                             {% endif %}
                             <div class="row">
+                                {% if tiff_message %}
+                                    <script>
+                                        alert({{ tiff_message }});
+                                    </script>
+                                {% endif %}
                                 <div class="col-md-12">
                                     <div class="table-responsive">
                                         <table class="table table-striped table-colored">
                                             <thead>
                                             <tr>
-                                                <th>Nombre</th>
                                                 <th>Latitud</th>
                                                 <th>Longitud</th>
                                                 <th>Acciones</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {% if tiff_message %}
-                                                <script>
-                                                    alert({{ tiff_message }});
-                                                </script>
-                                            {% endif %}
+
                                             {% for file in files %}
                                                 <tr>
                                                     {% if ".gif" in file.file %}
@@ -192,7 +192,6 @@
                                                             <a href="{% url 'execution:delete_result' execution.id file.file %}" onclick="return confirm('¿Está seguro de eliminar este archivo?')" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> Borrar</a>
                                                         </td>
                                                     {% else %}
-                                                        <td>{{ file.file }}</td>
                                                         <td>{{ file.lat}}</td>
                                                         <td>{{ file.long }}</td>
                                                         <td>

@@ -99,7 +99,7 @@ def get_detail_context(execution_id):
     try:
         algorithm_name= execution.version.algorithm.name.lower().replace(" ", "_")
         tiff_message = None
-        generating_tiff = False
+        generating_tiff = '0'
         for i in range(int(area_param.areatype.latitude_start), int(area_param.areatype.latitude_end)):
             for j in range(int(area_param.areatype.longitude_start), int(area_param.areatype.longitude_end)):
                 file_name= '{}_{}_{}_{}_(u{}u{})_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_param.timeperiodtype.start_date.strftime("%d-%m-%Y"), time_period_param.timeperiodtype.end_date.strftime("%d-%m-%Y"))
@@ -109,8 +109,9 @@ def get_detail_context(execution_id):
                     f['state'] = convertion_task.state
                     if f['state'] == '3':
                         tiff_message='Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
-                    elif f['state']:
-                        generating_tiff = True
+                    elif f['state'] == True:
+                        generating_tiff = '1'
+
                 except ObjectDoesNotExist:
                     pass
                 except MultipleObjectsReturned:
