@@ -197,7 +197,7 @@
                                                         <td>{{ file.long }}</td>
                                                         <td>{{ file.task_state }}</td>
                                                         <td>
-                                                        {% if file.result_state %}
+                                                        {% if file.result_state or execution.trace_error %}
                                                             <div class="btn-group">
                                                                 <button type="button" class="btn btn-info">Acciones</button>
                                                                 <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -205,29 +205,35 @@
                                                                     <span class="sr-only">Toggle Dropdown</span>
                                                                 </button>
                                                                 <ul class="dropdown-menu" role="menu">
-                                                                    <li><a href="{% url 'execution:download_result' execution.id file.file %}"><i class="fa fa-bars"></i> Descargar Resultados</a></li>
-                                                                    {% if not execution.version.algorithm.multitemporal %}
-                                                                        {% if file.state == '4' %}
-                                                                            <li><a href="{% url 'execution:download_result' execution.id file.tiff_file %}" >
-                                                                                    <i class="fa fa-file-image-o"></i> Descargar Geotiff
-                                                                                </a></li>
+                                                                    {% if file.result_state %}
+                                                                        <li><a href="{% url 'execution:download_result' execution.id file.file %}"><i class="fa fa-bars"></i> Descargar Resultados</a></li>
+                                                                        {% if not execution.version.algorithm.multitemporal %}
+                                                                            {% if file.state == '4' %}
+                                                                                <li><a href="{% url 'execution:download_result' execution.id file.tiff_file %}" >
+                                                                                        <i class="fa fa-file-image-o"></i> Descargar Geotiff
+                                                                                    </a></li>
 
-                                                                        {% elif file.state == '3' %}
-                                                                            <li><a href="{% url 'execution:generate_geotiff_task' execution.id file.file %}" >
-                                                                                    <i class="fa fa-file-image-o"></i> Error Geotiff
-                                                                                </a></li>
+                                                                            {% elif file.state == '3' %}
+                                                                                <li><a href="{% url 'execution:generate_geotiff_task' execution.id file.file %}" >
+                                                                                        <i class="fa fa-file-image-o"></i> Error Geotiff
+                                                                                    </a></li>
 
-                                                                        {% elif file.state %}
-                                                                            <li><a class="btn btn-gray btn-sm">
-                                                                                    <i class="fa fa-spinner fa-spin"></i> Generando Geotiff
-                                                                                </a></li>
+                                                                            {% elif file.state %}
+                                                                                <li><a class="btn btn-gray btn-sm">
+                                                                                        <i class="fa fa-spinner fa-spin"></i> Generando Geotiff
+                                                                                    </a></li>
 
-                                                                        {% else %}
-                                                                            <li><a href="{% url 'execution:generate_geotiff_task' execution.id file.file %}" onclick="alert('El archivo Geotiff se está generando. Por favor, espere un momento')">
-                                                                                    <i class="fa fa-play" aria-hidden="true"></i> Generar Geotiff
-                                                                                </a></li>
+                                                                            {% else %}
+                                                                                <li><a href="{% url 'execution:generate_geotiff_task' execution.id file.file %}" onclick="alert('El archivo Geotiff se está generando. Por favor, espere un momento')">
+                                                                                        <i class="fa fa-play" aria-hidden="true"></i> Generar Geotiff
+                                                                                    </a></li>
+                                                                            {% endif %}
                                                                         {% endif %}
-                                                                        <li><a data-toggle="modal" data-target="#myModal">Ver traza de errores</a></li>
+                                                                        <li><a href="{% url 'execution:delete_result' execution.id file.file %}" onclick="return confirm('¿Está seguro de eliminar este archivo?')"><i class="fa fa-trash-o"></i> Borrar resultados</a></li>
+                                                                    {% endif %}
+                                                                    <li class="divider"></li>
+                                                                    {% if execution.tracer_error %}
+                                                                    <li><a data-toggle="modal" data-target="#myModal"><i class="fa fa-sticky-note-o"></i>Ver traza de errores</a></li>
 
                                                                         <!-- Modal -->
                                                                         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -247,37 +253,11 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <li><a href="{% url 'execution:delete_result' execution.id file.file %}" onclick="return confirm('¿Está seguro de eliminar este archivo?')"><i class="fa fa-trash-o"></i> Borrar resultados</a></li>
-
-                                                                    {% endif %}
 
 
                                                                 </ul>
                                                             </div>
                                                         {% endif %}
-{#                                                        {% if file.result_state %}#}
-{#                                                            <a href="{% url 'execution:download_result' execution.id file.file %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>#}
-{#                                                            {% if not execution.version.algorithm.multitemporal %}#}
-{#                                                                {% if file.state == '4' %}#}
-{#                                                                    <a href="{% url 'execution:download_result' execution.id file.tiff_file %}" class="btn btn-gray btn-sm">#}
-{#                                                                        <i class="fa fa-file-image-o"></i> Descargar Geotiff#}
-{#                                                                    </a>#}
-{#                                                                {% elif file.state == '3' %}#}
-{#                                                                    <a href="{% url 'execution:generate_geotiff_task' execution.id file.file %}" class="btn btn-gray btn-sm">#}
-{#                                                                        <i class="fa fa-file-image-o"></i> Error Geotiff#}
-{#                                                                    </a>#}
-{#                                                                {% elif file.state %}#}
-{#                                                                    <a class="btn btn-gray btn-sm">#}
-{#                                                                        <i class="fa fa-spinner fa-spin"></i> Generando Geotiff#}
-{#                                                                    </a>#}
-{#                                                                {% else %}#}
-{#                                                                    <a href="{% url 'execution:generate_geotiff_task' execution.id file.file %}" class="btn btn-gray btn-sm" onclick="alert('El archivo Geotiff se está generando. Por favor, espere un momento')">#}
-{#                                                                        <i class="fa fa-play" aria-hidden="true"></i> Generar Geotiff#}
-{#                                                                    </a>#}
-{#                                                                {% endif %}#}
-{#                                                            {% endif %}#}
-{#                                                            <a href="{% url 'execution:delete_result' execution.id file.file %}" onclick="return confirm('¿Está seguro de eliminar este archivo?')" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> Borrar</a>#}
-{#                                                        {% endif %}#}
                                                         </td>
                                                     {% endif %}
                                                     
@@ -355,13 +335,6 @@
                             </div>
                         {% endif %}
                     {% endif %}
-
-
-                    <h3 class="page-title">Traza de errores</h3>
-                    <div class="separator-2"></div>
-                    <p>La traza del error de la ejecución es la siguiente:</p>
-
-                    <pre><code style="color: #c7254e;">{{ execution.trace_error }}</code></pre>
                 </div>
                 <!-- main end -->
 
