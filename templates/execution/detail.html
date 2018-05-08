@@ -195,7 +195,7 @@
                                                     {% else %}
                                                         <td>{{ file.lat}}</td>
                                                         <td>{{ file.long }}</td>
-                                                        <td>{{ file.task_state }}</td>
+                                                        <td>{{ file.file }}</td>
                                                         <td>
                                                         {% if file.result_state or execution.trace_error %}
                                                             <div class="btn-group">
@@ -253,6 +253,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
+                                                                    {% endif %}
 
 
                                                                 </ul>
