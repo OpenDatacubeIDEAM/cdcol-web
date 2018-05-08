@@ -195,7 +195,7 @@
                                                     {% else %}
                                                         <td>{{ file.lat}}</td>
                                                         <td>{{ file.long }}</td>
-                                                        <td>{{ file.file }}</td>
+                                                        <td>{{ file.task_state }}</td>
                                                         <td>
                                                         {% if file.result_state or execution.trace_error %}
                                                             <div class="btn-group">
@@ -231,8 +231,9 @@
                                                                         {% endif %}
                                                                         <li><a href="{% url 'execution:delete_result' execution.id file.file %}" onclick="return confirm('¿Está seguro de eliminar este archivo?')"><i class="fa fa-trash-o"></i> Borrar resultados</a></li>
                                                                     {% endif %}
-                                                                    <li class="divider"></li>
-                                                                    {% if execution.tracer_error %}
+
+
+
                                                                     <li><a data-toggle="modal" data-target="#myModal"><i class="fa fa-sticky-note-o"></i>Ver traza de errores</a></li>
 
                                                                         <!-- Modal -->
@@ -253,7 +254,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    {% endif %}
+
 
 
                                                                 </ul>
@@ -336,6 +337,13 @@
                             </div>
                         {% endif %}
                     {% endif %}
+
+                    <h3 class="page-title">Traza de errores</h3>
+                    <div class="separator-2"></div>
+                    <p>La traza del error de la ejecución es la siguiente:</p>
+
+                    <pre><code style="color: #c7254e;">{{ execution.trace_error }}</code></pre>
+
                 </div>
                 <!-- main end -->
 
