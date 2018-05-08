@@ -205,15 +205,15 @@
                                                                     <span class="sr-only">Toggle Dropdown</span>
                                                                 </button>
                                                                 <ul class="dropdown-menu" role="menu">
-                                                                    <li><a href="{% url 'execution:download_result' execution.id file.file %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar Resultados</a></li>
+                                                                    <li><a href="{% url 'execution:download_result' execution.id file.file %}"><i class="fa fa-bars"></i> Descargar Resultados</a></li>
                                                                     {% if not execution.version.algorithm.multitemporal %}
                                                                         {% if file.state == '4' %}
-                                                                            <li><a href="{% url 'execution:download_result' execution.id file.tiff_file %}" class="btn btn-gray btn-sm">
+                                                                            <li><a href="{% url 'execution:download_result' execution.id file.tiff_file %}" >
                                                                                     <i class="fa fa-file-image-o"></i> Descargar Geotiff
                                                                                 </a></li>
 
                                                                         {% elif file.state == '3' %}
-                                                                            <li><a href="{% url 'execution:generate_geotiff_task' execution.id file.file %}" class="btn btn-gray btn-sm">
+                                                                            <li><a href="{% url 'execution:generate_geotiff_task' execution.id file.file %}" >
                                                                                     <i class="fa fa-file-image-o"></i> Error Geotiff
                                                                                 </a></li>
 
@@ -223,13 +223,34 @@
                                                                                 </a></li>
 
                                                                         {% else %}
-                                                                            <li><a href="{% url 'execution:generate_geotiff_task' execution.id file.file %}" class="btn btn-gray btn-sm" onclick="alert('El archivo Geotiff se está generando. Por favor, espere un momento')">
+                                                                            <li><a href="{% url 'execution:generate_geotiff_task' execution.id file.file %}" onclick="alert('El archivo Geotiff se está generando. Por favor, espere un momento')">
                                                                                     <i class="fa fa-play" aria-hidden="true"></i> Generar Geotiff
                                                                                 </a></li>
                                                                         {% endif %}
+                                                                        <li><a data-toggle="modal" data-target="#myModal">Ver traza de errores</a></li>
+
+                                                                        <!-- Modal -->
+                                                                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                                            <div class="modal-dialog">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                                                        <h4 class="modal-title" id="myModalLabel">Traza de errores</h4>
+                                                                                    </div>
+                                                                                    <div class="modal-body">
+                                                                                        <p>La traza del error de la ejecución es la siguiente:</p>
+                                                                                        <pre><code style="color: #c7254e;">{{ execution.trace_error }}</code></pre>
+                                                                                    </div>
+                                                                                    <div class="modal-footer">
+                                                                                        <button type="button" class="btn btn-sm btn-dark" data-dismiss="modal">Close</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <li><a href="{% url 'execution:delete_result' execution.id file.file %}" onclick="return confirm('¿Está seguro de eliminar este archivo?')"><i class="fa fa-trash-o"></i> Borrar resultados</a></li>
+
                                                                     {% endif %}
 
-                                                                    <li><a href="{% url 'execution:delete_result' execution.id file.file %}" onclick="return confirm('¿Está seguro de eliminar este archivo?')" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> Borrar</a></li>
 
                                                                 </ul>
                                                             </div>
