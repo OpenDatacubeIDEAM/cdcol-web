@@ -106,10 +106,8 @@ def get_detail_context(execution_id):
                 f = {'file': file_name, 'lat': i, 'long': j, 'task_state': '', 'result_state': os.path.exists(system_path+file_name), 'state': False, 'tiff_file': file_name.replace('.nc', '.tiff')}
                 if f['result_state']:
                     f['task_state'] = 'Finalizado'
-                elif os.path.exists(system_path+"{}_{}_no_data.lock".format(i,j)):
-                    f['task_state'] = 'Sin datos'
-                # elif (execution.state == Execution.COMPLETED_STATE and not f['result_state']):
-                #     f['task_state'] = 'Sin datos'
+                elif (os.path.exists(system_path+"{}_{}_no_data.lock".format(i,j)))  or (execution.state == Execution.COMPLETED_STATE and not f['result_state']):
+                    f['task_state'] = 'Sin datos en el area'
                 elif execution.state == Execution.ENQUEUED_STATE:
                     f['task_state'] = 'En espera'
                 elif execution.state == Execution.EXECUTING_STATE:
