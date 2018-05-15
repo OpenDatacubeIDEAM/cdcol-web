@@ -297,6 +297,8 @@ class Task(models.Model):
 	state_updated_at = models.DateTimeField()
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+	parameters = models.TextField(blank=True, null=True)
+	trace_error = models.TextField(blank=True, null=True)
 
 	def __unicode__(self):
 		return "{} - {}".format(self.execution.id, self.uuid)
