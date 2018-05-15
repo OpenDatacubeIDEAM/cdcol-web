@@ -24,3 +24,9 @@ class UserProfile(models.Model):
 
 	def __unicode__(self):
 		return "{} - {} - {}".format(self.id, self.user, self.institution)
+	class Meta:
+		permissions = (
+			("can_view_quick_guide_developer", "Puede ver guia rápida de desarrolladores"),
+			("can_view_quick_guide_analyst", "Puede ver guia rápida de analista"),
+
+		)

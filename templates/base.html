@@ -194,7 +194,11 @@
                                                                 <a href="{% url 'profile:index' %}">Mi Perfil</a>
                                                             </li>
                                                             <li>
-                                                                <a href="/ayuda/manual_de_ayuda.pdf" target="_blank">Manual de Ayuda</a>
+                                                                {% if perms.user_profile.can_view_quick_guide_developer  %}
+                                                                    <a href="/ayuda/guia_rapida_desarrolladores.pdf" target="_blank">Guia Rapida para Desarrolladores</a>
+                                                                {% if perms.user_profile.can_view_quick_guide_analyst or  perms.user_profile.can_view_quick_guide_developer  %}
+                                                                    <a href="/ayuda/guia_rapida_analistas.pdf" target="_blank">Guia Rapida para Analistas</a>
+                                                                {% endif  %}
                                                             </li>
                                                             <li>
                                                                 <a href="#"
