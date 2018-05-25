@@ -91,11 +91,19 @@ def download_parameter_file(request, execution_id, parameter_name, file_name):
 def get_detail_context(execution_id):
     execution = get_object_or_404(Execution, id=execution_id)
     executed_params = ExecutionParameter.objects.filter(execution=execution)
+    tasks = Task.objects.filter(execution=execution)
     area_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter_type=Parameter.AREA_TYPE)
     time_period_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter_type=Parameter.TIME_PERIOD_TYPE)
     review = Review.objects.filter(execution=execution).last()
     system_path = "{}/results/{}/".format(settings.WEB_STORAGE_PATH, execution.id)
     files = []
+
+    # for task in tasks:
+    #     kwargs = json.load(task.parameters)
+    #     f = {'file': file_name, 'lat': kwargs['min_lat'], 'long': kwargs['min_long'], 'task_state': task.state,
+    #          'result_state': os.path.exists(system_path + file_name), 'state': False,
+    #          'tiff_file': file_name.replace('.nc', '.tiff')}
+
     try:
         algorithm_name= execution.version.algorithm.name.lower().replace(" ", "_")
         tiff_message = None

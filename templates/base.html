@@ -196,6 +196,7 @@
                                                             <li>
                                                                 {% if perms.user_profile.can_view_quick_guide_developer  %}
                                                                     <a href="/ayuda/guia_rapida_desarrolladores.pdf" target="_blank">Guia Rapida para Desarrolladores</a>
+                                                                {% endif  %}
                                                                 {% if perms.user_profile.can_view_quick_guide_analyst or  perms.user_profile.can_view_quick_guide_developer  %}
                                                                     <a href="/ayuda/guia_rapida_analistas.pdf" target="_blank">Guia Rapida para Analistas</a>
                                                                 {% endif  %}
