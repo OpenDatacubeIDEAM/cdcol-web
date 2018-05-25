@@ -19,17 +19,17 @@ class TaskInline(admin.TabularInline):
 class ExecutionAdmin(admin.ModelAdmin):
 	list_display = ('id', 'version', 'state', 'created_at', 'executed_by', 'results_available', 'results_deleted_at', 'started_at','finished_at')
 	ordering = ('-id',)
-	list_filter = ('state')
+	list_filter = (['state'])
 	actions = [cancel_execution]
-	inlines = [TaskInline,]
+	inlines = [TaskInline]
 	def save_model(self, request, obj, form, change):
                 obj.user = request.user
                 raise PermissionDenied
 
 class TaskAdmin(admin.ModelAdmin):
 	list_display = ('id','execution', 'state', 'uuid', 'created_at', 'updated_at', 'start_date', 'end_date', 'state_updated_at')
-	ordering = ('-created_at' )
-	list_filter = ('state')
+	ordering = (['-created_at'] )
+	list_filter = (['state'])
 	
 class ReviewAdmin(admin.ModelAdmin):
         def save_model(self, request, obj, form, change):
