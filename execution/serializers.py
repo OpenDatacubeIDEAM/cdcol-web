@@ -12,7 +12,7 @@ class ExecutionSerializer(serializers.ModelSerializer):
 	finished_at = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S")
 	current_executions = serializers.SerializerMethodField()
 	can_rate = serializers.SerializerMethodField()
-	credits_consumed = serializers.SerializerMethodField()
+	credits_consumed = serializers.IntegerField()
 
 	class Meta:
 		model = Execution
