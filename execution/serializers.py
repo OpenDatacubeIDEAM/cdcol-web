@@ -12,10 +12,11 @@ class ExecutionSerializer(serializers.ModelSerializer):
 	finished_at = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S")
 	current_executions = serializers.SerializerMethodField()
 	can_rate = serializers.SerializerMethodField()
+	credits_consumed = serializers.SerializerMethodField()
 
 	class Meta:
 		model = Execution
-		fields = ('id', 'algorithm_name', 'state', 'created_at', 'started_at', 'finished_at', 'current_executions', 'can_rate')
+		fields = ('id', 'algorithm_name', 'state', 'created_at', 'started_at', 'finished_at', 'current_executions', 'can_rate', 'credits_consumed')
 
 	def get_algorithm_name(self, obj):
 		return obj.version.algorithm.name
