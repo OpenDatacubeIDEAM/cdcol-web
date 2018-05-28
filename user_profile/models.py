@@ -28,5 +28,4 @@ class UserProfile(models.Model):
 		permissions = (
 			("can_view_quick_guide_developer", "Puede ver guia rápida de desarrolladores"),
 			("can_view_quick_guide_analyst", "Puede ver guia rápida de analista"),
-
 		)
