@@ -55,8 +55,6 @@ class Execution(models.Model):
 			("can_view_blank_execution", "Ver listado de algoritmos para ejecutar"),
 			("can_create_new_execution", "Registrar la ejecución de un algoritmo"),
 			("can_view_new_execution", "Ver detalle y parámetros de un algoritmo para ejecutar"),
-			("can_view_quick_guide_developer", "Puede ver guia rápida de desarrolladores"),
-			("can_view_quick_guide_analyst", "Puede ver guia rápida de analista"),
 		)
 
 
