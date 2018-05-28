@@ -97,7 +97,7 @@ $(document).ready(function () {
     function countCredits(bounds)
     {
         var credits_approved=0;
-        var credits_consumed=(bounds.south-bounds.north)*(bounds.east-bounds.west);
+        var credits_consumed=(bounds.north-bounds.south)*(bounds.east-bounds.west);
         console.log(credits_consumed);
         console.log(bounds);
         if(credits_consumed > credits_approved){
