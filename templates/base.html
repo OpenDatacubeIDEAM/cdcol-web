@@ -99,6 +99,62 @@
                                                      src="{% static 'images/logo_ideam_header_sin_texto.png' %}"
                                                      alt="CDCOL - IDEAM"></a>
                                 </div>
+                                <div class="header-dropdown-buttons visible-xs">
+										<div class="btn-group dropdown">
+											<button type="button" class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-search"></i></button>
+											<ul class="dropdown-menu dropdown-menu-right dropdown-animation">
+												<li>
+													<form role="search" class="search-box margin-clear">
+														<div class="form-group has-feedback">
+															<input type="text" class="form-control" placeholder="Search">
+															<i class="icon-search form-control-feedback"></i>
+														</div>
+													</form>
+												</li>
+											</ul>
+										</div>
+										<div class="btn-group dropdown">
+											<button type="button" class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-basket-1"></i><span class="cart-count default-bg">8</span></button>
+											<ul class="dropdown-menu dropdown-menu-right dropdown-animation cart">
+												<li>
+													<table class="table table-hover">
+														<thead>
+															<tr>
+																<th class="quantity">QTY</th>
+																<th class="product">Product</th>
+																<th class="amount">Subtotal</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr>
+																<td class="quantity">2 x</td>
+																<td class="product"><a href="shop-product.html">Android 4.4 Smartphone</a><span class="small">4.7" Dual Core 1GB</span></td>
+																<td class="amount">$199.00</td>
+															</tr>
+															<tr>
+																<td class="quantity">3 x</td>
+																<td class="product"><a href="shop-product.html">Android 4.2 Tablet</a><span class="small">7.3" Quad Core 2GB</span></td>
+																<td class="amount">$299.00</td>
+															</tr>
+															<tr>
+																<td class="quantity">3 x</td>
+																<td class="product"><a href="shop-product.html">Desktop PC</a><span class="small">Quad Core 3.2MHz, 8GB RAM, 1TB Hard Disk</span></td>
+																<td class="amount">$1499.00</td>
+															</tr>
+															<tr>
+																<td class="total-quantity" colspan="2">Total 8 Items</td>
+																<td class="total-amount">$1997.00</td>
+															</tr>
+														</tbody>
+													</table>
+													<div class="panel-body text-right">
+														<a href="template/shop-cart.html" class="btn btn-group btn-gray btn-sm">Ver listado ejecuciones</a>
+														<a href="template/shop-checkout.html" class="btn btn-group btn-gray btn-sm">Checkout</a>
+													</div>
+												</li>
+											</ul>
+										</div>
+									</div>
                             {% else %}
                                 <div id="logo" class="logo">
                                     <a href="/"><img id="logo_img"
@@ -238,82 +294,6 @@
                             <!-- main-navigation end -->
                         </div>
                         <!-- header-right end -->
-
-                        <div class="header-left clearfix">
-
-									<!-- header dropdown buttons -->
-									<div class="header-dropdown-buttons visible-xs">
-										<div class="btn-group dropdown">
-											<button type="button" class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-search"></i></button>
-											<ul class="dropdown-menu dropdown-menu-right dropdown-animation">
-												<li>
-													<form role="search" class="search-box margin-clear">
-														<div class="form-group has-feedback">
-															<input type="text" class="form-control" placeholder="Search">
-															<i class="icon-search form-control-feedback"></i>
-														</div>
-													</form>
-												</li>
-											</ul>
-										</div>
-										<div class="btn-group dropdown">
-											<button type="button" class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-basket-1"></i><span class="cart-count default-bg">8</span></button>
-											<ul class="dropdown-menu dropdown-menu-right dropdown-animation cart">
-												<li>
-													<table class="table table-hover">
-														<thead>
-															<tr>
-																<th class="quantity">QTY</th>
-																<th class="product">Product</th>
-																<th class="amount">Subtotal</th>
-															</tr>
-														</thead>
-														<tbody>
-															<tr>
-																<td class="quantity">2 x</td>
-																<td class="product"><a href="shop-product.html">Android 4.4 Smartphone</a><span class="small">4.7" Dual Core 1GB</span></td>
-																<td class="amount">$199.00</td>
-															</tr>
-															<tr>
-																<td class="quantity">3 x</td>
-																<td class="product"><a href="shop-product.html">Android 4.2 Tablet</a><span class="small">7.3" Quad Core 2GB</span></td>
-																<td class="amount">$299.00</td>
-															</tr>
-															<tr>
-																<td class="quantity">3 x</td>
-																<td class="product"><a href="shop-product.html">Desktop PC</a><span class="small">Quad Core 3.2MHz, 8GB RAM, 1TB Hard Disk</span></td>
-																<td class="amount">$1499.00</td>
-															</tr>
-															<tr>
-																<td class="total-quantity" colspan="2">Total 8 Items</td>
-																<td class="total-amount">$1997.00</td>
-															</tr>
-														</tbody>
-													</table>
-													<div class="panel-body text-right">
-														<a href="template/shop-cart.html" class="btn btn-group btn-gray btn-sm">Ver listado ejecuciones</a>
-														<a href="template/shop-checkout.html" class="btn btn-group btn-gray btn-sm">Checkout</a>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-									<!-- header dropdown buttons end-->
-
-									<!-- logo -->
-									<div id="logo" class="logo">
-										<a href="template/index.html"><img id="logo_img" src="template/images/logo_light_blue.png" alt="The Project"></a>
-									</div>
-
-									<!-- name-and-slogan -->
-									<div class="site-slogan">
-										Multipurpose HTML5 Template
-									</div>
-
-								</div>
-								<!-- header-left end -->
-
-							</div>
 
                     </div>
                 </div>
