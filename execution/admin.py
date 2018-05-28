@@ -17,7 +17,7 @@ class TaskInline(admin.TabularInline):
 	fk_name = 'execution'
 
 class ExecutionAdmin(admin.ModelAdmin):
-	list_display = ('id', 'version', 'state', 'created_at', 'executed_by', 'results_available', 'results_deleted_at', 'started_at','finished_at')
+	list_display = ('id', 'version', 'state', 'executed_by', 'credits_consumed', 'created_at',  'results_available', 'results_deleted_at', 'started_at','finished_at')
 	ordering = ('-id',)
 	list_filter = (['state'])
 	actions = [cancel_execution]
