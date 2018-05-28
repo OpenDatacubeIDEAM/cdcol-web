@@ -73,6 +73,14 @@ $(document).ready(function () {
         document.getElementById("ne_latitude").value = Math.ceil(ne.lat());
         document.getElementById("ne_longitude").value = Math.ceil(ne.lng());
 
+        var bounds = {
+            north: Math.floor(ne.lat()),
+            south: Math.floor(sw.lat()),
+            east: Math.ceil(ne.lng()),
+            west: Math.floor(sw.lng())
+        };
+        countCredits(bounds);
+
     }
     
     function changeRectBounds(){
@@ -83,8 +91,18 @@ $(document).ready(function () {
             west: Math.floor(document.getElementById("sw_longitude").value)
         };
         rectangle.setBounds(bounds);
+        countCredits(bounds);
     }
-    
+
+    function countCredits(bounds)
+    {
+        var creditos=0;
+        console.log((bounds.south-bounds.north)*(bounds.east-bounds.west));
+        if((bounds.south-bounds.north)*(bounds.east-bounds.west)> creditos){
+            //mostrar dialogo
+            console.log((bounds.south-bounds.north)*(bounds.east-bounds.west));
+        }
+    }
     
     // Getting the version id from the url and selecting it
 
@@ -650,4 +668,5 @@ $(document).ready(function () {
         }
         return null;
     }
+
 });
