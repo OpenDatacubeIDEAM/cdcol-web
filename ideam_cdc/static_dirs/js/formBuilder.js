@@ -96,11 +96,17 @@ $(document).ready(function () {
 
     function countCredits(bounds)
     {
-        var creditos=0;
-        console.log((bounds.south-bounds.north)*(bounds.east-bounds.west));
-        if((bounds.south-bounds.north)*(bounds.east-bounds.west)> creditos){
+        var credits_approved=0;
+        var credits_consumed=(bounds.south-bounds.north)*(bounds.east-bounds.west);
+        console.log(credits_consumed);
+        console.log(bounds);
+        if(credits_consumed > credits_approved){
             //mostrar dialogo
-            console.log((bounds.south-bounds.north)*(bounds.west-bounds.east));
+            var credits_message = document.getElementById("credits_message");
+            var mensaje = "Esta ejecución requiere "+credits_consumed+" créditos y sólo tiene "+credits_approved+" créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen.";
+            credits_message.innerHTML = mensaje;
+            credits_message.style.visibility = "visible";
+            console.log(credits_consumed);
         }
     }
     
@@ -378,11 +384,13 @@ $(document).ready(function () {
                     init_google_map();
 
                     var credits_message = document.createElement("div");
-                    var mensaje = "Esta ejecución requiere x créditos y sólo tiene y créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen."
-                    credits_message.innerHTML = "<i class=\"fa fa-times\"></i>"+mensaje;
+                    //var mensaje = "Esta ejecución requiere "+credits_consumed+" créditos y sólo tiene "+credits_approved+" créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen."
+                    //credits_message.innerHTML = mensaje;
                     credits_message.className = "alert  alert-icon alert-danger";
+                    credits_message.id = "credits_message";
+                    credits_message.name = "credits_message";
                     credits_message.setAttribute("role", "alert");
-                    //credits_message.style.visibility = "hidden";
+                    credits_message.style.visibility = "hidden";
                     f.appendChild(credits_message);
 
                     break;
