@@ -100,7 +100,7 @@ $(document).ready(function () {
         console.log((bounds.south-bounds.north)*(bounds.east-bounds.west));
         if((bounds.south-bounds.north)*(bounds.east-bounds.west)> creditos){
             //mostrar dialogo
-            console.log((bounds.south-bounds.north)*(bounds.east-bounds.west));
+            console.log((bounds.south-bounds.north)*(bounds.west-bounds.east));
         }
     }
     
@@ -376,6 +376,15 @@ $(document).ready(function () {
                     // appending to the form
                     f.appendChild(param_div);
                     init_google_map();
+
+                    var credits_message = document.createElement("div");
+                    var mensaje = "Esta ejecución requiere x créditos y sólo tiene y créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen."
+                    credits_message.innerHTML = "<i class=\"fa fa-times\"></i>"+mensaje;
+                    credits_message.className = "alert  alert-icon alert-danger";
+                    credits_message.setAttribute("role", "alert");
+                    //credits_message.style.visibility = "hidden";
+                    f.appendChild(credits_message);
+
                     break;
                 case "8":
                     console.log("Creating StorageUnitType field");
@@ -578,7 +587,11 @@ $(document).ready(function () {
                     break;
                 default:
                     console.log("Object not supported, " + parameter_type);
+
             }
+
+
+
         });
         console.log("Configuring datepicker");
         $('.datepicker').datepicker({
