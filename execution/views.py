@@ -491,7 +491,8 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
                     print response
                     return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': new_execution.id}))
                 else:
-                    version_selection_form.add_error(None, "Esta ejecución requiere {} créditos y sólo tiene {} créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen".format(credits_calculated, credits_approved))
+                    raise ValidationError("Esta ejecución requiere {} créditos y sólo tiene {} créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen".format(credits_calculated, credits_approved))
+                    #version_selection_form.add_error(None, "Esta ejecución requiere {} créditos y sólo tiene {} créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen".format(credits_calculated, credits_approved))
     context = {'topics': topics, 'algorithm': algorithm, 'parameters': parameters,
                'version_selection_form': version_selection_form, 'version': current_version,
                'reviews': reviews, 'average_rating': average_rating, 'executions': executions,
