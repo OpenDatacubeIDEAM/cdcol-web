@@ -9,7 +9,7 @@
 $(document).ready(function () {
 
     var map;
-    var disabled_button = false;
+    var user_profile;
     function init_osm() {
         var mymap = L.map('map').setView([4.6870819, -74.0808636], 5);
 
@@ -98,8 +98,8 @@ $(document).ready(function () {
     {
         var credits_message = document.getElementById("credits_message");
         var button = document.getElementById("button-execution");
-        if(credits_message && button){
-            var credits_approved=0;
+        if(user_profile && credits_message && button){
+            var credits_approved=user_profile.credits_approved;
             var credits_consumed=(bounds.north-bounds.south)*(bounds.east-bounds.west);
             var mensaje;
             console.log(credits_consumed);
@@ -187,7 +187,9 @@ $(document).ready(function () {
 
     function createForm(json) {
         executed_params = JSON.parse(executed_params);
+        user_profile = JSON.parse(user_profile);
         console.log(executed_params);
+        console.log(user_profile);
         // obtaining the form
         var f = document.getElementById("mainForm");
         // iterating over the parameters
@@ -392,7 +394,7 @@ $(document).ready(function () {
                     var credits_message = document.createElement("div");
                     //var mensaje = "Esta ejecución requiere "+credits_consumed+" créditos y sólo tiene "+credits_approved+" créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen."
                     //credits_message.innerHTML = mensaje;
-                    credits_message.className = "alert  alert-icon alert-danger";
+                    credits_message.className = "alert alert-danger";
                     credits_message.id = "credits_message";
                     credits_message.name = "credits_message";
                     credits_message.setAttribute("role", "alert");

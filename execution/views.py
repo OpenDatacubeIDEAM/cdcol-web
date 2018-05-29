@@ -429,12 +429,14 @@ def unzip_every_file_in_directory(execution_directory):
 @permission_required(('execution.can_create_new_execution', 'execution.can_view_new_execution'), raise_exception=True)
 def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
     executed_params = []
+    user_profile = []
     if copy_execution_id:
         print copy_execution_id
         executed_params = map(lambda param: param.obtain_json_values(),get_detail_context(copy_execution_id)['executed_params'])
         executed_params = json.dumps(executed_params)
         print executed_params
     current_user = request.user
+    user_profile = UserProfile.get(user=current_user)
     algorithm = get_object_or_404(Algorithm, id=algorithm_id)
     current_version = None
     if version_id:
@@ -457,7 +459,7 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
 
         if current_user.has_perm('execution.can_create_new_execution'):
             parameter = parameters.get(parameter_type=Parameter.AREA_TYPE)
-            user_profile = UserProfile.get(user=current_user)
+
             if parameter and user_profile:
 
                 sw_latitude = request.POST.get('sw_latitude', False)
@@ -494,7 +496,7 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
     context = {'topics': topics, 'algorithm': algorithm, 'parameters': parameters,
                'version_selection_form': version_selection_form, 'version': current_version,
                'reviews': reviews, 'average_rating': average_rating, 'executions': executions,
-               'executed_params': executed_params}
+               'executed_params': executed_params, 'user_profile': user_profile}
     return render(request, 'execution/new.html', context)
 
 
