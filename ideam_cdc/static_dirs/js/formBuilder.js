@@ -98,8 +98,7 @@ $(document).ready(function () {
     {
         var credits_message = document.getElementById("credits_message");
         var button = document.getElementById("button-execution");
-        if(user_profile && credits_message && button){
-            var credits_approved=user_profile.credits_approved;
+        if(credits_approved && credits_message && button){
             var credits_consumed=(bounds.north-bounds.south)*(bounds.east-bounds.west);
             var mensaje;
             console.log(credits_consumed);
@@ -187,8 +186,8 @@ $(document).ready(function () {
 
     function createForm(json) {
         executed_params = JSON.parse(executed_params);
-        console.log(user_profile);
-        user_profile = JSON.parse(user_profile);
+        credits_approved = JSON.parse(credits_approved);
+        console.log(credits_approved)
         console.log(executed_params);
 
         // obtaining the form

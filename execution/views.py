@@ -436,7 +436,7 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
         executed_params = json.dumps(executed_params)
         print executed_params
     current_user = request.user
-    user_profile = UserProfile.objects.get(user=current_user).credits_approved
+    credits_approved = UserProfile.objects.get(user=current_user).credits_approved
     algorithm = get_object_or_404(Algorithm, id=algorithm_id)
     current_version = None
     if version_id:
@@ -460,14 +460,14 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
         if current_user.has_perm('execution.can_create_new_execution'):
             parameter = parameters.get(parameter_type=Parameter.AREA_TYPE)
 
-            if parameter and user_profile:
+            if parameter and credits_approved:
 
                 sw_latitude = request.POST.get('sw_latitude', False)
                 sw_longitude = request.POST.get('sw_longitude', False)
                 ne_latitude = request.POST.get('ne_latitude', False)
                 ne_longitude = request.POST.get('ne_longitude', False)
                 credits_calculated = (ne_latitude-sw_latitude)*(ne_longitude-sw_longitude)
-                if credits_calculated <= user_profile.credits_approved:
+                if credits_calculated <= credits_approved:
                     new_execution = Execution(
                         version=current_version,
                         description=textarea_name,
@@ -496,7 +496,7 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
     context = {'topics': topics, 'algorithm': algorithm, 'parameters': parameters,
                'version_selection_form': version_selection_form, 'version': current_version,
                'reviews': reviews, 'average_rating': average_rating, 'executions': executions,
-               'executed_params': executed_params, 'user_profile': user_profile}
+               'executed_params': executed_params, 'credits_approved': credits_approved}
     return render(request, 'execution/new.html', context)
 
 
