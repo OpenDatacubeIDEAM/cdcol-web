@@ -462,10 +462,10 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
 
             if parameter and credits_approved:
 
-                sw_latitude = request.POST.get('sw_latitude', False)
-                sw_longitude = request.POST.get('sw_longitude', False)
-                ne_latitude = request.POST.get('ne_latitude', False)
-                ne_longitude = request.POST.get('ne_longitude', False)
+                sw_latitude = int(request.POST.get('sw_latitude', False))
+                sw_longitude = int(request.POST.get('sw_longitude', False))
+                ne_latitude = int(request.POST.get('ne_latitude', False))
+                ne_longitude = int(request.POST.get('ne_longitude', False))
                 credits_calculated = (ne_latitude-sw_latitude)*(ne_longitude-sw_longitude)
                 if credits_calculated <= credits_approved:
                     new_execution = Execution(
