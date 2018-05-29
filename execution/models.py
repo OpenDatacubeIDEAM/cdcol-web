@@ -35,6 +35,7 @@ class Execution(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 	generate_mosaic = models.BooleanField(default=True)
+	credits_consumed = models.IntegerField(default=0)
 
 
 	def __unicode__(self):

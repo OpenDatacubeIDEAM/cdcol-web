@@ -59,7 +59,7 @@ def decline_users(modeladmin, request, queryset):
 
 
 class EventAdmin(admin.ModelAdmin):
-	list_display = ('full_name', 'user_email', 'institution', 'phone', 'status', 'created_at')
+	list_display = ('full_name', 'user_email', 'credits_approved', 'institution', 'phone', 'status', 'created_at')
 	ordering = ('-created_at',)
 	search_fields = ('user__email', 'institution', 'status')
 	list_filter = ('status', 'created_at')
@@ -91,7 +91,7 @@ class EventAdmin(admin.ModelAdmin):
 		setting the readonly_fields
 		based on http://stackoverflow.com/a/31787817/4808337 answer
 		"""
-		readonly_fields = ('user', 'institution', 'phone', 'usage', 'status', 'created_at', 'updated_at', 'user_groups')
+		readonly_fields = ('user', 'institution', 'phone', 'usage', 'credits_approved', 'status', 'created_at', 'updated_at', 'user_groups')
 		return readonly_fields
 
 	full_name.short_description = 'Full Name'

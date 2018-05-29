@@ -5,12 +5,13 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.core import serializers
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
-from django.db.models import Avg, Q
+from django.db.models import Avg, Q, Sum
 from django.utils.encoding import smart_str
 from algorithm.models import Topic, Algorithm, VersionStorageUnit
 from execution.models import *
 from execution.forms import VersionSelectionForm, ReviewForm
 from execution.serializers import ExecutionSerializer
+from user_profile.models import  *
 import datetime
 from storage.models import StorageUnit
 from rest_framework.renderers import JSONRenderer
@@ -428,13 +429,20 @@ def unzip_every_file_in_directory(execution_directory):
 @permission_required(('execution.can_create_new_execution', 'execution.can_view_new_execution'), raise_exception=True)
 def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
     executed_params = []
+
     if copy_execution_id:
         print copy_execution_id
         executed_params = map(lambda param: param.obtain_json_values(),get_detail_context(copy_execution_id)['executed_params'])
         executed_params = json.dumps(executed_params)
         print executed_params
     current_user = request.user
+    credits_approved = UserProfile.objects.get(user=current_user).credits_approved
+    states = [Execution.ENQUEUED_STATE, Execution.EXECUTING_STATE]
+    credits_used=Execution.objects.filter(executed_by=current_user, state__in=states).aggregate(Sum('credits_consumed'))
+    if credits_used['credits_consumed__sum']:
+        credits_approved -= credits_used['credits_consumed__sum']
     algorithm = get_object_or_404(Algorithm, id=algorithm_id)
+    version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id, current_user=current_user)
     current_version = None
     if version_id:
         current_version = get_object_or_404(Version, id=version_id)
@@ -454,32 +462,45 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
        # started_at = datetime.datetime.now()
 
         if current_user.has_perm('execution.can_create_new_execution'):
-            new_execution = Execution(
-                version=current_version,
-                description=textarea_name,
-                state=Execution.ENQUEUED_STATE,
-                executed_by=current_user,
-                generate_mosaic= checkbox_generate_mosaic
-            )
-            new_execution.save()
+            parameter = parameters.get(parameter_type=Parameter.AREA_TYPE)
 
-            create_execution_parameter_objects(parameters, request, new_execution, current_version)
+            if parameter and credits_approved:
 
-            # Unzip uploaded parameters
-            execution_directory = "/".join( [ settings.MEDIA_ROOT, 'input', str(new_execution.id) ] )
-            if os.path.isdir(execution_directory):
-                unzip_every_file_in_directory(execution_directory)
+                sw_latitude = int(request.POST.get('sw_latitude', False))
+                sw_longitude = int(request.POST.get('sw_longitude', False))
+                ne_latitude = int(request.POST.get('ne_latitude', False))
+                ne_longitude = int(request.POST.get('ne_longitude', False))
+                credits_calculated = (ne_latitude-sw_latitude)*(ne_longitude-sw_longitude)
+                if credits_calculated <= credits_approved:
+                    new_execution = Execution(
+                        version=current_version,
+                        description=textarea_name,
+                        state=Execution.ENQUEUED_STATE,
+                        executed_by=current_user,
+                        generate_mosaic= checkbox_generate_mosaic,
+                        credits_consumed=credits_calculated,
+                    )
+                    new_execution.save()
 
-            # send the execution to the REST service
-            response = send_execution(new_execution)
+                    create_execution_parameter_objects(parameters, request, new_execution, current_version)
 
-            print response
-            return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': new_execution.id}))
-    version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id, current_user=current_user)
+                    # Unzip uploaded parameters
+                    execution_directory = "/".join( [ settings.MEDIA_ROOT, 'input', str(new_execution.id) ] )
+                    if os.path.isdir(execution_directory):
+                        unzip_every_file_in_directory(execution_directory)
+
+                    # send the execution to the REST service
+                    response = send_execution(new_execution)
+
+                    print response
+                    return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': new_execution.id}))
+                #else:
+                    #raise ValidationError("Esta ejecución requiere {} créditos y sólo tiene {} créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen".format(credits_calculated, credits_approved))
+                    #version_selection_form.add_error(None, "Esta ejecución requiere {} créditos y sólo tiene {} créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen".format(credits_calculated, credits_approved))
     context = {'topics': topics, 'algorithm': algorithm, 'parameters': parameters,
                'version_selection_form': version_selection_form, 'version': current_version,
                'reviews': reviews, 'average_rating': average_rating, 'executions': executions,
-               'executed_params': executed_params}
+               'executed_params': executed_params, 'credits_approved': credits_approved}
     return render(request, 'execution/new.html', context)
 
 

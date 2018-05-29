@@ -21,6 +21,10 @@ class UserProfile(models.Model):
 	status = models.CharField(max_length=2, choices=APPROBATION_STATUS)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+	credits_approved = models.IntegerField(default=8, blank=True, null=True)
+
+	def self(self):
+		return self
 
 	def __unicode__(self):
 		return "{} - {} - {}".format(self.id, self.user, self.institution)
