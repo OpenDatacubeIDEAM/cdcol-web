@@ -436,7 +436,7 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
         executed_params = json.dumps(executed_params)
         print executed_params
     current_user = request.user
-    user_profile = UserProfile.objects.get(user=current_user).self()
+    user_profile = UserProfile.objects.get(user=current_user).credits_approved
     algorithm = get_object_or_404(Algorithm, id=algorithm_id)
     current_version = None
     if version_id:
