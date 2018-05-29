@@ -438,6 +438,7 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
     current_user = request.user
     credits_approved = UserProfile.objects.get(user=current_user).credits_approved
     algorithm = get_object_or_404(Algorithm, id=algorithm_id)
+    version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id, current_user=current_user)
     current_version = None
     if version_id:
         current_version = get_object_or_404(Version, id=version_id)
@@ -450,7 +451,6 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
     executions = Execution.objects.filter(version=current_version)
     topics = Topic.objects.filter(enabled=True)
     if request.method == 'POST':
-        version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id, current_user=current_user)
         textarea_name = request.POST.get('textarea_name', None)
         checkbox_generate_mosaic = request.POST.get('checkbox_generate_mosaic', None)
         if checkbox_generate_mosaic is None :
@@ -492,7 +492,8 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
                     return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': new_execution.id}))
                 else:
                     version_selection_form.add_error(None, "Esta ejecución requiere {} créditos y sólo tiene {} créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen".format(credits_calculated, credits_approved))
-    version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id, current_user=current_user)
+    else:
+        version_selection_form = VersionSelectionForm()
     context = {'topics': topics, 'algorithm': algorithm, 'parameters': parameters,
                'version_selection_form': version_selection_form, 'version': current_version,
                'reviews': reviews, 'average_rating': average_rating, 'executions': executions,
