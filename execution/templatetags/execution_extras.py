@@ -28,7 +28,7 @@ register.filter('last_version_id', last_version_id)
 def get_storage_unit(value):
 	"""Returns the alias of a storage unit from a parameter"""
 	if "," not in value:
-		alias = StorageUnit.objects.get(name="value").alias
+		alias = StorageUnit.objects.get(name=value).alias
 	else:
 		unit_and_bands=value.split(",", 1)
 		alias = "{} ({})".format(StorageUnit.objects.get(name=unit_and_bands[0]).alias, unit_and_bands[1])
