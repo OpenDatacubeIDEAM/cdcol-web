@@ -438,7 +438,7 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
     current_user = request.user
     credits_approved = UserProfile.objects.get(user=current_user).credits_approved
     states = [Execution.ENQUEUED_STATE, Execution.EXECUTING_STATE]
-    credits_used=Execution.objects.filter(executed_by=current_user, state__in=states).aggregate(Sum('credits_consumed'))
+    credits_used=Execution.objects.filter(executed_by=current_user, state=Execution.ENQUEUED_STATE).aggregate(Sum('credits_consumed'))
     credits_approved -= credits_used['credits_consumed__sum']
     algorithm = get_object_or_404(Algorithm, id=algorithm_id)
     version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id, current_user=current_user)
