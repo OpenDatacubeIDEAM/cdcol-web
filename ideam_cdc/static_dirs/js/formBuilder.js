@@ -79,7 +79,7 @@ $(document).ready(function () {
             east: Math.ceil(ne.lng()),
             west: Math.floor(sw.lng())
         };
-        //countCredits(bounds);
+        countCredits(bounds);
 
     }
     
@@ -91,7 +91,7 @@ $(document).ready(function () {
             west: Math.floor(document.getElementById("sw_longitude").value)
         };
         rectangle.setBounds(bounds);
-        //countCredits(bounds);
+        countCredits(bounds);
     }
 
     function countCredits(bounds)
@@ -631,7 +631,7 @@ $(document).ready(function () {
         // appending the custom form
         $("mainForm").append(f);
         setExecutedParameters();
-        //changeRectBounds();
+        changeRectBounds();
     };
 
     function setExecutedParameters()
