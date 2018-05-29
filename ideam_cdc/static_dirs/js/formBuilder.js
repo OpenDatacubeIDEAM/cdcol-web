@@ -187,9 +187,10 @@ $(document).ready(function () {
 
     function createForm(json) {
         executed_params = JSON.parse(executed_params);
+        console.log(user_profile);
         user_profile = JSON.parse(user_profile);
         console.log(executed_params);
-        console.log(user_profile);
+
         // obtaining the form
         var f = document.getElementById("mainForm");
         // iterating over the parameters
