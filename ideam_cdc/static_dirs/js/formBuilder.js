@@ -623,7 +623,6 @@ $(document).ready(function () {
         send_button.type = "submit";
         send_button.className = "btn btn-default";
         send_button.innerHTML = "Ejecutar Algoritmo";
-        if(disabled_button) send_button.disabled = true;
         var param_div = document.createElement("div");
         param_div.className = "text-center";
         // appending the button
