@@ -11,6 +11,7 @@ from algorithm.models import Topic, Algorithm, VersionStorageUnit
 from execution.models import *
 from execution.forms import VersionSelectionForm, ReviewForm
 from execution.serializers import ExecutionSerializer
+from user_profile.models import  *
 import datetime
 from storage.models import StorageUnit
 from rest_framework.renderers import JSONRenderer
@@ -447,6 +448,7 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
     executions = Execution.objects.filter(version=current_version)
     topics = Topic.objects.filter(enabled=True)
     if request.method == 'POST':
+        version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id, current_user=current_user)
         textarea_name = request.POST.get('textarea_name', None)
         checkbox_generate_mosaic = request.POST.get('checkbox_generate_mosaic', None)
         if checkbox_generate_mosaic is None :
@@ -454,27 +456,40 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
        # started_at = datetime.datetime.now()
 
         if current_user.has_perm('execution.can_create_new_execution'):
-            new_execution = Execution(
-                version=current_version,
-                description=textarea_name,
-                state=Execution.ENQUEUED_STATE,
-                executed_by=current_user,
-                generate_mosaic= checkbox_generate_mosaic
-            )
-            new_execution.save()
+            parameter = parameters.get(parameter_type=Parameter.AREA_TYPE)
+            user_profile = UserProfile.get(user=current_user)
+            if parameter and user_profile:
 
-            create_execution_parameter_objects(parameters, request, new_execution, current_version)
+                sw_latitude = request.POST.get('sw_latitude', False)
+                sw_longitude = request.POST.get('sw_longitude', False)
+                ne_latitude = request.POST.get('ne_latitude', False)
+                ne_longitude = request.POST.get('ne_longitude', False)
+                credits_calculated = (ne_latitude-sw_latitude)*(ne_longitude-sw_longitude)
+                if credits_calculated <= user_profile.credits_approved:
+                    new_execution = Execution(
+                        version=current_version,
+                        description=textarea_name,
+                        state=Execution.ENQUEUED_STATE,
+                        executed_by=current_user,
+                        generate_mosaic= checkbox_generate_mosaic,
+                        credits_consumed=credits_calculated,
+                    )
+                    new_execution.save()
 
-            # Unzip uploaded parameters
-            execution_directory = "/".join( [ settings.MEDIA_ROOT, 'input', str(new_execution.id) ] )
-            if os.path.isdir(execution_directory):
-                unzip_every_file_in_directory(execution_directory)
+                    create_execution_parameter_objects(parameters, request, new_execution, current_version)
 
-            # send the execution to the REST service
-            response = send_execution(new_execution)
+                    # Unzip uploaded parameters
+                    execution_directory = "/".join( [ settings.MEDIA_ROOT, 'input', str(new_execution.id) ] )
+                    if os.path.isdir(execution_directory):
+                        unzip_every_file_in_directory(execution_directory)
 
-            print response
-            return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': new_execution.id}))
+                    # send the execution to the REST service
+                    response = send_execution(new_execution)
+
+                    print response
+                    return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': new_execution.id}))
+                else:
+                    version_selection_form.add_error(None, "Esta ejecución requiere "+credits_calculated+" créditos y sólo tiene "+user_profile.credits_approved+" créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen.")
     version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id, current_user=current_user)
     context = {'topics': topics, 'algorithm': algorithm, 'parameters': parameters,
                'version_selection_form': version_selection_form, 'version': current_version,

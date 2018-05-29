@@ -9,7 +9,7 @@
 $(document).ready(function () {
 
     var map;
-
+    var disabled_button = false;
     function init_osm() {
         var mymap = L.map('map').setView([4.6870819, -74.0808636], 5);
 
@@ -96,18 +96,24 @@ $(document).ready(function () {
 
     function countCredits(bounds)
     {
-        var credits_approved=0;
-        var credits_consumed=(bounds.north-bounds.south)*(bounds.east-bounds.west);
-        console.log(credits_consumed);
-        console.log(bounds);
-        if(credits_consumed > credits_approved){
-            //mostrar dialogo
-            var credits_message = document.getElementById("credits_message");
-            var mensaje = "Esta ejecución requiere "+credits_consumed+" créditos y sólo tiene "+credits_approved+" créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen.";
-            credits_message.innerHTML = mensaje;
-            credits_message.style.visibility = "visible";
+        var credits_message = document.getElementById("credits_message");
+        var button = document.getElementById("button-execution");
+        if(credits_message && button){
+            var credits_approved=0;
+            var credits_consumed=(bounds.north-bounds.south)*(bounds.east-bounds.west);
+            var mensaje;
             console.log(credits_consumed);
+            if(credits_consumed > credits_approved){
+                mensaje = "Esta ejecución requiere "+credits_consumed+" créditos y sólo tiene "+credits_approved+" créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen.";
+                credits_message.innerHTML = mensaje;
+                credits_message.style.visibility = "visible";
+                button.disabled = true;
+            }else{
+                credits_message.style.visibility = "hidden";
+                button.disabled = false;
+            }
         }
+
     }
     
     // Getting the version id from the url and selecting it
@@ -610,9 +616,12 @@ $(document).ready(function () {
         });
         console.log("Creating Send Button");
         var send_button = document.createElement("button");
+        send_button.id = "button-execution";
+        send_button.name = "button-execution";
         send_button.type = "submit";
         send_button.className = "btn btn-default";
         send_button.innerHTML = "Ejecutar Algoritmo";
+        if(disabled_button) send_button.disabled = true;
         var param_div = document.createElement("div");
         param_div.className = "text-center";
         // appending the button
@@ -621,6 +630,7 @@ $(document).ready(function () {
         // appending the custom form
         $("mainForm").append(f);
         setExecutedParameters();
+        changeRectBounds();
     };
 
     function setExecutedParameters()
