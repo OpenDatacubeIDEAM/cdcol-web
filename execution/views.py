@@ -429,7 +429,7 @@ def unzip_every_file_in_directory(execution_directory):
 @permission_required(('execution.can_create_new_execution', 'execution.can_view_new_execution'), raise_exception=True)
 def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
     executed_params = []
-    user_profile = []
+
     if copy_execution_id:
         print copy_execution_id
         executed_params = map(lambda param: param.obtain_json_values(),get_detail_context(copy_execution_id)['executed_params'])

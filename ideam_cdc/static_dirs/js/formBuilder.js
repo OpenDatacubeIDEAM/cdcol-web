@@ -9,7 +9,7 @@
 $(document).ready(function () {
 
     var map;
-    var user_profile;
+    var user;
     function init_osm() {
         var mymap = L.map('map').setView([4.6870819, -74.0808636], 5);
 
@@ -98,7 +98,7 @@ $(document).ready(function () {
     {
         var credits_message = document.getElementById("credits_message");
         var button = document.getElementById("button-execution");
-        if(user_profile && credits_message && button){
+        if(user && credits_message && button){
             var credits_approved=user_profile.credits_approved;
             var credits_consumed=(bounds.north-bounds.south)*(bounds.east-bounds.west);
             var mensaje;
@@ -187,9 +187,10 @@ $(document).ready(function () {
 
     function createForm(json) {
         executed_params = JSON.parse(executed_params);
-        user_profile = JSON.parse(user_profile);
+        console.log(JSON.parse(topics))
+        user = JSON.parse(user_profile);
         console.log(executed_params);
-        console.log(user_profile);
+        console.log(user);
         // obtaining the form
         var f = document.getElementById("mainForm");
         // iterating over the parameters
