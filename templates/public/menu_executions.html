@@ -1,0 +1,41 @@
+<div class="header-dropdown-buttons">
+    <div class="btn-group dropdown">
+        <button type="button" class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-basket-1"></i><span
+                class="cart-count default-bg">{{ available_credits }}</span></button>
+        <ul class="dropdown-menu dropdown-menu-right dropdown-animation cart">
+            <li>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th class="quantity">Código</th>
+                        <th class="product">Algoritmo</th>
+                        <th class="amount">Créditos</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for execution in executions %}
+                        <tr>
+                            <td class="quantity">{{ execution.id }}</td>
+                            <td class="product">{{ execution.version.algorithm.name }}</td>
+                        <td class="amount">{{ execution.credits_consumed }}</td>
+                        </tr>
+                    {% endfor %}
+
+                    <tr>
+                        <td class="total-quantity" colspan="2">Créditos en uso</td>
+                        <td class="total-amount">{{ used_credits }}</td>
+                    </tr>
+                    <tr>
+                        <td class="total-quantity" colspan="2">Créditos dispónible</td>
+                        <td class="total-amount">{{ available_cedits }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="panel-body text-right">
+                    <a href="{% url 'execution:index' %}" class="btn btn-group btn-gray btn-md">Ver listado ejecuciones</a>
+
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
