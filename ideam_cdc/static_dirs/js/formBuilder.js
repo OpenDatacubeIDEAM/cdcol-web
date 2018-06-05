@@ -40,10 +40,10 @@ $(document).ready(function () {
         });
 
         var bounds = {
-            north: 8.0,
-            south: 4.0,
-            east: -70.0,
-            west: -75.7
+            north: 2.0,
+            south: 3.0,
+            east: -73,
+            west: -74
         };
 
         rectangle = new google.maps.Rectangle({
