@@ -11,7 +11,7 @@ def has_group(user, group_name):
 	groups = user.groups.all().values_list('name', flat=True)
 	return True if group_name in groups else False
 
-@register.inclusion_tag('menu_executions.html')
+@register.inclusion_tag('public/menu_executions.html')
 def get_execution():
 	executions = Execution.objects.filter(state__in=[Execution.EXECUTING_STATE, Execution.ENQUEUED_STATE])
 	used_credits = 0
