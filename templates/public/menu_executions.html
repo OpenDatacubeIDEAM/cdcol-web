@@ -16,7 +16,7 @@
                     {% for execution in executions %}
                             <tr>
                                 <td class="quantity">{{ execution.id }}</td>
-                                <td class="product">{{ execution.version.algorithm.name }}</td>
+                                <td class="product"><a href="{% url 'execution:detail' execution.id %}">{{ execution.version.algorithm.name }}</a></td>
                                 <td class="amount">{{ execution.credits_consumed }}</td>
                             </tr>
                         {% endfor %}
