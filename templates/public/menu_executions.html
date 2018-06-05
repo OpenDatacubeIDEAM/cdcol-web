@@ -13,22 +13,22 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for execution in executions %}
+
+                    {% if executions|length > 0 %}
+                        {% for execution in executions %}
                             <tr>
-                                <td class="quantity">{{ execution.id }}</td>
+                                <td class="quantity"><a href="{% url 'execution:detail' execution.id %}">{{ execution.id }}</a></td>
                                 <td class="product"><a href="{% url 'execution:detail' execution.id %}">{{ execution.version.algorithm.name }}</a></td>
                                 <td class="amount">{{ execution.credits_consumed }}</td>
                             </tr>
                         {% endfor %}
-{#                    {% if executions.length > 0 %}#}
-{#                        #}
-{#                    {% else %}#}
-{#                        <tr>#}
-{#                            <td class="quantity">--</td>#}
-{#                            <td class="product">No hay ejecuciones disponibles</td>#}
-{#                            <td class="amount">--</td>#}
-{#                        </tr>#}
-{#                    {% endif %}#}
+                    {% else %}
+                        <tr>
+                            <td class="quantity">--</td>
+                            <td class="product">No hay ejecuciones disponibles</td>
+                            <td class="amount">--</td>
+                        </tr>
+                    {% endif %}
 
                     <tr>
                         <td class="total-quantity" colspan="2">Créditos en uso</td>
