@@ -12,8 +12,8 @@ def has_group(user, group_name):
 	return True if group_name in groups else False
 
 @register.inclusion_tag('public/menu_executions.html')
-def get_execution():
+def get_execution(user):
 	executions = Execution.objects.filter(state__in=[Execution.EXECUTING_STATE, Execution.ENQUEUED_STATE])
-	used_credits = 0
+	used_credits = user.id
 	available_credits = 7
 	return {'executions': executions, 'used_credits': used_credits, 'available_credits': available_credits}
