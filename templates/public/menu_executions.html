@@ -13,21 +13,22 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% if executions.length > 0 %}
-                        {% for execution in executions %}
+                    {% for execution in executions %}
                             <tr>
                                 <td class="quantity">{{ execution.id }}</td>
                                 <td class="product">{{ execution.version.algorithm.name }}</td>
                                 <td class="amount">{{ execution.credits_consumed }}</td>
                             </tr>
                         {% endfor %}
-                    {% else %}
-                        <tr>
-                            <td class="quantity">--</td>
-                            <td class="product">No hay ejecuciones disponibles</td>
-                            <td class="amount">--</td>
-                        </tr>
-                    {% endif %}
+{#                    {% if executions.length > 0 %}#}
+{#                        #}
+{#                    {% else %}#}
+{#                        <tr>#}
+{#                            <td class="quantity">--</td>#}
+{#                            <td class="product">No hay ejecuciones disponibles</td>#}
+{#                            <td class="amount">--</td>#}
+{#                        </tr>#}
+{#                    {% endif %}#}
 
                     <tr>
                         <td class="total-quantity" colspan="2">Créditos en uso</td>
