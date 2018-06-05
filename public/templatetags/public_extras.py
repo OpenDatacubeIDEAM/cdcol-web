@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 from django import template
 from execution.models import Execution
+from user_profile.models import UserProfile
 # registering a new filter
 register = template.Library()
 
@@ -13,7 +14,8 @@ def has_group(user, group_name):
 
 @register.inclusion_tag('public/menu_executions.html')
 def get_execution(user):
-	executions = Execution.objects.filter(state__in=[Execution.EXECUTING_STATE, Execution.ENQUEUED_STATE])
+	#executions = Execution.objects.filter(state__in=[Execution.EXECUTING_STATE, Execution.ENQUEUED_STATE], cr)
+	executions = Execution.objects.filter(executed_by=user)
 	used_credits = user.id
-	available_credits = 7
+	available_credits = UserProfile.objects.get(user=user).credits_approved
 	return {'executions': executions, 'used_credits': used_credits, 'available_credits': available_credits}
