@@ -443,11 +443,12 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
         credits_approved -= credits_used['credits_consumed__sum']
     algorithm = get_object_or_404(Algorithm, id=algorithm_id)
     version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id, current_user=current_user)
+
     current_version = None
     if version_id:
         current_version = get_object_or_404(Version, id=version_id)
+    storage_units_version = VersionStorageUnit.objects.filter(version=current_version)
     parameters = Parameter.objects.filter(version=current_version, enabled=True).order_by('position')
-    allowed_storage_units = VersionStorageUnit.objects.filter(version=current_version)
     reviews = Review.objects.filter(version=current_version)
     # getting the average rating
     average_rating = Review.objects.filter(version=current_version).aggregate(Avg('rating'))['rating__avg']
@@ -500,7 +501,7 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
     context = {'topics': topics, 'algorithm': algorithm, 'parameters': parameters,
                'version_selection_form': version_selection_form, 'version': current_version,
                'reviews': reviews, 'average_rating': average_rating, 'executions': executions,
-               'executed_params': executed_params, 'credits_approved': credits_approved}
+               'executed_params': executed_params, 'credits_approved': credits_approved, 'storage_units_version':storage_units_version}
     return render(request, 'execution/new.html', context)
 
 
