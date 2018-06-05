@@ -19,6 +19,6 @@ def get_execution(user):
 	executions = Execution.objects.filter(state__in=[Execution.EXECUTING_STATE, Execution.ENQUEUED_STATE],executed_by=user)
 	available_credits = UserProfile.objects.get(user=user).credits_approved
 	used_credits = executions.aggregate(Sum('credits_consumed'))
-	if used_credits['credits_consumed__sum']:
-		available_credits -= used_credits['credits_consumed__sum']
+	if used_credits['credits_consumed__sum']: available_credits -= used_credits['credits_consumed__sum']
+	else: used_credits['credits_consumed__sum'] = 0
 	return {'executions': executions, 'used_credits': used_credits['credits_consumed__sum'], 'available_credits': available_credits}
