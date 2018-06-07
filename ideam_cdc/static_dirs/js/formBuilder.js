@@ -390,15 +390,7 @@ $(document).ready(function () {
                     f.appendChild(param_div);
                     init_google_map();
 
-                    var credits_message = document.createElement("div");
-                    //var mensaje = "Esta ejecución requiere "+credits_consumed+" créditos y sólo tiene "+credits_approved+" créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen."
-                    //credits_message.innerHTML = mensaje;
-                    credits_message.className = "alert alert-danger";
-                    credits_message.id = "credits_message";
-                    credits_message.name = "credits_message";
-                    credits_message.setAttribute("role", "alert");
-                    credits_message.style.visibility = "hidden";
-                    f.appendChild(credits_message);
+
 
                     break;
                 case "8":
@@ -615,6 +607,17 @@ $(document).ready(function () {
             autoclose: true,
             todayHighlight: true
         });
+
+        var credits_message = document.createElement("div");
+        //var mensaje = "Esta ejecución requiere "+credits_consumed+" créditos y sólo tiene "+credits_approved+" créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen."
+        //credits_message.innerHTML = mensaje;
+        credits_message.className = "alert alert-danger";
+         credits_message.id = "credits_message";
+         credits_message.name = "credits_message";
+         credits_message.setAttribute("role", "alert");
+         credits_message.style.visibility = "hidden";
+         f.appendChild(credits_message);
+
         console.log("Creating Send Button");
         var send_button = document.createElement("button");
         send_button.id = "button-execution";
