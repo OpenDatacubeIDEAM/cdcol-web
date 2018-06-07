@@ -300,6 +300,7 @@ class Task(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 	parameters = models.TextField(blank=True, null=True)
 	trace_error = models.TextField(blank=True, null=True)
+	results = models.TextField(blank=True, null=True)
 
 	def __unicode__(self):
 		return "{} - {}".format(self.execution.id, self.uuid)
