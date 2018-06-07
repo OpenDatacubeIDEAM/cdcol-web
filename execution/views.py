@@ -159,7 +159,7 @@ def get_detail_context(execution_id):
                 except MultipleObjectsReturned:
                     tiff_message = 'Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
                     FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
-            other_files.append(f)
+                other_files.append(f)
 
 
         # for f in os.listdir(system_path):
