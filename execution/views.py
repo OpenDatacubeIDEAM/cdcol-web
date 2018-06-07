@@ -98,7 +98,7 @@ def get_detail_context(execution_id):
     review = Review.objects.filter(execution=execution).last()
     system_path = "{}/results/{}/".format(settings.WEB_STORAGE_PATH, execution.id)
     files = []
-
+    other_files = []
     # for task in tasks:
     #     kwargs = json.load(task.parameters)
     #     f = {'file': file_name, 'lat': kwargs['min_lat'], 'long': kwargs['min_long'], 'task_state': task.state,
@@ -140,7 +140,7 @@ def get_detail_context(execution_id):
                     tiff_message = 'Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
                     FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
                 files.append(f)
-        other_files = []
+
         for f in os.listdir(system_path):
             if ".gif" in f :
                 f = {'file': f, 'state':False}
