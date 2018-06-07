@@ -40,8 +40,8 @@ $(document).ready(function () {
         });
 
         var bounds = {
-            north: 2,
-            south: 3,
+            north: 3,
+            south: 2,
             east: -73,
             west: -74
         };
