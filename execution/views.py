@@ -116,6 +116,7 @@ def get_detail_context(execution_id):
                 if f['result_state']:
                     f['task_state'] = 'Finalizado'
                 elif (os.path.exists(system_path+"{}_{}_no_data.lock".format(i,j)))  or (execution.state == Execution.COMPLETED_STATE and not f['result_state']):
+                    f['file_name'] = "{}_{}_no_data.lock".format(i,j)
                     f['task_state'] = 'Sin datos en el area'
                 elif execution.state == Execution.ENQUEUED_STATE:
                     f['task_state'] = 'En espera'
@@ -140,26 +141,26 @@ def get_detail_context(execution_id):
                     tiff_message = 'Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
                     FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
                 files.append(f)
-            other_files = []
-            for f in os.listdir(system_path):
-                if ".gif" in f :
-                    f = {'file': f, 'state':False}
-                    other_files.append(f)
-                elif "mosaic" in f and ".nc" in f:
-                    f = {'file': f, 'state': False}
-                    try:
-                        convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
-                        f['state'] = convertion_task.state
-                        if f['state'] == '3':
-                            tiff_message = 'Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
-                        elif f['state'] == True:
-                            generating_tiff = '1'
-                    except ObjectDoesNotExist:
-                        pass
-                    except MultipleObjectsReturned:
+        other_files = []
+        for f in os.listdir(system_path):
+            if ".gif" in f :
+                f = {'file': f, 'state':False}
+                other_files.append(f)
+            elif "mosaic" in f and ".nc" in f:
+                f = {'file': f, 'state': False}
+                try:
+                    convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
+                    f['state'] = convertion_task.state
+                    if f['state'] == '3':
                         tiff_message = 'Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
-                        FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
-                    other_files.append(f)
+                    elif f['state'] == True:
+                        generating_tiff = '1'
+                except ObjectDoesNotExist:
+                    pass
+                except MultipleObjectsReturned:
+                    tiff_message = 'Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
+                    FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
+            other_files.append(f)
 
 
         # for f in os.listdir(system_path):
