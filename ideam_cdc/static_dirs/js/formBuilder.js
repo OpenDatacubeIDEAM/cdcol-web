@@ -42,8 +42,8 @@ $(document).ready(function () {
         var bounds = {
             north: 2,
             south: 3,
-            east: -74,
-            west: -73
+            east: -73,
+            west: -74
         };
 
         rectangle = new google.maps.Rectangle({
