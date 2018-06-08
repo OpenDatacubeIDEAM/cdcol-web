@@ -191,7 +191,7 @@ $(document).ready(function () {
         for(var i=0; i<storage_units_version.length; i++){
             storage_units_version[i] = storage_units_version[i].split(":");
             storage_units_version[i] = (storage_units_version[i])[1];
-            // storage_units_version[i] = storage_units_version[i].substring(1,storage_units_version.length[i]-1);
+            storage_units_version[i] = storage_units_version[i].substring(1,storage_units_version[i].length-1);
         }
 
         console.log(storage_units_version);
@@ -422,16 +422,19 @@ $(document).ready(function () {
                         var storage_unit_option = document.createElement("option");
                         var storage_unit_executed_param = getExecutedParam(pk);
                         jQuery.each(su_data, function (i, storage_unit_value) {
-                            var storage_pk = storage_unit_value.pk;
-                            var storage_name = storage_unit_value.fields.name;
-                            storage_unit_option = document.createElement("option");
-                            storage_unit_option.value = storage_pk;
-                            storage_unit_option.text = storage_unit_value.fields.alias;
-                            storage_unit_select.appendChild(storage_unit_option);
-                            if(storage_unit_executed_param && storage_name === storage_unit_executed_param.storage_unit_name)
-                            {
-                                storage_unit_select.value = storage_pk;
-                            }
+                            if(storage_units_version.indexOf(storage_unit_value.fields.alias)>-1){
+                                var storage_pk = storage_unit_value.pk;
+                                var storage_name = storage_unit_value.fields.name;
+                                storage_unit_option = document.createElement("option");
+                                storage_unit_option.value = storage_pk;
+                                storage_unit_option.text = storage_unit_value.fields.alias;
+                                storage_unit_select.appendChild(storage_unit_option);
+                                if(storage_unit_executed_param && storage_name === storage_unit_executed_param.storage_unit_name)
+                                {
+                                    storage_unit_select.value = storage_pk;
+                                }
+                                }
+
                         });
                         // bands_select
                         var bands_select = document.createElement("select");
@@ -574,10 +577,10 @@ $(document).ready(function () {
                         var storage_unit_option = document.createElement("option");
                         jQuery.each(su_data, function (i, storage_unit_value) {
                             var storage_pk = storage_unit_value.pk;
-                            var storage_name = storage_unit_value.fields.alias;
+                            var storage_name = storage_unit_value.fields.name;
                             storage_unit_option = document.createElement("option");
                             storage_unit_option.value = storage_pk;
-                            storage_unit_option.text = storage_name;
+                            storage_unit_option.text = storage_unit_value.fields.name;
                             storage_unit_select.appendChild(storage_unit_option);
                             if(storage_unit_executed_param && storage_name === storage_unit_executed_param.storage_unit_name)
                             {
