@@ -125,7 +125,7 @@ class VersionStorageUnit(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 
 	def __unicode__(self):
-		return self.storage_unit.id
+		return self.storage_unit.name
 
 
 
