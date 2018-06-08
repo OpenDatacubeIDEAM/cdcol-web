@@ -190,7 +190,7 @@ $(document).ready(function () {
         storage_units_version = storage_units_version.substring(1, storage_units_version.length-1).split(",");
         for(var i=0; i<storage_units_version.length; i++){
             storage_units_version[i] = storage_units_version[i].split(":")[1];
-            storage_units_version[i] = storage_units_version[i].substring(1,storage_units_version.length-1);
+            storage_units_version[i] = storage_units_version[i].substring(1,storage_units_version.length[i]-1);
         }
 
         console.log(storage_units_version);
@@ -421,16 +421,19 @@ $(document).ready(function () {
                         var storage_unit_option = document.createElement("option");
                         var storage_unit_executed_param = getExecutedParam(pk);
                         jQuery.each(su_data, function (i, storage_unit_value) {
-                            var storage_pk = storage_unit_value.pk;
-                            var storage_name = storage_unit_value.fields.name;
-                            storage_unit_option = document.createElement("option");
-                            storage_unit_option.value = storage_pk;
-                            storage_unit_option.text = storage_unit_value.fields.alias;
-                            storage_unit_select.appendChild(storage_unit_option);
-                            if(storage_unit_executed_param && storage_name === storage_unit_executed_param.storage_unit_name)
-                            {
-                                storage_unit_select.value = storage_pk;
+                            if(storage_units_version.indexOf(storage_unit_value.fields.alias)){
+                                var storage_pk = storage_unit_value.pk;
+                                var storage_name = storage_unit_value.fields.name;
+                                storage_unit_option = document.createElement("option");
+                                storage_unit_option.value = storage_pk;
+                                storage_unit_option.text = storage_unit_value.fields.alias;
+                                storage_unit_select.appendChild(storage_unit_option);
+                                if(storage_unit_executed_param && storage_name === storage_unit_executed_param.storage_unit_name)
+                                {
+                                    storage_unit_select.value = storage_pk;
+                                }
                             }
+
                         });
                         // bands_select
                         var bands_select = document.createElement("select");
