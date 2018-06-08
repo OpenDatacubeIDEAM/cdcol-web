@@ -9,7 +9,7 @@ register = template.Library()
 def get_algorithms(value):
 	"""Returns all the algorithms belonging to a certain topic"""
 
-	query = 'SELECT * FROM algorithm_algorithm AS alg LEFT JOIN algorithm_version AS ver ON alg.id = ver.id WHERE (ver.publishing_state=\'1\' OR ver.publishing_state=\'2\') AND alg.topic_id={}'.format(str(value.id))
+	query = 'SELECT * FROM algorithm_algorithm AS alg LEFT JOIN algorithm_version AS ver ON alg.id = ver.id WHERE (ver.publishing_state=\'1\') AND alg.topic_id={}'.format(str(value.id))
 	return Algorithm.objects.raw(query);
 	#return 	Algorithm.objects.filter(topic=value)
 
