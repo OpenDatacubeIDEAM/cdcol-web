@@ -209,7 +209,7 @@
                                             <a href="#">{{ topic.name }}</a>
                                             <ul>
                                                 {% for algorithm in topic|get_algorithms %}
-                                                    <li><a href="{% url 'execution:new_execution' algorithm.id %}">{{ algorithm.name }}</a></li>
+                                                    <li><a href="{% url 'execution:new_execution' algorithm.id algorithm %}">{{ algorithm.name }}</a></li>
                                                 {% endfor %}
                                             </ul>
                                         </li>
