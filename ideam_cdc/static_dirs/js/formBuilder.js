@@ -576,15 +576,16 @@ $(document).ready(function () {
                         // storage_unit_options
                         var storage_unit_option = document.createElement("option");
                         jQuery.each(su_data, function (i, storage_unit_value) {
-                            var storage_pk = storage_unit_value.pk;
-                            var storage_name = storage_unit_value.fields.name;
-                            storage_unit_option = document.createElement("option");
-                            storage_unit_option.value = storage_pk;
-                            storage_unit_option.text = storage_unit_value.fields.name;
-                            storage_unit_select.appendChild(storage_unit_option);
-                            if(storage_unit_executed_param && storage_name === storage_unit_executed_param.storage_unit_name)
-                            {
-                                storage_unit_select.value = storage_pk;
+                            if(storage_units_version.indexOf(storage_unit_value.fields.alias)>-1) {
+                                var storage_pk = storage_unit_value.pk;
+                                var storage_name = storage_unit_value.fields.name;
+                                storage_unit_option = document.createElement("option");
+                                storage_unit_option.value = storage_pk;
+                                storage_unit_option.text = storage_unit_value.fields.alias;
+                                storage_unit_select.appendChild(storage_unit_option);
+                                if (storage_unit_executed_param && storage_name === storage_unit_executed_param.storage_unit_name) {
+                                    storage_unit_select.value = storage_pk;
+                                }
                             }
                         });
                         // ===== LABELS =====
