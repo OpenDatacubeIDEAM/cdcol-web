@@ -448,7 +448,7 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
     storage_units_version = []
     if version_id:
         current_version = get_object_or_404(Version, id=version_id)
-        storage_units_version = VersionStorageUnit.objects.filter(version=current_version)
+        storage_units_version = VersionStorageUnit.objects.filter(version__algorithm=algorithm)
     parameters = Parameter.objects.filter(version=current_version, enabled=True).order_by('position')
     reviews = Review.objects.filter(version=current_version)
     # getting the average rating
