@@ -188,6 +188,10 @@ $(document).ready(function () {
         executed_params = JSON.parse(executed_params);
         credits_approved = JSON.parse(credits_approved);
         storage_units_version = storage_units_version.substring(1, storage_units_version.length-1).split(",");
+        for(var i=0; i<storage_units_version.length; i++){
+            storage_units_version[i] = storage_units_version[i].split(": ")[1]
+            storage_units_version[i] = storage_units_version[i].substring(0,storage_units_version.length-1)
+        }
 
         console.log(storage_units_version);
         console.log(credits_approved);
