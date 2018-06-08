@@ -187,7 +187,6 @@ $(document).ready(function () {
     function createForm(json) {
         executed_params = JSON.parse(executed_params);
         credits_approved = JSON.parse(credits_approved);
-        version = JSON.parse(version);
         console.log(credits_approved);
         console.log(version);
         console.log(executed_params);
