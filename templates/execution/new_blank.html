@@ -70,8 +70,8 @@
                                         <li>
                                             <a href="#">{{ topic.name }}</a>
                                             <ul>
-                                                {% for algorithm in topic|get_algorithms %}
-                                                    <li><a href="{% url 'execution:new_execution' algorithm.id algorithm|last_version_id %}">{{ algorithm.name }}</a></li>
+                                                {% for version in topic|get_algorithms %}
+                                                    <li><a href="{% url 'execution:new_execution' version.algorithm.id version.algorithm|last_version_id %}">{{ version.algorithm.name }}</a></li>
                                                 {% endfor %}
                                             </ul>
                                         </li>
