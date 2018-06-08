@@ -568,7 +568,7 @@ $(document).ready(function () {
                         var storage_unit_option = document.createElement("option");
                         jQuery.each(su_data, function (i, storage_unit_value) {
                             var storage_pk = storage_unit_value.pk;
-                            var storage_name = storage_unit_value.fields.name;
+                            var storage_name = storage_unit_value.fields.alias;
                             storage_unit_option = document.createElement("option");
                             storage_unit_option.value = storage_pk;
                             storage_unit_option.text = storage_name;
