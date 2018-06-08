@@ -94,7 +94,10 @@ def get_detail_context(execution_id):
     executed_params = ExecutionParameter.objects.filter(execution=execution)
     tasks = Task.objects.filter(execution=execution)
     area_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter_type=Parameter.AREA_TYPE)
-    time_period_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter_type=Parameter.TIME_PERIOD_TYPE)
+    time_period_params = ExecutionParameter.objects.filter(execution=execution, parameter__parameter_type=Parameter.TIME_PERIOD_TYPE)
+    time_period_params_string = ""
+    for time_period in time_period_params:
+        time_period_params.concat("(u{}u{})".format(time_period.timeperiodtype.start_date.strftime("%d-%m-%Y"), time_period.timeperiodtype.end_date.strftime("%d-%m-%Y") ))
     review = Review.objects.filter(execution=execution).last()
     system_path = "{}/results/{}/".format(settings.WEB_STORAGE_PATH, execution.id)
     files = []
@@ -111,7 +114,7 @@ def get_detail_context(execution_id):
         generating_tiff = '0'
         for i in range(int(area_param.areatype.latitude_start), int(area_param.areatype.latitude_end)):
             for j in range(int(area_param.areatype.longitude_start), int(area_param.areatype.longitude_end)):
-                file_name= '{}_{}_{}_{}_(u{}u{})_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_param.timeperiodtype.start_date.strftime("%d-%m-%Y"), time_period_param.timeperiodtype.end_date.strftime("%d-%m-%Y"))
+                file_name= '{}_{}_{}_{}_{}_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period)
                 f = {'file': file_name, 'lat': i, 'long': j, 'task_state': '', 'result_state': os.path.exists(system_path+file_name), 'state': False, 'tiff_file': file_name.replace('.nc', '.tiff')}
                 if f['result_state']:
                     f['task_state'] = 'Finalizado'
