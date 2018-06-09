@@ -303,7 +303,7 @@
                                                         <a href="{% url 'execution:download_result' execution.id file.file %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
                                                             {% if not execution.version.algorithm.multitemporal %}
                                                                 {% if file.state == '4' %}
-                                                                    <a href="{% url 'execution:download_result' execution.id file.tiff_file %}" class="btn btn-gray btn-sm">
+                                                                    <a href="{% url 'execution:download_result' execution.id file.file %}" class="btn btn-gray btn-sm">
                                                                         <i class="fa fa-file-image-o"></i> Descargar Geotiff
                                                                     </a>
                                                                 {% elif file.state == '3' %}
