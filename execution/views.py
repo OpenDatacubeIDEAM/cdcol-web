@@ -102,16 +102,12 @@ def get_detail_context(execution_id):
     system_path = "{}/results/{}/".format(settings.WEB_STORAGE_PATH, execution.id)
     files = []
     other_files = []
-    # for task in tasks:
-    #     kwargs = json.load(task.parameters)
-    #     f = {'file': file_name, 'lat': kwargs['min_lat'], 'long': kwargs['min_long'], 'task_state': task.state,
-    #          'result_state': os.path.exists(system_path + file_name), 'state': False,
-    #          'tiff_file': file_name.replace('.nc', '.tiff')}
 
     try:
         algorithm_name= execution.version.algorithm.name.lower().replace(" ", "_")
         tiff_message = None
         generating_tiff = '0'
+        print int(area_param.areatype.latitude_start)
         for i in range(int(area_param.areatype.latitude_start), int(area_param.areatype.latitude_end)):
             for j in range(int(area_param.areatype.longitude_start), int(area_param.areatype.longitude_end)):
                 file_name= '{}_{}_{}_{}_{}_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_params_string)
