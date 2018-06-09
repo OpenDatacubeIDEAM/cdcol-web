@@ -111,8 +111,7 @@ def get_detail_context(execution_id):
         for i in range(int(area_param.areatype.latitude_start), int(area_param.areatype.latitude_end)):
             for j in range(int(area_param.areatype.longitude_start), int(area_param.areatype.longitude_end)):
                 file_name= '{}_{}_{}_{}_{}_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_params_string)
-                tiff_name= '{}_{}_{}_{}_{}_output.tiff'.format(algorithm_name, execution.version.number, i, j, time_period_params_string)
-                f = {'file': file_name, 'lat': i, 'long': j, 'task_state': '', 'result_state': os.path.exists(system_path+file_name), 'state': False, 'tiff_file': tiff_name}
+                f = {'file': file_name, 'lat': i, 'long': j, 'task_state': '', 'result_state': os.path.exists(system_path+file_name), 'state': False, 'tiff_file': file_name.replace('.nc', '.tiff')}
                 if f['result_state']:
                     f['task_state'] = 'Finalizado'
                 elif (os.path.exists(system_path+"{}_{}_no_data.lock".format(i,j)))  or (execution.state == Execution.COMPLETED_STATE and not f['result_state']):
@@ -146,7 +145,7 @@ def get_detail_context(execution_id):
                 f = {'file': f, 'state':False}
                 other_files.append(f)
             elif "mosaic" in f and ".nc" in f:
-                f = {'file': f, 'state': False}
+                f = {'file': f, 'state': False, 'tiff_file':f.replace('.nc', '.tiff')}
                 try:
                     convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
                     f['state'] = convertion_task.state
