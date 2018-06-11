@@ -464,14 +464,20 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
 
         if current_user.has_perm('execution.can_create_new_execution'):
             parameter = parameters.get(parameter_type=Parameter.AREA_TYPE)
-
+            time_parameters = parameters.filter(parameter_type=Parameter.TIME_PERIOD_TYPE)
             if parameter and credits_approved:
+                anhos = 1;
+                if time_parameters:
+                    for p in time_parameters:
+                        start_date = request.POST.get('start_date_{}'.format(p.id), False)
+                        end_date = request.POST.get('end_date_{}'.format(p.id), False)
+                        anhos += (end_date.year - start_date.year)
 
                 sw_latitude = int(request.POST.get('sw_latitude', False))
                 sw_longitude = int(request.POST.get('sw_longitude', False))
                 ne_latitude = int(request.POST.get('ne_latitude', False))
                 ne_longitude = int(request.POST.get('ne_longitude', False))
-                credits_calculated = (ne_latitude-sw_latitude)*(ne_longitude-sw_longitude)
+                credits_calculated = (ne_latitude-sw_latitude)*(ne_longitude-sw_longitude)*anhos
                 if credits_calculated <= credits_approved:
                     new_execution = Execution(
                         version=current_version,
