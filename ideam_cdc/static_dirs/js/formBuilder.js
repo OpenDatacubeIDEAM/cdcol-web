@@ -102,17 +102,25 @@ $(document).ready(function () {
         var button = document.getElementById("button-execution");
         if(credits_approved && credits_message && button){
             console.log(time_pks);
+            var anhos=1;
             if(time_pks){
+                anhos =0;
                 for(var i =0; i<time_pks.length; i++){
+                    anhos += 1
                     start_date = document.getElementById("start_date_"+time_pks[i]);
                     end_date = document.getElementById("end_date_"+time_pks[i]);
-                    if(start_date && end_date)
-                        console.log("Fecha inicio: "+ start_date.value + " Fecha fin: " + end_date.value);
+                    if(start_date && end_date){
+                        start_date = start_date.value.split["-"];
+                        end_date = end_date.value.split["-"];
+                        if(start_date.length == 3 && end_date.length == 3)
+                            anhos += (parseInt(end_date[2])+parseInt(start_date[2]))
+                    }
                 }
-            }else{var anhos = 1;}
-            var credits_consumed=(bounds.north-bounds.south)*(bounds.east-bounds.west);
+                console.log("Anhos : " + anhos);
+            }else{anhos = 1;}
+            var credits_consumed=(bounds.north-bounds.south)*(bounds.east-bounds.west) * anhos;
             var mensaje;
-            console.log(credits_consumed);
+            console.log("Creditos consumidos: " +  credits_consumed);
             if(credits_consumed > credits_approved){
                 mensaje = "Esta ejecución requiere "+credits_consumed+" créditos y sólo tiene "+credits_approved+" créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen.";
                 credits_message.innerHTML = mensaje;
