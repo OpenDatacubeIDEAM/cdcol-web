@@ -10,6 +10,7 @@ $(document).ready(function () {
 
     var map;
     var user;
+    var time_pks = [];
     function init_osm() {
         var mymap = L.map('map').setView([4.6870819, -74.0808636], 5);
 
@@ -94,11 +95,21 @@ $(document).ready(function () {
         countCredits(bounds);
     }
 
+
     function countCredits(bounds)
     {
         var credits_message = document.getElementById("credits_message");
         var button = document.getElementById("button-execution");
         if(credits_approved && credits_message && button){
+            console.log(time_pks);
+            if(time_pks){
+                for(var i =0; i<time_pks.length; i++){
+                    start_date = document.getElementById("start_date_"+time_pks[i]);
+                    end_date = document.getElementById("end_date_"+time_pks[i]);
+                    if(start_date && end_date)
+                        console.log("Fecha inicio: "+ start_date.value + " Fecha fin: " + end_date.value);
+                }
+            }else{var anhos = 1;}
             var credits_consumed=(bounds.north-bounds.south)*(bounds.east-bounds.west);
             var mensaje;
             console.log(credits_consumed);
@@ -491,18 +502,24 @@ $(document).ready(function () {
                     break;
                 case "9":
                     console.log("Creating TimePeriod field");
+                    if(time_pks.indexOf(pk)<0)
+                        time_pks.push(pk);
                     // start date
                     var start_date_input = document.createElement("input");
                     start_date_input.id = "start_date_"+pk;
                     start_date_input.name = "start_date_"+pk;
                     start_date_input.className = "form-control datepicker";
                     start_date_input.required = parameter.fields.required;
+                    start_date_input.addEventListener("mouseup",function(){changeRectBounds()});
+                    start_date_input.addEventListener("keyup", function(){changeRectBounds()});
                     // end date
                     var end_date_input = document.createElement("input");
                     end_date_input.id = "end_date_"+pk;
                     end_date_input.name = "end_date_"+pk;
                     end_date_input.className = "form-control datepicker";
                     end_date_input.required = parameter.fields.required;
+                    end_date_input.addEventListener("mouseup",function(){changeRectBounds()});
+                    end_date_input.addEventListener("keyup", function(){changeRectBounds()});
                     // ===== LABELS =====
                     var start_date_label = document.createElement("label");
                     start_date_label.innerHTML = "<b>Desde</b>";

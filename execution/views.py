@@ -466,14 +466,17 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
             parameter = parameters.get(parameter_type=Parameter.AREA_TYPE)
             time_parameters = parameters.filter(parameter_type=Parameter.TIME_PERIOD_TYPE)
             if parameter and credits_approved:
-                anhos = 1;
+                anhos = 1
                 if time_parameters:
+                    anhos = 0
                     for p in time_parameters:
                         start_date = request.POST.get('start_date_{}'.format(p.id), False)
                         end_date = request.POST.get('end_date_{}'.format(p.id), False)
                         start_date_value = datetime.datetime.strptime(start_date, "%d-%m-%Y")
                         end_date_value = datetime.datetime.strptime(end_date, "%d-%m-%Y")
-                        anhos += (end_date_value.year - start_date_value.year)
+                        anhos += 1+(end_date_value.year - start_date_value.year)
+                else:
+                    anhos = 1
 
                 sw_latitude = int(request.POST.get('sw_latitude', False))
                 sw_longitude = int(request.POST.get('sw_longitude', False))
