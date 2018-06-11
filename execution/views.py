@@ -471,7 +471,9 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
                     for p in time_parameters:
                         start_date = request.POST.get('start_date_{}'.format(p.id), False)
                         end_date = request.POST.get('end_date_{}'.format(p.id), False)
-                        anhos += (end_date.year - start_date.year)
+                        start_date_value = datetime.datetime.strptime(start_date, "%d-%m-%Y")
+                        end_date_value = datetime.datetime.strptime(end_date, "%d-%m-%Y")
+                        anhos += (end_date_value.year - start_date_value.year)
 
                 sw_latitude = int(request.POST.get('sw_latitude', False))
                 sw_longitude = int(request.POST.get('sw_longitude', False))
