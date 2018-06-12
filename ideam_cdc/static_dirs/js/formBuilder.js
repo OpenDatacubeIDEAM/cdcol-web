@@ -119,7 +119,7 @@ $(document).ready(function () {
                         end_date = end_date.split('-');
                         console.log(end_date);
                         if(start_date.length == 3 && end_date.length == 3)
-                            anhos += (parseInt(end_date[2])+parseInt(start_date[2]))
+                            anhos += ((parseInt(end_date[2])-parseInt(start_date[2])));
                     }
                 }
                 console.log("Anhos : " + anhos);
