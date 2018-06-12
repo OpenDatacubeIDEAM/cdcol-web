@@ -115,6 +115,12 @@ def get_detail_context(execution_id):
 
         ]
         for i in range(int(area_param.areatype.latitude_start), int(area_param.areatype.latitude_end)):
+            files = [
+                {'file': "hola.nc", 'lat': 1, 'long': 1, 'task_state': 'Prueba',
+                 'result_state': True, 'state': False,
+                 'tiff_file': "hola.tiff"}
+
+            ]
             for j in range(int(area_param.areatype.longitude_start), int(area_param.areatype.longitude_end)):
                 file_name= '{}_{}_{}_{}_{}_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_params_string)
                 f = {'file': file_name, 'lat': i, 'long': j, 'task_state': '', 'result_state': os.path.exists(system_path+file_name), 'state': False, 'tiff_file': file_name.replace('.nc', '.tiff')}
