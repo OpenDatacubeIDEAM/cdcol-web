@@ -97,7 +97,7 @@ def get_detail_context(execution_id):
     time_period_param = ExecutionParameter.objects.filter(execution=execution, parameter__parameter_type=Parameter.TIME_PERIOD_TYPE)
     time_period_params_string = ""
     for time_period in time_period_param:
-        time_period_params_string+='"\("u{}u{}"\)"'.format(time_period.timeperiodtype.start_date.strftime("%d-%m-%Y"), time_period.timeperiodtype.end_date.strftime("%d-%m-%Y") )
+        time_period_params_string+='(u{}u{})'.format(time_period.timeperiodtype.start_date.strftime("%d-%m-%Y"), time_period.timeperiodtype.end_date.strftime("%d-%m-%Y") )
     review = Review.objects.filter(execution=execution).last()
     system_path = "{}/results/{}/".format(settings.WEB_STORAGE_PATH, execution.id)
     files = []
