@@ -126,7 +126,6 @@ def get_detail_context(execution_id):
                     f['task_state'] = 'Cancelado'
                 else:
                     f['task_state'] = 'Sin información dispónible'
-                f['task_state'] = "{}-{}".format(f['result_state'], system_path+file_name)
                 try:
                     convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
                     f['state'] = convertion_task.state
