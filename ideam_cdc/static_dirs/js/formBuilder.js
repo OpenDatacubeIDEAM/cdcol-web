@@ -107,11 +107,13 @@ $(document).ready(function () {
                 anhos =0;
                 for(var i =0; i<time_pks.length; i++){
                     anhos += 1
-                    start_date = document.getElementById("start_date_"+time_pks[i]);
-                    end_date = document.getElementById("end_date_"+time_pks[i]);
-                    if(start_date && end_date && start_date.includes("-") && end_date.includes("-")){
-                        start_date = start_date.value.split["-"];
-                        end_date = end_date.value.split["-"];
+                    var start_date = document.getElementById("start_date_"+time_pks[i]);
+                    var end_date = document.getElementById("end_date_"+time_pks[i]);
+                    if(start_date && end_date ){
+                        start_date = start_date.value;
+                        start_date = (start_date.includes("-"))?start_date.split["-"]:[];
+                        end_date = end_date.value;
+                        end_date = (end_date.includes("-"))?end_date.split["-"]:[];
                         if(start_date.length == 3 && end_date.length == 3)
                             anhos += (parseInt(end_date[2])+parseInt(start_date[2]))
                     }
