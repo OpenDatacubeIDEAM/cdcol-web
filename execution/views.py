@@ -105,7 +105,7 @@ def get_detail_context(execution_id):
     other_files = []
 
     try:
-        algorithm_name= execution.version.algorithm.name.lower().replace(" ", "-")
+        algorithm_name= unidecode.unidecode(execution.version.algorithm.name.lower().replace(" ", "-"))
         tiff_message = None
         generating_tiff = '0'
         print int(area_param.areatype.latitude_start)
@@ -114,7 +114,7 @@ def get_detail_context(execution_id):
 
             for j in range(int(area_param.areatype.longitude_start), int(area_param.areatype.longitude_end)):
                 files = [
-                    {'file': "hola.nc", 'lat': 1, 'long': 1, 'task_state': 'Prueba1234',
+                    {'file': "hola.nc", 'lat': i, 'long': j, 'task_state': 'Prueba1234',
                      'result_state': True, 'state': False,
                      'tiff_file': "hola.tiff"}
 
