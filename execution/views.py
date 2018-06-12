@@ -108,6 +108,7 @@ def get_detail_context(execution_id):
         tiff_message = None
         generating_tiff = '0'
         print int(area_param.areatype.latitude_start)
+        files = os.listdir(system_path)
         for i in range(int(area_param.areatype.latitude_start), int(area_param.areatype.latitude_end)):
             for j in range(int(area_param.areatype.longitude_start), int(area_param.areatype.longitude_end)):
                 file_name= '{}_{}_{}_{}_{}_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_params_string)
@@ -126,7 +127,7 @@ def get_detail_context(execution_id):
                     f['task_state'] = 'Cancelado'
                 else:
                     f['task_state'] = 'Sin información dispónible'
-                f['task_state'] = "{}-{}".format(f['result_state'], system_path+file_name)
+                f['task_state'] = "{}-{}".format(files.index(file_name), system_path+file_name)
                 try:
                     convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
                     f['state'] = convertion_task.state
