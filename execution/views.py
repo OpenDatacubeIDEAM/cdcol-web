@@ -105,7 +105,7 @@ def get_detail_context(execution_id):
     other_files = []
 
     try:
-        algorithm_name= unidecode.unidecode(execution.version.algorithm.name.lower().replace(" ", "-"))
+        algorithm_name= slugify(unidecode.unidecode(execution.version.algorithm.name.lower()))
         tiff_message = None
         generating_tiff = '0'
         print int(area_param.areatype.latitude_start)
