@@ -111,12 +111,12 @@ $(document).ready(function () {
                     var end_date = document.getElementById("end_date_"+time_pks[i]);
                     if(start_date && end_date ){
                         start_date = start_date.value;
-                        console.log(typeof start_date );
-                        start_date = start_date.split["-"];
+                        console.log(start_date );
+                        start_date = start_date.split('-');
                         console.log(start_date);
                         end_date = end_date.value;
-                        console.log(typeof end_date);
-                        end_date = end_date.split["-"];
+                        console.log(end_date);
+                        end_date = end_date.split('-');
                         console.log(end_date);
                         if(start_date.length == 3 && end_date.length == 3)
                             anhos += (parseInt(end_date[2])+parseInt(start_date[2]))
