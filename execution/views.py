@@ -25,6 +25,7 @@ from slugify import slugify
 import subprocess
 import glob
 import time
+import unidecode
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 
@@ -119,7 +120,7 @@ def get_detail_context(execution_id):
                 files = [
                     {'file': algorithm_name, 'lat': 1, 'long': 1, 'task_state': 'Prueba',
                      'result_state': os.path.exists(system_path+file_name), 'state': False,
-                     'tiff_file': "hola.tiff"}
+                     'tiff_file': algorithm_name+"tiff"}
 
                 ]
                 file_name= '{}_{}_{}_{}_{}_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_params_string)
