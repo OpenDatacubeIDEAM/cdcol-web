@@ -108,6 +108,12 @@ def get_detail_context(execution_id):
         tiff_message = None
         generating_tiff = '0'
         print int(area_param.areatype.latitude_start)
+        files = [
+            {'file': "hola.nc", 'lat': 1, 'long': 1, 'task_state': 'Prueba',
+                 'result_state': True, 'state': False,
+                 'tiff_file':"hola.tiff"}
+
+        ]
         for i in range(int(area_param.areatype.latitude_start), int(area_param.areatype.latitude_end)):
             for j in range(int(area_param.areatype.longitude_start), int(area_param.areatype.longitude_end)):
                 file_name= '{}_{}_{}_{}_{}_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_params_string)
