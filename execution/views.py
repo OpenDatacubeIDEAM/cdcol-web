@@ -104,7 +104,7 @@ def get_detail_context(execution_id):
     other_files = []
 
     try:
-        algorithm_name= execution.version.algorithm.name.lower().replace(" ", "_")
+        algorithm_name= execution.version.algorithm.name.lower().replace(" ", "-")
         tiff_message = None
         generating_tiff = '0'
         print int(area_param.areatype.latitude_start)
