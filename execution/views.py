@@ -118,7 +118,7 @@ def get_detail_context(execution_id):
             for j in range(int(area_param.areatype.longitude_start), int(area_param.areatype.longitude_end)):
                 files = [
                     {'file': algorithm_name, 'lat': 1, 'long': 1, 'task_state': 'Prueba',
-                     'result_state': True, 'state': False,
+                     'result_state': os.path.exists(system_path+file_name), 'state': False,
                      'tiff_file': "hola.tiff"}
 
                 ]
