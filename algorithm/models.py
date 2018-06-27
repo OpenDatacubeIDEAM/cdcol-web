@@ -44,7 +44,10 @@ class Algorithm(models.Model):
 		return self.obtain_versions().count()
 
 	def last_version_status(self):
-		return self.last_version().get_publishing_state_display()
+		if self.last_version():
+			return self.last_version().get_publishing_state_display()
+		else:
+			return ""
 
 	class Meta:
 		permissions = (
