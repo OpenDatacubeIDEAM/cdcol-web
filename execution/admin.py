@@ -16,8 +16,8 @@ class TaskInline(admin.TabularInline):
 	model = Task
 	fk_name = 'execution'
 
-class ExecutionParameterInline(admin.TabularInline):
-	model = ExecutionParameter
+class AreaTypeInline(admin.TabularInline):
+	model = AreaType
 	fk_name = 'execution'
 
 class ExecutionAdmin(admin.ModelAdmin):
@@ -25,7 +25,7 @@ class ExecutionAdmin(admin.ModelAdmin):
 	ordering = ('-id',)
 	list_filter = (['state'])
 	actions = [cancel_execution]
-	inlines = [TaskInline, ExecutionParameterInline]
+	inlines = [TaskInline, AreaTypeInline]
 	def save_model(self, request, obj, form, change):
                 obj.user = request.user
                 raise PermissionDenied
