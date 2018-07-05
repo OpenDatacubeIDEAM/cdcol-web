@@ -29,7 +29,7 @@ class IntegerTypeInline(admin.TabularInline):
 	fk_name = 'execution'
 
 class DoubleTypeInline(admin.TabularInline):
-	model = StringType
+	model = DoubleType
 	fk_name = 'execution'
 
 class BooleanTypeInline(admin.TabularInline):
