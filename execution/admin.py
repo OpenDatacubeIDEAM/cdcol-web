@@ -16,12 +16,16 @@ class TaskInline(admin.TabularInline):
 	model = Task
 	fk_name = 'execution'
 
+class ExecutionParameterInline(admin.TabularInline):
+	model = ExecutionParameter
+	fk_name = 'execution'
+
 class ExecutionAdmin(admin.ModelAdmin):
 	list_display = ('id', 'version', 'state', 'executed_by', 'credits_consumed', 'created_at',  'results_available', 'results_deleted_at', 'started_at','finished_at')
 	ordering = ('-id',)
 	list_filter = (['state'])
 	actions = [cancel_execution]
-	inlines = [TaskInline]
+	inlines = [TaskInline, ExecutionParameterInline]
 	def save_model(self, request, obj, form, change):
                 obj.user = request.user
                 raise PermissionDenied
