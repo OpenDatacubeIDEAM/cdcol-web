@@ -16,32 +16,13 @@ class TaskInline(admin.TabularInline):
 	model = Task
 	fk_name = 'execution'
 
-class AreaTypeInline(admin.TabularInline):
-	model = AreaType
-	fk_name = 'execution'
-
-class StringTypeInline(admin.TabularInline):
-	model = StringType
-	fk_name = 'execution'
-
-class IntegerTypeInline(admin.TabularInline):
-	model = IntegerType
-	fk_name = 'execution'
-
-class DoubleTypeInline(admin.TabularInline):
-	model = DoubleType
-	fk_name = 'execution'
-
-class BooleanTypeInline(admin.TabularInline):
-	model = BooleanType
-	fk_name = 'execution'
 
 class ExecutionAdmin(admin.ModelAdmin):
 	list_display = ('id', 'version', 'state', 'executed_by', 'credits_consumed', 'created_at',  'results_available', 'results_deleted_at', 'started_at','finished_at')
 	ordering = ('-id',)
 	list_filter = (['state'])
 	actions = [cancel_execution]
-	inlines = [TaskInline, AreaTypeInline, StringType, IntegerType, BooleanType, DoubleType]
+	inlines = [TaskInline]
 	def save_model(self, request, obj, form, change):
                 obj.user = request.user
                 raise PermissionDenied
