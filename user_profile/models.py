@@ -21,6 +21,15 @@ class UserProfile(models.Model):
 	status = models.CharField(max_length=2, choices=APPROBATION_STATUS)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+	credits_approved = models.IntegerField(default=8, blank=True, null=True)
+
+	def self(self):
+		return self
 
 	def __unicode__(self):
 		return "{} - {} - {}".format(self.id, self.user, self.institution)
+	class Meta:
+		permissions = (
+			("can_view_quick_guide_developer", "Puede ver guia rápida de desarrolladores"),
+			("can_view_quick_guide_analyst", "Puede ver guia rápida de analista"),
+		)

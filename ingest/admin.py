@@ -7,7 +7,7 @@ class EventAdmin(admin.ModelAdmin):
 	list_display = ('storage_unit', 'state', 'created_by', 'created_at')
 	ordering = ('-created_at',)
 	search_fields = ['storage_unit', 'state', 'created_by']
-	list_filter = ('state', 'created_by')
+	list_filter = ('state',)
 
 	def get_readonly_fields(self, request, obj=None):
 		"""

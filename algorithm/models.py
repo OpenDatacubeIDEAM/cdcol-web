@@ -44,7 +44,10 @@ class Algorithm(models.Model):
 		return self.obtain_versions().count()
 
 	def last_version_status(self):
-		return self.last_version().get_publishing_state_display()
+		if self.last_version():
+			return self.last_version().get_publishing_state_display()
+		else:
+			return ""
 
 	class Meta:
 		permissions = (
@@ -125,7 +128,8 @@ class VersionStorageUnit(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 
 	def __unicode__(self):
-		return "{} - {}".format(self.version.name, self.storage_unit.name)
+		return self.storage_unit.alias
+
 
 
 class Parameter(models.Model):

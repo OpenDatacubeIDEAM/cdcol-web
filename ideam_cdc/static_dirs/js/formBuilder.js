@@ -9,7 +9,8 @@
 $(document).ready(function () {
 
     var map;
-
+    var user;
+    var time_pks = [];
     function init_osm() {
         var mymap = L.map('map').setView([4.6870819, -74.0808636], 5);
 
@@ -40,10 +41,10 @@ $(document).ready(function () {
         });
 
         var bounds = {
-            north: 8.0,
-            south: 4.0,
-            east: -70.0,
-            west: -75.7
+            north: 3,
+            south: 2,
+            east: -73,
+            west: -74
         };
 
         rectangle = new google.maps.Rectangle({
@@ -73,6 +74,14 @@ $(document).ready(function () {
         document.getElementById("ne_latitude").value = Math.ceil(ne.lat());
         document.getElementById("ne_longitude").value = Math.ceil(ne.lng());
 
+        var bounds = {
+            north: Math.floor(ne.lat()),
+            south: Math.floor(sw.lat()),
+            east: Math.ceil(ne.lng()),
+            west: Math.floor(sw.lng())
+        };
+        countCredits(bounds);
+
     }
     
     function changeRectBounds(){
@@ -83,8 +92,49 @@ $(document).ready(function () {
             west: Math.floor(document.getElementById("sw_longitude").value)
         };
         rectangle.setBounds(bounds);
+        countCredits(bounds);
     }
-    
+
+
+    function countCredits(bounds)
+    {
+        var credits_message = document.getElementById("credits_message");
+        var button = document.getElementById("button-execution");
+        if(credits_approved && credits_message && button){
+            console.log(time_pks);
+            var anhos=1;
+            if(time_pks){
+                anhos =0;
+                for(var i =0; i<time_pks.length; i++){
+                    anhos += 1
+                    var start_date = document.getElementById("start_date_"+time_pks[i]);
+                    var end_date = document.getElementById("end_date_"+time_pks[i]);
+                    if(start_date && end_date ){
+                        start_date = start_date.value;
+                        start_date = start_date.split('-');
+                        end_date = end_date.value;
+                        end_date = end_date.split('-');
+                        if(start_date.length == 3 && end_date.length == 3)
+                            anhos += ((parseInt(end_date[2])-parseInt(start_date[2])));
+                    }
+                }
+                console.log("Anhos : " + anhos);
+            }else{anhos = 1;}
+            var credits_consumed=(bounds.north-bounds.south)*(bounds.east-bounds.west) * anhos;
+            var mensaje;
+            console.log("Creditos consumidos: " +  credits_consumed);
+            if(credits_consumed > credits_approved){
+                mensaje = "Esta ejecución requiere "+credits_consumed+" créditos y sólo tiene "+credits_approved+" créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen.";
+                credits_message.innerHTML = mensaje;
+                credits_message.style.visibility = "visible";
+                button.disabled = true;
+            }else{
+                credits_message.style.visibility = "hidden";
+                button.disabled = false;
+            }
+        }
+
+    }
     
     // Getting the version id from the url and selecting it
 
@@ -157,6 +207,16 @@ $(document).ready(function () {
 
     function createForm(json) {
         executed_params = JSON.parse(executed_params);
+        credits_approved = JSON.parse(credits_approved);
+        storage_units_version = storage_units_version.substring(1, storage_units_version.length-1).split(",");
+        for(var i=0; i<storage_units_version.length; i++){
+            storage_units_version[i] = storage_units_version[i].split(":");
+            storage_units_version[i] = (storage_units_version[i])[1];
+            storage_units_version[i] = storage_units_version[i].substring(1,storage_units_version[i].length-1);
+        }
+
+        console.log(storage_units_version);
+        console.log(credits_approved);
         console.log(executed_params);
         // obtaining the form
         var f = document.getElementById("mainForm");
@@ -358,6 +418,9 @@ $(document).ready(function () {
                     // appending to the form
                     f.appendChild(param_div);
                     init_google_map();
+
+
+
                     break;
                 case "8":
                     console.log("Creating StorageUnitType field");
@@ -380,16 +443,19 @@ $(document).ready(function () {
                         var storage_unit_option = document.createElement("option");
                         var storage_unit_executed_param = getExecutedParam(pk);
                         jQuery.each(su_data, function (i, storage_unit_value) {
-                            var storage_pk = storage_unit_value.pk;
-                            var storage_name = storage_unit_value.fields.name;
-                            storage_unit_option = document.createElement("option");
-                            storage_unit_option.value = storage_pk;
-                            storage_unit_option.text = storage_unit_value.fields.alias;
-                            storage_unit_select.appendChild(storage_unit_option);
-                            if(storage_unit_executed_param && storage_name === storage_unit_executed_param.storage_unit_name)
-                            {
-                                storage_unit_select.value = storage_pk;
-                            }
+                            if(storage_units_version.indexOf(storage_unit_value.fields.alias)>-1){
+                                var storage_pk = storage_unit_value.pk;
+                                var storage_name = storage_unit_value.fields.name;
+                                storage_unit_option = document.createElement("option");
+                                storage_unit_option.value = storage_pk;
+                                storage_unit_option.text = storage_unit_value.fields.alias;
+                                storage_unit_select.appendChild(storage_unit_option);
+                                if(storage_unit_executed_param && storage_name === storage_unit_executed_param.storage_unit_name)
+                                {
+                                    storage_unit_select.value = storage_pk;
+                                }
+                                }
+
                         });
                         // bands_select
                         var bands_select = document.createElement("select");
@@ -446,18 +512,24 @@ $(document).ready(function () {
                     break;
                 case "9":
                     console.log("Creating TimePeriod field");
+                    if(time_pks.indexOf(pk)<0)
+                        time_pks.push(pk);
                     // start date
                     var start_date_input = document.createElement("input");
                     start_date_input.id = "start_date_"+pk;
                     start_date_input.name = "start_date_"+pk;
                     start_date_input.className = "form-control datepicker";
                     start_date_input.required = parameter.fields.required;
+                    start_date_input.addEventListener("mouseup",function(){changeRectBounds()});
+                    start_date_input.addEventListener("keyup", function(){changeRectBounds()});
                     // end date
                     var end_date_input = document.createElement("input");
                     end_date_input.id = "end_date_"+pk;
                     end_date_input.name = "end_date_"+pk;
                     end_date_input.className = "form-control datepicker";
                     end_date_input.required = parameter.fields.required;
+                    end_date_input.addEventListener("mouseup",function(){changeRectBounds()});
+                    end_date_input.addEventListener("keyup", function(){changeRectBounds()});
                     // ===== LABELS =====
                     var start_date_label = document.createElement("label");
                     start_date_label.innerHTML = "<b>Desde</b>";
@@ -531,15 +603,16 @@ $(document).ready(function () {
                         // storage_unit_options
                         var storage_unit_option = document.createElement("option");
                         jQuery.each(su_data, function (i, storage_unit_value) {
-                            var storage_pk = storage_unit_value.pk;
-                            var storage_name = storage_unit_value.fields.name;
-                            storage_unit_option = document.createElement("option");
-                            storage_unit_option.value = storage_pk;
-                            storage_unit_option.text = storage_name;
-                            storage_unit_select.appendChild(storage_unit_option);
-                            if(storage_unit_executed_param && storage_name === storage_unit_executed_param.storage_unit_name)
-                            {
-                                storage_unit_select.value = storage_pk;
+                            if(storage_units_version.indexOf(storage_unit_value.fields.alias)>-1) {
+                                var storage_pk = storage_unit_value.pk;
+                                var storage_name = storage_unit_value.fields.name;
+                                storage_unit_option = document.createElement("option");
+                                storage_unit_option.value = storage_pk;
+                                storage_unit_option.text = storage_unit_value.fields.alias;
+                                storage_unit_select.appendChild(storage_unit_option);
+                                if (storage_unit_executed_param && storage_name === storage_unit_executed_param.storage_unit_name) {
+                                    storage_unit_select.value = storage_pk;
+                                }
                             }
                         });
                         // ===== LABELS =====
@@ -560,7 +633,11 @@ $(document).ready(function () {
                     break;
                 default:
                     console.log("Object not supported, " + parameter_type);
+
             }
+
+
+
         });
         console.log("Configuring datepicker");
         $('.datepicker').datepicker({
@@ -569,8 +646,21 @@ $(document).ready(function () {
             autoclose: true,
             todayHighlight: true
         });
+
+        var credits_message = document.createElement("div");
+        //var mensaje = "Esta ejecución requiere "+credits_consumed+" créditos y sólo tiene "+credits_approved+" créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen."
+        //credits_message.innerHTML = mensaje;
+        credits_message.className = "alert alert-danger";
+         credits_message.id = "credits_message";
+         credits_message.name = "credits_message";
+         credits_message.setAttribute("role", "alert");
+         credits_message.style.visibility = "hidden";
+         f.appendChild(credits_message);
+
         console.log("Creating Send Button");
         var send_button = document.createElement("button");
+        send_button.id = "button-execution";
+        send_button.name = "button-execution";
         send_button.type = "submit";
         send_button.className = "btn btn-default";
         send_button.innerHTML = "Ejecutar Algoritmo";
@@ -582,6 +672,7 @@ $(document).ready(function () {
         // appending the custom form
         $("mainForm").append(f);
         setExecutedParameters();
+        changeRectBounds();
     };
 
     function setExecutedParameters()
@@ -650,4 +741,5 @@ $(document).ready(function () {
         }
         return null;
     }
+
 });

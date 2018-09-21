@@ -35,6 +35,7 @@ class Execution(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 	generate_mosaic = models.BooleanField(default=True)
+	credits_consumed = models.IntegerField(default=0)
 
 
 	def __unicode__(self):
@@ -64,6 +65,11 @@ class ExecutionParameter(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
+	def obtain_time_range_file(self):
+		if self.parameter.parameter_type == "9":
+			return "u{}u{}".format(self.timeperiodtype.start_date.strftime("%d-%m-%Y"), self.timeperiodtype.end_date.strftime("%d-%m-%Y"))
+		else:
+			return "--"
 
 	def obtain_value(self):
 		parameter_type = self.parameter.parameter_type
@@ -292,6 +298,9 @@ class Task(models.Model):
 	state_updated_at = models.DateTimeField()
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+	parameters = models.TextField(blank=True, null=True)
+	trace_error = models.TextField(blank=True, null=True)
+	results = models.TextField(blank=True, null=True)
 
 	def __unicode__(self):
 		return "{} - {}".format(self.execution.id, self.uuid)

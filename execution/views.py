@@ -5,12 +5,13 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.core import serializers
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
-from django.db.models import Avg, Q
+from django.db.models import Avg, Q, Sum
 from django.utils.encoding import smart_str
 from algorithm.models import Topic, Algorithm, VersionStorageUnit
 from execution.models import *
 from execution.forms import VersionSelectionForm, ReviewForm
 from execution.serializers import ExecutionSerializer
+from user_profile.models import  *
 import datetime
 from storage.models import StorageUnit
 from rest_framework.renderers import JSONRenderer
@@ -24,6 +25,7 @@ from slugify import slugify
 import subprocess
 import glob
 import time
+import unidecode
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 
@@ -87,40 +89,92 @@ def download_parameter_file(request, execution_id, parameter_name, file_name):
     file_path = "{}/input/{}/{}/{}".format(settings.MEDIA_ROOT, execution.id, parameter_name, file_name)
     return download(file_path)
 
-def localize(value):
-
-    if settings.USE_L10N:
-        if isinstance(value, datetime.datetime):
-            return date_format(value, 'DATETIME_FORMAT')
-        elif isinstance(value, datetime.date):
-            return date_format(value, 'DATE_FORMAT')
-        elif isinstance(value, datetime.time):
-            return time_format(value, 'TIME_FORMAT')
-    return value;
 
 def get_detail_context(execution_id):
     execution = get_object_or_404(Execution, id=execution_id)
     executed_params = ExecutionParameter.objects.filter(execution=execution)
+    tasks = Task.objects.filter(execution=execution)
+    area_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter_type=Parameter.AREA_TYPE)
+    time_period_param = ExecutionParameter.objects.filter(execution=execution, parameter__parameter_type=Parameter.TIME_PERIOD_TYPE)
+    time_period_params_string = ""
+    for time_period in time_period_param:
+        time_period_params_string+='(u{}u{})'.format(time_period.timeperiodtype.start_date.strftime("%d-%m-%Y"), time_period.timeperiodtype.end_date.strftime("%d-%m-%Y") )
     review = Review.objects.filter(execution=execution).last()
-    # Setting seconds to date
-    # execution.created_at = localize(execution.created_at)
-    # execution.started_at = localize(execution.started_at)
-    # execution.finished_at = localize(execution.finished_at)
-    # getting the files from the filesystem
     system_path = "{}/results/{}/".format(settings.WEB_STORAGE_PATH, execution.id)
     files = []
+    other_files = []
+
     try:
-        for f in os.listdir(system_path):
-            if ".tiff" not in f:
-                f = {'file': f, 'state': False, 'tiff_file': f.replace('.nc', '.tiff')}
+        algorithm_name= slugify(unidecode.unidecode(execution.version.algorithm.name.lower()))
+        tiff_message = None
+        generating_tiff = '0'
+        print int(area_param.areatype.latitude_start)
+
+        for i in range(int(area_param.areatype.latitude_start), int(area_param.areatype.latitude_end)):
+
+            for j in range(int(area_param.areatype.longitude_start), int(area_param.areatype.longitude_end)):
+                file_name= '{}_{}_{}_{}_{}_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_params_string)
+                f = {'file': file_name, 'lat': i, 'long': j, 'task_state': '', 'result_state': os.path.exists(system_path+file_name), 'state': False, 'tiff_file': file_name.replace('.nc', '.tiff')}
+                if f['result_state']:
+                    f['task_state'] = 'Finalizado'
+                elif (os.path.exists(system_path+"{}_{}_no_data.lock".format(i,j)))  or (execution.state == Execution.COMPLETED_STATE and not f['result_state']):
+                    f['task_state'] = 'Sin datos en el area'
+                elif execution.state == Execution.ENQUEUED_STATE:
+                    f['task_state'] = 'En espera'
+                elif execution.state == Execution.EXECUTING_STATE:
+                    f['task_state'] = 'En ejecución'
+                elif execution.state == Execution.ERROR_STATE:
+                    f['task_state'] = 'Falló'
+                elif execution.state == Execution.CANCELED_STATE:
+                    f['task_state'] = 'Cancelado'
+                else:
+                    f['task_state'] = 'Sin información dispónible'
                 try:
                     convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
                     f['state'] = convertion_task.state
+                    if f['state'] == '3':
+                        tiff_message='Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
+                    elif f['state'] == True:
+                        generating_tiff = '1'
                 except ObjectDoesNotExist:
                     pass
                 except MultipleObjectsReturned:
+                    tiff_message = 'Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
                     FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
                 files.append(f)
+
+        for f in os.listdir(system_path):
+            if ".gif" in f :
+                f = {'file': f, 'state':False}
+                other_files.append(f)
+            elif "mosaic" in f and ".nc" in f:
+                f = {'file': f, 'state': False, 'tiff_file':f.replace('.nc', '.tiff')}
+                try:
+                    convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
+                    f['state'] = convertion_task.state
+                    if f['state'] == '3':
+                        tiff_message = 'Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
+                    elif f['state'] == True:
+                        generating_tiff = '1'
+                except ObjectDoesNotExist:
+                    pass
+                except MultipleObjectsReturned:
+                    tiff_message = 'Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
+                    FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
+                other_files.append(f)
+
+
+        # for f in os.listdir(system_path):
+        #     if ".tiff" not in f:
+        #         f = {'file': f, 'lat':0, 'long':0, 'state': False, 'tiff_file': f.replace('.nc', '.tiff')}
+        #         try:
+        #             convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
+        #             f['state'] = convertion_task.state
+        #         except ObjectDoesNotExist:
+        #             pass
+        #         except MultipleObjectsReturned:
+        #             FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
+        #         files.append(f)
     except:
         pass
     # getting current executions
@@ -133,9 +187,9 @@ def get_detail_context(execution_id):
         delete_time = execution.finished_at + datetime.timedelta(hours=delete_hours)
     else:
         delete_time = None
-    context = {'execution': execution, 'executed_params': executed_params, 'review': review, 'files': files,
+    context = {'execution': execution, 'executed_params': executed_params, 'review': review, 'files': files, 'other_files': other_files,
                'current_executions': current_executions, 'temporizer_value': temporizer_value, 'delete_time': delete_time,
-               'system_path': system_path}
+               'system_path': system_path, 'area_param':area_param, 'time_period_param':time_period_param, 'tiff_message':tiff_message, 'generating_tiff': generating_tiff}
     return context
 
 
@@ -377,18 +431,27 @@ def unzip_every_file_in_directory(execution_directory):
 @permission_required(('execution.can_create_new_execution', 'execution.can_view_new_execution'), raise_exception=True)
 def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
     executed_params = []
+
     if copy_execution_id:
         print copy_execution_id
         executed_params = map(lambda param: param.obtain_json_values(),get_detail_context(copy_execution_id)['executed_params'])
         executed_params = json.dumps(executed_params)
         print executed_params
     current_user = request.user
+    credits_approved = UserProfile.objects.get(user=current_user).credits_approved
+    states = [Execution.ENQUEUED_STATE, Execution.EXECUTING_STATE]
+    credits_used=Execution.objects.filter(executed_by=current_user, state__in=states).aggregate(Sum('credits_consumed'))
+    if credits_used['credits_consumed__sum']:
+        credits_approved -= credits_used['credits_consumed__sum']
     algorithm = get_object_or_404(Algorithm, id=algorithm_id)
+    version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id, current_user=current_user)
+
     current_version = None
+    storage_units_version = []
     if version_id:
         current_version = get_object_or_404(Version, id=version_id)
+    storage_units_version = VersionStorageUnit.objects.filter(version__algorithm=algorithm)
     parameters = Parameter.objects.filter(version=current_version, enabled=True).order_by('position')
-    allowed_storage_units = VersionStorageUnit.objects.filter(version=current_version)
     reviews = Review.objects.filter(version=current_version)
     # getting the average rating
     average_rating = Review.objects.filter(version=current_version).aggregate(Avg('rating'))['rating__avg']
@@ -403,32 +466,56 @@ def new_execution(request, algorithm_id, version_id, copy_execution_id = 0):
        # started_at = datetime.datetime.now()
 
         if current_user.has_perm('execution.can_create_new_execution'):
-            new_execution = Execution(
-                version=current_version,
-                description=textarea_name,
-                state=Execution.ENQUEUED_STATE,
-                executed_by=current_user,
-                generate_mosaic= checkbox_generate_mosaic
-            )
-            new_execution.save()
+            parameter = parameters.get(parameter_type=Parameter.AREA_TYPE)
+            time_parameters = parameters.filter(parameter_type=Parameter.TIME_PERIOD_TYPE)
+            if parameter and credits_approved:
+                anhos = 1
+                if time_parameters:
+                    anhos = 0
+                    for p in time_parameters:
+                        start_date = request.POST.get('start_date_{}'.format(p.id), False)
+                        end_date = request.POST.get('end_date_{}'.format(p.id), False)
+                        start_date_value = datetime.datetime.strptime(start_date, "%d-%m-%Y")
+                        end_date_value = datetime.datetime.strptime(end_date, "%d-%m-%Y")
+                        anhos += 1+(end_date_value.year - start_date_value.year)
+                else:
+                    anhos = 1
 
-            create_execution_parameter_objects(parameters, request, new_execution, current_version)
+                sw_latitude = int(request.POST.get('sw_latitude', False))
+                sw_longitude = int(request.POST.get('sw_longitude', False))
+                ne_latitude = int(request.POST.get('ne_latitude', False))
+                ne_longitude = int(request.POST.get('ne_longitude', False))
+                credits_calculated = (ne_latitude-sw_latitude)*(ne_longitude-sw_longitude)*anhos
+                if credits_calculated <= credits_approved:
+                    new_execution = Execution(
+                        version=current_version,
+                        description=textarea_name,
+                        state=Execution.ENQUEUED_STATE,
+                        executed_by=current_user,
+                        generate_mosaic= checkbox_generate_mosaic,
+                        credits_consumed=credits_calculated,
+                    )
+                    new_execution.save()
 
-            # Unzip uploaded parameters
-            execution_directory = "/".join( [ settings.MEDIA_ROOT, 'input', str(new_execution.id) ] )
-            if os.path.isdir(execution_directory):
-                unzip_every_file_in_directory(execution_directory)
+                    create_execution_parameter_objects(parameters, request, new_execution, current_version)
 
-            # send the execution to the REST service
-            response = send_execution(new_execution)
+                    # Unzip uploaded parameters
+                    execution_directory = "/".join( [ settings.MEDIA_ROOT, 'input', str(new_execution.id) ] )
+                    if os.path.isdir(execution_directory):
+                        unzip_every_file_in_directory(execution_directory)
 
-            print response
-            return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': new_execution.id}))
-    version_selection_form = VersionSelectionForm(algorithm_id=algorithm_id, current_user=current_user)
+                    # send the execution to the REST service
+                    response = send_execution(new_execution)
+
+                    print response
+                    return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': new_execution.id}))
+                #else:
+                    #raise ValidationError("Esta ejecución requiere {} créditos y sólo tiene {} créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen".format(credits_calculated, credits_approved))
+                    #version_selection_form.add_error(None, "Esta ejecución requiere {} créditos y sólo tiene {} créditos disponibles. Disminuya el área o espere a que sus demás ejecuciones finalicen".format(credits_calculated, credits_approved))
     context = {'topics': topics, 'algorithm': algorithm, 'parameters': parameters,
                'version_selection_form': version_selection_form, 'version': current_version,
                'reviews': reviews, 'average_rating': average_rating, 'executions': executions,
-               'executed_params': executed_params}
+               'executed_params': executed_params, 'credits_approved': credits_approved, 'storage_units_version':storage_units_version}
     return render(request, 'execution/new.html', context)
 
 

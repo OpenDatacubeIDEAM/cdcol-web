@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load public_extras %}
 <!DOCTYPE html>
 <!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
 <!--[if !IE]><!-->
@@ -8,7 +9,16 @@
 <head>
     <meta charset="utf-8">
     <title>{% block head_title %}{% endblock %}</title>
-    <meta name="description" content="The Project a Bootstrap-based, Responsive HTML5 Template">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120837459-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-120837459-1');
+    </script>
+    <meta name="description" content="CDCol - IDEAM- El Cubo de datos colombiano">
     <meta name="author" content="htmlcoder.me">
 
     <!-- Mobile Meta -->
@@ -86,6 +96,7 @@
 
             <div class="container">
                 <div class="row">
+
                     <div class="col-md-3 ">
                         <!-- header-left start -->
                         <!-- ================ -->
@@ -98,6 +109,22 @@
                                                      src="{% static 'images/logo_ideam_header_sin_texto.png' %}"
                                                      alt="CDCOL - IDEAM"></a>
                                 </div>
+                                <div class="header-dropdown-buttons visible-xs">
+										<div class="btn-group dropdown">
+											<button type="button" class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-search"></i></button>
+											<ul class="dropdown-menu dropdown-menu-right dropdown-animation">
+												<li>
+													<form role="search" class="search-box margin-clear">
+														<div class="form-group has-feedback">
+															<input type="text" class="form-control" placeholder="Search">
+															<i class="icon-search form-control-feedback"></i>
+														</div>
+													</form>
+												</li>
+											</ul>
+										</div>
+
+									</div>
                             {% else %}
                                 <div id="logo" class="logo">
                                     <a href="/"><img id="logo_img"
@@ -194,7 +221,12 @@
                                                                 <a href="{% url 'profile:index' %}">Mi Perfil</a>
                                                             </li>
                                                             <li>
-                                                                <a href="/ayuda/manual_de_ayuda.pdf" target="_blank">Manual de Ayuda</a>
+                                                                {% if perms.user_profile.can_view_quick_guide_developer  %}
+                                                                    <a href="https://github.com/OpenDatacubeIDEAM/cdcol/raw/desacoplado/guias/M-GCI-E-G008%20GUIA.pdf" target="_blank">Guia Rapida para Desarrolladores</a>
+                                                                {% endif  %}
+                                                                {% if perms.user_profile.can_view_quick_guide_analyst or  perms.user_profile.can_view_quick_guide_developer  %}
+                                                                    <a href="https://github.com/OpenDatacubeIDEAM/cdcol/raw/desacoplado/guias/M-GCI-E-G007%20GUIA.pdf" target="_blank">Guia Rapida para Analistas</a>
+                                                                {% endif  %}
                                                             </li>
                                                             <li>
                                                                 <a href="#"
@@ -209,6 +241,13 @@
                                                             </li>
                                                         </ul>
                                                     </li>
+                                                    <li>&emsp;</li>
+                                                    {% if perms.execution.can_list_executions %}
+                                                        <li>
+                                                        &emsp;{% get_execution user %}
+                                                        </li>
+                                                    {% endif %}
+
                                                 {% else %}
                                                     <li>
                                                         <a href="{% url 'account_signup' %}">Registro</a>
@@ -222,6 +261,7 @@
                                             </nav>
                                             <!-- main-menu end -->
                                         </div>
+
 
                                     </div>
                                 </nav>
@@ -349,7 +389,7 @@
                 <div class="subfooter-inner">
                     <div class="row">
                         <div class="col-md-12">
-                            <p class="text-center">Todos los derechos reservados - IDEAM 2016. Desarrollado por <a target="_blank" href="http://www.uniandes.edu.co">Universidad de los Andes</a></p>
+                            <p class="text-center">Todos los derechos reservados - IDEAM 2015 - {% now "Y" %}. Desarrollado por <a target="_blank" href="http://www.uniandes.edu.co">Universidad de los Andes</a></p>
                         </div>
                     </div>
                 </div>
