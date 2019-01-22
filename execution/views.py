@@ -118,7 +118,7 @@ def get_detail_context(execution_id):
                 if f['result_state']:
                     f['task_state'] = 'Finalizado'
                 elif (os.path.exists(system_path+"{}_{}_no_data.lock".format(i,j)))  or (execution.state == Execution.COMPLETED_STATE and not f['result_state']):
-                    f['task_state'] = system_path+file_name
+                    f['task_state'] = 'Sin datos en el area'
                 elif execution.state == Execution.ENQUEUED_STATE:
                     f['task_state'] = 'En espera'
                 elif execution.state == Execution.EXECUTING_STATE:
