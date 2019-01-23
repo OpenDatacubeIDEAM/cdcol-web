@@ -95,7 +95,7 @@ def get_detail_context(execution_id):
     executed_params = ExecutionParameter.objects.filter(execution=execution)
     tasks = Task.objects.filter(execution=execution)
     area_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter_type=Parameter.AREA_TYPE)
-    time_period_param = ExecutionParameter.objects.filter(execution=execution, parameter__parameter_type=Parameter.TIME_PERIOD_TYPE).order_by('-parameter__position')
+    time_period_param = ExecutionParameter.objects.filter(execution=execution, parameter__parameter_type=Parameter.TIME_PERIOD_TYPE).order_by('parameter__position')
     time_period_params_string = ""
     for time_period in time_period_param:
         time_period_params_string+='(u{}u{})'.format(time_period.timeperiodtype.start_date.strftime("%d-%m-%Y"), time_period.timeperiodtype.end_date.strftime("%d-%m-%Y") )
