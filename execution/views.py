@@ -92,7 +92,7 @@ def download_parameter_file(request, execution_id, parameter_name, file_name):
 
 def get_detail_context(execution_id):
     execution = get_object_or_404(Execution, id=execution_id)
-    executed_params = ExecutionParameter.objects.filter(execution=execution)
+    executed_params = ExecutionParameter.objects.filter(execution=execution).order_by('parameter__position')
     tasks = Task.objects.filter(execution=execution)
     area_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter_type=Parameter.AREA_TYPE)
     time_period_param = ExecutionParameter.objects.filter(execution=execution, parameter__parameter_type=Parameter.TIME_PERIOD_TYPE).order_by('parameter__position')
