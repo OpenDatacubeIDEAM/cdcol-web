@@ -92,10 +92,10 @@ def download_parameter_file(request, execution_id, parameter_name, file_name):
 
 def get_detail_context(execution_id):
     execution = get_object_or_404(Execution, id=execution_id)
-    executed_params = ExecutionParameter.objects.filter(execution=execution)
+    executed_params = ExecutionParameter.objects.filter(execution=execution).order_by('parameter__position')
     tasks = Task.objects.filter(execution=execution)
     area_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter_type=Parameter.AREA_TYPE)
-    time_period_param = ExecutionParameter.objects.filter(execution=execution, parameter__parameter_type=Parameter.TIME_PERIOD_TYPE)
+    time_period_param = ExecutionParameter.objects.filter(execution=execution, parameter__parameter_type=Parameter.TIME_PERIOD_TYPE).order_by('parameter__position')
     time_period_params_string = ""
     for time_period in time_period_param:
         time_period_params_string+='(u{}u{})'.format(time_period.timeperiodtype.start_date.strftime("%d-%m-%Y"), time_period.timeperiodtype.end_date.strftime("%d-%m-%Y") )
@@ -118,7 +118,7 @@ def get_detail_context(execution_id):
                 if f['result_state']:
                     f['task_state'] = 'Finalizado'
                 elif (os.path.exists(system_path+"{}_{}_no_data.lock".format(i,j)))  or (execution.state == Execution.COMPLETED_STATE and not f['result_state']):
-                    f['task_state'] = 'Sin datos en el area'
+                    f['task_state'] = system_path+file_name
                 elif execution.state == Execution.ENQUEUED_STATE:
                     f['task_state'] = 'En espera'
                 elif execution.state == Execution.EXECUTING_STATE:
@@ -388,7 +388,7 @@ def send_execution(execution):
     :return:
     """
     response = {}
-    parameters = ExecutionParameter.objects.filter(execution=execution)
+    parameters = ExecutionParameter.objects.filter(execution=execution).order_by('parameter__position')
     # getting all the values
     json_parameters = {}
     for parameter in parameters:
