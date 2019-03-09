@@ -13,6 +13,3 @@
 ideam_cdc/static_root
 
 */migrations/*
-entrypoint.sh
-env.sh
-

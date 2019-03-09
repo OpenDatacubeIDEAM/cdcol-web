@@ -63,10 +63,12 @@ Create a backup of the Admin user data
 
 ```sh
 python manage.py dumpdata auth.user --indent 2 > admin.json
+python manage.py dumpdata auth.group auth.permission --indent 2 > group.json
 ```
 
 Load Admin data into the database
 
 ```sh
 python manage.py loaddata admin.json
+python manage.py loaddata group.json
 ```

@@ -1,0 +1,1448 @@
+[
+{
+  "model": "auth.permission",
+  "pk": 1,
+  "fields": {
+    "name": "Can add log entry",
+    "content_type": 1,
+    "codename": "add_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 2,
+  "fields": {
+    "name": "Can change log entry",
+    "content_type": 1,
+    "codename": "change_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 3,
+  "fields": {
+    "name": "Can delete log entry",
+    "content_type": 1,
+    "codename": "delete_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 4,
+  "fields": {
+    "name": "Can add permission",
+    "content_type": 2,
+    "codename": "add_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 5,
+  "fields": {
+    "name": "Can change permission",
+    "content_type": 2,
+    "codename": "change_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 6,
+  "fields": {
+    "name": "Can delete permission",
+    "content_type": 2,
+    "codename": "delete_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 7,
+  "fields": {
+    "name": "Can add group",
+    "content_type": 3,
+    "codename": "add_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 8,
+  "fields": {
+    "name": "Can change group",
+    "content_type": 3,
+    "codename": "change_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 9,
+  "fields": {
+    "name": "Can delete group",
+    "content_type": 3,
+    "codename": "delete_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 10,
+  "fields": {
+    "name": "Can add user",
+    "content_type": 4,
+    "codename": "add_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 11,
+  "fields": {
+    "name": "Can change user",
+    "content_type": 4,
+    "codename": "change_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 12,
+  "fields": {
+    "name": "Can delete user",
+    "content_type": 4,
+    "codename": "delete_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 13,
+  "fields": {
+    "name": "Can add content type",
+    "content_type": 5,
+    "codename": "add_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 14,
+  "fields": {
+    "name": "Can change content type",
+    "content_type": 5,
+    "codename": "change_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 15,
+  "fields": {
+    "name": "Can delete content type",
+    "content_type": 5,
+    "codename": "delete_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 16,
+  "fields": {
+    "name": "Can add session",
+    "content_type": 6,
+    "codename": "add_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 17,
+  "fields": {
+    "name": "Can change session",
+    "content_type": 6,
+    "codename": "change_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 18,
+  "fields": {
+    "name": "Can delete session",
+    "content_type": 6,
+    "codename": "delete_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 19,
+  "fields": {
+    "name": "Can add site",
+    "content_type": 7,
+    "codename": "add_site"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 20,
+  "fields": {
+    "name": "Can change site",
+    "content_type": 7,
+    "codename": "change_site"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 21,
+  "fields": {
+    "name": "Can delete site",
+    "content_type": 7,
+    "codename": "delete_site"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 22,
+  "fields": {
+    "name": "Can add email address",
+    "content_type": 8,
+    "codename": "add_emailaddress"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 23,
+  "fields": {
+    "name": "Can change email address",
+    "content_type": 8,
+    "codename": "change_emailaddress"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 24,
+  "fields": {
+    "name": "Can delete email address",
+    "content_type": 8,
+    "codename": "delete_emailaddress"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 25,
+  "fields": {
+    "name": "Can add email confirmation",
+    "content_type": 9,
+    "codename": "add_emailconfirmation"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 26,
+  "fields": {
+    "name": "Can change email confirmation",
+    "content_type": 9,
+    "codename": "change_emailconfirmation"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 27,
+  "fields": {
+    "name": "Can delete email confirmation",
+    "content_type": 9,
+    "codename": "delete_emailconfirmation"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 28,
+  "fields": {
+    "name": "Can add social application",
+    "content_type": 10,
+    "codename": "add_socialapp"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 29,
+  "fields": {
+    "name": "Can change social application",
+    "content_type": 10,
+    "codename": "change_socialapp"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 30,
+  "fields": {
+    "name": "Can delete social application",
+    "content_type": 10,
+    "codename": "delete_socialapp"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 31,
+  "fields": {
+    "name": "Can add social account",
+    "content_type": 11,
+    "codename": "add_socialaccount"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 32,
+  "fields": {
+    "name": "Can change social account",
+    "content_type": 11,
+    "codename": "change_socialaccount"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 33,
+  "fields": {
+    "name": "Can delete social account",
+    "content_type": 11,
+    "codename": "delete_socialaccount"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 34,
+  "fields": {
+    "name": "Can add social application token",
+    "content_type": 12,
+    "codename": "add_socialtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 35,
+  "fields": {
+    "name": "Can change social application token",
+    "content_type": 12,
+    "codename": "change_socialtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 36,
+  "fields": {
+    "name": "Can delete social application token",
+    "content_type": 12,
+    "codename": "delete_socialtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 37,
+  "fields": {
+    "name": "Can add user profile",
+    "content_type": 13,
+    "codename": "add_userprofile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 38,
+  "fields": {
+    "name": "Can change user profile",
+    "content_type": 13,
+    "codename": "change_userprofile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 39,
+  "fields": {
+    "name": "Can delete user profile",
+    "content_type": 13,
+    "codename": "delete_userprofile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 40,
+  "fields": {
+    "name": "Puede ver guia r\u00e1pida de desarrolladores",
+    "content_type": 13,
+    "codename": "can_view_quick_guide_developer"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 41,
+  "fields": {
+    "name": "Puede ver guia r\u00e1pida de analista",
+    "content_type": 13,
+    "codename": "can_view_quick_guide_analyst"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 42,
+  "fields": {
+    "name": "Can add storage unit",
+    "content_type": 14,
+    "codename": "add_storageunit"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 43,
+  "fields": {
+    "name": "Can change storage unit",
+    "content_type": 14,
+    "codename": "change_storageunit"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 44,
+  "fields": {
+    "name": "Can delete storage unit",
+    "content_type": 14,
+    "codename": "delete_storageunit"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 45,
+  "fields": {
+    "name": "Ver listado de unidades de almacenamiento",
+    "content_type": 14,
+    "codename": "can_list_units"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 46,
+  "fields": {
+    "name": "Crear unidad de almacenamiento",
+    "content_type": 14,
+    "codename": "can_create_units"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 47,
+  "fields": {
+    "name": "Ver detalle de una unidad de almacenamiento",
+    "content_type": 14,
+    "codename": "can_view_unit_detail"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 48,
+  "fields": {
+    "name": "Ver contenido de una unidad de almacenamiento",
+    "content_type": 14,
+    "codename": "can_view_storage_content"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 49,
+  "fields": {
+    "name": "Descargar un archivo",
+    "content_type": 14,
+    "codename": "can_download_file"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 50,
+  "fields": {
+    "name": "Ver detalle de un contenido",
+    "content_type": 14,
+    "codename": "can_view_content_detail"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 51,
+  "fields": {
+    "name": "Descargar metadados",
+    "content_type": 14,
+    "codename": "can_download_metadata"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 52,
+  "fields": {
+    "name": "Editar unidad de almacenamiento",
+    "content_type": 14,
+    "codename": "can_edit_units"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 53,
+  "fields": {
+    "name": "Can add topic",
+    "content_type": 15,
+    "codename": "add_topic"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 54,
+  "fields": {
+    "name": "Can change topic",
+    "content_type": 15,
+    "codename": "change_topic"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 55,
+  "fields": {
+    "name": "Can delete topic",
+    "content_type": 15,
+    "codename": "delete_topic"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 56,
+  "fields": {
+    "name": "Can add algorithm",
+    "content_type": 16,
+    "codename": "add_algorithm"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 57,
+  "fields": {
+    "name": "Can change algorithm",
+    "content_type": 16,
+    "codename": "change_algorithm"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 58,
+  "fields": {
+    "name": "Can delete algorithm",
+    "content_type": 16,
+    "codename": "delete_algorithm"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 59,
+  "fields": {
+    "name": "Listar los algoritmos",
+    "content_type": 16,
+    "codename": "can_list_algorithms"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 60,
+  "fields": {
+    "name": "Crear un algoritmo",
+    "content_type": 16,
+    "codename": "can_create_algorithm"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 61,
+  "fields": {
+    "name": "Ver detalle de un algoritmo",
+    "content_type": 16,
+    "codename": "can_view_algorithm_detail"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 62,
+  "fields": {
+    "name": "Editar algoritmo",
+    "content_type": 16,
+    "codename": "can_edit_algorithm"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 63,
+  "fields": {
+    "name": "Crear una nueva versi\u00f3n de un algoritmo",
+    "content_type": 16,
+    "codename": "can_create_new_version"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 64,
+  "fields": {
+    "name": "Ver detalle de la versi\u00f3n de un algoritmo",
+    "content_type": 16,
+    "codename": "can_view_version_detail"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 65,
+  "fields": {
+    "name": "Editar una versi\u00f3n de un algoritmo",
+    "content_type": 16,
+    "codename": "can_edit_version"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 66,
+  "fields": {
+    "name": "Publicar versi\u00f3n de un algoritmo",
+    "content_type": 16,
+    "codename": "can_publish_version"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 67,
+  "fields": {
+    "name": "Despublicar versi\u00f3n de un algoritmo",
+    "content_type": 16,
+    "codename": "can_unpublish_version"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 68,
+  "fields": {
+    "name": "Volver versi\u00f3n de un algoritmo obsoleta",
+    "content_type": 16,
+    "codename": "can_deprecate_version"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 69,
+  "fields": {
+    "name": "Eliminar versi\u00f3n de un algoritmo (si no tiene ejecuciones)",
+    "content_type": 16,
+    "codename": "can_delete_version"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 70,
+  "fields": {
+    "name": "Crear par\u00e1metro para una versi\u00f3n de un algoritmo",
+    "content_type": 16,
+    "codename": "can_create_parameter"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 71,
+  "fields": {
+    "name": "Ver detalle de un par\u00e1metro de una versi\u00f3n de un algoritmo",
+    "content_type": 16,
+    "codename": "can_view_parameter_detail"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 72,
+  "fields": {
+    "name": "Editar par\u00e1metro de una versi\u00f3n de un algoritmo (tener en cuenta posibles variabilidades por tipo de par\u00e1metro)",
+    "content_type": 16,
+    "codename": "can_edit_parameter"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 73,
+  "fields": {
+    "name": "Ver listado de calificaciones de una versi\u00f3n de un algoritmo",
+    "content_type": 16,
+    "codename": "can_view_ratings"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 74,
+  "fields": {
+    "name": "Can add version",
+    "content_type": 17,
+    "codename": "add_version"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 75,
+  "fields": {
+    "name": "Can change version",
+    "content_type": 17,
+    "codename": "change_version"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 76,
+  "fields": {
+    "name": "Can delete version",
+    "content_type": 17,
+    "codename": "delete_version"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 77,
+  "fields": {
+    "name": "Can add version storage unit",
+    "content_type": 18,
+    "codename": "add_versionstorageunit"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 78,
+  "fields": {
+    "name": "Can change version storage unit",
+    "content_type": 18,
+    "codename": "change_versionstorageunit"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 79,
+  "fields": {
+    "name": "Can delete version storage unit",
+    "content_type": 18,
+    "codename": "delete_versionstorageunit"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 80,
+  "fields": {
+    "name": "Can add parameter",
+    "content_type": 19,
+    "codename": "add_parameter"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 81,
+  "fields": {
+    "name": "Can change parameter",
+    "content_type": 19,
+    "codename": "change_parameter"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 82,
+  "fields": {
+    "name": "Can delete parameter",
+    "content_type": 19,
+    "codename": "delete_parameter"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 83,
+  "fields": {
+    "name": "Can add execution",
+    "content_type": 20,
+    "codename": "add_execution"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 84,
+  "fields": {
+    "name": "Can change execution",
+    "content_type": 20,
+    "codename": "change_execution"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 85,
+  "fields": {
+    "name": "Can delete execution",
+    "content_type": 20,
+    "codename": "delete_execution"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 86,
+  "fields": {
+    "name": "Ver listado de ejecuciones",
+    "content_type": 20,
+    "codename": "can_list_executions"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 87,
+  "fields": {
+    "name": "Ver detalle de una ejecuci\u00f3n",
+    "content_type": 20,
+    "codename": "can_view_execution_detail"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 88,
+  "fields": {
+    "name": "Descargar los resultados de la ejecuci\u00f3n",
+    "content_type": 20,
+    "codename": "can_download_execution_results"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 89,
+  "fields": {
+    "name": "Calificar el resultado de una ejecuci\u00f3n",
+    "content_type": 20,
+    "codename": "can_rate_execution"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 90,
+  "fields": {
+    "name": "Ver listado de algoritmos para ejecutar",
+    "content_type": 20,
+    "codename": "can_view_blank_execution"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 91,
+  "fields": {
+    "name": "Registrar la ejecuci\u00f3n de un algoritmo",
+    "content_type": 20,
+    "codename": "can_create_new_execution"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 92,
+  "fields": {
+    "name": "Ver detalle y par\u00e1metros de un algoritmo para ejecutar",
+    "content_type": 20,
+    "codename": "can_view_new_execution"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 93,
+  "fields": {
+    "name": "Can add execution parameter",
+    "content_type": 21,
+    "codename": "add_executionparameter"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 94,
+  "fields": {
+    "name": "Can change execution parameter",
+    "content_type": 21,
+    "codename": "change_executionparameter"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 95,
+  "fields": {
+    "name": "Can delete execution parameter",
+    "content_type": 21,
+    "codename": "delete_executionparameter"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 96,
+  "fields": {
+    "name": "Can add string type",
+    "content_type": 22,
+    "codename": "add_stringtype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 97,
+  "fields": {
+    "name": "Can change string type",
+    "content_type": 22,
+    "codename": "change_stringtype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 98,
+  "fields": {
+    "name": "Can delete string type",
+    "content_type": 22,
+    "codename": "delete_stringtype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 99,
+  "fields": {
+    "name": "Can add integer type",
+    "content_type": 23,
+    "codename": "add_integertype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 100,
+  "fields": {
+    "name": "Can change integer type",
+    "content_type": 23,
+    "codename": "change_integertype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 101,
+  "fields": {
+    "name": "Can delete integer type",
+    "content_type": 23,
+    "codename": "delete_integertype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 102,
+  "fields": {
+    "name": "Can add double type",
+    "content_type": 24,
+    "codename": "add_doubletype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 103,
+  "fields": {
+    "name": "Can change double type",
+    "content_type": 24,
+    "codename": "change_doubletype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 104,
+  "fields": {
+    "name": "Can delete double type",
+    "content_type": 24,
+    "codename": "delete_doubletype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 105,
+  "fields": {
+    "name": "Can add boolean type",
+    "content_type": 25,
+    "codename": "add_booleantype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 106,
+  "fields": {
+    "name": "Can change boolean type",
+    "content_type": 25,
+    "codename": "change_booleantype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 107,
+  "fields": {
+    "name": "Can delete boolean type",
+    "content_type": 25,
+    "codename": "delete_booleantype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 108,
+  "fields": {
+    "name": "Can add area type",
+    "content_type": 26,
+    "codename": "add_areatype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 109,
+  "fields": {
+    "name": "Can change area type",
+    "content_type": 26,
+    "codename": "change_areatype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 110,
+  "fields": {
+    "name": "Can delete area type",
+    "content_type": 26,
+    "codename": "delete_areatype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 111,
+  "fields": {
+    "name": "Can add storage unit band type",
+    "content_type": 27,
+    "codename": "add_storageunitbandtype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 112,
+  "fields": {
+    "name": "Can change storage unit band type",
+    "content_type": 27,
+    "codename": "change_storageunitbandtype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 113,
+  "fields": {
+    "name": "Can delete storage unit band type",
+    "content_type": 27,
+    "codename": "delete_storageunitbandtype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 114,
+  "fields": {
+    "name": "Can add storage unit no band type",
+    "content_type": 28,
+    "codename": "add_storageunitnobandtype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 115,
+  "fields": {
+    "name": "Can change storage unit no band type",
+    "content_type": 28,
+    "codename": "change_storageunitnobandtype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 116,
+  "fields": {
+    "name": "Can delete storage unit no band type",
+    "content_type": 28,
+    "codename": "delete_storageunitnobandtype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 117,
+  "fields": {
+    "name": "Can add time period type",
+    "content_type": 29,
+    "codename": "add_timeperiodtype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 118,
+  "fields": {
+    "name": "Can change time period type",
+    "content_type": 29,
+    "codename": "change_timeperiodtype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 119,
+  "fields": {
+    "name": "Can delete time period type",
+    "content_type": 29,
+    "codename": "delete_timeperiodtype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 120,
+  "fields": {
+    "name": "Can add file type",
+    "content_type": 30,
+    "codename": "add_filetype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 121,
+  "fields": {
+    "name": "Can change file type",
+    "content_type": 30,
+    "codename": "change_filetype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 122,
+  "fields": {
+    "name": "Can delete file type",
+    "content_type": 30,
+    "codename": "delete_filetype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 123,
+  "fields": {
+    "name": "Can add multiple choice list type",
+    "content_type": 31,
+    "codename": "add_multiplechoicelisttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 124,
+  "fields": {
+    "name": "Can change multiple choice list type",
+    "content_type": 31,
+    "codename": "change_multiplechoicelisttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 125,
+  "fields": {
+    "name": "Can delete multiple choice list type",
+    "content_type": 31,
+    "codename": "delete_multiplechoicelisttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 126,
+  "fields": {
+    "name": "Can add review",
+    "content_type": 32,
+    "codename": "add_review"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 127,
+  "fields": {
+    "name": "Can change review",
+    "content_type": 32,
+    "codename": "change_review"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 128,
+  "fields": {
+    "name": "Can delete review",
+    "content_type": 32,
+    "codename": "delete_review"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 129,
+  "fields": {
+    "name": "Can add task",
+    "content_type": 33,
+    "codename": "add_task"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 130,
+  "fields": {
+    "name": "Can change task",
+    "content_type": 33,
+    "codename": "change_task"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 131,
+  "fields": {
+    "name": "Can delete task",
+    "content_type": 33,
+    "codename": "delete_task"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 132,
+  "fields": {
+    "name": "Can add file convertion task",
+    "content_type": 34,
+    "codename": "add_fileconvertiontask"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 133,
+  "fields": {
+    "name": "Can change file convertion task",
+    "content_type": 34,
+    "codename": "change_fileconvertiontask"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 134,
+  "fields": {
+    "name": "Can delete file convertion task",
+    "content_type": 34,
+    "codename": "delete_fileconvertiontask"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 135,
+  "fields": {
+    "name": "Can add yaml template",
+    "content_type": 35,
+    "codename": "add_yamltemplate"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 136,
+  "fields": {
+    "name": "Can change yaml template",
+    "content_type": 35,
+    "codename": "change_yamltemplate"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 137,
+  "fields": {
+    "name": "Can delete yaml template",
+    "content_type": 35,
+    "codename": "delete_yamltemplate"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 138,
+  "fields": {
+    "name": "Ver listado de plantillas de archivos YML",
+    "content_type": 35,
+    "codename": "can_list_yaml_templates"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 139,
+  "fields": {
+    "name": "Descargar plantilla de archivo YML",
+    "content_type": 35,
+    "codename": "can_download_yaml_template"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 140,
+  "fields": {
+    "name": "Can add ingest task",
+    "content_type": 36,
+    "codename": "add_ingesttask"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 141,
+  "fields": {
+    "name": "Can change ingest task",
+    "content_type": 36,
+    "codename": "change_ingesttask"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 142,
+  "fields": {
+    "name": "Can delete ingest task",
+    "content_type": 36,
+    "codename": "delete_ingesttask"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 143,
+  "fields": {
+    "name": "Ver listado de tareas de ingesta",
+    "content_type": 36,
+    "codename": "can_list_storage_tasks"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 144,
+  "fields": {
+    "name": "Programar una nueva tarea de ingesta",
+    "content_type": 36,
+    "codename": "can_create_storage_task"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 145,
+  "fields": {
+    "name": "Ver detalle de una tarea de ingesta",
+    "content_type": 36,
+    "codename": "can_view_storage_task_detail"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 146,
+  "fields": {
+    "name": "Can add ingest template",
+    "content_type": 37,
+    "codename": "add_ingesttemplate"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 147,
+  "fields": {
+    "name": "Can change ingest template",
+    "content_type": 37,
+    "codename": "change_ingesttemplate"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 148,
+  "fields": {
+    "name": "Can delete ingest template",
+    "content_type": 37,
+    "codename": "delete_ingesttemplate"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 149,
+  "fields": {
+    "name": "Ver listado de scritps de generaci\u00f3n de metadatos",
+    "content_type": 37,
+    "codename": "can_list_ingest_templates"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 150,
+  "fields": {
+    "name": "Descargar scripts de generaci\u00f3n de metadatos (.py)",
+    "content_type": 37,
+    "codename": "can_download_metadata_script"
+  }
+},
+{
+  "model": "auth.group",
+  "pk": 1,
+  "fields": {
+    "name": "DataAdmin",
+    "permissions": [
+      69,
+      68,
+      59,
+      66,
+      67,
+      61,
+      71,
+      64,
+      57,
+      144,
+      143,
+      145,
+      150,
+      149,
+      46,
+      49,
+      51,
+      45,
+      50,
+      48,
+      47,
+      43,
+      135,
+      139,
+      138,
+      136,
+      137,
+      37
+    ]
+  }
+},
+{
+  "model": "auth.group",
+  "pk": 2,
+  "fields": {
+    "name": "Developer",
+    "permissions": [
+      60,
+      63,
+      70,
+      69,
+      68,
+      62,
+      72,
+      65,
+      59,
+      66,
+      67,
+      61,
+      71,
+      73,
+      64,
+      91,
+      88,
+      86,
+      90,
+      87,
+      92,
+      49,
+      51,
+      45,
+      50,
+      48,
+      47
+    ]
+  }
+},
+{
+  "model": "auth.group",
+  "pk": 3,
+  "fields": {
+    "name": "Analyst",
+    "permissions": [
+      73,
+      91,
+      88,
+      86,
+      89,
+      90,
+      87,
+      92,
+      49,
+      51,
+      45,
+      50,
+      48,
+      47
+    ]
+  }
+}
+]

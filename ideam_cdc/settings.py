@@ -87,7 +87,6 @@ WSGI_APPLICATION = 'ideam_cdc.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-print 'URL', os.environ.get('IDEAM_DATABASE_URL'), os.environ.get('IDEAM_DATABASE_URL')
 DATABASES = {'default': dj_database_url.parse(os.environ.get('IDEAM_DATABASE_URL'))}
 
 # Password validation

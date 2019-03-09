@@ -1,0 +1,20 @@
+[
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$24000$UBNWgzBzr02w$AV2G+kTpJtwyXYTFTmf5wWDtWRqKseENhxoOwpZADdk=",
+    "last_login": "2019-03-09T21:23:48.796Z",
+    "is_superuser": true,
+    "username": "cdcolprueba+sistema",
+    "first_name": "",
+    "last_name": "",
+    "email": "cdcolprueba+sistema@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2019-03-09T21:23:28.356Z",
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]
