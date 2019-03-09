@@ -1,3 +1,4 @@
+.env
 .idea/
 *~
 .DS_Store
@@ -10,3 +11,8 @@
 .idea/workspace.xml
 .idea
 ideam_cdc/static_root
+
+*/migrations/*
+entrypoint.sh
+env.sh
+
