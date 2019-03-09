@@ -52,9 +52,9 @@ docker inspect  devel_web_1 | grep IPAddress
             "SecondaryIPAddresses": null,
             "IPAddress": "",
                     "IPAddress": "172.20.0.5",
-                    ```
+```
 
-Place the ulr http://172.20.0.5:8000/ in the browser
+Place the ulr http://172.20.0.5:8000/ in the browser.
 
 
 # Create and Load Database Backups
