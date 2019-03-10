@@ -177,7 +177,7 @@
                                     {% endif %}
                                 {% endif %}
                             {% endif %}
-                            {% if version.publishing_state == "1" %}
+                            {% if version.publishing_state == "1" and perms.algorithm.can_publish_version %}
                                 <nav>
                                     <a href="{% url 'algorithm:publish_version' version.algorithm.id version.id %}"
                                        class="btn btn-primary btn-md btn-block">Publicar Versión</a>
