@@ -310,6 +310,17 @@ def review_version(request, algorithm_id, version_id):
 	)
 
 @login_required(login_url='/accounts/login/')
+def version_review_list(request):
+	"""Display all Version objects which review is Pending."""
+
+	versions = Version.objects.filter(publishing_state=Version.REVIEW_PENDING)
+	context = {
+		'object_list': versions	
+	} 
+	return render(request,'algorithm/version_review_list.html',context)
+
+
+@login_required(login_url='/accounts/login/')
 @permission_required('algorithm.can_publish_version', raise_exception=True)
 def publish_version(request, algorithm_id, version_id):
 	current_user = request.user

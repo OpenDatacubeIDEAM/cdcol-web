@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block banner_block %}
+<img class="overlay" src="{% static 'images/small-banner-home.jpg' %}">
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+{% endblock %}
+
+{% block content %}
+<!-- breadcrumb start -->
+<!-- ================ -->
+<div class="breadcrumb-container">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
+      <li class="active">Versiones para Revisión</li>
+    </ol>
+  </div>
+</div>
+<!-- breadcrumb end -->
+
+<!-- main-container start -->
+<!-- ================ -->
+<section class="main-container padding-ver-clear">
+  <div class="container pv-40">
+    <div class="row">
+
+      <!-- main start -->
+      <!-- ================ -->
+      <div class="main col-md-12">
+        <h3 class="title">Versiones para Revisión</h3>
+        <div class="separator-2"></div>
+        <p>A continuación se presentan las versiones a ser verificadas</p>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <table id="table_versions" class="table table-striped table-colored">
+                <thead>
+                  <tr>
+                    <th>Código</th>
+                    <th>Nombre del Algoritmo</th>
+                    <th>Tipo del Algoritmo</th>
+                    <th>Número de la Versión</th>
+                    <th>Fecha de Creación</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for version in object_list %}
+                  <tr>
+                    <td>{{ version.id }}</td>
+                    <td>{{ version.algorithm.name }}</td>
+                    <td>{{ version.algorithm.topic }}</td>
+                    <td>{{ version.number }}</td>
+                    <td>{{ version.created_at }}</td>
+                    <td>
+                      <a href="{% url 'algorithm:version_detail' version.algorithm.id version.id %}" class="btn btn-gray btn-sm">
+                        <i class="fa fa-bars"></i> Ver Detalle
+                      </a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- main end -->
+
+    </div>
+  </div>
+</section>
+<!-- main-container end -->
+{% endblock %}
+
+{% block extra_body %}
+<script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#table_versions').dataTable();
+  });
+</script>
+{% endblock %}

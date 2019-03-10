@@ -124,6 +124,11 @@ class Version(models.Model):
 		return Parameter.objects.filter(version=self.id).count()
 
 
+	class Meta:
+		permissions = (
+			("can_list_versions", "Ver listado de Versiones"),
+		)
+
 class VersionStorageUnit(models.Model):
 	version = models.ForeignKey(Version, on_delete=models.CASCADE, related_name='source_version')
 	storage_unit = models.ForeignKey(StorageUnit, on_delete=models.CASCADE, related_name='source_storage_unit')

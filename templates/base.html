@@ -189,6 +189,11 @@
                                                             <a href="{% url 'storage:index' %}">Almacenamiento</a>
                                                         </li>
                                                     {% endif %}
+                                                    {% if perms.algorithm.can_list_versions %}
+                                                        <li>
+                                                            <a href="{% url 'algorithm:version_review_list' %}">Versiones para Revisión</a>
+                                                        </li>
+                                                    {% endif %}
                                                     {% if perms.template.can_list_yaml_templates or perms.ingest_template.can_list_ingest_templates %}
                                                         <li class="dropdown ">
                                                             <a class="dropdown-toggle" data-toggle="dropdown">Plantillas</a>
