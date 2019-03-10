@@ -64,6 +64,7 @@ class Algorithm(models.Model):
 			("can_view_parameter_detail", "Ver detalle de un parámetro de una versión de un algoritmo"),
 			("can_edit_parameter", "Editar parámetro de una versión de un algoritmo (tener en cuenta posibles variabilidades por tipo de parámetro)"),
 			("can_view_ratings", "Ver listado de calificaciones de una versión de un algoritmo"),
+			("can_send_version_to_review", "Enviar a revisión una versión del algoritmo")
 		)
 
 
@@ -84,9 +85,11 @@ class Version(models.Model):
 	DEVELOPED_STATE = '1'
 	PUBLISHED_STATE = '2'
 	DEPRECATED_STATE = '3'
+	REVIEW_PENDING = '4'
 	# PUBLISHING STATES
 	VERSION_STATES = (
 		(DEVELOPED_STATE, "EN DESARROLLO"),
+		(REVIEW_PENDING, 'PENDIENTE DE REVISION'),
 		(PUBLISHED_STATE, "PUBLICADA"),
 		(DEPRECATED_STATE, "OBSOLETA"),
 	)

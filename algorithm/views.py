@@ -295,6 +295,19 @@ def version_rating(request, algorithm_id, version_id):
 	           'average_rating': average_rating}
 	return render(request, 'algorithm/version_rating.html', context)
 
+@login_required(login_url='/accounts/login/')
+@permission_required('algorithm.can_send_version_to_review', raise_exception=True)
+def review_version(request, algorithm_id, version_id):
+	"""Change Version.publishing_state to REVIEW_PENDING."""
+	version = get_object_or_404(Version, id=version_id)
+	version.publishing_state = Version.REVIEW_PENDING
+	version.save()
+	return HttpResponseRedirect(
+		reverse(
+			'algorithm:version_detail', 
+			kwargs={ 'algorithm_id':algorithm_id, 'version_id':version_id }
+		)
+	)
 
 @login_required(login_url='/accounts/login/')
 @permission_required('algorithm.can_publish_version', raise_exception=True)
