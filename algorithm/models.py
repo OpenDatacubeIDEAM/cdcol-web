@@ -63,8 +63,7 @@ class Algorithm(models.Model):
 			("can_create_parameter", "Crear parámetro para una versión de un algoritmo"),
 			("can_view_parameter_detail", "Ver detalle de un parámetro de una versión de un algoritmo"),
 			("can_edit_parameter", "Editar parámetro de una versión de un algoritmo (tener en cuenta posibles variabilidades por tipo de parámetro)"),
-			("can_view_ratings", "Ver listado de calificaciones de una versión de un algoritmo"),
-			("can_send_version_to_review", "Enviar a revisión una versión del algoritmo")
+			("can_view_ratings", "Ver listado de calificaciones de una versión de un algoritmo")
 		)
 
 
@@ -91,7 +90,7 @@ class Version(models.Model):
 	VERSION_STATES = (
 		(DEVELOPED_STATE, "EN DESARROLLO"),
 		(REVIEW_PENDING, 'PENDIENTE DE REVISION'),
-		(REVIEW, "REVISION"),
+		(REVIEW, "EN REVISION"),
 		(PUBLISHED_STATE, "PUBLICADA"),
 		(DEPRECATED_STATE, "OBSOLETA"),
 	)
@@ -127,6 +126,8 @@ class Version(models.Model):
 	class Meta:
 		permissions = (
 			("can_list_versions", "Ver listado de Versiones"),
+			("can_send_version_to_review", "Enviar a revisión una versión del algoritmo"),
+			("can_start_version_review", "Iniciar Revisión Versión"),
 		)
 
 class VersionStorageUnit(models.Model):

@@ -28,6 +28,8 @@ urlpatterns = [
 	url(r'^update/(?P<algorithm_id>[0-9]+)/version/(?P<version_id>[0-9]+)/delete/$', views.delete_version, name='delete_version'),
 	# ex: /algorithm/11/version/12/review
 	url(r'^update/(?P<algorithm_id>[0-9]+)/version/(?P<version_id>[0-9]+)/review/$', views.review_version, name='review_version'),
+	# ex: /algorithm/11/version/12/review_start
+	url(r'^update/(?P<algorithm_id>[0-9]+)/version/(?P<version_id>[0-9]+)/reviewing/$', views.version_review_start, name='version_review_start'),
 	# ex: /algorithm/11/version/12
 	url(r'^(?P<algorithm_id>[0-9]+)/version/(?P<version_id>[0-9]+)$', views.version_detail, name='version_detail'),
 	# ex: /algorithm/11/version/12/download

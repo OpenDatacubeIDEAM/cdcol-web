@@ -319,6 +319,24 @@ def version_review_list(request):
 	} 
 	return render(request,'algorithm/version_review_list.html',context)
 
+def version_review_start(request, algorithm_id, version_id):
+	"""Change Version.publishing_state.
+
+	Change Version.publishing_state to REVIEW
+	And send an email to the developer.
+	"""
+	version = get_object_or_404(Version, id=version_id)
+	version.publishing_state = Version.REVIEW
+	version.save()
+
+	# send email
+	
+	return HttpResponseRedirect(
+		reverse(
+			'algorithm:version_detail', 
+			kwargs={ 'algorithm_id':algorithm_id, 'version_id':version_id }
+		)
+	)
 
 @login_required(login_url='/accounts/login/')
 @permission_required('algorithm.can_publish_version', raise_exception=True)
