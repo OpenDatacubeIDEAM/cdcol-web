@@ -18,6 +18,7 @@ import urllib
 from django.core.files import File
 from wsgiref.util import FileWrapper
 from django.utils.encoding import smart_str
+from django.core.mail import send_mail
 
 
 class JSONResponse(HttpResponse):
@@ -264,10 +265,10 @@ def download_version(request, algorithm_id, version_id):
 @permission_required('algorithm.can_view_version_detail', raise_exception=True)
 def version_detail(request, algorithm_id, version_id):
 	current_user = request.user
-	if is_data_admin(current_user):
-		version = get_object_or_404(Version, id=version_id)
-	else:
-		version = get_object_or_404(Version, Q(created_by=current_user), id=version_id)
+	# if is_data_admin(current_user):
+	version = get_object_or_404(Version, id=version_id)
+	# else:
+		# version = get_object_or_404(Version, Q(created_by=current_user), id=version_id)
 	parameters = Parameter.objects.filter(version=version_id).order_by('position')
 	reviews = Review.objects.filter(execution__version=version).order_by('created_at')
 	# getting version executions
@@ -330,6 +331,19 @@ def version_review_start(request, algorithm_id, version_id):
 	version.save()
 
 	# send email
+	subject = 'Versión en Revisión'
+	message = 'La versión %s del Algoritmo %s ha iniciado su proceso de revisión.'
+	message = message.decode('utf-8') % (version.number, version.algorithm.name)
+	from_email = settings.DEFAULT_FROM_EMAIL
+	to_email =  [version.created_by.email]
+
+	send_mail(
+		subject,
+		message,
+		from_email,
+		to_email,
+		fail_silently=False
+	)
 	
 	return HttpResponseRedirect(
 		reverse(

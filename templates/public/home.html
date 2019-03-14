@@ -201,6 +201,18 @@
                                 </div>
                             </div>
                         {% endif %}
+                        {% if perms.algorithm.can_list_versions %}
+                            <div class="col-md-4 ">
+                                <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible"
+                                     data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+                                    <span class="icon default-bg circle"><i class="fa fa-connectdevelop"></i></span>
+                                    <h3>Revisión de Versiones</h3>
+                                    <div class="separator clearfix"></div>
+                                    <p>Revise las versiones de algoritmos entregadas por los desarrolladores para su posterior publciación.</p>
+                                    <a href="{% url 'algorithm:version_review_list' %}">Ir al módulo<i class="pl-5 fa fa-angle-double-right"></i></a>
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
             </div>
         </section>
