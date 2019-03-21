@@ -38,7 +38,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # `allauth` needs this from django
+    'django.contrib.sites',
+
+    # `allauth`
+    'allauth',
+    'allauth.account',
+
     'index',
+    'user_profile',
+    'execution',
+    'algorithm',
+    'storage',
 ]
 
 MIDDLEWARE = [
@@ -56,7 +67,7 @@ ROOT_URLCONF = 'ideam.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,  'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -64,6 +75,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # `allauth` needs this from django
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -120,3 +133,23 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+if 'PRODUCTION' in os.environ:
+    STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+if 'PRODUCTION' not in os.environ:
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, "static"),
+    ]
+
+
+# `allauth`
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+# `allauth`
+SITE_ID = 1
