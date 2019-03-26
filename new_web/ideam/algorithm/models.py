@@ -4,6 +4,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from storage.models import StorageUnit
 
+from django.utils.text import slugify
+
 
 class Topic(models.Model):
     name = models.CharField(max_length=200)
@@ -63,6 +65,16 @@ class Algorithm(models.Model):
     #         ("can_view_ratings", "Ver listado de calificaciones de una versión de un algoritmo")
     #     )
 
+
+def version_upload_to(instance, filename):
+    """File will be uploaded to MEDIA_ROOT/<algo_path>."""
+    algo_name = slugify(instance.algorithm.name)
+    algo_version_number = instance.number
+    filename = '{}_{}.py' % (algo_name,algo_version_number)
+    algo_path = 'algorithms/{}/{}' % (algo_name,filename)
+
+    return algo_path
+
 class Version(models.Model):
     """Each algorithm has several versions."""
 
@@ -81,11 +93,13 @@ class Version(models.Model):
     )
 
     algorithm = models.ForeignKey(Algorithm, on_delete=models.CASCADE)
-    source_storage_units = models.ManyToManyField(StorageUnit, through='VersionStorageUnit')
+    source_storage_units = models.ManyToManyField(StorageUnit)
     description = models.TextField()
     number = models.CharField(max_length=200)
     repository_url = models.CharField(max_length=300)
-    source_code = models.FileField(upload_to=upload_to, max_length=1000, blank=True, null=True)
+    source_code = models.FileField(
+        upload_to=version_upload_to,max_length=1000, blank=True, null=True
+    )
     publishing_state = models.CharField(max_length=2, choices=VERSION_STATES)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE,)
     created_at = models.DateTimeField(auto_now_add=True)
