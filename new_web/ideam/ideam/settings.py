@@ -134,13 +134,20 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-if 'PRODUCTION' in os.environ:
-    STATIC_ROOT = os.path.join(BASE_DIR, "static")
-
-if 'PRODUCTION' not in os.environ:
+if DEBUG:
+    # When debugging
     STATICFILES_DIRS = [
         os.path.join(BASE_DIR, "static"),
     ]
+
+if not DEBUG:
+    # For deployment
+    STATIC_ROOT = os.path.join(
+        BASE_DIR, "static"
+    )
+
+
+
 
 
 # `allauth`

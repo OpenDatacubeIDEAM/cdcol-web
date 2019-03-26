@@ -275,8 +275,8 @@
                         </li>
                         {% endif %}
                         {% else %}
-                        <li><a href="{% url 'account_signup' %}">Registro</a></li>
-                        <li><a href="{% url 'account_login' %}">Iniciar Sesión</a></li>
+                        <li><a href="{% url 'allauth:account_signup' %}">Registro</a></li>
+                        <li><a href="{% url 'allauth:account_login' %}">Iniciar Sesión</a></li>
                         {% endif %}
                       <!-- mega-menu end -->
                       </nav>

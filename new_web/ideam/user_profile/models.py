@@ -25,6 +25,10 @@ class Profile(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     credits_approved = models.IntegerField(default=8, blank=True, null=True)
 
+
+    def get_executions(self):
+        self.user.execution_set.all()
+
     # def self(self):
     #     return self
 
