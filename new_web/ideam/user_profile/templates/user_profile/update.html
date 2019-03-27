@@ -32,7 +32,7 @@
               <h3 class="title">Configuración</h3>
               <div class="separator-2"></div>
               <nav>
-                <a href="{% url 'profile:index' %}" class="btn btn-primary btn-md btn-block">Información de la Cuenta</a>
+                <a href="{% url 'profile:update' %}" class="btn btn-primary btn-md btn-block">Información de la Cuenta</a>
               </nav>
               <nav>
                 <a href="{% url 'account_reset_password' %}" class="btn btn-primary btn-md btn-block">Restablecer contraseña</a>
@@ -54,7 +54,7 @@
           <p>Esta es la información registrada en su perfil:</p>
           <div class="section light-gray-bg">
             <div class="container">
-              <form role="form" class="form-horizontal col-md-7" method="POST" action="{% url 'profile:index'  enctype="multipart/form-data">
+              <form role="form" class="form-horizontal col-md-7" method="POST" action="{% url 'profile:update'%}" enctype="multipart/form-data">
               {% csrf_token %}
 
                 <!-- Errors -->

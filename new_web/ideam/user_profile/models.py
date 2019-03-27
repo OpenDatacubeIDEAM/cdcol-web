@@ -27,13 +27,13 @@ class Profile(models.Model):
 
     def get_groups(self):
 
-        user_groups = self.user.groups.all().values_list('name', flat=True)
+        user_groups = self.user.groups.values_list('name', flat=True)
         app_groups = []
-        if 'DataAdmin' in groups:
+        if 'DataAdmin' in user_groups:
             app_groups.append('Administrador de Datos')
-        if 'Developer' in groups:
+        if 'Developer' in user_groups:
             app_groups.append('Desarrollador')
-        if 'Analyst' in groups:
+        if 'Analyst' in user_groups:
             app_groups.append('Analista')
         
         return app_groups

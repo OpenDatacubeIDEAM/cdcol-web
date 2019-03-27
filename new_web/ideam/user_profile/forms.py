@@ -5,6 +5,7 @@ from user_profile.models import Profile
 
 
 class SignupForm(forms.ModelForm):
+    """User registration, this is used for 'allouth' app."""
 
     first_name = forms.CharField(max_length=30, label='Nombres', required=True)
     last_name = forms.CharField(max_length=30, label='Apellidos', required=True)
@@ -35,3 +36,29 @@ class SignupForm(forms.ModelForm):
         profile.usage = self.cleaned_data['usage']
         profile.status = Profile.WAITING_APPROBATION_STATE
         profile.save()
+
+
+class ProfileForm(forms.Form):
+    """User profile personal data update."""
+    
+    email = forms.CharField(
+        label='Email',max_length=200,
+        widget=forms.TextInput(
+            attrs={'class': 'form-control', 'readonly':'readonly'}
+        )
+    )
+    name = forms.CharField(
+        label='Nombres', required=True,
+        widget=forms.TextInput( attrs={'class': 'form-control'})
+    )
+    last_name = forms.CharField(label='Apellidos',required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    institution = forms.CharField(
+        label='Institución',required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    phone = forms.CharField(
+        label='Teléfono Institucional',required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )

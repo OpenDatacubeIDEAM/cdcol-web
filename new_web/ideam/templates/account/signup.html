@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+<!-- main-container start -->
+<!-- ================ -->
+<div class="main-container dark-translucent-bg" style="background-image:url('images/background-img-6.jpg');">
+  <div class="container">
+    <div class="row">
+      <!-- main start -->
+      <!-- ================ -->
+      <div class="main object-non-visible" data-animation-effect="fadeInUpSmall" data-effect-delay="100">
+        <div class="form-block center-block p-30 light-gray-bg border-clear">
+          <h2 class="title">{% trans "Sign Up" %}</h2>
+            <form class="form-horizontal" role="form" id="signup_form" method="post" action="{% url 'account_signup' %}">
+              {% csrf_token %}
+              <!-- Errors -->
+              {% if form.errors %}
+              {% for error in form.non_field_errors %}
+              <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+              </div>
+              {% endfor %}
+              {% endif %}
+              <!-- /Errors -->
+
+              <!-- First Name -->
+              <div class="form-group has-feedback">
+                <!-- Errors -->
+                {% if form.first_name.errors %}
+                {% for error in form.first_name.errors %}
+                  <div class="alert alert-danger">
+                      <strong>{{ error|escape }}</strong>
+                  </div>
+                {% endfor %}
+                {% endif %}
+                <!-- /Errors -->
+                <label for="inputFirstName" class="col-sm-3 control-label">Nombres<span class="text-danger small"> *</span></label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="{{ form.first_name.html_name }}" id="{{ form.first_name.id_for_label }}" placeholder="Nombres" {% if form.first_name.value %} value="{{ form.first_name.value }}"{% endif %} required>
+                    <i class="fa fa-user form-control-feedback"></i>
+                </div>
+              </div>
+              <!-- /First Name -->
+
+              <!-- Last Name -->
+              <div class="form-group has-feedback">
+              <!-- Errors -->
+                {% if form.last_name.errors %}
+                {% for error in form.last_name.errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %}
+                {% endif %}
+              <!-- /Errors -->
+              <label for="inputLastName" class="col-sm-3 control-label">Apellidos<span class="text-danger small"> *</span></label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" name="{{ form.last_name.html_name }}" id="{{ form.last_name.id_for_label }}" placeholder="Apellidos" {% if form.last_name.value %} value="{{ form.last_name.value }}"{% endif %} required>
+                  <i class="fa fa-user form-control-feedback"></i>
+                </div>
+              </div>
+              <!-- /Last Name -->
+
+              <!-- Email -->
+              <div class="form-group has-feedback">
+                <!-- Errors -->
+                {% if form.email.errors %}
+                {% for error in form.email.errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- /Errors -->
+                <label for="inputEmail" class="col-sm-3 control-label">Email<span class="text-danger small"> *</span></label>
+                <div class="col-sm-8">
+                    <input type="email" class="form-control" name="{{ form.email.html_name }}" id="{{ form.email.id_for_label }}" placeholder="Email" {% if form.email.value %} value="{{ form.email.value }}"{% endif %} required>
+                    <i class="fa fa-envelope form-control-feedback"></i>
+                </div>
+              </div>
+              <!-- /Email -->
+
+              <!-- Password -->
+              <div class="form-group has-feedback">
+                <!-- Errors -->
+                {% if form.password1.errors %}
+                {% for error in form.password1.errors %}
+                <div class="alert alert-danger">
+                  <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- /Errors -->
+                <label for="inputPassword" class="col-sm-3 control-label">{% trans "Password" %}<span class="text-danger small"> *</span></label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" name="{{ form.password1.html_name }}" id="{{ form.password1.id_for_label }}" placeholder="{% trans "Password" %}" required>
+                    <i class="fa fa-lock form-control-feedback"></i>
+                </div>
+              </div>
+              <!-- /Password -->
+
+              <!-- Password2 -->
+              <div class="form-group has-feedback">
+                <!-- Errors -->
+                {% if form.password2.errors %}
+                {% for error in form.password2.errors %}
+                <div class="alert alert-danger">
+                  <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- /Errors -->
+                <label for="inputPassword" class="col-sm-3 control-label">Confirmar contraseña<span class="text-danger small"> *</span></label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" name="{{ form.password2.html_name }}" id="{{ form.password2.id_for_label }}" placeholder="Confirmar contraseña" %}" required>
+                    <i class="fa fa-lock form-control-feedback"></i>
+                </div>
+              </div>
+              <!-- /Password2 -->
+
+              <!-- Institución -->
+              <div class="form-group has-feedback">
+                <!-- Errors -->
+                {% if form.institution.errors %}
+                {% for error in form.institution.errors %}
+                <div class="alert alert-danger">
+                  <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- /Errors -->
+                <label class="col-sm-3 control-label">Institución<span class="text-danger small"> *</span></label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" name="{{ form.institution.html_name }}" id="{{ form.institution.id_for_label }}" placeholder="Institución" {% if form.institution.value %} value="{{ form.institution.value }}"{% endif %} required>
+                  <i class="fa fa-building form-control-feedback"></i>
+                </div>
+              </div>
+              <!-- /Institución -->
+
+              <!-- Teléfono Institucional -->
+              <div class="form-group has-feedback">
+                <!-- Errors -->
+                {% if form.phone.errors %}
+                {% for error in form.phone.errors %}
+                <div class="alert alert-danger">
+                  <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- /Errors -->
+                <label class="col-sm-3 control-label">Teléfono Institucional<span class="text-danger small"> *</span></label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="{{ form.phone.html_name }}" id="{{ form.phone.id_for_label }}" placeholder="Teléfono Institucional" {% if form.phone.value %} value="{{ form.phone.value }}"{% endif %} required>
+                    <i class="fa fa-phone-square form-control-feedback"></i>
+                </div>
+              </div>
+              <!-- /Teléfono Institucional -->
+
+              <!-- Uso -->
+              <div class="form-group has-feedback">
+                <!-- Errors -->
+                {% if form.usage.errors %}
+                {% for error in form.usage.errors %}
+                <div class="alert alert-danger">
+                  <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- /Errors -->
+                <label class="col-sm-3 control-label">Uso<span class="text-danger small"> *</span></label>
+                <div class="col-sm-8">
+                  {{ form.usage }}
+                  <i class="fa fa-question-circle form-control-feedback"></i>
+                </div>
+              </div>
+              <!-- /Uso -->
+              <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-8">
+                  <div class="checkbox">
+                    <label>
+                        <input type="checkbox" required> Acepta <a href="http://www.ideam.gov.co/web/atencion-y-participacion-ciudadana/transparencia-y-acceso-a-informacion-publica/politicas" target="_blank">Política de Privacidad</a>
+                        y <a href="http://www.ideam.gov.co/web/atencion-y-participacion-ciudadana/condiciones-y-terminos-de-uso-de-la-informacion" target="_blank">Términos y Condiciones.</a>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-8">
+                  <button type="submit" class="btn btn-group btn-default">Registrarme</button>
+                </div>
+              </div>
+              {% if redirect_field_value %}
+              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+              {% endif %}
+            </form>
+          </div>
+        </div>
+        <!-- main end -->
+      </div>
+  </div>
+</div>
+<!-- main-container end -->
+{% endblock %}
