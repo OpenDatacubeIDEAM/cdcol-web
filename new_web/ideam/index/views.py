@@ -19,7 +19,7 @@ class IndexView(TemplateView):
             return render(request,template_name)
         
         if request.user.is_superuser:
-            return redirect('admin/')
+            return redirect('admin:index')
 
         if request.user.profile.status in Profile.WAITING_APPROBATION_STATE:
             # When a new user is registered allauth authenticated them

@@ -178,3 +178,12 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_ADAPTER = 'user_profile.adapters.MyAccountAdapter'
+
+# Email service
+# this variables are needed for 'allouth' to perform password reset 
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = "aucarvideo@gmail.com"
+EMAIL_HOST_PASSWORD = "aucar2018"
+EMAIL_PORT = "587"
+EMAIL_USE_TLS = True
