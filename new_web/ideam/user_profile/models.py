@@ -25,6 +25,19 @@ class Profile(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     credits_approved = models.IntegerField(default=8, blank=True, null=True)
 
+    def get_groups(self):
+
+        user_groups = self.user.groups.all().values_list('name', flat=True)
+        app_groups = []
+        if 'DataAdmin' in groups:
+            app_groups.append('Administrador de Datos')
+        if 'Developer' in groups:
+            app_groups.append('Desarrollador')
+        if 'Analyst' in groups:
+            app_groups.append('Analista')
+        
+        return app_groups
+
 
     def get_executions(self):
         self.user.execution_set.all()

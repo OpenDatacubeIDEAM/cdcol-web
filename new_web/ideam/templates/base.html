@@ -202,7 +202,7 @@
                           <a class="dropdown-toggle" data-toggle="dropdown">Mi cuenta</a>
                           <ul class="dropdown-menu">
                             <li class="dropdown ">
-                            <li> <a href="{% url 'profile:index' %}">Mi Perfil</a></li>
+                            <li> <a href="{% url 'profile:home' %}">Mi Perfil</a></li>
                             <li>
                               {% if perms.user_profile.can_view_quick_guide_developer  %}
                               <a href="https://github.com/OpenDatacubeIDEAM/cdcol/raw/desacoplado/guias/M-GCI-E-G008%20GUIA.pdf" target="_blank">Guia Rapida para Desarrolladores</a>
@@ -275,8 +275,8 @@
                         </li>
                         {% endif %}
                         {% else %}
-                        <li><a href="{% url 'allauth:account_signup' %}">Registro</a></li>
-                        <li><a href="{% url 'allauth:account_login' %}">Iniciar Sesión</a></li>
+                        <li><a href="{% url 'account_signup' %}">Registro</a></li>
+                        <li><a href="{% url 'account_login' %}">Iniciar Sesión</a></li>
                         {% endif %}
                       <!-- mega-menu end -->
                       </nav>

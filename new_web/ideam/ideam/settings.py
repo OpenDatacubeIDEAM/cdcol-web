@@ -118,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-co'
 
 TIME_ZONE = 'UTC'
 
@@ -127,6 +127,13 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+DATE_FORMAT = 'j \d\e F,Y'
+
+DATETIME_FORMAT = 'j \d\e F,Y H:i:s'
+
+TIME_FORMAT = 'H:i:s'
+
 
 
 # Static files (CSS, JavaScript, Images)
@@ -147,8 +154,9 @@ if not DEBUG:
     )
 
 
-
-
+# Media
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # `allauth`
 AUTHENTICATION_BACKENDS = (
@@ -161,6 +169,12 @@ AUTHENTICATION_BACKENDS = (
 # `allauth`
 SITE_ID = 1
 
-# Media
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# User registration form.
+# A custom template is required in templates/account/signup.html
+ACCOUNT_SIGNUP_FORM_CLASS = 'user_profile.forms.SignupForm'
+LOGIN_REDIRECT_URL = '/index/'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
