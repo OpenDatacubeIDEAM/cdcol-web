@@ -1,3 +1,9 @@
-from django.contrib import admin
+# -*- coding: utf-8 -*-
 
-# Register your models here.
+from django.contrib import admin
+from algorithm.models import Algorithm
+from algorithm.models import Topic
+
+
+admin.site.register(Algorithm)
+admin.site.register(Topic)

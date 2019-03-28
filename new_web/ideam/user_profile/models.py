@@ -26,7 +26,8 @@ class Profile(models.Model):
     credits_approved = models.IntegerField(default=8, blank=True, null=True)
 
     def get_groups(self):
-
+        """Result user associated groups."""
+        
         user_groups = self.user.groups.values_list('name', flat=True)
         app_groups = []
         if 'DataAdmin' in user_groups:
@@ -38,6 +39,8 @@ class Profile(models.Model):
         
         return app_groups
 
+    def is_data_admin(self):
+        return self.user.groups.filter(name='DataAdmin').exists()
 
     def get_executions(self):
         self.user.execution_set.all()

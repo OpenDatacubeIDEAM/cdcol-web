@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     # `allauth`
     'allauth',
     'allauth.account',
+    'rest_framework',
+    'rest_framework_datatables',
 
     'index',
     'user_profile',
@@ -187,3 +189,27 @@ EMAIL_HOST_USER = "aucarvideo@gmail.com"
 EMAIL_HOST_PASSWORD = "aucar2018"
 EMAIL_PORT = "587"
 EMAIL_USE_TLS = True
+
+# Rest Framework
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+
+    # django-rest-framework-datatables
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework_datatables.renderers.DatatablesRenderer',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'rest_framework_datatables.filters.DatatablesFilterBackend',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework_datatables.pagination.DatatablesPageNumberPagination',
+    'PAGE_SIZE': 1,
+    
+}
+
+

@@ -15,17 +15,26 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
-# Serve static files during development
 from django.conf import settings
 from django.conf.urls.static import static
 
+from rest_framework import routers
+from algorithm .views import AlgorithmViewSet
+
+
+# Routers provide an easy way of automatically determining the URL conf.
+router = routers.DefaultRouter()
+router.register(r'algorithms', AlgorithmViewSet)
 
 urlpatterns = [
+    path('api/', include(router.urls)),
     path('admin/', admin.site.urls),
-    path('accounts/',include('allauth.urls')),
+
     path('', include(('index.urls','index'))),
+
+    path('accounts/',include('allauth.urls')),
     path('profile/', include(('user_profile.urls','profile'))),
+    path('algorithm/', include(('algorithm.urls','algorithm'))),
 ]
 
 # if settings.DEBUG:
