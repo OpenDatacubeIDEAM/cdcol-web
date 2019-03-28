@@ -26,6 +26,15 @@ class Algorithm(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def version_count(self):
+        return self.version_set.all().count()
+
+    def last_version_status(self):
+        last = self.version_set.all().last()
+        if last:
+            return last.get_publishing_state_display()
+        return ''
+
     class Meta:
         permissions = (
             ("can_list_algorithms", "Listar los algoritmos"),

@@ -208,7 +208,8 @@ REST_FRAMEWORK = {
         'rest_framework_datatables.filters.DatatablesFilterBackend',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework_datatables.pagination.DatatablesPageNumberPagination',
-    'PAGE_SIZE': 1,
+    #  The page size is driven by the datatable in the html 
+    'PAGE_SIZE': 10,
     
 }
 
