@@ -53,14 +53,17 @@ class AlgorithmCreateView(CreateView):
         This method is called when valid form data has been POSTed.
         """
         
-        # Creating new algorithm version 
+        # Relate current user with the created algorthm
+        form.instance.created_by = self.request.user
+        self.object = form.save()
+
+        # Creating new algorithm version
         version = Version(
             algorithm=self.object ,
             description='Versión por defecto 1.0',
             number='1.0',
             repository_url='',
-            publishing_state=Version.DEVELOPED_STATE,
-            created_by=self.request.user
+            publishing_state=Version.DEVELOPED_STATE
         )
         version.save()
         return redirect(self.get_success_url())
@@ -72,6 +75,37 @@ class AlgorithmCreateView(CreateView):
         topics = Topic.objects.filter(enabled=True)
         data['algorithm_form'] = data.get('form')
         data['topics'] = topics
+
+        # Template aditional data
+        data['section'] = 'Nuevo'
+        data['title'] = 'Nuevo Algoritmo'
+        data['button'] = 'Crear Algoritmo'
+        return data
+
+
+class AlgorithmUpdateView(UpdateView):
+    """Update an algorithm.
+
+    Use the template algorithm/algorithm_form.html
+    """
+
+    model = Algorithm
+    fields = ['name','description','topic']
+    success_url = reverse_lazy('algorithm:index')
+
+
+    def get_context_data(self, **kwargs):
+        """Add or change context initial data."""
+
+        data = super(AlgorithmUpdateView, self).get_context_data(**kwargs)
+        topics = Topic.objects.filter(enabled=True)
+        data['algorithm_form'] = data.get('form')
+        data['topics'] = topics
+
+        # Template aditional data
+        data['section'] = 'Editar'
+        data['title'] = 'Editar Algoritmo'
+        data['button'] = 'Actualizar Algoritmo'
         return data
 
 
@@ -82,6 +116,21 @@ class AlgorithmDetailView(DetailView):
     """
     model = Algorithm
     context_object_name = 'algorithm'
+
+
+class VersionCreateView(CreateView):
+    """Create a version for a given algorithm.
+
+    Use the template algorithm/version_form.html
+    """
+    model = Version
+
+    def get_context_data(self, **kwargs):
+        """Add or change context initial data."""
+
+        data = super(VersionUpdateView, self).get_context_data(**kwargs)
+        data['version_form'] = data.get('form')
+        return data
 
 
 class VersionDetailView(DetailView):
@@ -113,13 +162,3 @@ class VersionUpdateView(UpdateView):
         last_version = get_object_or_404(Version,pk=last_version_pk)
         data = { 'version': last_version }
         return data
-
-class VersionDownloadView(TemplateView):
-    """Perform version update.
-
-    Use the template algorithm/version_form.html
-    """
-    model = Version
-
-    def get(self,request,*args,**kwargs):
-        pass

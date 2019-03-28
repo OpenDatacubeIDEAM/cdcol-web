@@ -1,4 +1,4 @@
- # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 from django.views.generic.edit import CreateView
 from django.shortcuts import get_object_or_404

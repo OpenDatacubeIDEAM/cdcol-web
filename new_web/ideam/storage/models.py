@@ -12,7 +12,7 @@ class StorageUnit(models.Model):
     description_file = models.CharField(max_length=200)
     ingest_file = models.CharField(max_length=200)
     metadata_generation_script = models.CharField(max_length=200)
-    metadata = JSONField()
+    metadata = JSONField(blank=True)
     root_dir = models.FilePathField(null=True,blank=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author')
     created_at = models.DateTimeField(auto_now_add=True)
