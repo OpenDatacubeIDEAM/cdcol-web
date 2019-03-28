@@ -5,7 +5,6 @@ from algorithm.models import Algorithm
 from algorithm.models import Topic 
 
 
-
 class TopicSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     
