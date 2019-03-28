@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+
 from django.contrib import admin
 
-# Register your models here.
+from storage.models import StorageUnit
+
+
+admin.site.register(StorageUnit)

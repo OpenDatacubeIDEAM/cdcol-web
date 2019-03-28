@@ -17,7 +17,13 @@ class Topic(models.Model):
 
 
 class Algorithm(models.Model):
-    """Metadata considered for an algorithm uploaded by a user."""
+    """Algorithm.
+
+    An algorithm is created by a specific user.
+    * Only the user that create the algorithm can see it.
+    * The DataAdmin can see all created algorithms.
+    * An algorithm have serveral Versions.
+    """
 
     name = models.CharField(max_length=200)
     description = models.TextField()
@@ -69,13 +75,21 @@ def version_upload_to(instance, filename):
     """File will be uploaded to MEDIA_ROOT/<algo_path>."""
     algo_name = slugify(instance.algorithm.name)
     algo_version_number = instance.number
-    filename = '{}_{}.py' % (algo_name,algo_version_number)
-    algo_path = 'algorithms/{}/{}' % (algo_name,filename)
+    filename = '{}_{}.py'.format(algo_name,algo_version_number)
+    algo_path = 'algorithms/{}/{}'.format(algo_name,filename)
 
     return algo_path
 
 class Version(models.Model):
-    """Each algorithm has several versions."""
+    """Algorithm Version.
+
+    Each algorithm has several versions.
+    * Only the owner of the algorithm can (create/update/list) the versions.
+    * Only the owner of the algorithm can execute a version while its 
+        publishing_state is 'In Development'. 
+    * It is only possible to update a version if its publishing_state is in 
+        'In Development'.
+    """
 
     DEVELOPED_STATE = '1'
     PUBLISHED_STATE = '2'
@@ -100,7 +114,6 @@ class Version(models.Model):
         upload_to=version_upload_to,max_length=1000, blank=True, null=True
     )
     publishing_state = models.CharField(max_length=2, choices=VERSION_STATES)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE,)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -117,5 +130,57 @@ class VersionStorageUnit(models.Model):
 
     version = models.ForeignKey(Version, on_delete=models.CASCADE)
     storage_unit = models.ForeignKey(StorageUnit, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class Parameter(models.Model):
+    """Algorithm Version Parameter
+
+    Each algorithm version has a set of parameters required by 
+    the specific version of the algorithm.
+    """
+
+    STRING_TYPE = '1'
+    INTEGER_TYPE = '2'
+    DOUBLE_TYPE = '3'
+    BOOLEAN_TYPE = '4'
+    # DATE_TYPE = '5'
+    # DATETIME_TYPE = '6'
+    AREA_TYPE = '7'
+    STORAGE_UNIT_TYPE = '8'
+    TIME_PERIOD_TYPE = '9'
+    # ONLY_CHOICE_LIST_TYPE = '10'
+    # MULTIPLE_CHOICE_LIST_TYPE = '11'
+    FILE_TYPE = '12'
+    STORAGE_UNIT_SIMPLE_TYPE = '13'
+    # full parameter type list
+    PARAMETER_TYPES = (
+        (STRING_TYPE, "STRING"),
+        (INTEGER_TYPE, "INTEGER"),
+        (DOUBLE_TYPE, "DOUBLE"),
+        (BOOLEAN_TYPE, "BOOLEAN"),
+        # (DATE_TYPE, "FECHA"),
+        # (DATETIME_TYPE, "FECHA Y HORA"),
+        (AREA_TYPE, "AREA"),
+        (STORAGE_UNIT_TYPE, "UNIDAD ALMACENAMIENTO CON BANDAS"),
+        (TIME_PERIOD_TYPE, "PERIODO DE TIEMPO"),
+        # (ONLY_CHOICE_LIST_TYPE, "LISTA DE SELECCIÓN ÚNICA"),
+        # (MULTIPLE_CHOICE_LIST_TYPE, "LISTA DE SELECCIÓN MÚLTIPLE"),
+        (FILE_TYPE, "ARCHIVO"),
+        (STORAGE_UNIT_SIMPLE_TYPE, "UNIDAD ALMACENAMIENTO SIN BANDAS"),
+    )
+
+    version = models.ForeignKey(Version, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200)
+    parameter_type = models.CharField(max_length=2, choices=PARAMETER_TYPES)
+    description = models.TextField(blank=True, null=True)
+    help_text = models.TextField(blank=True, null=True)
+    position = models.IntegerField(default=0)
+    required = models.BooleanField(default=False)
+    enabled = models.BooleanField(default=False)
+    default_value = models.CharField(max_length=200, default="")
+    function_name = models.CharField(max_length=200, default="")
+    output_included = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

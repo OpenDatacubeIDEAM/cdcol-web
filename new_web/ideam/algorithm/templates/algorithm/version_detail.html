@@ -44,7 +44,13 @@
             </tr>
             <tr>
               <td>Código fuente:</td>
-              <td><a href="{% url 'algorithm:download_version' version.source_code.name|slice:'35:' %}" class="btn btn-gray btn-sm"><i class="fa fa-download"></i> Descargar</a></td>
+              <td> 
+                {% if version.source_code %}
+                <a href="{{ version.source_code.url }}" class="btn btn-gray btn-sm"><i class="fa fa-download"></i> Descargar</a>
+                {% else %}
+                Anún no has subido un código fuente
+                {% endif %}
+              </td>
             </tr>
             <tr>
               <td>Repositorio código fuente:</td>
@@ -60,7 +66,7 @@
             </tr>
             <tr>
               <td>Creada por:</td>
-              <td>{{ version.created_by.email }}</td>
+              <td>{{ version.algorithm.created_by.email }}</td>
             </tr>
             </tbody>
           </table>
@@ -152,14 +158,14 @@
               <div class="separator-2"></div>
                 {% if version.publishing_state in "1245" %}
                 <nav>
-                  <a href="{% url 'execution:new_execution' version.algorithm.id version.id %}" class="btn btn-primary btn-md btn-block">Ejecutar Versión</a>
+                  <a href="{% url 'execution:create' version.id %}" class="btn btn-primary btn-md btn-block">Ejecutar Versión</a>
                 </nav>
                 {% endif %}
                 {% if version.publishing_state == "1" %}
                 {% if user.is_authenticated %}
                 {% if perms.algorithm.can_edit_version %}
                 <nav>
-                  <a href="{% url 'algorithm:update_version' version.algorithm.id version.id %}" class="btn btn-primary btn-md btn-block">Editar Versión</a>
+                  <a href="{% url 'algorithm:version-update' version.id %}" class="btn btn-primary btn-md btn-block">Editar Versión</a>
                 </nav>
                 {% endif %}
                 {% endif %}

@@ -13,4 +13,5 @@ urlpatterns = [
     path('<int:pk>/', AlgorithmDetailView.as_view(), name='detail'),
     path('version/<int:pk>/', VersionDetailView.as_view(), name='version-detail'),
     path('version/<int:pk>/', VersionUpdateView.as_view(), name='version-update'),
+    path('version/<int:pk>/', VersionUpdateView.as_view(), name='version-download'),
 ]

@@ -98,3 +98,28 @@ class VersionUpdateView(UpdateView):
     Use the template algorithm/version_form.html
     """
     model = Version
+
+    def get_context_data(self, **kwargs):
+        """Add or change context initial data."""
+
+        data = super(VersionUpdateView, self).get_context_data(**kwargs)
+        data['version_form'] = data.get('form')
+        return data
+
+    def get_initial(self):
+        """This method must return a dictionary."""
+
+        last_version_pk = self.kwargs.get('pk')
+        last_version = get_object_or_404(Version,pk=last_version_pk)
+        data = { 'version': last_version }
+        return data
+
+class VersionDownloadView(TemplateView):
+    """Perform version update.
+
+    Use the template algorithm/version_form.html
+    """
+    model = Version
+
+    def get(self,request,*args,**kwargs):
+        pass
