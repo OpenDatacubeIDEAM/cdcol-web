@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import UpdateView
 
 from rest_framework import viewsets
 from algorithm.models import Algorithm
@@ -36,18 +38,21 @@ class AlgorithmViewSet(viewsets.ModelViewSet):
         
 
 class AlgorithmCreateView(CreateView):
+    """Create an algorithm and an initial version.
+
+    Use the template algorithm/algorithm_form.html
+    """
 
     model = Algorithm
     fields = ['name','description','topic']
-    template_name = 'algorithm/create.html'
     success_url = reverse_lazy('algorithm:index')
 
     def form_valid(self, form):
-        # This method is called when valid form data has been POSTed.
-        # It should return an HttpResponse.
-        form.instance.created_by = self.request.user
-        self.object = form.save()
+        """Create an initial version for the algorithm.
 
+        This method is called when valid form data has been POSTed.
+        """
+        
         # Creating new algorithm version 
         version = Version(
             algorithm=self.object ,
@@ -61,8 +66,35 @@ class AlgorithmCreateView(CreateView):
         return redirect(self.get_success_url())
  
     def get_context_data(self, **kwargs):
+        """Add or change context initial data."""
+
         data = super(AlgorithmCreateView, self).get_context_data(**kwargs)
         topics = Topic.objects.filter(enabled=True)
         data['algorithm_form'] = data.get('form')
         data['topics'] = topics
         return data
+
+
+class AlgorithmDetailView(DetailView):
+    """Display algorithm detail.
+
+    Use the template algorithm/algorithm_detail.html
+    """
+    model = Algorithm
+    context_object_name = 'algorithm'
+
+
+class VersionDetailView(DetailView):
+    """Display version detail.
+
+    Use the template algorithm/version_detail.html
+    """
+    model = Version
+
+
+class VersionUpdateView(UpdateView):
+    """Perform version update.
+
+    Use the template algorithm/version_form.html
+    """
+    model = Version

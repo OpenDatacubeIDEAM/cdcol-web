@@ -35,6 +35,7 @@ urlpatterns = [
     path('accounts/',include('allauth.urls')),
     path('profile/', include(('user_profile.urls','profile'))),
     path('algorithm/', include(('algorithm.urls','algorithm'))),
+    path('execution/', include(('execution.urls','execution'))),
 ]
 
 # if settings.DEBUG:

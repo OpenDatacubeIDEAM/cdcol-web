@@ -27,13 +27,23 @@ class Algorithm(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def version_count(self):
+        """This is used in algorithm index page."""
         return self.version_set.all().count()
 
     def last_version_status(self):
+        """This is used in algorithm index page."""
         last = self.version_set.all().last()
         if last:
             return last.get_publishing_state_display()
         return ''
+
+    def last_version(self):
+        """Return algorithm lattes version.
+
+        This is used when creating a new execution 
+        in algorith detail.
+        """
+        return self.version_set.all().last()
 
     class Meta:
         permissions = (
