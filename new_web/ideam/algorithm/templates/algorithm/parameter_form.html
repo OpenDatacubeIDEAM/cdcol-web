@@ -1,0 +1,269 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- breadcrumb start -->
+<!-- ================ -->
+<div class="breadcrumb-container">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
+      <li><a href="{% url 'algorithm:index' %}">Mis Algoritmos</a></li>
+      <li class="active">Nuevo Parámetro</li>
+    </ol>
+  </div>
+</div>
+<!-- breadcrumb end -->
+
+<!-- main-container start -->
+<!-- ================ -->
+<section class="main-container">
+  <div class="container">
+    <div class="row">
+      <!-- main start -->
+      <!-- ================ -->
+      <div class="main col-md-12">
+        <!-- page-title start -->
+        <!-- ================ -->
+        <h3>Nuevo Parámetro</h3>
+        <div class="separator-2"></div>
+        <!-- page-title end -->
+        <p>Ingrese la siguiente información del parámetro:</p>
+        <!-- Success Messages  -->
+        {% if response %}
+        <div class="alert alert-success">
+          {{ response.message|escape }}
+        </div>
+        {% endif %}
+        <!-- /Success Messages -->
+        <div class="section light-gray-bg">
+          <div class="container">
+            <form role="form" class="form-horizontal col-md-6 col-md-offset-3" method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+
+              <!-- Errors -->
+              {% if new_parameter_form.errors %}
+              {% for error in new_parameter_form.non_field_errors %}
+              <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+              </div>
+              {% endfor %}
+              {% endif %}
+              <!-- /Errors -->
+              <!-- Algoritmo -->
+              <div class="form-group">
+                <label for="">
+                  <b>Algoritmo</b>
+                </label>
+                <input class="form-control" placeholder="{{ version.algorithm.name }}" disabled="" type="text">
+              </div>
+              <!-- /Algoritmo -->
+
+              <!-- Número de la versión -->
+              <div class="form-group">
+                <label for="">
+                  <b>Versión</b>
+                </label>
+                <input class="form-control" placeholder="{{ version.number }}" disabled="" type="text">
+              </div>
+              <!-- /Número de la versión -->
+
+              <!-- Nombre del parámetro -->
+              <div class="form-group">
+                <!-- Errors -->
+                {% if new_parameter_form.name.errors %}
+                {% for error in new_parameter_form.name.errors %}
+                <div class="alert alert-danger">
+                  <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- /Errors -->
+                <label for="">
+                  <b>
+                    Nombre del parámetro <span class="text-danger small"> * </span>
+                    <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ingrese el nombre del parámetro."></i></a>
+                  </b>
+                </label>
+                <input name="{{ new_parameter_form.name.html_name }}" id="{{ new_parameter_form.name.id_for_label }}" class="form-control" placeholder="Ingrese el nombre del parámetro" {% if new_parameter_form.name.value %} value="{{ new_parameter_form.name.value }}"{% endif %} type="text" required>
+              </div>
+              <!-- /Nombre del parámetro -->
+
+              <!-- Tipo de parámetro -->
+              <div class="form-group">
+                <!-- Errors -->
+                {% if new_parameter_form.parameter_type.errors %}
+                {% for error in new_parameter_form.parameter_type.errors %}
+                <div class="alert alert-danger">
+                  <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- /Errors -->
+                <label for="">
+                  <b>
+                    Tipo de parámetro <span class="text-danger small"> * </span>
+                    <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Seleccione el tipo de parámetro."></i></a>
+                  </b>
+                </label>
+                {{ new_parameter_form.parameter_type }}
+              </div>
+              <!-- /Tipo de parámetro -->
+
+              <!-- Descripción del parámetro -->
+              <div class="form-group">
+                <!-- Errors -->
+                {% if new_parameter_form.description.errors %}
+                {% for error in new_parameter_form.description.errors %}
+                <div class="alert alert-danger">
+                  <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- /Errors -->
+                <label for="">
+                  <b>
+                    Descripción del parámetro
+                    <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ingrese una descripción del parámetro."></i></a>
+                  </b>
+                </label>
+                {{ new_parameter_form.description }}
+              </div>
+              <!-- /Descripción del parámetro -->
+
+              <!-- Texto de ayuda parámetro -->
+              <div class="form-group">
+                <!-- Errors -->
+                {% if new_parameter_form.help_text.errors %}
+                {% for error in new_parameter_form.help_text.errors %}
+                <div class="alert alert-danger">
+                  <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- /Errors -->
+                <label for="">
+                  <b>
+                    Texto de ayuda del parámetro (opcional)
+                    <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Este texto le aparecerá como ayuda a los usuarios al momento de ejecutar la versión del algoritmo."></i></a>
+                  </b>
+                </label>
+                {{ new_parameter_form.help_text }}
+              </div>
+              <!-- /Texto de ayuda parámetro -->
+
+              <!-- Posición -->
+              <div class="form-group">
+                <!-- Errors -->
+                {% if new_parameter_form.position.errors %}
+                {% for error in new_parameter_form.position.errors %}
+                <div class="alert alert-danger">
+                  <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- /Errors -->
+                <label for="">
+                  <b>
+                    Posición <span class="text-danger small"> * </span>
+                    <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="La posición indica el orden en el que aparecerá este parámetro al momento de ejecutar la versión del algoritmo."></i></a>
+                  </b>
+                </label>
+                <input name="{{ new_parameter_form.position.html_name }}" id="{{ new_parameter_form.position.id_for_label }}" class="form-control" placeholder="Indique el orden en el que aparecerá el parámetro al momento de ejecutarse la versión del algoritmo." {% if new_parameter_form.position.value %} value="{{ new_parameter_form.position.value }}"{% endif %} type="number" required>
+              </div>
+              <!-- /Posición -->
+
+              <!-- Es obligatorio -->
+              <div class="form-group">
+                <div class="checkbox">
+                  <label>
+                    {{ new_parameter_form.required }}
+                    <b>
+                      Este parámetro es obligatorio
+                      <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Si este parámetro debe obligatoriamente ser ingresado por los usuarios, deje esta casilla marcada."></i></a>
+                    </b>
+                  </label>
+                  <p class="help-block">Si el parámetro es opcional desmarcar esta casilla.</p>
+                </div>
+              </div>
+              <!-- /Es obligatorio -->
+
+              <!-- Esta habilitado -->
+              <div class="form-group">
+                <div class="checkbox">
+                  <label>
+                    {{ new_parameter_form.enabled }}
+                    <b>
+                      Este parámetro está habilitado
+                      <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Si desea deshabilitar este parámetro para que no se le muestre a los usuarios, deje esta casilla desmarcada."></i></a>
+                    </b>
+                  </label>
+                  <p class="help-block">
+                    Para deshabilitar este parámetro, desmarcar esta casilla.
+                  </p>
+                </div>
+              </div>
+              <!-- /Esta habilitado -->
+
+              <!-- Incluye en salida -->
+              <div class="form-group">
+                <div class="checkbox">
+                  <label>
+                    {{ new_parameter_form.output_included}}
+                    <b>
+                      Se incluye en la salida
+                      <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Si este parámetro debe ser tenido en cuenta al generar el nombre de los archivos de salida de la ejecuciones, deje esta casilla marcada."></i></a>
+                    </b>
+                  </label>
+                  <p class="help-block">
+                    Para no inluir este parámetro en la salida, desmarcar esta casilla.
+                  </p>
+                </div>
+
+              </div>
+              <!-- /Incluye en salida -->
+
+              <!-- Valor por defecto -->
+              <div class="form-group">
+                <label for="">
+                  <b>
+                    Valor por defecto (opcional)
+                    <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ingrese el valor por defecto que debe tomar este parámetro."></i></a>
+                  </b>
+                </label>
+                <input name="{{ new_parameter_form.default_value.html_name }}" id="{{ new_parameter_form.default_value.id_for_label }}" class="form-control" placeholder="Ingrese el valor por defecto si lo requiere." {% if new_parameter_form.default_value.value %} value="{{ new_parameter_form.default_value.value }}"{% endif %} type="text">
+              </div>
+              <!-- /Valor por defecto -->
+
+              <!-- Nombre por defecto de función -->
+              <div class="form-group">
+                <!-- Errors -->
+                {% if new_parameter_form.function_name.errors %}
+                {% for error in new_parameter_form.function_name.errors %}
+                <div class="alert alert-danger">
+                  <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- /Errors -->
+                <label for="">
+                  <b>
+                    Nombre por defecto en la función <span class="text-danger small"> * </span>
+                    <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ingrese el nombre por defecto del parámetro en la función."></i></a>
+                  </b>
+                </label>
+                <input name="{{ new_parameter_form.function_name.html_name }}" id="{{ new_parameter_form.function_name.id_for_label }}" class="form-control" placeholder="Ingresa el nombre del parámetro en la función en Python." {% if new_parameter_form.function_name.value %} value="{{ new_parameter_form.function_name.value }}"{% endif %} type="text" required>
+              </div>
+              <!-- /Nombre por defecto de función -->
+              <div class="text-center">
+                <button type="submit" class="btn btn-default btn-lg">Crear Parámetro</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- main end -->
+    </div>  
+  </div>
+</section>
+<!-- main-container end -->
+{% endblock %}

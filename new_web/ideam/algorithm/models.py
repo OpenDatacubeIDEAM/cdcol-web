@@ -55,7 +55,7 @@ class Algorithm(models.Model):
         """Return the next version number for a new algorithm version."""
         
         next_version = '1.0'
-        last = last_version()
+        last = self.last_version()
         if last:
             major_number = int(last.number.split('.')[0])
             minor_number = int(last.number.split('.')[1])
@@ -63,11 +63,11 @@ class Algorithm(models.Model):
 
         return next_version
 
-    def next_mayor_version(self):
+    def next_major_version(self):
         """Return the next version number for a new algorithm version."""
         
         next_version = '1.0'
-        last = last_version()
+        last = self.last_version()
         if last:
             major_number = int(last.number.split('.')[0])
             next_version = '{}.{}'.format(major_number + 1,0)

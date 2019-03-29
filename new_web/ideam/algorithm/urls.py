@@ -8,14 +8,22 @@ from algorithm.views import AlgorithmDetailView
 from algorithm.views import VersionCreateView
 from algorithm.views import VersionDetailView
 from algorithm.views import VersionUpdateView
+from algorithm.views import VersionPublishView
+from algorithm.views import VersionDeprecateView
+from algorithm.views import ParameterCreateView
+
 
 urlpatterns = [
 	path('', AlgorithmIndexView.as_view(), name='index'),
 	path('create/', AlgorithmCreateView.as_view(), name='create'),
     path('<int:pk>/', AlgorithmDetailView.as_view(), name='detail'),
-    path('<int:pk>/update/', AlgorithmUpdateView.as_view(), name='update'),
-    path('<int:pk>/version/create/', VersionCreateView.as_view(), name='version-create'),
+    path('<int:pk>/update', AlgorithmUpdateView.as_view(), name='update'),
+
+    path('<int:pk>/version/create', VersionCreateView.as_view(), name='version-create'),
     path('version/<int:pk>/detail', VersionDetailView.as_view(), name='version-detail'),
     path('version/<int:pk>/update', VersionUpdateView.as_view(), name='version-update'),
-    path('version/<int:pk>/', VersionUpdateView.as_view(), name='version-download'),
+    path('version/<int:pk>/publish', VersionPublishView.as_view(), name='version-publish'),
+    path('version/<int:pk>/deprecate', VersionDeprecateView.as_view(), name='version-deprecate'),
+
+    path('<int:pk>/parameter/create/', ParameterCreateView.as_view(), name='parameter-create'),
 ]

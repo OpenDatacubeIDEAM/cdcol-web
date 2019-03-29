@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- breadcrumb start -->
+<!-- ================ -->
+<div class="breadcrumb-container">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
+      <li><a href="{% url 'algorithm:index' %}">Mis Algoritmos</a></li>
+      <li class="active">Editar Versión</li>
+    </ol>
+  </div>
+</div>
+<!-- breadcrumb end -->
+
+<!-- main-container start -->
+<!-- ================ -->
+<section class="main-container">
+  <div class="container">
+    <div class="row">
+      <!-- main start -->
+      <!-- ================ -->
+      <div class="main col-md-12">
+        <!-- page-title start -->
+        <!-- ================ -->
+        <h3 class="page-title">Editar Versión</h3>
+        <div class="separator-2"></div>
+        <!-- page-title end -->
+        <p>Ingrese la siguiente información de la versión:</p>
+        <!-- Success Messages  -->
+        {% if response %}
+        <div class="alert alert-success">
+          {{ response.message|escape }}
+        </div>
+        {% endif %}
+        <!-- /Success Messages -->
+        <div class="section light-gray-bg">
+          <div class="container">
+            <form role="form" class="form-horizontal col-md-6 col-md-offset-3" method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+
+              <!-- Errors -->
+              {% if version_form.errors %}
+              {% for error in version_form.non_field_errors %}
+              <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+              </div>
+              {% endfor %}
+              {% endif %}
+              <!-- /Errors -->
+
+              <!-- Algoritmo -->
+              <div class="form-group">
+                <label for="algorithmName">
+                  <b>Algoritmo</b>
+                </label>
+                <input class="form-control" placeholder="Nombre del Algoritmo" disabled="" type="text" value="{{ algorithm.name }}">
+              </div>
+              <!-- /Algoritmo -->
+
+              <!-- Número de la versión -->
+              <div class="form-group">
+                <!-- Errors -->
+                {% if version_form.number.errors %}
+                {% for error in version_form.number.errors %}
+                <div class="alert alert-danger">
+                  <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- /Errors -->
+                <label for="versionNumber">
+                  <b>Número de la versión</b>
+                </label>
+                <select class="form-control" disabled>
+                  <option>{{ version.number }}</option>
+                </select>
+              </div>
+              <!-- /Número de la versión -->
+
+              <!-- Descripción de la versión -->
+              <div class="form-group">
+                <!-- Errors -->
+                {% if version_form.description.errors %}
+                {% for error in version_form.description.errors %}
+                <div class="alert alert-danger">
+                  <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- /Errors -->
+                <label for="versionDescription">
+                  <b>
+                    Descripción de la versión <span class="text-danger small"> * </span>
+                    <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ingrese la descripción de la versión. Describa la versión incluyendo ajustes, cambios o mejoras que haya realizado."></i></a>
+                  </b>
+                </label>
+                {{ version_form.description }}
+              </div>
+              <!-- /Descripción de la versión -->
+
+              <!-- Código fuente -->
+              <div class="form-group">
+                <!-- Errors -->
+                {% if version_form.repository_url.errors %}
+                {% for error in version_form.repository_url.errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- /Errors -->
+                <label>
+                  <b>
+                    Código fuente <span class="text-danger small"> * </span>
+                    <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Ingrese la URL desde donde se debe descargar el script en python (.py) que contiene el código fuente de la versión del algoritmo."></i></a>
+                  </b>
+                </label>
+                  <input name="{{ version_form.repository_url.html_name }}" id="{{ version_form.repository_url.id_for_label }}" class="form-control" placeholder="Escribe la url donde se encuentra el algoritmo." {% if version_form.repository_url.value %} value="{{ version_form.repository_url.value }}"{% endif %} type="text" required>
+                  <p class="help-block">Coloque la URL del archivo en python (.py) en GitHub, Bitbucket, etc.</p>
+              </div>
+              <!-- /Código fuente -->
+
+              <!-- Unidad Almacenamiento de entrada -->
+              <div class="form-group">
+                <!-- Errors -->
+                {% if version_form.source_storage_units.errors %}
+                {% for error in version_form.source_storage_units.errors %}
+                <div class="alert alert-danger">
+                  <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- /Errors -->
+                <label for="">
+                  <b>
+                    Posibles unidades de almacenamiento origen <span class="text-danger small"> * </span>
+                    <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Seleccione las unidades de almacenamiento origen con las que es compatible la versión del algoritmo."></i></a>
+                  </b>
+                </label>
+                <select name="{{ version_form.source_storage_units.html_name }}" id="{{ version_form.source_storage_units.id_for_label }}" multiple="" class="form-control" required>
+                  {% for storage_unit in source_storage_units %}
+                  {% if storage_unit in selected_storage_units %}
+                  <option selected value="{{ storage_unit.id }}">{{ storage_unit.alias }}</option>
+                  {% else %}
+                  <option value="{{ storage_unit.id }}">{{ storage_unit.alias }}</option>
+                  {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+              <!-- /Unidad Almacenamiento de entrada -->
+              <div class="text-center">
+                <button type="submit" class="btn btn-default btn-lg">Actualizar Versión</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- main end -->
+    </div>
+  </div>
+</section>
+<!-- main-container end -->
+{% endblock %}

@@ -1,7 +1,9 @@
  # -*- coding: utf-8 -*-
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
+from django.contrib import messages
+from django.core.files import File
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
@@ -11,7 +13,11 @@ from rest_framework import viewsets
 from algorithm.models import Algorithm
 from algorithm.models import Topic
 from algorithm.models import Version
+from algorithm.models import Parameter
+from algorithm.forms import VersionForm
 from algorithm.serializers import AlgorithmSerializer
+
+import os 
 
 
 class AlgorithmIndexView(TemplateView):
@@ -123,14 +129,47 @@ class VersionCreateView(CreateView):
 
     Use the template algorithm/version_form.html
     """
+
     model = Version
+    form_class = VersionForm
 
     def get_context_data(self, **kwargs):
         """Add or change context initial data."""
 
-        data = super(VersionUpdateView, self).get_context_data(**kwargs)
-        data['version_form'] = data.get('form')
-        return data
+        context = super(VersionCreateView, self).get_context_data(**kwargs)
+        context['version_form'] = context.get('form')
+
+        algorithm_pk = self.kwargs.get('pk')
+        algorithm = get_object_or_404(Algorithm,pk=algorithm_pk)
+
+        context['next_minor_version'] = algorithm.next_minor_version()
+        context['next_major_version'] = algorithm.next_major_version()
+
+        return context
+
+    def get_initial(self):
+        """initialize some form initial data."""
+
+        algorithm_pk = self.kwargs.get('pk')
+        algorithm = get_object_or_404(Algorithm,pk=algorithm_pk)
+        initial = super(VersionCreateView, self).get_initial()
+        initial['algorithm'] = algorithm
+        return initial
+
+    def form_valid(self, form):
+
+        # form.instance.source_code
+        form.instance.publishing_state = Version.DEVELOPED_STATE
+        self.object = form.save()
+
+        file_name = os.path.basename(self.object.repository_url)
+        response = urllib.request.urlopen(self.object.repository_url)
+        content = response.read()
+        response.close()
+
+        self.object.source_code.save(file_name,File)
+
+        return redirect(self.get_success_url())
 
 
 class VersionDetailView(DetailView):
@@ -147,6 +186,11 @@ class VersionUpdateView(UpdateView):
     Use the template algorithm/version_form.html
     """
     model = Version
+    fields = [
+        'description',
+        'repository_url',
+        'source_storage_units'
+    ]
 
     def get_context_data(self, **kwargs):
         """Add or change context initial data."""
@@ -161,4 +205,71 @@ class VersionUpdateView(UpdateView):
         last_version_pk = self.kwargs.get('pk')
         last_version = get_object_or_404(Version,pk=last_version_pk)
         data = { 'version': last_version }
+        return data
+
+
+class VersionPublishView(TemplateView):
+    """Change the publishing_state of a version as Version.PUBLISHED_STATE
+
+    Only versions with publishing_state == Version.DEVELOPED_STATE 
+    can be published.
+    """
+    
+    def get(self,request,*args,**kwargs):
+        version_pk = self.kwargs.get('pk')
+        version = get_object_or_404(Version,pk=version_pk)
+
+        if version.publishing_state == Version.DEVELOPED_STATE:
+            version.publishing_state = Version.PUBLISHED_STATE
+            version.save()
+            message = "Versión publicada con éxito."
+        else:
+            message = (
+                "No es posible publicar una version"
+                " que no esta en estado 'EN DESARROLLO'."
+            )
+        
+        messages.warning(request, message)
+
+        return redirect('algorithm:version-detail',pk=version_pk)
+
+
+class VersionDeprecateView(TemplateView):
+    """Change the publishing_state of a version as Version.DEPRECATED_STATE
+
+    Only versions with publishing_state == Version.PUBLISHED_STATE 
+    can be deprecated.
+    """
+
+    def get(self,request,*args,**kwargs):
+        version_pk = self.kwargs.get('pk')
+        version = get_object_or_404(Version,pk=version_pk)
+
+        if version.publishing_state == Version.PUBLISHED_STATE:
+            version.publishing_state = Version.DEPRECATED_STATE
+            version.save()
+            message = "Versión deprecada con éxito."
+        else:
+            message = (
+                "No es posible deprecar una version"
+                " que no esta en estado 'PUBLICADA'."
+            )
+        
+        messages.warning(request, message)
+
+        return redirect('algorithm:version-detail',pk=version_pk)
+
+
+class ParameterCreateView(CreateView):
+    """Create a version for a given algorithm.
+
+    Use the template algorithm/parameter_form.html
+    """
+    model = Version
+
+    def get_context_data(self, **kwargs):
+        """Add or change context initial data."""
+
+        data = super(VersionUpdateView, self).get_context_data(**kwargs)
+        data['version_form'] = data.get('form')
         return data

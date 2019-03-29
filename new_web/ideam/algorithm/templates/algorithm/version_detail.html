@@ -102,7 +102,7 @@
           {% if user.is_authenticated %}
           {% if perms.algorithm.can_create_parameter %}
           <div class="pull-right">
-              <a href="#"><a href="{% url 'algorithm:new_parameter' version.algorithm.id version.id %}" class="btn btn-default btn-md"><i class="fa fa-plus-circle"></i> Nuevo Parámetro</a></a>
+              <a href="#"><a href="{% url 'algorithm:parameter-create' version.id %}" class="btn btn-default btn-md"><i class="fa fa-plus-circle"></i> Nuevo Parámetro</a></a>
           </div>
           {% endif %}
           {% endif %}
@@ -182,7 +182,7 @@
                 {% endif %}
                 {% if version.publishing_state == "1" and perms.algorithm.can_publish_version %}
                 <nav>
-                  <a href="{% url 'algorithm:publish_version' version.algorithm.id version.id %}" class="btn btn-primary btn-md btn-block">Publicar Versión</a>
+                  <a href="{% url 'algorithm:version-publish' version.id %}" class="btn btn-primary btn-md btn-block">Publicar Versión</a>
                 </nav>
                 {% endif %}
                 {% if version.publishing_state == "2" and execution_count == 0 %}
@@ -192,7 +192,7 @@
                 {% endif %}
                 {% if version.publishing_state == "2" %}
                 <nav>
-                  <a onclick="return confirm('¿Está seguro de volver obsoleta la versión? Recuerde que esta no podrá seguir siendo utilizada por los analistas.')" href="{% url 'algorithm:deprecate_version' version.algorithm.id version.id %}" class="btn btn-primary btn-md btn-block">Volver Versión Obsoleta</a>
+                  <a onclick="return confirm('¿Está seguro de volver obsoleta la versión? Recuerde que esta no podrá seguir siendo utilizada por los analistas.')" href="{% url 'algorithm:version-deprecate' version.id %}" class="btn btn-primary btn-md btn-block">Volver Versión Obsoleta</a>
                 </nav>
                 {% endif %}
                 {% if execution_count == 0 %}
