@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_datatables',
 
+    'bootstrap3',
+
     'index',
     'user_profile',
     'execution',

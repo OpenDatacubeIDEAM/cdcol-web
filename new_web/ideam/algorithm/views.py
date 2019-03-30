@@ -1,9 +1,9 @@
  # -*- coding: utf-8 -*-
 
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.core.files import File
+from django.core.files.base import ContentFile
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
@@ -14,10 +14,13 @@ from algorithm.models import Algorithm
 from algorithm.models import Topic
 from algorithm.models import Version
 from algorithm.models import Parameter
+from algorithm.models import VersionStorageUnit
+from storage.models import StorageUnit
 from algorithm.forms import VersionForm
 from algorithm.serializers import AlgorithmSerializer
 
-import os 
+import os
+import urllib
 
 
 class AlgorithmIndexView(TemplateView):
@@ -134,22 +137,26 @@ class VersionCreateView(CreateView):
     form_class = VersionForm
 
     def get_context_data(self, **kwargs):
-        """Add or change context initial data."""
-
-        context = super(VersionCreateView, self).get_context_data(**kwargs)
-        context['version_form'] = context.get('form')
+        """Change form initial data."""
 
         algorithm_pk = self.kwargs.get('pk')
         algorithm = get_object_or_404(Algorithm,pk=algorithm_pk)
+        # 
+        context = super(VersionCreateView, self).get_context_data(**kwargs)
+        form = context.get('form')
 
-        context['next_minor_version'] = algorithm.next_minor_version()
-        context['next_major_version'] = algorithm.next_major_version()
+        minor_version = algorithm.next_minor_version()
+        major_version = algorithm.next_major_version()
+
+        form.fields.get('number').choices = [
+            (minor_version,'Versión Menor - {}'.format(minor_version)),
+            (major_version,'Versión Mayor - {}'.format(major_version))
+        ]
 
         return context
 
     def get_initial(self):
         """initialize some form initial data."""
-
         algorithm_pk = self.kwargs.get('pk')
         algorithm = get_object_or_404(Algorithm,pk=algorithm_pk)
         initial = super(VersionCreateView, self).get_initial()
@@ -158,18 +165,33 @@ class VersionCreateView(CreateView):
 
     def form_valid(self, form):
 
-        # form.instance.source_code
+        # Selecting new version publishing_state.
         form.instance.publishing_state = Version.DEVELOPED_STATE
         self.object = form.save()
 
+        # Download source code from github and save it locally.
         file_name = os.path.basename(self.object.repository_url)
         response = urllib.request.urlopen(self.object.repository_url)
         content = response.read()
         response.close()
 
-        self.object.source_code.save(file_name,File)
+        self.object.source_code.save(file_name,ContentFile(content))
+
+        # Relate selecetd storage units with the current version
+        selected_storage_units = form.cleaned_data['source_storage_units']
+        for storage_unit in selected_storage_units:
+            version_storage_unit = VersionStorageUnit(
+                version=self.object,
+                storage_unit=storage_unit
+            )
+
+        messages.info(self.request, 'Nueva versión create con éxito !!.')
 
         return redirect(self.get_success_url())
+
+    def get_success_url(self):
+        algorithm_pk = self.kwargs.get('pk')
+        return reverse('algorithm:detail',pk=algorithm_pk)
 
 
 class VersionDetailView(DetailView):
