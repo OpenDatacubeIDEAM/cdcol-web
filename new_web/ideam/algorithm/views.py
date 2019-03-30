@@ -10,25 +10,28 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 
 from rest_framework import viewsets
+from algorithm.serializers import AlgorithmSerializer
+
 from algorithm.models import Algorithm
-from algorithm.models import Topic
 from algorithm.models import Version
 from algorithm.models import Parameter
 from algorithm.models import VersionStorageUnit
-from storage.models import StorageUnit
 from algorithm.forms import VersionForm
-from algorithm.serializers import AlgorithmSerializer
+from algorithm.forms import AlgorithmCreateForm
+from algorithm.forms import AlgorithmUpdateForm
+from storage.models import StorageUnit
 
 import os
 import urllib
 
 
 class AlgorithmIndexView(TemplateView):
+    """Display a list of the algorithms."""
     template_name = 'algorithm/index.html'
 
 
-# ViewSets define the view behavior.
 class AlgorithmViewSet(viewsets.ModelViewSet):
+    """CRUD over Algoritm model via API calls."""
     queryset = Algorithm.objects.all()
     serializer_class = AlgorithmSerializer
 
@@ -47,13 +50,13 @@ class AlgorithmViewSet(viewsets.ModelViewSet):
         
 
 class AlgorithmCreateView(CreateView):
-    """Create an algorithm and an initial version.
+    """Create an algorithm and an initial version for the algorithm.
 
     Use the template algorithm/algorithm_form.html
     """
 
     model = Algorithm
-    fields = ['name','description','topic']
+    form_class = AlgorithmCreateForm
     success_url = reverse_lazy('algorithm:index')
 
     def form_valid(self, form):
@@ -80,16 +83,12 @@ class AlgorithmCreateView(CreateView):
     def get_context_data(self, **kwargs):
         """Add or change context initial data."""
 
-        data = super(AlgorithmCreateView, self).get_context_data(**kwargs)
-        topics = Topic.objects.filter(enabled=True)
-        data['algorithm_form'] = data.get('form')
-        data['topics'] = topics
-
+        context = super(AlgorithmCreateView, self).get_context_data(**kwargs)
         # Template aditional data
-        data['section'] = 'Nuevo'
-        data['title'] = 'Nuevo Algoritmo'
-        data['button'] = 'Crear Algoritmo'
-        return data
+        context['section'] = 'Nuevo'
+        context['title'] = 'Nuevo Algoritmo'
+        context['button'] = 'Crear Algoritmo'
+        return context
 
 
 class AlgorithmUpdateView(UpdateView):
@@ -99,23 +98,26 @@ class AlgorithmUpdateView(UpdateView):
     """
 
     model = Algorithm
-    fields = ['name','description','topic']
+    form_class = AlgorithmUpdateForm
     success_url = reverse_lazy('algorithm:index')
 
 
     def get_context_data(self, **kwargs):
         """Add or change context initial data."""
 
-        data = super(AlgorithmUpdateView, self).get_context_data(**kwargs)
-        topics = Topic.objects.filter(enabled=True)
-        data['algorithm_form'] = data.get('form')
-        data['topics'] = topics
-
+        context = super(AlgorithmUpdateView, self).get_context_data(**kwargs)
         # Template aditional data
-        data['section'] = 'Editar'
-        data['title'] = 'Editar Algoritmo'
-        data['button'] = 'Actualizar Algoritmo'
-        return data
+        context['section'] = 'Editar'
+        context['title'] = 'Editar Algoritmo'
+        context['button'] = 'Actualizar Algoritmo'
+        return context
+
+    def get_initial(self):
+        """initialize the topic of the algorithm."""
+        initial = super(AlgorithmUpdateView, self).get_initial()
+        obj = self.get_object()
+        initial['topic'] = obj.topic
+        return initial
 
 
 class AlgorithmDetailView(DetailView):

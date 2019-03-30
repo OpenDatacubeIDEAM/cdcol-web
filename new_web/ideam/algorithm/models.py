@@ -15,6 +15,14 @@ class Topic(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        """This is the way the object will be rendered in templates."""
+        return self.name
+
+    def __unicode__(self):
+        """This is the way the object will be rendered in templates."""
+        return self.name
+
 
 class Algorithm(models.Model):
     """Algorithm.
@@ -33,9 +41,11 @@ class Algorithm(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
+        """This is the way the object will be rendered in templates."""
         return self.name
 
     def __unicode__(self):
+        """This is the way the object will be rendered in templates."""
         return self.name
 
     def version_count(self):
