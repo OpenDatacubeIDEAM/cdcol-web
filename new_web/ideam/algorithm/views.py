@@ -259,13 +259,46 @@ class VersionPublishView(TemplateView):
             version.publishing_state = Version.PUBLISHED_STATE
             version.save()
             message = "Versión publicada con éxito."
+            messages.info(request, message)
         else:
             message = (
                 "No es posible publicar una version"
                 " que no esta en estado 'EN DESARROLLO'."
             )
         
-        messages.warning(request, message)
+            messages.warning(request, message)
+
+        return redirect('algorithm:version-detail',pk=version_pk)
+
+
+class VersionUnPublishView(TemplateView):
+    """Change the publishing_state of a version as Version.PUBLISHED_STATE
+
+    Only versions with publishing_state == Version.PUBLISHED_STATE,
+    and number of Executions == 0 can be unpublished.
+    """
+    
+    def get(self,request,*args,**kwargs):
+        version_pk = self.kwargs.get('pk')
+        version = get_object_or_404(Version,pk=version_pk)
+
+        # If the algorithm is public
+        condition_1 = version.publishing_state == Version.PUBLISHED_STATE
+        # and it does not have executions
+        condition_2 = version.execution_set.all().count() == 0
+
+        if condition_1 and condition_2:
+            version.publishing_state = Version.DEVELOPED_STATE
+            version.save()
+            message = "Versión ha cambiado a estado 'EN DESARROLLO'."
+            messages.info(request, message)
+        else:
+            message = (
+                "No es posible cambiar el estado de la version "
+                "puede que tenga ejecuciones o no sea publica aún."
+            )
+        
+            messages.warning(request, message)
 
         return redirect('algorithm:version-detail',pk=version_pk)
 
@@ -285,13 +318,14 @@ class VersionDeprecateView(TemplateView):
             version.publishing_state = Version.DEPRECATED_STATE
             version.save()
             message = "Versión deprecada con éxito."
+            messages.info(request, message)
         else:
             message = (
                 "No es posible deprecar una version"
                 " que no esta en estado 'PUBLICADA'."
             )
         
-        messages.warning(request, message)
+            messages.warning(request, message)
 
         return redirect('algorithm:version-detail',pk=version_pk)
 

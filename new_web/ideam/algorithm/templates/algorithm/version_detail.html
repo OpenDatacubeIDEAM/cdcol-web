@@ -185,9 +185,9 @@
                   <a href="{% url 'algorithm:version-publish' version.id %}" class="btn btn-primary btn-md btn-block">Publicar Versión</a>
                 </nav>
                 {% endif %}
-                {% if version.publishing_state == "2" and execution_count == 0 %}
+                {% if version.publishing_state == "2" and version.execution_set.count == 0 %}
                 <nav>
-                  <a href="{% url 'algorithm:unpublish_version' version.algorithm.id version.id %}" class="btn btn-primary btn-md btn-block">Volver versión a En Desarrollo</a>
+                  <a href="{% url 'algorithm:version-unpublish' version.id %}" class="btn btn-primary btn-md btn-block">Volver versión a En Desarrollo</a>
                 </nav>
                 {% endif %}
                 {% if version.publishing_state == "2" %}
