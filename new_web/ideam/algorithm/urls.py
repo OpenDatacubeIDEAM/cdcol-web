@@ -11,6 +11,7 @@ from algorithm.views import VersionUpdateView
 from algorithm.views import VersionPublishView
 from algorithm.views import VersionUnPublishView
 from algorithm.views import VersionDeprecateView
+from algorithm.views import VersionDeleteView
 from algorithm.views import ParameterCreateView
 
 
@@ -26,6 +27,7 @@ urlpatterns = [
     path('version/<int:pk>/publish', VersionPublishView.as_view(), name='version-publish'),
     path('version/<int:pk>/unpublish', VersionUnPublishView.as_view(), name='version-unpublish'),
     path('version/<int:pk>/deprecate', VersionDeprecateView.as_view(), name='version-deprecate'),
+    path('<int:apk>/version/<int:pk>/delete', VersionDeleteView.as_view(), name='version-delete'),
 
     path('<int:pk>/parameter/create/', ParameterCreateView.as_view(), name='parameter-create'),
 ]

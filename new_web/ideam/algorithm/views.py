@@ -8,6 +8,8 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
+from django.views.generic.edit import DeleteView
+
 
 from rest_framework import viewsets
 from algorithm.serializers import AlgorithmSerializer
@@ -328,6 +330,19 @@ class VersionDeprecateView(TemplateView):
             messages.warning(request, message)
 
         return redirect('algorithm:version-detail',pk=version_pk)
+
+
+class VersionDeleteView(DeleteView):
+    model = Version
+    # success_message = "Versión eliminada con éxito."
+
+    def get_success_url(self):
+        """
+        Return a URL to the detail of the algorithm which 
+        version was deleted.
+        """
+        algorithm_pk = self.kwargs.get('apk')
+        return reverse('algorithm:detail',kwargs={'pk':algorithm_pk})
 
 
 class ParameterCreateView(CreateView):

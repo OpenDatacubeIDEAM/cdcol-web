@@ -195,9 +195,9 @@
                   <a onclick="return confirm('¿Está seguro de volver obsoleta la versión? Recuerde que esta no podrá seguir siendo utilizada por los analistas.')" href="{% url 'algorithm:version-deprecate' version.id %}" class="btn btn-primary btn-md btn-block">Volver Versión Obsoleta</a>
                 </nav>
                 {% endif %}
-                {% if execution_count == 0 %}
+                {% if version.execution_set.count == 0 %}
                 <nav>
-                  <a onclick="return confirm('¿Está seguro que desea elminar esta versión?')" href="{% url 'algorithm:delete_version' version.algorithm.id version.id %}" class="btn btn-primary btn-md btn-block">Eliminar Versión</a>
+                  <a href="{% url 'algorithm:version-delete' version.algorithm.id version.id %}" class="btn btn-primary btn-md btn-block">Eliminar Versión</a>
                 </nav>
                 {% else %}
                 <nav>

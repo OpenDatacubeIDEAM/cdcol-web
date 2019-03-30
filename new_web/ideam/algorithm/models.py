@@ -163,6 +163,14 @@ class Version(models.Model):
             ("can_start_version_review", "Iniciar Revisión Versión"),
         )
 
+    def __str__(self):
+        """This is the way the object will be rendered in templates."""
+        return '{}-{}'.format(self.algorithm.name,self.number)
+
+    def __unicode__(self):
+        """This is the way the object will be rendered in templates."""
+        return '{}-{}'.format(self.algorithm.name,self.number)
+
 
 class VersionStorageUnit(models.Model):
     """Each algorithm version supports a set of storage units (LANDSAT,SENTNEL,etc)."""

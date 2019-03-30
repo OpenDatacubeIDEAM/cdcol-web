@@ -107,14 +107,18 @@
             <h3 class="title">Acciones</h3>
             <div class="separator-2"></div>
             <nav>
+              {% if algorithm.last_version %}
               <a href="{% url 'execution:create' algorithm.last_version.id %}" class="btn btn-primary btn-md btn-block">Ejecutar Algoritmo</a>
+              {% else %}
+              <a  onclick="alert('No hay versiones para ejecutar')" href="" class="btn btn-primary btn-md btn-block">Ejecutar Algoritmo</a>
+              {% endif %}
             </nav>
             <nav>
-                {% if user.is_authenticated %}
-                {% if perms.algorithm.can_edit_algorithm %}
-                <a href="{% url 'algorithm:update' algorithm.id %}" class="btn btn-primary btn-md btn-block"><i class="fa fa-edit"></i> Editar Algoritmo</a>
-                {% endif %}
-                {% endif %}
+              {% if user.is_authenticated %}
+              {% if perms.algorithm.can_edit_algorithm %}
+              <a href="{% url 'algorithm:update' algorithm.id %}" class="btn btn-primary btn-md btn-block"><i class="fa fa-edit"></i> Editar Algoritmo</a>
+              {% endif %}
+              {% endif %}
             </nav>
           </div>
         </div>
