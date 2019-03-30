@@ -221,6 +221,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework_datatables.filters.DatatablesFilterBackend',
+        # 'django_filters.rest_framework.DjangoFilterBackend'
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework_datatables.pagination.DatatablesPageNumberPagination',
     #  The page size is driven by the datatable in the html 

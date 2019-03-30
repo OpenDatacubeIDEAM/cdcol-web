@@ -128,6 +128,14 @@ class Version(models.Model):
         publishing_state is 'In Development'. 
     * It is only possible to update a version if its publishing_state is in 
         'In Development'.
+
+    This is the life cycle of a given version:
+    
+    1. EN DESARROLLO
+    2. PENDIENTE DE REVISION
+    3. EN REVISION
+    4. PUBLICADA
+    5. OBSOLETA
     """
 
     DEVELOPED_STATE = '1'

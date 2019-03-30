@@ -9,10 +9,14 @@ from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from django.views.generic.edit import DeleteView
+from django.conf import settings
+from django.core.mail import send_mail
 
+import django_filters.rest_framework
 
 from rest_framework import viewsets
 from algorithm.serializers import AlgorithmSerializer
+from algorithm.serializers import VersionSerializer
 
 from algorithm.models import Algorithm
 from algorithm.models import Version
@@ -50,7 +54,13 @@ class AlgorithmViewSet(viewsets.ModelViewSet):
             return super().get_queryset()
 
         return user.algorithm_set.all()
-        
+
+
+class VersionViewSet(viewsets.ModelViewSet):
+    """CRUD over Version model via API calls."""
+    queryset = Version.objects.filter(publishing_state="4")
+    serializer_class = VersionSerializer
+
 
 class AlgorithmCreateView(CreateView):
     """Create an algorithm and an initial version for the algorithm.
@@ -343,6 +353,75 @@ class VersionDeleteView(DeleteView):
         """
         algorithm_pk = self.kwargs.get('apk')
         return reverse('algorithm:detail',kwargs={'pk':algorithm_pk})
+
+
+class VersionDeleteView(DeleteView):
+    """Delete a given version of an algorithm."""
+    
+    model = Version
+    success_message = "Versión eliminada con éxito."
+
+    def get_success_url(self):
+        """
+        Return a URL to the detail of the algorithm which 
+        version was deleted.
+        """
+        algorithm_pk = self.kwargs.get('apk')
+        return reverse('algorithm:detail',kwargs={'pk':algorithm_pk})
+
+
+class VersionReviewPendingView(TemplateView):
+    """Change the publishing_state of a version as Version.REVIEW_PENDING."""
+    
+    def get(self,request,*args,**kwargs):
+        version_pk = self.kwargs.get('pk')
+        version = version = get_object_or_404(Version,pk=version_pk)
+        version.publishing_state = Version.REVIEW_PENDING
+        version.save()
+
+        messages.info(
+            request, 
+            'La versión del algoritmo esta pendiente por Revisión.'
+        )
+        return redirect('algorithm:version-detail', pk=version_pk)
+
+
+class VersionReviewStartView(TemplateView):
+    """Change the publishing_state of a version as Version.REVIEW.
+
+    And send an email to the user to indicate his/her version
+    is being reviewed.
+    """
+
+    def get(self,request,*args,**kwargs):
+        version_pk = self.kwargs.get('pk')
+        version = get_object_or_404(Version, pk=version_pk)
+        version.publishing_state = Version.REVIEW
+        version.save()
+
+        # send email
+        subject = 'Versión en Revisión'
+        message = (
+            'La versión %s del Algoritmo %s '
+            ' ha iniciado su proceso de revisión.'
+        )
+        message = message.format(version.number, version.algorithm.name)
+        from_email = settings.DEFAULT_FROM_EMAIL
+        to_email =  [version.algorithm.created_by.email]
+
+        send_mail(subject,message,from_email,to_email,fail_silently=False)
+
+        messages.info(
+            request, 
+            'Se ha iniciado la revisión de la Version.'
+        )
+
+        return redirect('algorithm:version-detail',pk=version_pk)
+
+
+class VersionReviewListView(TemplateView):
+    """Display the list of versions with publishing_state == Version.REVIEW_PENDING"""
+    template_name = 'algorithm/version_review_list.html'
 
 
 class ParameterCreateView(CreateView):

@@ -2,10 +2,12 @@
 
 from rest_framework import serializers
 from algorithm.models import Algorithm
-from algorithm.models import Topic 
+from algorithm.models import Topic
+from algorithm.models import Version
 
 
 class TopicSerializer(serializers.ModelSerializer):
+
     id = serializers.IntegerField(read_only=True)
     
     class Meta:
@@ -21,6 +23,7 @@ class TopicSerializer(serializers.ModelSerializer):
 
 
 class AlgorithmSerializer(serializers.ModelSerializer):
+
     topic = TopicSerializer()
     version_count = serializers.ReadOnlyField()
     last_version_status = serializers.ReadOnlyField()
@@ -39,3 +42,21 @@ class AlgorithmSerializer(serializers.ModelSerializer):
         # django-rest-framework-datatables
         datatables_always_serialize = ('id',)
 
+
+class VersionSerializer(serializers.ModelSerializer):
+
+    id = serializers.IntegerField(read_only=True)
+    algorithm = AlgorithmSerializer()
+
+    class Meta:
+        model = Version
+        fields = (
+            'id', 
+            'number', 
+            'algorithm',
+            'publishing_state', 
+            'created_at'
+        )
+
+        # django-rest-framework-datatables
+        datatables_always_serialize = ('id',)

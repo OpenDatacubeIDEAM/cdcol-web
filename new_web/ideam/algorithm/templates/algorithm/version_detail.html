@@ -172,12 +172,12 @@
                 {% endif %}
                 {% if version.publishing_state == "1" and perms.algorithm.can_send_version_to_review %}
                 <nav>
-                  <a href="{% url 'algorithm:review_version' version.algorithm.id version.id %}" class="btn btn-primary btn-md btn-block">Enviar a Revisión</a>
+                  <a href="{% url 'algorithm:version-review' version.id %}" class="btn btn-primary btn-md btn-block">Enviar a Revisión</a>
                 </nav>
                 {% endif %}
                 {% if version.publishing_state == "4" and perms.algorithm.can_start_version_review %}
                 <nav>
-                  <a href="{% url 'algorithm:version_review_start' version.algorithm.id version.id %}" class="btn btn-primary btn-md btn-block">Iniciar Revisión</a>
+                  <a href="{% url 'algorithm:version-review-start' version.id %}" class="btn btn-primary btn-md btn-block">Iniciar Revisión</a>
                 </nav>
                 {% endif %}
                 {% if version.publishing_state == "1" and perms.algorithm.can_publish_version %}
