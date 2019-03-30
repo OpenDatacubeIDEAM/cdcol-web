@@ -16,7 +16,8 @@ from algorithm.models import Algorithm
 from algorithm.models import Version
 from algorithm.models import Parameter
 from algorithm.models import VersionStorageUnit
-from algorithm.forms import VersionForm
+from algorithm.forms import VersionCreateForm
+from algorithm.forms import VersionUpdateForm
 from algorithm.forms import AlgorithmCreateForm
 from algorithm.forms import AlgorithmUpdateForm
 from storage.models import StorageUnit
@@ -115,8 +116,8 @@ class AlgorithmUpdateView(UpdateView):
     def get_initial(self):
         """initialize the topic of the algorithm."""
         initial = super(AlgorithmUpdateView, self).get_initial()
-        obj = self.get_object()
-        initial['topic'] = obj.topic
+        algorithm_obj = self.get_object()
+        initial['topic'] = algorithm_obj.topic
         return initial
 
 
@@ -136,17 +137,16 @@ class VersionCreateView(CreateView):
     """
 
     model = Version
-    form_class = VersionForm
+    form_class = VersionCreateForm
 
     def get_context_data(self, **kwargs):
-        """Change form initial data."""
+        """Change form and context initial data."""
 
-        algorithm_pk = self.kwargs.get('pk')
-        algorithm = get_object_or_404(Algorithm,pk=algorithm_pk)
-        # 
         context = super(VersionCreateView, self).get_context_data(**kwargs)
         form = context.get('form')
 
+        algorithm_pk = self.kwargs.get('pk')
+        algorithm = get_object_or_404(Algorithm,pk=algorithm_pk)
         minor_version = algorithm.next_minor_version()
         major_version = algorithm.next_major_version()
 
@@ -155,10 +155,15 @@ class VersionCreateView(CreateView):
             (major_version,'Versión Mayor - {}'.format(major_version))
         ]
 
+        # Template aditional data
+        context['section'] = 'Version'
+        context['title'] = 'Nueva Version'
+        context['button'] = 'Crear Version'
+
         return context
 
     def get_initial(self):
-        """initialize some form initial data."""
+        """initialize version algorthm."""
         algorithm_pk = self.kwargs.get('pk')
         algorithm = get_object_or_404(Algorithm,pk=algorithm_pk)
         initial = super(VersionCreateView, self).get_initial()
@@ -166,6 +171,7 @@ class VersionCreateView(CreateView):
         return initial
 
     def form_valid(self, form):
+        """Initialice version status and source_code."""
 
         # Selecting new version publishing_state.
         form.instance.publishing_state = Version.DEVELOPED_STATE
@@ -192,16 +198,9 @@ class VersionCreateView(CreateView):
         return redirect(self.get_success_url())
 
     def get_success_url(self):
+        """Return a URL to the detail of the algorithm."""
         algorithm_pk = self.kwargs.get('pk')
-        return reverse('algorithm:detail',pk=algorithm_pk)
-
-
-class VersionDetailView(DetailView):
-    """Display version detail.
-
-    Use the template algorithm/version_detail.html
-    """
-    model = Version
+        return reverse('algorithm:detail',kwargs={'pk':algorithm_pk})
 
 
 class VersionUpdateView(UpdateView):
@@ -210,26 +209,39 @@ class VersionUpdateView(UpdateView):
     Use the template algorithm/version_form.html
     """
     model = Version
-    fields = [
-        'description',
-        'repository_url',
-        'source_storage_units'
-    ]
+    form_class = VersionUpdateForm
 
     def get_context_data(self, **kwargs):
         """Add or change context initial data."""
 
-        data = super(VersionUpdateView, self).get_context_data(**kwargs)
-        data['version_form'] = data.get('form')
-        return data
+        context = super(VersionUpdateView, self).get_context_data(**kwargs)
+
+        # Template aditional data
+        context['section'] = 'Version'
+        context['title'] = 'Editar Version'
+        context['button'] = 'Actualizar Version'
+        return context
 
     def get_initial(self):
-        """This method must return a dictionary."""
+        """initialize version algorthm."""
+        initial = super(VersionUpdateView, self).get_initial()
+        version_obj = self.get_object()
+        initial['algorithm'] = version_obj.algorithm
+        initial['number'] = version_obj.number
+        return initial
 
-        last_version_pk = self.kwargs.get('pk')
-        last_version = get_object_or_404(Version,pk=last_version_pk)
-        data = { 'version': last_version }
-        return data
+    def get_success_url(self):
+        """Return a URL to the detail of the updted version."""
+        version_pk = self.kwargs.get('pk')
+        return reverse('algorithm:version-detail',kwargs={'pk':version_pk})
+
+
+class VersionDetailView(DetailView):
+    """Display version detail.
+
+    Use the template algorithm/version_detail.html
+    """
+    model = Version
 
 
 class VersionPublishView(TemplateView):

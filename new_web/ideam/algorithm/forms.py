@@ -38,6 +38,7 @@ class AlgorithmCreateForm(forms.ModelForm):
         )
     )
 
+
 class AlgorithmUpdateForm(AlgorithmCreateForm):
     """Form to update algorithm."""
 
@@ -61,8 +62,9 @@ class ChoiceFieldNoValidation(forms.ChoiceField):
         pass
 
 
-class VersionForm(forms.ModelForm):
-    
+class VersionCreateForm(forms.ModelForm):
+    """Create version form."""
+
     class Meta:
         model = Version
         fields = [ 
@@ -90,10 +92,51 @@ class VersionForm(forms.ModelForm):
             }
         )
     )
-    number = ChoiceFieldNoValidation(label='Número de Nueva Versión')
-    repository_url = forms.CharField(max_length=200, required=True)
+    number = ChoiceFieldNoValidation(label='Número de Versión')
+    repository_url = forms.CharField(
+        label='URL Código Fuente',max_length=200, required=True
+    )
     source_storage_units = forms.ModelMultipleChoiceField(
         queryset=StorageUnit.objects.all(), required=True
     )
 
 
+class VersionUpdateForm(forms.ModelForm):
+    """Update version form."""
+
+    class Meta:
+        model = Version
+        fields = [ 
+            'algorithm','number','description',
+            'repository_url','source_storage_units'
+        ]
+
+    algorithm = forms.ModelChoiceField(
+        label='Algoritmo',
+        queryset=Algorithm.objects.all(),
+        to_field_name="name",
+        widget=forms.TextInput(attrs={'readonly':'readonly'}),
+    )
+    description = forms.CharField(
+        label='Descripción de la Versión',
+        widget=forms.Textarea(
+            attrs={
+                'rows': 5, 
+                'class': 'form-control', 
+                'required': 'True',
+                'placeholder': (
+                    'Ingrese una descripción de los cambios o ajustes ' 
+                    'realizados al algoritmo en esta nueva versión.'
+                )
+            }
+        )
+    )
+    number = forms.CharField(
+        label='Número de la Versión',disabled=True
+    )
+    repository_url = forms.CharField(
+        label='URL Código Fuente',max_length=200, required=True
+    )
+    source_storage_units = forms.ModelMultipleChoiceField(
+        queryset=StorageUnit.objects.all(), required=True
+    )
