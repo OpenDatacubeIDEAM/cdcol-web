@@ -130,7 +130,7 @@ class Version(models.Model):
         'In Development'.
 
     This is the life cycle of a given version:
-    
+
     1. EN DESARROLLO
     2. PENDIENTE DE REVISION
     3. EN REVISION

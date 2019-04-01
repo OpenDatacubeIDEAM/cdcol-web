@@ -5,6 +5,7 @@ from django import forms
 from algorithm.models import Version
 from algorithm.models import Algorithm
 from algorithm.models import Topic
+from algorithm.models import Parameter
 from storage.models import StorageUnit
 
 
@@ -139,4 +140,112 @@ class VersionUpdateForm(forms.ModelForm):
     )
     source_storage_units = forms.ModelMultipleChoiceField(
         queryset=StorageUnit.objects.all(), required=True
+    )
+
+
+class ParameterForm(forms.ModelForm):
+
+    class Meta:
+        model = Parameter
+        fields = [ 
+            'algorithm','version','name',
+            'parameter_type',
+            'description','help_text',
+            'position','required','enabled',
+            'output_included',
+            'default_value','function_name',
+            
+        ]
+
+    algorithm = forms.ModelChoiceField(
+        label='Algoritmo',
+        queryset=Algorithm.objects.all(),
+        to_field_name="name",
+        widget=forms.TextInput(attrs={'readonly':'readonly'}),
+    )
+
+    version = forms.ModelChoiceField(
+        label='Número de la Versión',
+        queryset=Version.objects.all(),
+        to_field_name="number",
+        widget=forms.TextInput(attrs={'readonly':'readonly'}),
+    )
+
+    name = forms.CharField(
+        label='Nombre del Parámetro',
+        max_length=200
+    )
+    parameter_type = forms.ChoiceField(
+        label='Tipo del Parámetro',
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        choices=Parameter.PARAMETER_TYPES,
+        required=True
+    )
+    description = forms.CharField(
+        label='Descripción del Parámetro',
+        required=False, 
+        widget=forms.Textarea(
+            attrs={
+                'rows': 5, 
+                'class': 'form-control',
+                'placeholder': (
+                    'Ingrese una descripción del significado de este parámetro ' 
+                    'en la ejecución de la versión algortimo.'
+                )
+            }
+        )
+    )
+    help_text = forms.CharField(
+        label='Texto de Ayuda del Parámetro (Opcional)',
+        required=False, 
+        widget=forms.Textarea(
+            attrs={
+                'rows': 5, 
+                'class': 'form-control',
+                'placeholder': (
+                    'Ingrese un texto con las ayudas y consideraciones '
+                    'que deben ser tenidas en cuenta por los usuarios al '
+                    'ingresar este parámetro.'
+                )
+            }
+        )
+    )
+    position = forms.IntegerField(
+        label='Posición',
+        min_value=0, 
+        required=True,
+        help_text=(
+            'La posición indica el orden en el que aparecerá este '
+            'parámetro al momento de ejecutar la versión del algoritmo.'
+        )
+    )
+    required = forms.BooleanField(
+        label='Este Parámetro es Obligatorio',
+        required=False, 
+        initial=True,
+        help_text = 'Si el parámetro es opcional desmarcar esta casilla.'
+    )
+    enabled = forms.BooleanField(
+        label='Este parámetro está habilitado',
+        required=False, 
+        initial=True,
+        help_text='Para deshabilitar este parámetro, desmarcar esta casilla. '
+    )
+    default_value = forms.CharField(
+        label='Valor por Defecto (Opcional)',
+        max_length=200, 
+        required=False,
+        help_text='Ingrese el valor por defecto que debe tomar este parámetro.'
+    )
+    function_name = forms.CharField(
+        label='Nombre por Defecto en la Función',
+        max_length=200,
+        required=True,
+        help_text='Ingrese el nombre por defecto del parámetro en la función.'
+    )
+    output_included = forms.BooleanField(
+        label='Se incluye en la Salida',
+        required=False,
+        initial=True,
+        help_text='Para no inluir este parámetro en la salida, desmarcar esta casilla. '
     )

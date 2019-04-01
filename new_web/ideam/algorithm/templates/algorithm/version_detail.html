@@ -123,7 +123,7 @@
                 </tr>
               </thead>
               <tbody>
-                {% for param in parameters %}
+                {% for param in version.parameter_set.all %}
                 <tr>
                   <td>{{ param.name }}</td>
                   <td>{{ param.get_parameter_type_display }}</td>
@@ -132,11 +132,11 @@
                   <td>{{ param.enabled }}</td>
                   <td>{{ param.output_included }}</td>
                   <td>
-                    <a href="{% url 'algorithm:view_parameter' param.version.algorithm.id param.version.id param.id %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a>
+                    <a href="{% url 'algorithm:parameter-detail' param.id %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a>
                     {% if version.publishing_state == "1" %}
                     {% if user.is_authenticated %}
                     {% if perms.algorithm.can_edit_parameter %}
-                    <a href="{% url 'algorithm:update_parameter' param.version.algorithm.id param.version.id param.id %}" class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a>
+                    <a href="{% url 'algorithm:parameter-update' param.id %}" class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a>
                     {% endif %}
                     {% endif %}
                     {% endif %}

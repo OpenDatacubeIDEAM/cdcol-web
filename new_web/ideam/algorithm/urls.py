@@ -16,6 +16,8 @@ from algorithm.views import VersionReviewPendingView
 from algorithm.views import VersionReviewStartView
 from algorithm.views import VersionReviewListView
 from algorithm.views import ParameterCreateView
+from algorithm.views import ParameterUpdateView
+from algorithm.views import ParameterDetailView
 
 
 urlpatterns = [
@@ -37,5 +39,7 @@ urlpatterns = [
 
     
 
-    path('<int:pk>/parameter/create/', ParameterCreateView.as_view(), name='parameter-create'),
+    path('version/<int:pk>/parameter/create/', ParameterCreateView.as_view(), name='parameter-create'),
+    path('version/parameter/<int:pk>/update/', ParameterUpdateView.as_view(), name='parameter-update'),
+    path('version/parameter/<int:pk>/detail/', ParameterDetailView.as_view(), name='parameter-detail'),
 ]

@@ -26,6 +26,7 @@ from algorithm.forms import VersionCreateForm
 from algorithm.forms import VersionUpdateForm
 from algorithm.forms import AlgorithmCreateForm
 from algorithm.forms import AlgorithmUpdateForm
+from algorithm.forms import ParameterForm
 from storage.models import StorageUnit
 
 import os
@@ -425,15 +426,81 @@ class VersionReviewListView(TemplateView):
 
 
 class ParameterCreateView(CreateView):
-    """Create a version for a given algorithm.
+    """Create a parameter for a given version.
 
     Use the template algorithm/parameter_form.html
     """
-    model = Version
+    model = Parameter
+    form_class = ParameterForm
+
+    def get_initial(self):
+        """initialize version algorthm."""
+        initial = super(ParameterCreateView, self).get_initial()
+        version_pk = self.kwargs.get('pk')
+        version_obj = get_object_or_404(Version,pk=version_pk)
+        initial['algorithm'] = version_obj.algorithm
+        initial['version'] = version_obj
+        return initial
 
     def get_context_data(self, **kwargs):
         """Add or change context initial data."""
 
-        data = super(VersionUpdateView, self).get_context_data(**kwargs)
-        data['version_form'] = data.get('form')
-        return data
+        context = super(ParameterCreateView, self).get_context_data(**kwargs)
+
+        # Template aditional data
+        context['section'] = 'Nuevo Parámetro'
+        context['title'] = 'Nuevo Parámetro'
+        context['button'] = 'Crear Parámetro'
+        return context
+
+    def get_success_url(self):
+        """
+        Return a URL to the detail of the algorithm version.
+        """
+        version_pk = self.kwargs.get('pk')
+        return reverse('algorithm:version-detail',kwargs={'pk':version_pk})
+
+
+class ParameterUpdateView(UpdateView):
+    """Update a parameter for a given version.
+
+    Use the template algorithm/parameter_form.html
+    """
+    model = Parameter
+    form_class = ParameterForm
+
+    def get_initial(self):
+        """initialize version algorthm."""
+        initial = super(ParameterUpdateView, self).get_initial()
+        parameter_pk = self.kwargs.get('pk')
+        parameter_obj = get_object_or_404(Parameter,pk=parameter_pk)
+        initial['algorithm'] = parameter_obj.version.algorithm
+        initial['version'] = parameter_obj.version
+        return initial
+
+    def get_context_data(self, **kwargs):
+        """Add or change context initial data."""
+
+        context = super(ParameterUpdateView, self).get_context_data(**kwargs)
+
+        # Template aditional data
+        context['section'] = 'Editar Parámetro'
+        context['title'] = 'Editar Parámetro'
+        context['button'] = 'Actualizar Parámetro'
+        return context
+
+    def get_success_url(self):
+        """
+        Return a URL to the detail of the algorithm version.
+        """
+        parameter_pk = self.kwargs.get('pk')
+        return reverse('algorithm:parameter-detail',kwargs={'pk':parameter_pk})
+
+
+class ParameterDetailView(DetailView):
+    """Display parameter detail.
+
+    Use the template algorithm/parameter_detail.html
+    """
+    model = Parameter
+    context_object_name = 'parameter'
