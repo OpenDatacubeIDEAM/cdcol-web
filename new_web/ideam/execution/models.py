@@ -55,3 +55,14 @@ class Execution(models.Model):
     #         ("can_create_new_execution", "Registrar la ejecución de un algoritmo"),
     #         ("can_view_new_execution", "Ver detalle y parámetros de un algoritmo para ejecutar"),
     #     )
+
+
+class Review(models.Model):
+    """Each execution can be punctuated after it has finished."""
+
+    execution = models.ForeignKey(Execution, on_delete=models.CASCADE)
+    rating = models.IntegerField()
+    comments = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    reviewed_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='review_author')
