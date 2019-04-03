@@ -63,157 +63,140 @@
                 </div>
 
 
-                                <!-- Archivo de ingesta -->
-                                <div class="form-group">
-                                    <!-- Errors -->
-                                    {% if form.ingest_file.errors %}
-                                        {% for error in form.ingest_file.errors %}
-                                            <div class="alert alert-danger">
-                                                <strong>{{ error|escape }}</strong>
-                                            </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                    <!-- /Errors -->
-                                    <label for="nameUnitIngestFile">
-                                        <b>
-                                            Archivo de ingesta <span class="text-danger small"> * </span>
-                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Debe cargar un archivo yaml (.yml) con la informacion necesaria para poder ejecutar los procesos de ingesta sobre la unidad de almacenamiento."></i></a>
-                                        </b>
-                                    </label>
-                                    <input name="{{ form.ingest_file.html_name }}"
-                                           id="{{ form.ingest_file.id_for_label }}" type="file" required>
-                                    <p class="help-block">Suba el archivo .yml con la información para poder realizar la ingesta <a target="_blank" href="{% url 'template:index' %}" class="btn btn-primary btn-sm">Ver plantillas</a></p>
-                                </div>
-                                <!-- /Archivo de ingesta -->
+                <!-- Archivo de ingesta -->
+                <div class="form-group">
+                  <!-- Errors -->
+                  {% if form.ingest_file.errors %}
+                  {% for error in form.ingest_file.errors %}
+                  <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                  </div>
+                  {% endfor %}
+                  {% endif %}
+                  <!-- /Errors -->
+                  <label for="nameUnitIngestFile">
+                    <b>
+                      Archivo de ingesta <span class="text-danger small"> * </span>
+                      <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Debe cargar un archivo yaml (.yml) con la informacion necesaria para poder ejecutar los procesos de ingesta sobre la unidad de almacenamiento."></i></a>
+                    </b>
+                  </label>
+                  <input name="{{ form.ingest_file.html_name }}" id="{{ form.ingest_file.id_for_label }}" type="file" required>
+                  <p class="help-block">Suba el archivo .yml con la información para poder realizar la ingesta <a target="_blank" href="{% url 'template:index' %}" class="btn btn-primary btn-sm">Ver plantillas</a></p>
+                </div>
+                <!-- /Archivo de ingesta -->
 
-                                <!-- Nombre de la unidad -->
-                                <div class="form-group">
-                                    <!-- Errors -->
-                                    {% if form.detailed_processing_level.errors %}
-                                        {% for error in form.detailed_processing_level.errors %}
-                                            <div class="alert alert-danger">
-                                                <strong>{{ error|escape }}</strong>
-                                            </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                    <!-- /Errors -->
-                                    <label for="detailedProcessingLevel">
-                                        <b>
-                                            Nombre de la unidad
-                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="El nombre de la unidad se toma del 'Archivo de descripción'."></i></a>
-                                        </b>
-                                    </label>
-                                    <input class="form-control"
-                                           name="{{ form.name.html_name }}"
-                                           id="{{ form.name.id_for_label }}"
-                                           readonly="true"
-                                           placeholder="Nombre UA"
-                                            {% if form.name.value %}
-                                           value="{{ form.name.value }}"{% endif %}
-                                           type="text">
-                                </div>
+                <!-- Nombre de la unidad -->
+                <div class="form-group">
+                  <!-- Errors -->
+                  {% if form.detailed_processing_level.errors %}
+                  {% for error in form.detailed_processing_level.errors %}
+                  <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                  </div>
+                  {% endfor %}
+                  {% endif %}
+                  <!-- /Errors -->
+                  <label for="detailedProcessingLevel">
+                    <b>
+                      Nombre de la unidad
+                      <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="El nombre de la unidad se toma del 'Archivo de descripción'."></i></a>
+                    </b>
+                  </label>
+                  <input class="form-control" name="{{ form.name.html_name }}" id="{{ form.name.id_for_label }}" readonly="true" placeholder="Nombre UA" {% if form.name.value %} value="{{ form.name.value }}"{% endif %} type="text">
+                </div>
                                 <!-- /Nombre de la unidad -->
 
-                                <!-- Descripción -->
-                                <div class="form-group">
-                                    <!-- Errors -->
-                                    {% if form.detailed_processing_level.errors %}
-                                        {% for error in form.detailed_processing_level.errors %}
-                                            <div class="alert alert-danger">
-                                                <strong>{{ error|escape }}</strong>
-                                            </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                    <!-- /Errors -->
-                                    <label for="detailedProcessingLevel">
-                                        <b>
-                                            Descripción
-                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="La descripción de la unidad se toma del 'Archivo de descripción'."></i></a>
-                                        </b>
-                                    </label>
-                                    <input class="form-control"
-                                           name="{{ form.description.html_name }}"
-                                           id="{{ form.description.id_for_label }}"
-                                           readonly="true"
-                                           placeholder="Descripción UA"
-                                            {% if form.description.value %}
-                                           value="{{ form.description.value }}"{% endif %}
-                                           type="text">
-                                </div>
-                                <!-- /Descripción -->
-
-                                <!-- Archivo de descripción -->
-                                <div class="form-group">
-                                    <!-- Errors -->
-                                    {% if form.description_file.errors %}
-                                        {% for error in form.description_file.errors %}
-                                            <div class="alert alert-danger">
-                                                <strong>{{ error|escape }}</strong>
-                                            </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                    <!-- /Errors -->
-                                    <label for="nameUnitFile">
-                                        <b>
-                                            Archivo de descripción <span class="text-danger small"> *</span>
-                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Debe cargar un archivo yaml (.yml) con la informacion de la descripcion de la unidad de almacenamiento."></i></a>
-                                        </b>
-                                    </label>
-                                    <input name="{{ form.description_file.html_name }}"
-                                           id="{{ form.description_file.id_for_label }}" type="file" required>
-                                    <p class="help-block">Suba el archivo .yml con la descripción de la unidad <a target="_blank" href="{% url 'template:index' %}" class="btn btn-primary btn-sm">Ver plantillas</a></p>
-                                </div>
-                                <!-- /Archivo de descripción -->
-
-                                <!-- Metadata script file -->
-                                <div class="form-group">
-                                    <!-- Errors -->
-                                    {% if form.metadata_generation_script.errors %}
-                                        {% for error in form.metadata_generation_script.errors %}
-                                            <div class="alert alert-danger">
-                                                <strong>{{ error|escape }}</strong>
-                                            </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                    <!-- /Errors -->
-                                    <label for="">
-                                        <b>
-                                            Script de generación de metadatos <span class="text-danger small"> *</span>
-                                            <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Debe cargar un script en python (.py) con el codigo necesario para generar los metadatos durante los procesos de ingesta en la unidad de almacenamiento."></i></a>
-                                        </b>
-                                    </label>
-                                    <input name="{{ form.metadata_generation_script.html_name }}"
-                                           id="{{ form.metadata_generation_script.id_for_label }}" type="file" required>
-                                    <p class="help-block">Suba el archivo .py que genera los metadatos de las imágenes a ingestar <a target="_blank" href="{% url 'ingest_template:index' %}" class="btn btn-primary btn-sm">Ver scripts</a></p>
-                                </div>
-                                <!-- /Metadata script file -->
-
-                                <div class="text-center">
-                                    <button type="submit" class="btn btn-default btn-lg">Crear Unidad</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                <!-- Descripción -->
+                <div class="form-group">
+                  <!-- Errors -->
+                  {% if form.detailed_processing_level.errors %}
+                  {% for error in form.detailed_processing_level.errors %}
+                  <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                  </div>
+                  {% endfor %}
+                  {% endif %}
+                  <!-- /Errors -->
+                  <label for="detailedProcessingLevel">
+                    <b>
+                      Descripción
+                      <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="La descripción de la unidad se toma del 'Archivo de descripción'."></i></a>
+                    </b>
+                  </label>
+                  <input class="form-control" name="{{ form.description.html_name }}" id="{{ form.description.id_for_label }}" readonly="true"  placeholder="Descripción UA" {% if form.description.value %} value="{{ form.description.value }}"{% endif %} type="text">
                 </div>
-                <!-- main end -->
+                <!-- /Descripción -->
+
+                <!-- Archivo de descripción -->
+                <div class="form-group">
+                  <!-- Errors -->
+                  {% if form.description_file.errors %}
+                  {% for error in form.description_file.errors %}
+                  <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                  </div>
+                  {% endfor %}
+                  {% endif %}
+                  <!-- /Errors -->
+                  <label for="nameUnitFile">
+                    <b>
+                      Archivo de descripción <span class="text-danger small"> *</span>
+                      <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Debe cargar un archivo yaml (.yml) con la informacion de la descripcion de la unidad de almacenamiento."></i></a>
+                    </b>
+                  </label>
+                    <input name="{{ form.description_file.html_name }}" id="{{ form.description_file.id_for_label }}" type="file" required>
+                    <p class="help-block">Suba el archivo .yml con la descripción de la unidad <a target="_blank" href="{% url 'template:index' %}" class="btn btn-primary btn-sm">Ver plantillas</a></p>
+                </div>
+                <!-- /Archivo de descripción -->
+
+                <!-- Metadata script file -->
+                <div class="form-group">
+                  <!-- Errors -->
+                  {% if form.metadata_generation_script.errors %}
+                  {% for error in form.metadata_generation_script.errors %}
+                  <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                  </div>
+                  {% endfor %}
+                  {% endif %}
+                  <!-- /Errors -->
+                  <label for="">
+                    <b>
+                      Script de generación de metadatos <span class="text-danger small"> *</span>
+                      <a class="help-hover hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Debe cargar un script en python (.py) con el codigo necesario para generar los metadatos durante los procesos de ingesta en la unidad de almacenamiento."></i></a>
+                    </b>
+                  </label>
+                  <input name="{{ form.metadata_generation_script.html_name }}" id="{{ form.metadata_generation_script.id_for_label }}" type="file" required>
+                  <p class="help-block">Suba el archivo .py que genera los metadatos de las imágenes a ingestar <a target="_blank" href="{% url 'ingest_template:index' %}" class="btn btn-primary btn-sm">Ver scripts</a></p>
+                </div>
+                <!-- /Metadata script file -->
+
+                <div class="text-center">
+                  <button type="submit" class="btn btn-default btn-lg">Crear Unidad</button>
+                </div>
+              </form>
             </div>
+          </div>
         </div>
-    </section>
-    <!-- main-container end -->
+        <!-- main end -->
+      </div>
+    </div>
+  </section>
+  <!-- main-container end -->
 {% endblock %}
 
 {% block extra_body %}
-    <script src="{% static 'js/yaml.min.js' %}"></script>
-    <script type="text/javascript">
-        $("#id_ingest_file").change(function(event){
-            var input = event.target;
-            var reader = new FileReader();
-            reader.onload = function(){
-                parsed = YAML.parse(reader.result);
-                $("#id_name").val(parsed["output_type"]);
-                $("#id_description").val(parsed["description"]);
-            };
-            reader.readAsText(input.files[0]);
-        });
-    </script>
+<script src="{% static 'js/yaml.min.js' %}"></script>
+<script type="text/javascript">
+  $("#id_ingest_file").change(function(event){
+    var input = event.target;
+    var reader = new FileReader();
+    reader.onload = function(){
+      parsed = YAML.parse(reader.result);
+      $("#id_name").val(parsed["output_type"]);
+      $("#id_description").val(parsed["description"]);
+    };
+    reader.readAsText(input.files[0]);
+  });
+</script>
 {% endblock %}

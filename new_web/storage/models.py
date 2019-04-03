@@ -6,6 +6,19 @@ from django.contrib.auth.models import User
 
 
 class StorageUnit(models.Model):
+
+    class Meta:
+        permissions = (
+            ("can_list_units", "Ver listado de unidades de almacenamiento"),
+            ("can_create_units", "Crear unidad de almacenamiento"),
+            ("can_view_unit_detail", "Ver detalle de una unidad de almacenamiento"),
+            ("can_view_storage_content", "Ver contenido de una unidad de almacenamiento"),
+            ("can_download_file", "Descargar un archivo"),
+            ("can_view_content_detail", "Ver detalle de un contenido"),
+            ("can_download_metadata", "Descargar metadados"),
+            ("can_edit_units", "Editar unidad de almacenamiento"),
+        )
+
     alias = models.CharField(max_length=200, unique=True)
     name = models.CharField(max_length=200, unique=True)
     description = models.TextField()
@@ -28,16 +41,3 @@ class StorageUnit(models.Model):
     #     if not self.alias:
     #         self.alias = self.name
     #     super(StorageUnit, self).save(*args, **kwargs);
-
-
-    # class Meta:
-    #     permissions = (
-    #         ("can_list_units", "Ver listado de unidades de almacenamiento"),
-    #         ("can_create_units", "Crear unidad de almacenamiento"),
-    #         ("can_view_unit_detail", "Ver detalle de una unidad de almacenamiento"),
-    #         ("can_view_storage_content", "Ver contenido de una unidad de almacenamiento"),
-    #         ("can_download_file", "Descargar un archivo"),
-    #         ("can_view_content_detail", "Ver detalle de un contenido"),
-    #         ("can_download_metadata", "Descargar metadados"),
-    #         ("can_edit_units", "Editar unidad de almacenamiento"),
-    #     )

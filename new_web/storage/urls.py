@@ -3,6 +3,7 @@
 from django.urls import path
 from storage.views import IndexView
 from storage.views import StoragelistJsonView
+from storage.views import StorageCreateView
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),

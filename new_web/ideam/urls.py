@@ -21,12 +21,14 @@ from django.conf.urls.static import static
 from rest_framework import routers
 from algorithm.views import AlgorithmViewSet
 from algorithm.views import VersionViewSet
+from template.views import YamlViewSet
 
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'algorithms', AlgorithmViewSet)
 router.register(r'versions', VersionViewSet)
+router.register(r'templates/yaml', YamlViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),
@@ -39,6 +41,7 @@ urlpatterns = [
     path('algorithm/', include(('algorithm.urls','algorithm'))),
     path('execution/', include(('execution.urls','execution'))),
     path('storage/', include(('storage.urls','storage'))),
+    path('template/', include(('template.urls','template'))),
 ]
 
 if settings.DEBUG:

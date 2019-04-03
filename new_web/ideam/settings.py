@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'execution',
     'algorithm',
     'storage',
+    'template',
 ]
 
 MIDDLEWARE = [

@@ -1,11 +1,14 @@
  # -*- coding: utf-8 -*-
 
 from django.shortcuts import redirect
+from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 from django.contrib import messages
 from django.http import JsonResponse
 from django.conf import settings
+
+from storage.forms import StorageUnitForm
 
 import requests
 
@@ -65,6 +68,40 @@ class StoragelistJsonView(TemplateView):
 
 
 class StorageCreateView(FormView):
-    template_name = 'contact.html'
-    form_class = ContactForm
-    success_url = '/thanks/'
+    template_name = 'storage/storage_form.html'
+    form_class = StorageUnitForm
+    success_url = reverse_lazy('storage:index')
+
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+
+        alias = form.cleaned_data['alias']
+        name = form.cleaned_data['name']
+        description = form.cleaned_data['description']
+        description_file = request.FILES['description_file']
+        ingest_file = request.FILES['ingest_file']
+        metadata_generation_script_file = request.FILES['metadata_generation_script']
+
+        print('ingest_file',ingest_file.read())
+        print('metadata_generation_script_file',metadata_generation_script_file.read())
+
+        # data = {
+        #     "alias":alias,
+        #     "name": name,
+        #     "description": description,
+        #     "description_file": encoded_description,
+        #     "ingest_file": encoded_ingest,
+        #     "metadata_generation_script": encoded_metadata_script,
+        #     "created_by": current_user.id
+        # }
+        # header = {'Content-Type': 'application/json'}
+        # url = "{}/api/storage_units/".format(settings.API_URL)
+        # r = requests.post(url, data=json.dumps(data), headers=header)
+        # if r.status_code == 201:
+        #     return HttpResponseRedirect(reverse('storage:index'))
+        # else:
+        #     print r.status_code, r.text
+        #     form.add_error(None, "Ha ocurrido un error con el envío de la información, por favor vuelve a intentarlo.")
+
+        return super().form_valid(form)

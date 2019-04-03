@@ -38,7 +38,7 @@
             <div class="pull-right" style="margin-bottom: 10px;">
               {% if user.is_authenticated %}
               {% if perms.storage.can_create_units %}
-              <a href="{% url 'storage:new' %}" class="btn btn-default btn-md"><i class="fa fa-plus-circle"></i> Nueva unidad</a>
+              <a href="{% url 'storage:create' %}" class="btn btn-default btn-md"><i class="fa fa-plus-circle"></i> Nueva unidad</a>
               {% endif %}
               {% endif %}
             </div>
