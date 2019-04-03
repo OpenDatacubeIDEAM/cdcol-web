@@ -72,11 +72,11 @@
         {"data": "ttype", "searchable": false},
         {"data": "created_at"},
         {
-          "data": "id",
+          "data": "file",
           "searchable": false,
           "sortable": false,
-          "render": function (id) {
-            html = `<a href=${id}/ class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>`;
+          "render": function (file_url) {
+            html = `<a href="${file_url}" class='btn btn-gray btn-sm'><i class='fa fa-download'></i> Descargar</a>`;
             return html;
           }
         }

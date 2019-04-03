@@ -11,10 +11,11 @@ class YamlSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Yaml
-        fields = ('id', 'name', 'type', 'created_at')
+        fields = ('id', 'name', 'ttype', 'created_at','file')
 
         # django-rest-framework-datatables
         datatables_always_serialize = ('id',)
 
     def get_ttype(self, obj):
-        return obj.get_type_display()
+        """Returns the display string assigned to choice fields."""
+        return obj.get_ttype_display()
