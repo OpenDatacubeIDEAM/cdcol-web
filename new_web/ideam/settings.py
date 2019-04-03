@@ -103,11 +103,11 @@ WSGI_APPLICATION = 'ideam.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'HOST': '172.17.0.2',
+        'HOST': 'web_db',
         'PORT': '5432',
-        'NAME': 'ideam',
-        'USER': 'ideam',
-        'PASSWORD': 'ideam'
+        'NAME': 'cdcol',
+        'USER': 'cdcol',
+        'PASSWORD': 'cdcol'
     }
 }
 
@@ -229,4 +229,7 @@ REST_FRAMEWORK = {
     
 }
 
+
+# DATACUBE ENDPOINTS
+API_URL = 'http://api:8000'
 
