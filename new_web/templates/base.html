@@ -185,10 +185,10 @@
                           <ul class="dropdown-menu">
                             <li class="dropdown ">
                               {% if perms.template.can_list_yaml_templates %}
-                              <li><a href="{% url 'template:index' %}">YAML de descripción e ingesta</a></li>
+                              <li><a href="{% url 'template:yaml-index' %}">YAML de descripción e ingesta</a></li>
                               {% endif %}
-                              {% if perms.ingest_template.can_list_ingest_templates %}
-                                <li><a href="{% url 'ingest_template:index' %}">Scripts de generación de metadatos</a></li>
+                              {% if perms.template.can_list_ingest_templates %}
+                                <li><a href="{% url 'template:ingest-index' %}">Scripts de generación de metadatos</a></li>
                               {% endif %}
                                 </li>
                           </ul>

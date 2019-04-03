@@ -101,21 +101,21 @@
         <div class="col-md-4 ">
           <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="100">
             <span class="icon default-bg circle"><i class="fa fa-connectdevelop"></i></span>
-            <h3><a href="{% url 'template:index' %}">Plantillas YAML</a></h3>
+            <h3><a href="{% url 'template:yaml-index' %}">Plantillas YAML</a></h3>
             <div class="separator clearfix"></div>
             <p>Descargue las plantillas de archivos YML necesarios para la descripción e ingesta de unidades de almacenamiento.</p>
-            <a href="{% url 'template:index' %}">Ir al módulo<i class="pl-5 fa fa-angle-double-right"></i></a>
+            <a href="{% url 'template:yaml-index' %}">Ir al módulo<i class="pl-5 fa fa-angle-double-right"></i></a>
           </div>
         </div>
         {% endif %}
-        {% if perms.ingest_template.can_list_ingest_templates %}
+        {% if perms.template.can_list_ingest_templates %}
         <div class="col-md-4 ">
           <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="100">
             <span class="icon default-bg circle"><i class="fa fa-diamond"></i></span>
-            <h3><a href="{% url 'ingest_template:index' %}">Script de metadatos</a></h3>
+            <h3><a href="{% url 'template:ingest-index' %}">Script de metadatos</a></h3>
             <div class="separator clearfix"></div>
             <p>Descargue los scripts requeridos para el proceso de generación de metadatos en la ingesta de unidades de almacenamiento.</p>
-            <a href="{% url 'ingest_template:index' %}">Ir al módulo<i class="pl-5 fa fa-angle-double-right"></i></a>
+            <a href="{% url 'template:ingest-index' %}">Ir al módulo<i class="pl-5 fa fa-angle-double-right"></i></a>
           </div>
         </div>
         {% endif %}

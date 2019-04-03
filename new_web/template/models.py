@@ -30,3 +30,19 @@ class Yaml(models.Model):
     #     )
 
 
+class Ingest(models.Model):
+
+    class Meta:
+        permissions = (
+            ("can_list_ingest_templates", "Ver listado de scritps de generación de metadatos"),
+            ("can_download_metadata_script", "Descargar scripts de generación de metadatos (.py)"),
+        )
+
+    name = models.CharField(max_length=200)
+    file = models.FileField(upload_to='template/ingest/')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    # def __unicode__(self):
+    #     return "{}".format(self.name)
+

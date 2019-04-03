@@ -22,6 +22,7 @@ from rest_framework import routers
 from algorithm.views import AlgorithmViewSet
 from algorithm.views import VersionViewSet
 from template.views import YamlViewSet
+from template.views import IngestViewSet
 
 
 # Routers provide an easy way of automatically determining the URL conf.
@@ -29,6 +30,7 @@ router = routers.DefaultRouter()
 router.register(r'algorithms', AlgorithmViewSet)
 router.register(r'versions', VersionViewSet)
 router.register(r'templates/yaml', YamlViewSet)
+router.register(r'templates/ingest', IngestViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),
