@@ -105,8 +105,8 @@ $(document).ready(function () {
           "data": "id",
           "searchable": false,
           "sortable": false,
-          "render": function (data) {
-              return "<a href='detail/" + data + "' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>";
+          "render": function (storage_id) {
+              return "<a href='" + storage_id + "' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>";
           }
         },
     ]
