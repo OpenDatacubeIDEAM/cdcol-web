@@ -16,7 +16,7 @@
   <div class="container">
     <ol class="breadcrumb">
       <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
-      <li class="active">Mis Algoritmos</li>
+      <li class="active">Tareas de Ingesta</li>
     </ol>
   </div>
 </div>
@@ -30,16 +30,16 @@
       <!-- main start -->
       <!-- ================ -->
       <div class="main col-md-12">
-        <h3 class="title">Algoritmos</h3>
+        <h3 class="title">Tareas de ingesta</h3>
         <div class="separator-2"></div>
-        <p>A continuación se presentan los algoritmos.</p>
+        <p>A continuación se presentan la lista de tareas de ingesta.</p>
         <div class="row">
           <div class="col-md-12">
             <div class="pull-right" style="margin-bottom: 10px;">
               {% if user.is_authenticated %}
-              {% if perms.algorithm.can_create_algorithm %}
-              <a href="{% url 'algorithm:create' %}" class="btn btn-default btn-md"><i class="fa fa-plus-circle"></i> Nuevo Algoritmo</a>
-              {% endif %}
+              
+              <a href="{% url 'ingest:task-create' %}" class="btn btn-default btn-md"><i class="fa fa-plus-circle"></i> Programar Nueva Tarea de Ingesta</a>
+              
               {% endif %}
             </div>
           </div>
@@ -48,7 +48,7 @@
         <div class="row">
           <div class="col-md-12">
             <div class="table-responsive">
-              <table id="algorithms" class="table table-striped table-colored">
+              <table id="ingest" class="table table-striped table-colored">
                 <thead>
                   <tr>
                     <th>Unidad de Almacenamiento</th>
@@ -75,22 +75,20 @@
   <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
   <script>
       $(document).ready(function() {
-          var table = $('#algorithms').DataTable({
+          var table = $('#ingest').DataTable({
               "serverSide": true,
-              "ajax": "/api/algorithms/?format=datatables",
+              "ajax": "/api/ingest/task/?format=datatables",
               "columns": [
-                {"data": "id"},
-                {"data": "name"},
-                {"data": "topic.name"},
-                {"data": "version_count", "searchable": false},
-                {"data": "last_version_status", "searchable": false},
+                {"data": "storage_unit.name"},
+                {"data": "state"},
                 {"data": "created_at"},
+                {"data": "created_by.email", "searchable": false},
                 {
                   "data": "id",
                   "searchable": false,
                   "sortable": false,
                   "render": function (id) {
-                    html = `<a href=${id}/ class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>`;
+                    html = `<a href=task/${id}/ class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>`;
                     return html;
                   }
                 }

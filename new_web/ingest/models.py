@@ -19,14 +19,14 @@ class Task(models.Model):
         (FAILED_STATED, "CON FALLO"),
         (COMPLETED_STATE, "COMPLETADA"),
     )
-    storage_unit = models.ForeignKey(StorageUnit, on_delete=models.CASCADE, related_name='ingest_storage_unit')
+    storage_unit = models.ForeignKey(StorageUnit, on_delete=models.CASCADE)
     state = models.CharField(max_length=2, choices=INGEST_STATES)
     comments = models.TextField()
     error_messages = models.TextField()
     logs = models.TextField()
     start_execution_date = models.DateTimeField(null=True, blank=True)
     end_execution_date = models.DateTimeField(null=True, blank=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ingest_author')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -37,4 +37,4 @@ class Task(models.Model):
         permissions = (
             ("can_list_storage_tasks", "Ver listado de tareas de ingesta"),
             ("can_create_storage_task", "Programar una nueva tarea de ingesta"),
-            
+        )
