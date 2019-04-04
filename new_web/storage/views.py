@@ -3,6 +3,7 @@
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
+from django.views.generic.edit import UpdateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.contrib import messages
@@ -10,6 +11,7 @@ from django.http import JsonResponse
 from django.conf import settings
 
 from storage.forms import StorageUnitForm
+from storage.forms import StorageUnitUpdateForm
 from storage.models import StorageUnit
 
 from io import StringIO
@@ -125,6 +127,18 @@ class StorageCreateView(FormView):
             return redirect('storage:index')
 
         return super().form_valid(form)
+
+
+class StorageUpdateView(UpdateView):
+    """Update an algorithm.
+
+    Use the template storage/storage_form.html
+    """
+
+    model = StorageUnit
+    form_class = StorageUnitUpdateForm
+    template_name = 'storage/storage_update.html'
+    success_url = reverse_lazy('storage:index')
 
 
 class StorageDetailView(DetailView):
