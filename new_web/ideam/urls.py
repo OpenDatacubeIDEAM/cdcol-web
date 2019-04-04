@@ -23,6 +23,7 @@ from algorithm.views import AlgorithmViewSet
 from algorithm.views import VersionViewSet
 from template.views import YamlViewSet
 from template.views import IngestViewSet
+from ingest.views import TaskViewSet
 
 
 # Routers provide an easy way of automatically determining the URL conf.
@@ -31,6 +32,7 @@ router.register(r'algorithms', AlgorithmViewSet)
 router.register(r'versions', VersionViewSet)
 router.register(r'templates/yaml', YamlViewSet)
 router.register(r'templates/ingest', IngestViewSet)
+router.register(r'ingest/task', TaskViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),
@@ -44,6 +46,7 @@ urlpatterns = [
     path('execution/', include(('execution.urls','execution'))),
     path('storage/', include(('storage.urls','storage'))),
     path('template/', include(('template.urls','template'))),
+    path('ingest/', include(('ingest.urls','ingest'))),
 ]
 
 if settings.DEBUG:
