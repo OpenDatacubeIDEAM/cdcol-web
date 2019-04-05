@@ -9,6 +9,7 @@ from django.views.generic.edit import FormView
 from django.contrib import messages
 from django.http import JsonResponse
 from django.conf import settings
+from django.core.files import File
 
 from storage.forms import StorageUnitForm
 from storage.forms import StorageUnitUpdateForm
@@ -97,29 +98,34 @@ class StorageCreateView(FormView):
         ingest_binary_file = form.cleaned_data['ingest_file']
         metadata_generation_script_binary_file = form.cleaned_data['metadata_generation_script']
 
+        # print('STORAGE FILE',type(description_binary_file),description_binary_file)
+
         # As strings are objects they can be decoded calling the 'decode' method
-        description_file_str = description_binary_file.read().decode()
-        ingest_file_str = ingest_binary_file.read().decode()
-        metadata_generation_script_file_str = metadata_generation_script_binary_file.read().decode()
+        # description_file_str = description_binary_file.read().decode()
+        # ingest_file_str = ingest_binary_file.read().decode()
+        # metadata_generation_script_file_str = metadata_generation_script_binary_file.read().decode()
+
+        files = {
+            'description_file':description_binary_file.file,
+            'ingest_file': ingest_binary_file.file,
+            'metadata_generation_script': metadata_generation_script_binary_file.file
+        }
 
         data = {
             "alias":alias,
             "name": name,
             "description": description,
-            "description_file": description_file_str,
-            "ingest_file": ingest_file_str,
-            "metadata_generation_script": metadata_generation_script_file_str,
             "created_by": self.request.user.id
         }
 
-        header = {'Content-Type': 'application/json'}
-        url = "{}/api/storage_units/".format(settings.API_URL)
-        response = requests.post(url, data=json.dumps(data), headers=header)
+        # data = json.dumps(data)
 
-        print('JSON',json.dumps(data))
+        url = "{}/api/storage_units/".format(settings.API_URL)
+
+        response = requests.post(url,data=data,files=files)
 
         if response.status_code != 201:
-            err_message = response.json()[0]
+            err_message = response.json()
             messages.warning(self.request,
                 'Ha ocurrido un error con el envío de la información, por favor vuelve a intentarlo.'
             )
