@@ -233,5 +233,27 @@ REST_FRAMEWORK = {
 
 
 # DATACUBE ENDPOINTS
-API_URL = 'http://api:8000'
+DC_API_URL = 'http://api:8000'
+
+"""
+The datacube storage:
+* Keep the product (satelite) metadata file (yaml)
+* Ingestion metadata file (yaml)
+* Image metadata generation script (.py)
+
+the dc_storage may contain a folder for each product:}
+
+Example:
+
+dc_storage/
+    LS7_ETM_LEDAPS/
+        ingest_file.yml
+        description_file.yml
+        mgen_script.py
+    LS8_OLI_LEDAPS/
+        ingest_file.yml
+        description_file.yml
+        mgen_script.py
+"""
+DC_STORAGE_PATH = '/dc_storage'
 
