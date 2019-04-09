@@ -1,6 +1,6 @@
  # -*- coding: utf-8 -*-
 
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import UpdateView
@@ -11,8 +11,10 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 from django.http import Http404
 from django.http import HttpResponseBadRequest
+from django.http import HttpResponseNotFound
 from django.conf import settings
 from django.core.files import File
+from django.utils.encoding import smart_str
 
 from storage.forms import StorageUnitForm
 from storage.forms import StorageUnitUpdateForm
@@ -22,6 +24,7 @@ import mimetypes
 import requests
 import os
 import re
+import json
 
 
 class IndexView(TemplateView):
@@ -261,3 +264,102 @@ class StorageViewContentJsonView(TemplateView):
         except:
             raise
             return HttpResponseBadRequest()
+
+
+class StorageImageDetailView(TemplateView):
+    """
+    Return the content of a given storage unit as json. 
+    The storage unit content is obtained by a call to the 
+    Rest Api component.
+    """
+
+    def get(self,request,*args,**kwargs):
+        """Return the content of a given storage unit as json."""
+        
+        storage_unit_id = kwargs.get('pk')
+        image_name = kwargs.get('name')
+
+        url = "{}/api/storage_units/{}/contents/{}/".format(
+            settings.DC_API_URL, storage_unit_id, image_name
+        )
+        
+        response = requests.get(url)
+        image_info = response.json()
+        year = image_info["year"]
+        coordinates = image_info["coordinates"]
+        name = image_info["image_name"]
+        storage_unit_alias = image_info["storage_unit_alias"]
+        image_storage_unit = image_info["storage_unit"]
+        thumbnails = image_info["thumbnails"]
+        metadata = json.dumps(image_info["metadata"], indent=4, sort_keys=True)
+        
+        context = {
+            'metadata': metadata, 
+            'thumbnails': thumbnails, 
+            'year': year, 
+            'coordinates': coordinates, 
+            'name': name,
+            'image_storage_unit': image_storage_unit, 
+            'storage_unit_alias': storage_unit_alias,
+            'image_name': image_name, 
+            'storage_unit_id': storage_unit_id
+        }
+
+        return render(request, 'storage/image_detail.html', context)
+
+
+class StorageDownloadImageView(TemplateView):
+    """Download an image form the given storage unit and image name.
+
+    The image is downloaded from the dc_storage/<product-name>/...image_name
+    """
+
+    def get(self,request,*args,**kwargs):
+        """
+        Allow the downloading of a .nc image of a given product
+        form the dc_storage
+        """
+
+        storage_unit_id = kwargs.get('pk')
+        image_name = kwargs.get('image_name')
+
+        url = "{}/api/storage_units/{}/contents/{}/".format(
+            settings.DC_API_URL, storage_unit_id, image_name
+        )
+
+        response = requests.get(url)
+        image_info = response.json()
+
+        file_path = image_info["image_uri"]
+        file_name = file_path.split('/')[-1]
+
+        with open(file_path,'rb') as file:
+            mimetype = mimetypes.guess_type(file_path)
+            response = HttpResponse(file,content_type=mimetype)
+            response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
+            return response
+
+        # if the file could not be opened.
+        return HttpResponseNotFound('<h1>El archivo no se ha encontrado en el servidor</h1>')
+
+
+class StorageDownloadImageMetadataJsonView(TemplateView):
+    """Download an image metadata as json."""
+
+    def get(self,request,*args,**kwargs):
+        """
+        Return the metadata of a given image contained in a 
+        given storage unit as json object.
+        """
+
+        storage_unit_id = kwargs.get('pk')
+        image_name = kwargs.get('name')
+
+        url = "{}/api/storage_units/{}/contents/{}/".format(
+            settings.DC_API_URL, storage_unit_id, image_name
+        )
+        
+        response = requests.get(url)
+        image_info = response.json()
+        metadata = json.dumps(image_info["metadata"], indent=4, sort_keys=True)
+        return HttpResponse(metadata, content_type='application/json')

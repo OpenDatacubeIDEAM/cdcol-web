@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+{% endblock %}
+
+{% block content %}
+<!-- breadcrumb start -->
+<!-- ================ -->
+<div class="breadcrumb-container">
+  <div class="container">
+    <ol id="custom_breadcrumb" class="breadcrumb">
+      <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
+      <li class=""><a href="{% url 'storage:detail' storage_unit.id %}">{{ storage_unit.alias }}</a></li>
+    </ol>
+  </div>
+</div>
+<!-- breadcrumb end -->
+
+<!-- main-container start -->
+<!-- ================ -->
+<section class="main-container padding-ver-clear">
+  <div class="container pv-40">
+    <div class="row">
+      <!-- main start -->
+      <!-- ================ -->
+      <div class="main col-md-12">
+        <h3 class="title">Contenido de la Unidad</h3>
+        <div class="separator-2"></div>
+        <p>A continuación se presenta el contenido de la unidad de almacenamiento.</p>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <table id="storage_unit_detail" class="table table-striped table-colored">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- main end -->
+    </div>
+  </div>
+</section>
+<!-- main-container end -->
+{% endblock %}
+
+{% block extra_body %}
+<script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+      /*
+      Using getUrlParameter
+      url: http://stackoverflow.com/questions/19491336/get-url-parameter-jquery-or-how-to-get-query-string-values-in-js
+      */
+      var getUrlParameter = function getUrlParameter(sParam) {
+          var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                  sURLVariables = sPageURL.split('&'),
+                  sParameterName,
+                  i;
+
+          for (i = 0; i < sURLVariables.length; i++) {
+              sParameterName = sURLVariables[i].split('=');
+
+              if (sParameterName[0] === sParam) {
+                  return sParameterName[1] === undefined ? true : sParameterName[1];
+              }
+          }
+      };
+
+      /*
+      * Append a new element
+      * */
+      var appendNewElement = function appendNewElement(name, url){
+          // Getting the ol element
+          var ol = document.getElementById("custom_breadcrumb");
+          // Creating the li element
+          var li = document.createElement("li");
+          // Creating the a element
+          var aInnerHtml = "<a href='" + url + "'>" + name + "</a>";
+          var aElement = document.createElement('a');
+          aElement.innerHTML = aInnerHtml;
+          // Appending the elements
+          li.appendChild(aElement);
+          // Appending the new node
+          ol.appendChild(li);
+      };
+
+      /*
+       Autocompletes the breadcrumb path
+       * */
+      var breadcrumbPath = getUrlParameter('path');
+      if (breadcrumbPath != undefined) {
+          var tmp = breadcrumbPath.split('/');
+          console.log(tmp);
+          switch (tmp.length) {
+              case 4:
+                  appendNewElement('Años', '?path=/years/');
+                  break;
+              case 5:
+                  var yearSelected = tmp[2];
+                  var coordSelected= tmp[3];
+                  appendNewElement('Años', '?path=/years/');
+                  appendNewElement(yearSelected, '?path=/years/' + yearSelected + '/');
+                  appendNewElement(coordSelected, '#');
+                  break;
+          }
+      }
+
+      $('#storage_unit_detail').dataTable({
+          "language": {
+              "url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Spanish.json"
+          },
+          "processing": true,
+          "ajax": {
+              "processing": true,
+              "url": "{% url 'storage:content-json' storage_unit.id %}" + (getUrlParameter('path') === undefined ? "" : "?path=" + getUrlParameter('path')) ,
+              "dataSrc": ""
+          },
+          "columns": [
+              {"data": "name"},
+              {
+                  "data": function ( row, type, val, meta ) {
+                      var pathName = row.name;
+                      var isDir = row.is_dir;
+
+                      if (isDir){
+                          var currentPath = getUrlParameter('path');
+                          var newUrl = (currentPath != undefined) ? '?path=' + currentPath + pathName + '/' : '?path=/years/';
+                          return "<a href='" + newUrl + "' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>";
+                      }
+                      else{
+{#                                var option1 = "<a href='/storage/download/image/{{ storage_unit.name }}/" + pathName + "' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Descargar</a>";#}
+                          var option2 = "<a href='/storage/{{ storage_unit.id }}/image/" + pathName + "/detail/' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>";
+                          return "\n" + option2;
+{#                                return option1 + "\n" + option2;#}
+                      }
+                  },
+                  "searchable": false,
+                  "sortable": false,
+              },
+          ]
+      });
+    });
+</script>
+{% endblock %}
