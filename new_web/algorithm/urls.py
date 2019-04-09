@@ -21,8 +21,8 @@ from algorithm.views import ParameterDetailView
 
 
 urlpatterns = [
-	path('', AlgorithmIndexView.as_view(), name='index'),
-	path('create/', AlgorithmCreateView.as_view(), name='create'),
+    path('', AlgorithmIndexView.as_view(), name='index'),
+    path('create/', AlgorithmCreateView.as_view(), name='create'),
     path('<int:pk>/', AlgorithmDetailView.as_view(), name='detail'),
     path('<int:pk>/update', AlgorithmUpdateView.as_view(), name='update'),
 
@@ -36,8 +36,6 @@ urlpatterns = [
     path('version/<int:pk>/review', VersionReviewPendingView.as_view(), name='version-review'),
     path('version/<int:pk>/review_start', VersionReviewStartView.as_view(), name='version-review-start'),
     path('version/review', VersionReviewListView.as_view(), name='version-review-list'),
-
-    
 
     path('version/<int:pk>/parameter/create/', ParameterCreateView.as_view(), name='parameter-create'),
     path('version/parameter/<int:pk>/update/', ParameterUpdateView.as_view(), name='parameter-update'),

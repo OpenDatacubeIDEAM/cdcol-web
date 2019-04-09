@@ -243,8 +243,8 @@
                                     {% if executions|length > 0 %}
                                     {% for execution in executions %}
                                     <tr>
-                                      <td class="quantity"><a href="{% url 'execution:detail' execution.id %}">{{ execution.id }}</a></td>
-                                      <td class="product"><a href="{% url 'execution:detail' execution.id %}">{{ execution.version.algorithm.name }}</a></td>
+                                      {#<td class="quantity"><a href="{% url 'execution:detail' execution.id %}">{{ execution.id }}</a></td>#}
+                                      {#<td class="product"><a href="{% url 'execution:detail' execution.id %}">{{ execution.version.algorithm.name }}</a></td>#}
                                       <td class="amount">{{ execution.credits_consumed }}</td>
                                     </tr>
                                     {% endfor %}

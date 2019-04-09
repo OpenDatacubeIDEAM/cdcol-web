@@ -73,59 +73,59 @@
 {% endblock %}
 
 {% block extra_body %}
-  <script src="//code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-  <script>
-      $(document).ready(function() {
-          var table = $('#algorithms').DataTable({
-              "serverSide": true,
-              "ajax": "/api/algorithms/?format=datatables",
-              "columns": [
-                {"data": "id"},
-                {"data": "name"},
-                {"data": "topic.name"},
-                {"data": "version_count", "searchable": false},
-                {"data": "last_version_status", "searchable": false},
-                {"data": "created_at"},
-                {
-                  "data": "id",
-                  "searchable": false,
-                  "sortable": false,
-                  "render": function (id) {
-                    html = `<a href=${id}/ class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>`;
-                    return html;
-                  }
-                }
-              ],
-              "language": {
-                "decimal":        "",
-                "emptyTable":     "No hay datos disponibles en la tabla",
-                "info":           "Mostrando del registro _START_ al _END_ de _TOTAL_ registros",
-                "infoEmpty":      "Mostrando del registro 0 a 0 de 0 registros",
-                "infoFiltered":   "(filtrando entre un total de _MAX_ registros)",
-                "infoPostFix":    "",
-                "thousands":      ",",
-                "lengthMenu":     "Mostrar _MENU_ registros",
-                "loadingRecords": "Cargando...",
-                "processing":     "Procesando...",
-                "search":         "Buscar:",
-                "zeroRecords":    "No se encontraron registros",
-                "paginate": {
-                    "first":      "Primero",
-                    "last":       "Último",
-                    "next":       "Siguiente",
-                    "previous":   "Anterior"
-                },
-                "aria": {
-                    "sortAscending":  ": activate to sort column ascending",
-                    "sortDescending": ": activate to sort column descending"
-                },
-                "buttons": {
-                  "copy": "Copiar",
-                  "print": "Imprimir"
-                }
+<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script>
+  $(document).ready(function() {
+      var table = $('#algorithms').DataTable({
+          "serverSide": true,
+          "ajax": "/api/algorithms/?format=datatables",
+          "columns": [
+            {"data": "id"},
+            {"data": "name"},
+            {"data": "topic.name"},
+            {"data": "version_count", "searchable": false},
+            {"data": "last_version_status", "searchable": false},
+            {"data": "created_at"},
+            {
+              "data": "id",
+              "searchable": false,
+              "sortable": false,
+              "render": function (id) {
+                html = `<a href=${id}/ class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>`;
+                return html;
               }
-          });
+            }
+          ],
+          "language": {
+            "decimal":        "",
+            "emptyTable":     "No hay datos disponibles en la tabla",
+            "info":           "Mostrando del registro _START_ al _END_ de _TOTAL_ registros",
+            "infoEmpty":      "Mostrando del registro 0 a 0 de 0 registros",
+            "infoFiltered":   "(filtrando entre un total de _MAX_ registros)",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "lengthMenu":     "Mostrar _MENU_ registros",
+            "loadingRecords": "Cargando...",
+            "processing":     "Procesando...",
+            "search":         "Buscar:",
+            "zeroRecords":    "No se encontraron registros",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Último",
+                "next":       "Siguiente",
+                "previous":   "Anterior"
+            },
+            "aria": {
+                "sortAscending":  ": activate to sort column ascending",
+                "sortDescending": ": activate to sort column descending"
+            },
+            "buttons": {
+              "copy": "Copiar",
+              "print": "Imprimir"
+            }
+          }
       });
-  </script>
+  });
+</script>
 {% endblock %}

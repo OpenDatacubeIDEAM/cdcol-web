@@ -232,7 +232,7 @@ REST_FRAMEWORK = {
 }
 
 
-# DATACUBE ENDPOINTS
+# DATACUBE 
 DC_API_URL = 'http://api:8000'
 
 """
@@ -257,3 +257,7 @@ dc_storage/
 """
 DC_STORAGE_PATH = '/dc_storage'
 
+"""
+Execution index page refresh time.
+"""
+WB_EXECUTION_INDEX_TEMPORIZER = 10

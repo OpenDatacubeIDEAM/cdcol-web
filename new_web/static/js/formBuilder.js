@@ -150,12 +150,12 @@ $(document).ready(function () {
 
     $('#id_version').on('change', function () {
         var selectedIndex = this.selectedIndex;
-        var algorithmIndex = pathArray.indexOf("new");
+        // var algorithmIndex = pathArray.indexOf("algorithm");
         if (selectedIndex > 0){
-            var algorithmValue= pathArray[algorithmIndex + 1];
+            // var algorithmValue= pathArray[algorithmIndex + 1];
             var versionValue = this.options[this.selectedIndex].value;
             if(versionValue){
-                var new_url = "/execution/new/"+algorithmValue+"/version/"+versionValue;
+                var new_url = "/execution/algorithm/version/"+versionValue;
                 window.location = new_url;
             }
             else{
@@ -165,16 +165,19 @@ $(document).ready(function () {
     });
 
     $.ajax({
-        url: "/execution/parameters/" + versionValue + "/",
+        url: "/execution/parameters/version/" + versionValue + "/json",
         data: {
             format: 'json'
         },
-        error: function () {
+        error: function (err) {
             console.log('Cant load the parameters.');
+            console.log('Version value',versionValue)
+            console.log(err);
         },
         dataType: 'json',
         success: function (data) {
             console.log("Loading parameters for version " + versionValue + " of the algorithm.");
+            console.log('Version Value',versionValue)
             console.log(data);
             createForm(data);
         },

@@ -85,10 +85,10 @@
               </tr>
               </thead>
               <tbody>
-              {% for storage_unit in storage_units %}
+              {% for storage_unit in version.versionstorageunit_set.all %}
                 <tr>
                   <td>{{ storage_unit.storage_unit.id }}</td>
-                  <td>{{ storage_unit.storage_unit.alias}}</td>
+                  <td>{{ storage_unit.storage_unit.alias }}</td>
                   <td><a target="_blank" href="{% url 'storage:detail' storage_unit.storage_unit.id %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a></td>
                 </tr>
               {% endfor %}

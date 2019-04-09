@@ -23,6 +23,16 @@ class Topic(models.Model):
         """This is the way the object will be rendered in templates."""
         return self.name
 
+    def get_published_algorithms(self):
+        """
+        Return algorithms which contain versions with 'publishing_state'
+        equal to Version.PUBLISHED_STATE. In other words, return algorithms 
+        which has some published version.
+        """
+        return self.algorithm_set.filter(
+            version__publishing_state=Version.PUBLISHED_STATE
+        )
+
 
 class Algorithm(models.Model):
     """Algorithm.
