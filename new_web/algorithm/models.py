@@ -2,9 +2,17 @@
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.text import slugify
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
+
 from storage.models import StorageUnit
 
-from django.utils.text import slugify
+
+"""
+Used to upload file outside the proyect base directory
+"""
+upload_storage = FileSystemStorage(location=settings.MEDIA_ROOT)
 
 
 class Topic(models.Model):
@@ -124,6 +132,7 @@ class Algorithm(models.Model):
 
 def version_upload_to(instance, filename):
     """File will be uploaded to MEDIA_ROOT/<algo_path>."""
+
     algo_name = slugify(instance.algorithm.name)
     algo_version_number = instance.number
     filename = '{}_{}.py'.format(algo_name,algo_version_number)
@@ -170,7 +179,7 @@ class Version(models.Model):
     number = models.CharField(max_length=200)
     repository_url = models.CharField(max_length=300)
     source_code = models.FileField(
-        upload_to=version_upload_to,max_length=1000, blank=True, null=True
+        upload_to=version_upload_to,storage=upload_storage,max_length=1000, blank=True, null=True
     )
     publishing_state = models.CharField(max_length=2, choices=VERSION_STATES)
     created_at = models.DateTimeField(auto_now_add=True)

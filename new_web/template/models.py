@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+
+
+"""
+Used to upload file outside the proyect base directory
+"""
+upload_storage = FileSystemStorage(location=settings.MEDIA_ROOT)
 
 
 class Yaml(models.Model):
@@ -54,7 +62,7 @@ class Yaml(models.Model):
     )
 
     name = models.CharField(max_length=200)
-    file = models.FileField(upload_to='template/yaml/')
+    file = models.FileField(upload_to='template/yaml/',storage=upload_storage)
     ttype = models.CharField(max_length=2, choices=TYPES)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

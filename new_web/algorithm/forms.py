@@ -133,7 +133,8 @@ class VersionUpdateForm(forms.ModelForm):
         )
     )
     number = forms.CharField(
-        label='Número de la Versión',disabled=True
+        label='Número de la Versión',
+        widget=forms.TextInput(attrs={'readonly':'readonly'})
     )
     repository_url = forms.CharField(
         label='URL Código Fuente',max_length=200, required=True

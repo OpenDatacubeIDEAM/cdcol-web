@@ -27,6 +27,58 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# WEB VARIABLES
+
+"""
+Datacube REST API URL
+The web app interact with the datacube API 
+to perform some tasks.
+"""
+DC_API_URL = 'http://api:8000'
+
+"""
+The datacube storage:
+* Keep the product (satelite) metadata file (yaml)
+* Ingestion metadata file (yaml)
+* Image metadata generation script (.py)
+
+the dc_storage may contain a folder for each product:}
+
+Example:
+
+dc_storage/
+    LS7_ETM_LEDAPS/
+        ingest_file.yml
+        description_file.yml
+        mgen_script.py
+    LS8_OLI_LEDAPS/
+        ingest_file.yml
+        description_file.yml
+        mgen_script.py
+"""
+DC_STORAGE_PATH = '/dc_storage'
+
+"""
+The web storage will contains:
+    - algorithms: Algorithm versions uploaded by the user thorugh this web app.
+    - dags: Dags created by the user an stored manually.
+    - logs: 
+    - plugins:
+    - thumbnails: preview of satelite imagery.
+    - input: Contains the input data for each execution perfomed.
+    - results: The exectuion results will be placed here.
+    - template (new): The .yaml product confguration and ingestion files and also 
+        the image metadata generation script for each product (satelite).
+
+"""
+WEB_STORAGE_PATH = '/web_storage'
+
+"""
+Execution module in the web pages is refreshed with javascritp 
+each number of seconds specified on this variables.
+"""
+WEB_EXECUTION_TEMPORIZER = 10
+
 
 # Application definition
 
@@ -175,7 +227,7 @@ if not DEBUG:
 
 # Media
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = WEB_STORAGE_PATH
 
 # `allauth`
 AUTHENTICATION_BACKENDS = (
@@ -232,32 +284,3 @@ REST_FRAMEWORK = {
 }
 
 
-# DATACUBE 
-DC_API_URL = 'http://api:8000'
-
-"""
-The datacube storage:
-* Keep the product (satelite) metadata file (yaml)
-* Ingestion metadata file (yaml)
-* Image metadata generation script (.py)
-
-the dc_storage may contain a folder for each product:}
-
-Example:
-
-dc_storage/
-    LS7_ETM_LEDAPS/
-        ingest_file.yml
-        description_file.yml
-        mgen_script.py
-    LS8_OLI_LEDAPS/
-        ingest_file.yml
-        description_file.yml
-        mgen_script.py
-"""
-DC_STORAGE_PATH = '/dc_storage'
-
-"""
-Execution index page refresh time.
-"""
-WB_EXECUTION_INDEX_TEMPORIZER = 10

@@ -3,6 +3,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from execution.models import Execution
+
 
 class Profile(models.Model):
 
@@ -25,8 +27,29 @@ class Profile(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     credits_approved = models.IntegerField(default=8, blank=True, null=True)
 
+    @property
+    def credits_consumed(self):
+        """Return the number of credits consumed by the user.
+
+        Each execution has a number of credits it it consumes. 
+        The credits consumed by the user is the sum of all credits 
+        consumed by each execution the user has performed.
+        """
+
+        # Getting the number of credicts used for all user executions
+        states = [Execution.ENQUEUED_STATE, Execution.EXECUTING_STATE]
+        credits_used = self.user.execution_set.filter(
+            state__in=states
+        ).aggregate(Sum('credits_consumed'))
+
+        # Number of credits consumed by all user executions
+        credits_consumed = credits_used['credits_consumed__sum']
+
+        return credits_consumed
+
+
     def get_groups(self):
-        """Result user associated groups."""
+        """Return user associated groups for user profile update page."""
         
         user_groups = self.user.groups.values_list('name', flat=True)
         app_groups = []

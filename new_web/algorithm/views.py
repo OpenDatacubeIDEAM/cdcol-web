@@ -205,8 +205,9 @@ class VersionCreateView(CreateView):
                 version=self.object,
                 storage_unit=storage_unit
             )
+            version_storage_unit.save()
 
-        messages.info(self.request, 'Nueva versión create con éxito !!.')
+        messages.info(self.request, 'Nueva versión creada con éxito !!.')
 
         return redirect(self.get_success_url())
 
@@ -242,6 +243,33 @@ class VersionUpdateView(UpdateView):
         initial['algorithm'] = version_obj.algorithm
         initial['number'] = version_obj.number
         return initial
+
+    def form_valid(self, form):
+        """Initialice version status and source_code."""
+
+        self.object = form.save()
+
+        # Download source code from github and save it locally.
+        file_name = os.path.basename(self.object.repository_url)
+        response = urllib.request.urlopen(self.object.repository_url)
+        content = response.read()
+        response.close()
+
+        self.object.source_code.save(file_name,ContentFile(content))
+
+        # Relate selecetd storage units with the current version
+        selected_storage_units = form.cleaned_data['source_storage_units']
+        for storage_unit in selected_storage_units:
+            if not VersionStorageUnit.objects.filter(pk=storage_unit.pk).exists():
+                version_storage_unit = VersionStorageUnit(
+                    version=self.object,
+                    storage_unit=storage_unit
+                )
+                version_storage_unit.save()
+
+        messages.info(self.request, 'Versión actualizada con éxito !!.')
+
+        return redirect(self.get_success_url())
 
     def get_success_url(self):
         """Return a URL to the detail of the updted version."""
