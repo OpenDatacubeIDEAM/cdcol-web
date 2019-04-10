@@ -190,7 +190,7 @@ $(document).ready(function () {
             storageUnitSelected = this.options[this.selectedIndex].value;
             elementId = element.split('_')[2];
         }
-        $.post("/storage/json", {'storage_unit_id': storageUnitSelected}, function (data) {
+        $.post("/storage/json/", {'storage_unit_id': storageUnitSelected}, function (data) {
             console.log('Getting the bands for the storage unit ' + storageUnitSelected + ' ... ');
             $('#bands_'+elementId).empty();
             var bands = data.metadata.measurements;
@@ -212,6 +212,7 @@ $(document).ready(function () {
         executed_params = JSON.parse(executed_params);
         credits_approved = JSON.parse(credits_approved);
         storage_units_version = storage_units_version.substring(1, storage_units_version.length-1).split(",");
+        console.log('Storage units version',storage_units_version);
         for(var i=0; i<storage_units_version.length; i++){
             storage_units_version[i] = storage_units_version[i].split(":");
             storage_units_version[i] = (storage_units_version[i])[1];
@@ -436,6 +437,7 @@ $(document).ready(function () {
                     f.appendChild(tmp_bands);
                     //getting the json
                     $.getJSON( "/storage/storage_units", function( su_data ) {
+                        console.log('StorageUnitType data',su_data)
                         // storage_unit_select
                         var storage_unit_select = document.createElement("select");
                         storage_unit_select.id = "storage_unit_"+pk;
@@ -446,6 +448,9 @@ $(document).ready(function () {
                         var storage_unit_option = document.createElement("option");
                         var storage_unit_executed_param = getExecutedParam(pk);
                         jQuery.each(su_data, function (i, storage_unit_value) {
+                            console.log('Storage unit type fields alias',storage_unit_value.fields.alias)
+                            console.log('Storage unit type fields version',storage_units_version)
+                            console.log('Storage unit type indexOf fields',storage_units_version.indexOf(storage_unit_value.fields.alias))
                             if(storage_units_version.indexOf(storage_unit_value.fields.alias)>-1){
                                 var storage_pk = storage_unit_value.pk;
                                 var storage_name = storage_unit_value.fields.name;
@@ -457,7 +462,7 @@ $(document).ready(function () {
                                 {
                                     storage_unit_select.value = storage_pk;
                                 }
-                                }
+                            }
 
                         });
                         // bands_select
@@ -597,6 +602,7 @@ $(document).ready(function () {
                     f.appendChild(tmp_storage);
                     //getting the json
                     $.getJSON( "/storage/storage_units", function( su_data ) {
+                        console.log('StorageUnitType (no bands) data',su_data)
                         // storage_unit_select
                         var storage_unit_select = document.createElement("select");
                         storage_unit_select.id = "storage_unit_"+pk;

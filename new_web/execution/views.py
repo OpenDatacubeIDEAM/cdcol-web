@@ -260,8 +260,10 @@ class ExecutionCreateView(TemplateView):
             'average_rating': average_rating, 
             'executions': executions,
             'executed_params': executed_params, 
-            'credits_approved': credits_approved, 
-            'storage_units_version':storage_units_version
+            'credits_approved': credits_approved,
+            # return this parameter as a list is mandatory for
+            # /static/js/formBuilder.js works properly
+            'storage_units_version':list(storage_units_version)
         }
 
         return render(request, 'execution/execution_form.html', context)

@@ -200,6 +200,19 @@ class VersionStorageUnit(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __unicode__(self):
+        """
+        This representation is needed by /static/js/formBuilder.js 
+        and admin site.
+        """
+        return self.storage_unit.alias
+
+    def __str__(self):
+        """
+        This representation is needed by /static/js/formBuilder.js 
+        and admin site.
+        """
+        return self.storage_unit.alias
 
 class Parameter(models.Model):
     """Algorithm Version Parameter

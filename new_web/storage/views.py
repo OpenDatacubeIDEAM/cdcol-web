@@ -6,6 +6,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import UpdateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
+from django.views import View
 from django.contrib import messages
 from django.http import JsonResponse
 from django.http import HttpResponse
@@ -15,6 +16,9 @@ from django.http import HttpResponseNotFound
 from django.conf import settings
 from django.core.files import File
 from django.utils.encoding import smart_str
+from django.core import serializers
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 from storage.forms import StorageUnitForm
 from storage.forms import StorageUnitUpdateForm
@@ -38,6 +42,11 @@ class StoragelistJsonView(TemplateView):
     This view consult the REST API.
     """
 
+    # To allow post requests without CSRF token
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(StoragelistJsonView, self).dispatch(*args, **kwargs)
+
     def get(self,request,*arg,**kwars):
         """Retrieve the list of storage units from the API."""
         url = "{}/api/storage_units/".format(
@@ -51,7 +60,11 @@ class StoragelistJsonView(TemplateView):
         return JsonResponse(storage_units,safe=False)
 
     def post(self,request,*arg,**kwars):
-        """This method is not used"""
+        """
+        This method is used by /static/js/formBuilder.js (line 193)
+        to get the given storage unit data.
+        """
+
         storage_unit_id = request.POST.get('storage_unit_id')
         url = "{}/api/storage_units/{}".format(
             settings.DC_API_URL, storage_unit_id
@@ -80,6 +93,20 @@ class StoragelistJsonView(TemplateView):
             storage_units = []
 
         return storage_units
+
+
+class StorageObtainJsonListView(View):
+    """
+    Return a list of the storage units as json objects.
+    """
+
+    def get(self,request,*args,**kwargs):
+        """
+        This method is only used by /static/js/formBuilder.js 
+        (lines 438 and 600) to get the given storage unit data.
+        """
+        data = serializers.serialize("json", StorageUnit.objects.all())
+        return HttpResponse(data, content_type='application/json')     
 
 
 class StorageCreateView(FormView):
