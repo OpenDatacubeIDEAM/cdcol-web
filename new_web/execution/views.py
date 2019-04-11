@@ -4,6 +4,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.views import View
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from django.conf import settings
@@ -22,6 +23,7 @@ from algorithm.models import Topic
 
 from execution.serializers import ExecutionSerializer
 from execution.forms import VersionSelectionForm
+from execution.forms import ReviewForm
 from execution.models import FileConvertionTask
 from execution.models import ExecutionParameter
 from execution.models import Execution
@@ -44,6 +46,8 @@ import zipfile
 import datetime
 import requests
 import json
+import glob
+import subprocess
 
 
 class ExecutionIndexView(TemplateView):
@@ -483,25 +487,26 @@ def get_detail_context(execution_id):
                     FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
                 files.append(f)
 
-        for f in os.listdir(system_path):
-            if ".gif" in f :
-                f = {'file': f, 'state':False}
-                other_files.append(f)
-            elif "mosaic" in f and ".nc" in f:
-                f = {'file': f, 'state': False, 'tiff_file':f.replace('.nc', '.tiff')}
-                try:
-                    convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
-                    f['state'] = convertion_task.state
-                    if f['state'] == '3':
+        if os.path.exists(system_path):
+            for f in os.listdir(system_path):
+                if ".gif" in f :
+                    f = {'file': f, 'state':False}
+                    other_files.append(f)
+                elif "mosaic" in f and ".nc" in f:
+                    f = {'file': f, 'state': False, 'tiff_file':f.replace('.nc', '.tiff')}
+                    try:
+                        convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
+                        f['state'] = convertion_task.state
+                        if f['state'] == '3':
+                            tiff_message = 'Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
+                        elif f['state'] == True:
+                            generating_tiff = '1'
+                    except ObjectDoesNotExist:
+                        pass
+                    except MultipleObjectsReturned:
                         tiff_message = 'Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
-                    elif f['state'] == True:
-                        generating_tiff = '1'
-                except ObjectDoesNotExist:
-                    pass
-                except MultipleObjectsReturned:
-                    tiff_message = 'Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
-                    FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
-                other_files.append(f)
+                        FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
+                    other_files.append(f)
 
 
         # for f in os.listdir(system_path):
@@ -547,3 +552,67 @@ class VersionParametersJson(TemplateView):
             "json", parameters
         )
         return HttpResponse(data, content_type='application/json')
+
+
+class DeleteResultView(View):
+
+    def get(self,request,*args,**kwargs):
+
+        execution_id = kwargs.get('pk')
+        image_name = kwargs.get('image_name')
+
+        if image_name == "all":
+            file_path = "{}/results/{}/{}".format(
+                settings.WEB_STORAGE_PATH, execution_id, ""
+            )
+        else:
+            splitted_image_name = image_name.split(".")
+            splitted_image_name[-1] = "*"
+            image_name = ".".join(splitted_image_name)
+            file_path = "{}/results/{}/{}".format(
+                settings.WEB_STORAGE_PATH, execution_id, image_name
+            )
+        for file in glob.glob(file_path):
+            file = file.replace("(","\(")
+            file = file.replace(")","\)")
+            subprocess.Popen("rm -rf %s" % file, shell=True)
+        while glob.glob(file_path):
+                time.sleep(0.5)
+
+        context = get_detail_context(execution_id)
+        return redirect(request, 'execution/detail.html', context)
+
+
+class ExecutionRateView(CreateView):
+
+    model = Review
+    form_class = ReviewForm
+    template_name = 'execution/execution_rate.html'
+
+    # def get_initial(self):
+    #     """initialize the topic of the algorithm."""
+    #     initial = super(AlgorithmUpdateView, self).get_initial()
+    #     algorithm_obj = self.get_object()
+    #     initial['topic'] = algorithm_obj.topic
+    #     return initial
+
+    def form_valid(self, form):
+        """Create an initial version for the algorithm.
+
+        This method is called when valid form data has been POSTed.
+        """
+        
+        # Relate current user with the created algorthm
+        execution_id = self.kwargs.get('pk')
+        execution = get_object_or_404(Execution,id=execution_id)
+
+        form.instance.execution = execution
+        form.instance.created_by = self.request.user
+        self.object = form.save()
+        return redirect(self.get_success_url())
+
+
+class ExecutionCopyView(View):
+
+    def get(self,request,*args,**kwargs):
+        pass

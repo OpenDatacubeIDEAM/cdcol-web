@@ -78,7 +78,7 @@ Execution module index page and executon detail page
 are refresehd with javascript each number of seconds 
 specified on this variables.
 """
-WEB_EXECUTION_TEMPORIZER = 10
+WEB_EXECUTION_TEMPORIZER = 3000
 
 """
 This variable has the ID of the algorithm that 
