@@ -5,10 +5,12 @@ from execution.views import ExecutionIndexView
 from execution.views import ExecutionCreateView
 from execution.views import AlgorithmsByTopicListView
 from execution.views import VersionParametersJson
+from execution.views import ExecutionDetailView
 
 
 urlpatterns = [
     path('', ExecutionIndexView.as_view(), name='index'),
+    path('<int:pk>/detail',ExecutionDetailView.as_view(), name='detail'),
     path('algorithm/list', AlgorithmsByTopicListView.as_view(), name='algorithm-list'),
     path('algorithm/version/<int:pk>', ExecutionCreateView.as_view(), name='create'),
 

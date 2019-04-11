@@ -1,25 +1,31 @@
 # -*- coding: utf-8 -*-
 
-from django.db.models import Avg,Sum
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from django.shortcuts import get_object_or_404
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.conf import settings
 from django.core import serializers
 from django.http import HttpResponse
+from django.db.models import Avg
+from django.utils.text import slugify
+from django.contrib import messages
 
 from rest_framework import viewsets
-from execution.serializers import ExecutionSerializer
-from execution.forms import VersionSelectionForm
-from execution.models import Execution
-from execution.models import Review
 from algorithm.models import VersionStorageUnit
 from algorithm.models import Parameter
 from algorithm.models import Algorithm
 from algorithm.models import Version
 from algorithm.models import Topic
+
+from execution.serializers import ExecutionSerializer
+from execution.forms import VersionSelectionForm
+from execution.models import FileConvertionTask
+from execution.models import ExecutionParameter
+from execution.models import Execution
+from execution.models import Review
 from execution.models import StringType
 from execution.models import IntegerType
 from execution.models import DoubleType
@@ -29,9 +35,16 @@ from execution.models import StorageUnitBandType
 from execution.models import TimePeriodType
 from execution.models import FileType
 from execution.models import StorageUnitNoBandType
+from execution.models import Task
+
+from storage.models import StorageUnit
 
 import os
 import zipfile
+import datetime
+import requests
+import json
+
 
 class ExecutionIndexView(TemplateView):
     """Display a list of the algorithms."""
@@ -219,10 +232,15 @@ class ExecutionCreateView(TemplateView):
 
                     # send the execution to the REST service
                     response = send_execution(new_execution)
-
+                    messages.info(request,response.get('description'))
                     print(response)
-                    return HttpResponseRedirect(reverse('execution:detail', kwargs={'execution_id': new_execution.id}))
+                    return redirect('execution:detail', pk=new_execution.id)
 
+            # This is returned when the Area parameter is not given or
+            # the user has consumed all the credits
+            messages.warning(request,'El usuario no tiene créditos para llevar a cabo esta ejecución')
+            messages.info(request,'O la versión del algoritmo no tiene parametro de tipo AREA')
+            return redirect('execution:create', pk=version_pk)
 
 def create_execution_parameter_objects(parameters, request, execution):
     """
@@ -269,6 +287,7 @@ def create_execution_parameter_objects(parameters, request, execution):
             print("Getting elements for BooleanType parameter")
             boolean_name = "boolean_input_{}".format(parameter.id)
             boolean_value = request.POST.get(boolean_name, False)
+            boolean_value = True if isinstance(boolean_value, str) else False
             # BOOLEAN TYPE
             new_execution_parameter = BooleanType(
                 execution=execution,
@@ -386,9 +405,9 @@ def send_execution(execution):
     # sending the request
     try:
         header = {'Content-Type': 'application/json'}
-        if execution.version.algorithm.id == int(settings.IDEAM_ID_ALGORITHM_FOR_CUSTOM_SERVICE):
+        if execution.version.algorithm.id == int(settings.WEB_ALGORITHM_ID_FOR_CUSTOM_SERVICE):
             json_response['is_gif'] = True
-        url = "{}/api/new_execution/".format(settings.API_URL)
+        url = "{}/api/new_execution/".format(settings.DC_API_URL)
         r = requests.post(url, data=json.dumps(json_response), headers=header)
         if r.status_code == 201:
             response = {'status': 'ok', 'description': 'Se envió la ejecución correctamente.'}
@@ -398,6 +417,121 @@ def send_execution(execution):
     except:
         print('Something went wrong when trying to call the REST service')
     return response
+
+
+class ExecutionDetailView(DetailView):
+
+    model = Execution
+
+    def get_context_data(self, **kwargs):
+        # context = super().get_context_data(**kwargs)
+        execution_id = self.kwargs.get('pk')
+        context = get_detail_context(execution_id)
+        return context
+
+
+def get_detail_context(execution_id):
+    execution = get_object_or_404(Execution, id=execution_id)
+    executed_params = ExecutionParameter.objects.filter(execution=execution).order_by('parameter__position')
+    tasks = Task.objects.filter(execution=execution)
+    area_param = ExecutionParameter.objects.get(execution=execution, parameter__parameter_type=Parameter.AREA_TYPE)
+    time_period_param = ExecutionParameter.objects.filter(execution=execution, parameter__parameter_type=Parameter.TIME_PERIOD_TYPE).order_by('parameter__position')
+    time_period_params_string = ""
+    for time_period in time_period_param:
+        time_period_params_string+='(u{}u{})'.format(time_period.timeperiodtype.start_date.strftime("%d-%m-%Y"), time_period.timeperiodtype.end_date.strftime("%d-%m-%Y") )
+    review = Review.objects.filter(execution=execution).last()
+    system_path = "{}/results/{}/".format(settings.WEB_STORAGE_PATH, execution.id)
+    files = []
+    other_files = []
+
+    try:
+        algorithm_name= slugify(execution.version.algorithm.name.lower())
+        tiff_message = None
+        generating_tiff = '0'
+        print(int(area_param.areatype.latitude_start))
+
+        for i in range(int(area_param.areatype.latitude_start), int(area_param.areatype.latitude_end)):
+
+            for j in range(int(area_param.areatype.longitude_start), int(area_param.areatype.longitude_end)):
+                file_name= '{}_{}_{}_{}_{}_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_params_string)
+                f = {'file': file_name, 'lat': i, 'long': j, 'task_state': '', 'result_state': os.path.exists(system_path+file_name), 'state': False, 'tiff_file': file_name.replace('.nc', '.tiff')}
+                if f['result_state']:
+                    f['task_state'] = 'Finalizado'
+                elif (os.path.exists(system_path+"{}_{}_no_data.lock".format(i,j)))  or (execution.state == Execution.COMPLETED_STATE and not f['result_state']):
+                    f['task_state'] = system_path+file_name
+                elif execution.state == Execution.ENQUEUED_STATE:
+                    f['task_state'] = 'En espera'
+                elif execution.state == Execution.EXECUTING_STATE:
+                    f['task_state'] = 'En ejecución'
+                elif execution.state == Execution.ERROR_STATE:
+                    f['task_state'] = 'Falló'
+                elif execution.state == Execution.CANCELED_STATE:
+                    f['task_state'] = 'Cancelado'
+                else:
+                    f['task_state'] = 'Sin información dispónible'
+                try:
+                    convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
+                    f['state'] = convertion_task.state
+                    if f['state'] == '3':
+                        tiff_message='Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
+                    elif f['state'] == True:
+                        generating_tiff = '1'
+                except FileConvertionTask.DoesNotExist:
+                    pass
+                except MultipleObjectsReturned:
+                    tiff_message = 'Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
+                    FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
+                files.append(f)
+
+        for f in os.listdir(system_path):
+            if ".gif" in f :
+                f = {'file': f, 'state':False}
+                other_files.append(f)
+            elif "mosaic" in f and ".nc" in f:
+                f = {'file': f, 'state': False, 'tiff_file':f.replace('.nc', '.tiff')}
+                try:
+                    convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
+                    f['state'] = convertion_task.state
+                    if f['state'] == '3':
+                        tiff_message = 'Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
+                    elif f['state'] == True:
+                        generating_tiff = '1'
+                except ObjectDoesNotExist:
+                    pass
+                except MultipleObjectsReturned:
+                    tiff_message = 'Hubo un error generando el archivo Tiff. Por favor, intente de nuevo'
+                    FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
+                other_files.append(f)
+
+
+        # for f in os.listdir(system_path):
+        #     if ".tiff" not in f:
+        #         f = {'file': f, 'lat':0, 'long':0, 'state': False, 'tiff_file': f.replace('.nc', '.tiff')}
+        #         try:
+        #             convertion_task = FileConvertionTask.objects.get(execution=execution, filename=f['file'])
+        #             f['state'] = convertion_task.state
+        #         except ObjectDoesNotExist:
+        #             pass
+        #         except MultipleObjectsReturned:
+        #             FileConvertionTask.objects.filter(execution=execution, filename=f['file']).delete()
+        #         files.append(f)
+    except:
+        raise
+        pass
+    # getting current executions
+    current_executions = execution.pending_executions
+    # getting temporizer value
+    temporizer_value = settings.WEB_EXECUTION_TEMPORIZER
+    # getting the delete time
+    delete_hours = int(settings.WEB_DAYS_ELAPSED_TO_DELETE_EXECUTION_RESULTS) * 24
+    if execution.finished_at:
+        delete_time = execution.finished_at + datetime.timedelta(hours=delete_hours)
+    else:
+        delete_time = None
+    context = {'execution': execution, 'executed_params': executed_params, 'review': review, 'files': files, 'other_files': other_files,
+               'current_executions': current_executions, 'temporizer_value': temporizer_value, 'delete_time': delete_time,
+               'system_path': system_path, 'area_param':area_param, 'time_period_param':time_period_param, 'tiff_message':tiff_message, 'generating_tiff': generating_tiff}
+    return context
 
 
 class VersionParametersJson(TemplateView):

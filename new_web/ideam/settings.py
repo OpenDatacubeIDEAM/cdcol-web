@@ -74,11 +74,22 @@ The web storage will contains:
 WEB_STORAGE_PATH = '/web_storage'
 
 """
-Execution module in the web pages is refreshed with javascritp 
-each number of seconds specified on this variables.
+Execution module index page and executon detail page
+are refresehd with javascript each number of seconds 
+specified on this variables.
 """
 WEB_EXECUTION_TEMPORIZER = 10
 
+"""
+This variable has the ID of the algorithm that 
+can generate a gif.
+"""
+WEB_ALGORITHM_ID_FOR_CUSTOM_SERVICE = 8
+
+"""
+
+"""
+WEB_DAYS_ELAPSED_TO_DELETE_EXECUTION_RESULTS = 3
 
 # Application definition
 
@@ -283,4 +294,7 @@ REST_FRAMEWORK = {
     
 }
 
-
+"""
+Redirect to the home page after admin logout
+"""
+LOGOUT_REDIRECT_URL = 'index:index'
