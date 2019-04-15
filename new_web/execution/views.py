@@ -6,7 +6,7 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views import View
 from django.shortcuts import get_object_or_404
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.conf import settings
 from django.core import serializers
 from django.http import HttpResponse
@@ -459,6 +459,7 @@ def get_detail_context(execution_id):
             for j in range(int(area_param.areatype.longitude_start), int(area_param.areatype.longitude_end)):
                 file_name= '{}_{}_{}_{}_{}_output.nc'.format(algorithm_name, execution.version.number, i, j, time_period_params_string)
                 f = {'file': file_name, 'lat': i, 'long': j, 'task_state': '', 'result_state': os.path.exists(system_path+file_name), 'state': False, 'tiff_file': file_name.replace('.nc', '.tiff')}
+                print('Executio result file',f)
                 if f['result_state']:
                     f['task_state'] = 'Finalizado'
                 elif (os.path.exists(system_path+"{}_{}_no_data.lock".format(i,j)))  or (execution.state == Execution.COMPLETED_STATE and not f['result_state']):
@@ -533,9 +534,23 @@ def get_detail_context(execution_id):
         delete_time = execution.finished_at + datetime.timedelta(hours=delete_hours)
     else:
         delete_time = None
-    context = {'execution': execution, 'executed_params': executed_params, 'review': review, 'files': files, 'other_files': other_files,
-               'current_executions': current_executions, 'temporizer_value': temporizer_value, 'delete_time': delete_time,
-               'system_path': system_path, 'area_param':area_param, 'time_period_param':time_period_param, 'tiff_message':tiff_message, 'generating_tiff': generating_tiff}
+
+    context = {
+        'execution': execution, 
+        'executed_params': executed_params, 
+        'review': review, 
+        'files': files, 
+        'other_files': other_files,
+        'current_executions': current_executions, 
+        'temporizer_value': temporizer_value, 
+        'delete_time': delete_time,
+        'system_path': system_path, 
+        'area_param':area_param, 
+        'time_period_param':time_period_param, 
+        'tiff_message':tiff_message, 
+        'generating_tiff': generating_tiff
+    }
+
     return context
 
 
@@ -554,7 +569,7 @@ class VersionParametersJson(TemplateView):
         return HttpResponse(data, content_type='application/json')
 
 
-class DeleteResultView(View):
+class DeleteResultImageView(View):
 
     def get(self,request,*args,**kwargs):
 
@@ -607,12 +622,103 @@ class ExecutionRateView(CreateView):
         execution = get_object_or_404(Execution,id=execution_id)
 
         form.instance.execution = execution
+        form.instance.reviewed_by = self.request.user
         form.instance.created_by = self.request.user
         self.object = form.save()
         return redirect(self.get_success_url())
 
+    def get_success_url(self):
+        """Return a URL to the detail of the execution."""
+        execution_pk = self.kwargs.get('pk')
+        return reverse('execution:detail',kwargs={'pk':execution_pk})
 
-class ExecutionCopyView(View):
+
+class ExecutionCopyView(ExecutionCreateView):
+    """
+    Given te id of an Execution a new execution is 
+    created as a copy of the given one.
+    """
+
+    def get(self,request,*args,**kwargs):
+
+        # Getting the version to be executed
+        execution_pk = kwargs.get('pk')
+        execution = get_object_or_404(Execution, pk=execution_pk)
+
+        version = execution.version
+
+        # Current user
+        current_user = request.user
+
+        # User approved credits
+        credits_approved = current_user.profile.credits_approved
+        # User credits consumed
+        credits_consumed = current_user.profile.credits_consumed
+
+        if credits_consumed:
+            credits_approved -= credits_consumed
+
+        # Version selection form
+        version_selection_form = VersionSelectionForm(
+            algorithm=version.algorithm,user=request.user
+        )
+
+        storage_units_version = VersionStorageUnit.objects.filter(
+            version__algorithm=version.algorithm
+        )
+
+        parameters = Parameter.objects.filter(
+            version=version, enabled=True
+        ).order_by('position')
+
+        reviews = Review.objects.filter(execution__version=version)
+
+        # getting the average rating
+        average_rating = Review.objects.filter(
+            execution__version=version
+        ).aggregate(Avg('rating'))['rating__avg']
+        average_rating = round(average_rating if average_rating is not None else 0, 2)
+
+        executions = Execution.objects.filter(version=version)
+
+        topics = Topic.objects.filter(enabled=True)
+
+        executed_params = []
+        params = get_detail_context(execution_pk).get('executed_params')
+        json_params = map(lambda param: param.obtain_json_values(),params)
+        executed_params = json.dumps(json_params)
+
+        context = {
+            'topics': topics, 
+            'algorithm': version.algorithm, 
+            'parameters': parameters,
+            'version_selection_form': version_selection_form, 
+            'version': version,
+            'reviews': reviews,
+            'average_rating': average_rating, 
+            'executions': executions,
+            'executed_params': executed_params, 
+            'credits_approved': credits_approved,
+            # return this parameter as a list is mandatory for
+            # /static/js/formBuilder.js works properly
+            'storage_units_version':list(storage_units_version)
+        }
+
+        return render(request, 'execution/execution_form.html', context)
+
+class ExecutionCancelView(View):
+
+    def get(self,request,*args,**kwargs):
+        pass
+
+
+class DownloadResultImageView(View):
+
+    def get(self,request,*args,**kwargs):
+        pass
+
+
+class GenerateGeoTiffTask(View):
 
     def get(self,request,*args,**kwargs):
         pass

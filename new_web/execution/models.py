@@ -78,7 +78,7 @@ class Review(models.Model):
     comments = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    reviewed_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='review_author')
+    reviewed_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class ExecutionParameter(models.Model):
