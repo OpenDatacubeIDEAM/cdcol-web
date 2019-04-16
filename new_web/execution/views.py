@@ -48,6 +48,7 @@ import requests
 import json
 import glob
 import subprocess
+import mimetypes
 
 
 class ExecutionIndexView(TemplateView):
@@ -706,6 +707,7 @@ class ExecutionCopyView(ExecutionCreateView):
 
         return render(request, 'execution/execution_form.html', context)
 
+
 class ExecutionCancelView(View):
 
     def get(self,request,*args,**kwargs):
@@ -713,12 +715,70 @@ class ExecutionCancelView(View):
 
 
 class DownloadResultImageView(View):
+    """
+    Download a selected image from a given execution.
+    """
 
     def get(self,request,*args,**kwargs):
-        pass
+        execution_id = kwargs.get('pk')
+        image_name = kwargs.get('image_name')
+
+        execution = get_object_or_404(Execution,pk=execution_id)
+        file_path = "{}/results/{}/{}".format(
+            settings.WEB_STORAGE_PATH,execution_id,image_name
+        )
+
+        with open(file_path,'rb') as file:
+            mimetype = mimetypes.guess_type(file_path)
+            response = HttpResponse(file,content_type=mimetype)
+            response['Content-Disposition'] = 'attachment; filename={}'.format(image_name)
+            return response
+
+        # if the file could not be opened.
+        raise Http404
 
 
 class GenerateGeoTiffTask(View):
 
     def get(self,request,*args,**kwargs):
-        pass
+        execution_id = kwargs.get('pk')
+        image_name = kwargs.get('image_name')
+
+        file_path = "{}/results/{}/{}".format(
+            settings.WEB_STORAGE_PATH,execution_id,image_name
+        )
+
+        data = {'file_path': file_path}
+        header = {'Content-Type': 'application/json'}
+        url = '{}/api/download_geotiff/'.format(settings.DC_API_URL)
+
+        response = requests.post(
+            url, data=json.dumps(data), headers=header
+        )
+
+        if response.status_code == 200:
+            data = response.json()
+            file_path = data['file_path']
+
+            execution = get_object_or_404(Execution,pk=execution_id)
+            file_path = "{}/results/{}/{}".format(
+                settings.WEB_STORAGE_PATH,execution_id,image_name
+            )
+
+            with open(file_path,'rb') as file:
+                mimetype = mimetypes.guess_type(file_path)
+                response = HttpResponse(file,content_type=mimetype)
+                response['Content-Disposition'] = 'attachment; filename={}'.format(image_name)
+                return response
+
+            # if the file could not be opened.
+            raise Http404
+
+        else:
+            print('Json response',response)
+            message = response.json()['message']
+
+        context = get_detail_context(execution_id)
+        context['response_message'] = message
+
+        return render(request,'execution/execution_detail.html',context)
