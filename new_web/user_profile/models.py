@@ -29,6 +29,11 @@ class Profile(models.Model):
     credits_approved = models.IntegerField(default=8, blank=True, null=True)
 
     @property
+    def available_credits(self):
+        return self.credits_approved - self.credits_consumed
+    
+
+    @property
     def credits_consumed(self):
         """Return the number of credits consumed by the user.
 

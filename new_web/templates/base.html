@@ -227,24 +227,24 @@
                             <div class="btn-group dropdown">
                               <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
                                 <i class="glyphicon glyphicon-cloud-upload"></i>
-                                <span class="cart-count default-bg">{{ available_credits }}</span>
+                                <span class="cart-count default-bg">{{ user.profile.available_credits }}</span>
                               </button>
                               <ul class="dropdown-menu dropdown-menu-right dropdown-animation cart">
                                 <li>
                                   <table class="table table-hover">
                                     <thead>
                                       <tr>
-                                          <th class="quantity">Código</th>
-                                          <th class="product">Algoritmo</th>
-                                          <th class="amount">Créditos</th>
+                                        <th class="quantity">Código</th>
+                                        <th class="product">Algoritmo</th>
+                                        <th class="amount">Créditos</th>
                                       </tr>
                                     </thead>
                                     <tbody>
-                                    {% if executions|length > 0 %}
-                                    {% for execution in executions %}
+                                    {% if user.execution_set.all|length > 0 %}
+                                    {% for execution in user.execution_set.all %}
                                     <tr>
-                                      {#<td class="quantity"><a href="{% url 'execution:detail' execution.id %}">{{ execution.id }}</a></td>#}
-                                      {#<td class="product"><a href="{% url 'execution:detail' execution.id %}">{{ execution.version.algorithm.name }}</a></td>#}
+                                      <td class="quantity"><a href="{% url 'execution:detail' execution.id %}">{{ execution.id }}</a></td>
+                                      <td class="product"><a href="{% url 'execution:detail' execution.id %}">{{ execution.version.algorithm.name }}</a></td>
                                       <td class="amount">{{ execution.credits_consumed }}</td>
                                     </tr>
                                     {% endfor %}
@@ -257,11 +257,11 @@
                                     {% endif %}
                                     <tr>
                                       <td class="total-quantity" colspan="2">Créditos en uso</td>
-                                      <td class="total-amount">{{ used_credits }}</td>
+                                      <td class="total-amount">{{ user.profile.credits_consumed }}</td>
                                     </tr>
                                     <tr>
                                       <td class="total-quantity" colspan="2">Créditos dispónible</td>
-                                      <td class="total-amount">{{ available_credits }}</td>
+                                      <td class="total-amount">{{ user.profile.available_credits }}</td>
                                     </tr>
                                     </tbody>
                                   </table>
