@@ -51,7 +51,8 @@ class Profile(models.Model):
         # Number of credits consumed by all user executions
         credits_consumed = credits_used['credits_consumed__sum']
 
-        return credits_consumed
+        # if the nombre of credits consumed is None it resturns 0.
+        return credits_consumed or 0
 
 
     def get_groups(self):

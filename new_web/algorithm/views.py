@@ -11,6 +11,7 @@ from django.views.generic.edit import UpdateView
 from django.views.generic.edit import DeleteView
 from django.conf import settings
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 import django_filters.rest_framework
 
@@ -59,7 +60,7 @@ class AlgorithmViewSet(viewsets.ModelViewSet):
 
 class VersionViewSet(viewsets.ModelViewSet):
     """CRUD over Version model via API calls."""
-    queryset = Version.objects.filter(publishing_state="4")
+    queryset = Version.objects.filter(publishing_state__in=['4','5'])
     serializer_class = VersionSerializer
 
 
@@ -408,10 +409,29 @@ class VersionReviewPendingView(TemplateView):
         version.publishing_state = Version.REVIEW_PENDING
         version.save()
 
+        # send email
+        subject = 'Versión Pendiente por Revisión'
+
+        from_email = settings.DEFAULT_FROM_EMAIL
+        to_email =  [version.algorithm.created_by.email]
+
+        context = {
+            'version':version
+        }
+
+        message = render_to_string(
+            template_name='algorithm/email/algorithm_review_send.html',
+            context=context,
+            request=request
+        )
+
+        send_mail(subject,message,from_email,to_email,fail_silently=False)
+
         messages.info(
             request, 
             'La versión del algoritmo esta pendiente por Revisión.'
         )
+
         return redirect('algorithm:version-detail', pk=version_pk)
 
 
@@ -430,13 +450,19 @@ class VersionReviewStartView(TemplateView):
 
         # send email
         subject = 'Versión en Revisión'
-        message = (
-            'La versión %s del Algoritmo %s '
-            ' ha iniciado su proceso de revisión.'
-        )
-        message = message.format(version.number, version.algorithm.name)
+
         from_email = settings.DEFAULT_FROM_EMAIL
         to_email =  [version.algorithm.created_by.email]
+
+        context = {
+            'version':version
+        }
+
+        message = render_to_string(
+            template_name='algorithm/email/algorithm_review_start.html',
+            context=context,
+            request=request
+        )
 
         send_mail(subject,message,from_email,to_email,fail_silently=False)
 
