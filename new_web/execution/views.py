@@ -49,6 +49,7 @@ import json
 import glob
 import subprocess
 import mimetypes
+import time
 
 
 class ExecutionIndexView(TemplateView):
@@ -596,7 +597,7 @@ class DeleteResultImageView(View):
                 time.sleep(0.5)
 
         context = get_detail_context(execution_id)
-        return redirect(request, 'execution/detail.html', context)
+        return redirect('execution:detail', pk=execution_id)
 
 
 class ExecutionRateView(CreateView):
@@ -686,7 +687,7 @@ class ExecutionCopyView(ExecutionCreateView):
 
         executed_params = []
         params = get_detail_context(execution_pk).get('executed_params')
-        json_params = map(lambda param: param.obtain_json_values(),params)
+        json_params = list(map(lambda param: param.obtain_json_values(),params))
         executed_params = json.dumps(json_params)
 
         context = {
