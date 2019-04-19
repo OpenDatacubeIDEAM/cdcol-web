@@ -180,7 +180,7 @@
                   <a href="{% url 'algorithm:version-review-start' version.id %}" class="btn btn-primary btn-md btn-block">Iniciar Revisión</a>
                 </nav>
                 {% endif %}
-                {% if version.publishing_state == "1" and perms.algorithm.can_publish_version %}
+                {% if version.publishing_state == "5" and perms.algorithm.can_publish_version %}
                 <nav>
                   <a href="{% url 'algorithm:version-publish' version.id %}" class="btn btn-primary btn-md btn-block">Publicar Versión</a>
                 </nav>

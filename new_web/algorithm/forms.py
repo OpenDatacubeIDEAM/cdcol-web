@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
+from django.core.exceptions import ValidationError
 
 from algorithm.models import Version
 from algorithm.models import Algorithm
 from algorithm.models import Topic
 from algorithm.models import Parameter
 from storage.models import StorageUnit
+
+import os
 
 
 class AlgorithmCreateForm(forms.ModelForm):
@@ -249,4 +252,26 @@ class ParameterForm(forms.ModelForm):
         required=False,
         initial=True,
         help_text='Para no inluir este parámetro en la salida, desmarcar esta casilla. '
+    )
+
+
+def validate_file_extention(file):
+    ext = os.path.splitext(file.name)[1]
+    if not ext.lower() in '.zip':
+        raise ValidationError(u'La extensión del archivo debe ser .zip')
+
+class VersionPublishForm(forms.Form):
+    """Form to publish a version of a given algorithm."""
+
+    # The dag .py file in a zip file which use te algorithms submited
+    template = forms.FileField(
+        label='Plantilla (.zip)',
+        validators=[validate_file_extention],
+        required=True
+    )
+    # The .py algorithms required to execute the dag.
+    algorithms = forms.FileField(
+        label='Algoritmos (.zip)',
+        validators=[validate_file_extention],
+        required=True
     )

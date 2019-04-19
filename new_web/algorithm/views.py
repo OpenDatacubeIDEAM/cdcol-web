@@ -9,6 +9,7 @@ from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from django.views.generic.edit import DeleteView
+from django.views.generic.edit import FormView
 from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -27,6 +28,7 @@ from algorithm.forms import VersionCreateForm
 from algorithm.forms import VersionUpdateForm
 from algorithm.forms import AlgorithmCreateForm
 from algorithm.forms import AlgorithmUpdateForm
+from algorithm.forms import VersionPublishForm
 from algorithm.forms import ParameterForm
 from storage.models import StorageUnit
 
@@ -286,29 +288,77 @@ class VersionDetailView(DetailView):
     model = Version
 
 
-class VersionPublishView(TemplateView):
+
+class VersionPublishView(FormView):
     """Change the publishing_state of a version as Version.PUBLISHED_STATE
 
     Only versions with publishing_state == Version.DEVELOPED_STATE 
     can be published.
     """
-    
-    def get(self,request,*args,**kwargs):
+
+    template_name = 'algorithm/algorithm_publish_form.html'
+    form_class = VersionPublishForm
+    success_url = reverse_lazy('storage:index')
+
+
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+
         version_pk = self.kwargs.get('pk')
         version = get_object_or_404(Version,pk=version_pk)
 
-        if version.publishing_state == Version.DEVELOPED_STATE:
+        template_zip = form.cleaned_data['template']
+        algorithms_zip = form.cleaned_data['algorithms']
+ 
+        files = {
+            'template_zip': template_zip.file,
+            'algorithms_zip': algorithms_zip.file,
+        }
+
+        data = {}
+
+        # url = "{}/api/storage_units/".format(settings.DC_API_URL)
+
+        # response = requests.post(url,data=data,files=files)
+
+        # if response.status_code != 201:
+        #     err_message = response.json()
+        #     messages.warning(self.request,err_message)
+        #     return redirect('algorithm:version-publish',pk=version_pk)
+
+        if version.publishing_state == Version.REVIEW:
             version.publishing_state = Version.PUBLISHED_STATE
             version.save()
+            
             message = "Versión publicada con éxito."
-            messages.info(request, message)
+            messages.info(self.request, message)
+
+            # send email
+            subject = 'Versión Publicada'
+
+            from_email = settings.DEFAULT_FROM_EMAIL
+            to_email =  [version.algorithm.created_by.email]
+
+            context = {
+                'version':version
+            }
+
+            message = render_to_string(
+                template_name='algorithm/email/algorithm_published.html',
+                context=context,
+                request=self.request
+            )
+
+            send_mail(subject,message,from_email,to_email,fail_silently=False)
+
         else:
             message = (
-                "No es posible publicar una version"
-                " que no esta en estado 'EN DESARROLLO'."
+                "No es posible publicar una version "
+                "que no esta en estado 'EN REVISION'."
             )
         
-            messages.warning(request, message)
+            messages.warning(self.request, message)
 
         return redirect('algorithm:version-detail',pk=version_pk)
 
