@@ -1,5 +1,64 @@
 ## Production
 
+Create a user name **cubo**
+
+```sh
+sudo adduser cubo
+sudo usermod -aG sudo cubo
+su cubo
+cd
+```
+
+Create a RSA key pair
+
+```sh
+ssh-keygen -t rsa -C "usuario_gitlab@ejemplo.edu.co" -b 4096
+```
+
+Copy and paste the public key content in **gitlab.virtual.uniandes.edu.co key registration form**.
+
+```sh
+cat ~/.ssh/id_rsa.pub
+```
+
+Install git
+
+```sh
+sudo apt-get install git
+```
+
+Pull from git the **web instalation script**.
+
+```sh
+git clone git@gitlab.virtual.uniandes.edu.co:datacube-ideam/scripts-despliegue-desacoplado.git --branch open_data_cube
+mv scripts-despliegue-desacoplado/web_install.sh $HOME
+rm -rf scripts-despliegue-desacoplado
+```
+
+Run the instalation script
+
+```sh
+bash web_install.sh
+```
+
+Check the gunicorn and nginx services 
+
+```sh
+sudo systemctl status gunicorn.service
+sudo systemctl status nginx.service
+```
+
+If one or both service failed, restart them 
+
+```sh
+sudo systemctl restart gunicorn.service
+sudo systemctl restart nginx.service
+```
+
+**IMPORTANT:** For every change you perform over the web application or database, please restart both services.
+
+Check that **environmet** file is configured as you expected. 
+
 ## Development
 
 Create a database test database with docker using the following command
