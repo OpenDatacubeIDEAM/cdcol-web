@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '(!l@d8u0fco6b+m&vr6i&&@c@ne_a%2+@hmi5*5o=p7ic*@6)!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False if 'DEPLOYMENT' in os.environ else True
+DEBUG = True if 'DEBUG' in os.environ else False
 
 ALLOWED_HOSTS = ['*']
 
@@ -223,13 +223,13 @@ TIME_FORMAT = 'H:i:s'
 
 STATIC_URL = '/static/'
 
-if DEBUG:
+if not 'PRODUCTION' in os.environ:
     # When debugging
     STATICFILES_DIRS = [
         os.path.join(BASE_DIR, "static"),
     ]
 
-if not DEBUG:
+if 'PRODUCTION' in os.environ :
     # For deployment
     STATIC_ROOT = os.path.join(
         BASE_DIR, "static"

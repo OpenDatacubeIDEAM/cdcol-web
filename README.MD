@@ -1,9 +1,8 @@
+## Production
 
-# Development with docker
+## Development
 
-The storage module will not work properly because it depends of an API external service.
-
-Create a database
+Create a database test database with docker using the following command
 
 ```sh
 docker run \
@@ -14,61 +13,68 @@ docker run \
 	-d postgres
 ```
 
-Build the docker image
+Get the container IP Address
 
 ```sh
-docker build -t cdcol_web .
-```
-
-Run the conatiner
-
-```sh
-docker run -it --name web -v ${PWD}:/usr/src/app --env-file environment --link web_db cdcol_web /bin/bash
-```
-
-Install requirements and run the development server
-
-```sh
-./entrypoint.sh
-```
-
-Exit from container
-
-```sh
-exit
-```
-
-Start conatiner 
-
-```sh
-docker start -ia web
-```
-
-Get the container IP to get the web server
-
-```sh
-docker inspect  devel_web_1 | grep IPAddress
+docker inspect web_db | grep IPAddress
 
             "SecondaryIPAddresses": null,
-            "IPAddress": "",
-                    "IPAddress": "172.20.0.5",
+            "IPAddress": "172.17.0.2",
+                    "IPAddress": "172.17.0.2"
 ```
 
-Place the ulr http://172.20.0.5:8000/ in the browser.
-
-
-# Create and Load Database Backups
-
-Create a backup of the Admin user data
+Add the database and rest api (optional) IP Addresses to your hosts file
 
 ```sh
-python manage.py dumpdata auth.user --indent 2 > admin.json
-python manage.py dumpdata auth.group auth.permission --indent 2 > group.json
+sudo nano /etc/hosts
+
+...
+172.17.0.1	api
+172.17.0.2	db
+...
 ```
 
-Load Admin data into the database
+Create a python virtualenv in the project directory, activate the environment and install the application requirements.
 
 ```sh
-python manage.py loaddata admin.json
-python manage.py loaddata group.json
+virtualenv --python=python3.6 .env
+source .env/bin/activate
+pip3.6 install -r requirements.txt
+```
+
+Load the environent variables required for the application
+
+```sh
+export $(egrep -v '^#' environment | xargs)
+```
+
+Create database tables required for the application
+
+```sh
+python3.6 manage.py makemigrations
+python3.6 manage.py migrate
+python3.6 manage.py migrate --run-syncdb
+```
+
+Load the initial database data
+
+```sh
+python3.6 manage.py loaddata data/1.group.json
+python3.6 manage.py loaddata data/2.user.json
+python3.6 manage.py loaddata data/3.profile.json
+python3.6 manage.py loaddata data/4.topic.json
+```
+
+Run the development server
+
+```sh
+python3.6 manage.py runserver 0.0.0.0:8000
+```
+
+### Database backup
+
+To perform a backup of some database model, perform the following command. Change **auth.group** for the app.model_name and **.1group.json** for a name of your preference.
+
+```sh
+python3.6 manage.py dumpdata --natural-foreign --natural-primary --indent 2 auth.group > data/1.group.json
 ```
