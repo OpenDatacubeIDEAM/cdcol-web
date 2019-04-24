@@ -1,6 +1,9 @@
 #!/bin/bash
 # Load this file with 'export $(egrep -v '^#' environment | xargs)' command
 
+# Comment this line set DEBUG to True
+DEPLOYMENT='on'
+
 DC_API_URL="http://api:8000"
 DC_STORAGE_PATH="/dc_storage"
 
