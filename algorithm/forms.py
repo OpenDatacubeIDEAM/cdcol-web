@@ -255,7 +255,12 @@ class ParameterForm(forms.ModelForm):
     )
 
 
-def validate_file_extention(file):
+def validate_py_extention(file):
+    ext = os.path.splitext(file.name)[1]
+    if not ext.lower() in '.py':
+        raise ValidationError(u'La extensión del archivo debe ser .py')
+
+def validate_zip_extention(file):
     ext = os.path.splitext(file.name)[1]
     if not ext.lower() in '.zip':
         raise ValidationError(u'La extensión del archivo debe ser .zip')
@@ -265,13 +270,13 @@ class VersionPublishForm(forms.Form):
 
     # The dag .py file in a zip file which use te algorithms submited
     template = forms.FileField(
-        label='Plantilla (.zip)',
-        validators=[validate_file_extention],
+        label='Plantilla (.py)',
+        validators=[validate_py_extention],
         required=True
     )
     # The .py algorithms required to execute the dag.
     algorithms = forms.FileField(
         label='Algoritmos (.zip)',
-        validators=[validate_file_extention],
+        validators=[validate_zip_extention],
         required=True
     )

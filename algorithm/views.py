@@ -34,6 +34,7 @@ from storage.models import StorageUnit
 
 import os
 import urllib
+import requests
 
 
 class AlgorithmIndexView(TemplateView):
@@ -316,16 +317,18 @@ class VersionPublishView(FormView):
             'algorithms_zip': algorithms_zip.file,
         }
 
-        data = {}
+        data = {
+            'version_id': version_pk
+        }
 
-        # url = "{}/api/storage_units/".format(settings.DC_API_URL)
+        url = "{}/api/algorithms/publish/".format(settings.DC_API_URL)
 
-        # response = requests.post(url,data=data,files=files)
+        response = requests.post(url,data=data,files=files)
 
-        # if response.status_code != 201:
-        #     err_message = response.json()
-        #     messages.warning(self.request,err_message)
-        #     return redirect('algorithm:version-publish',pk=version_pk)
+        if response.status_code != 201:
+            err_message = response.json()
+            messages.warning(self.request,err_message)
+            return redirect('algorithm:version-publish',pk=version_pk)
 
         if version.publishing_state == Version.REVIEW:
             version.publishing_state = Version.PUBLISHED_STATE
