@@ -34,7 +34,7 @@ Datacube REST API URL
 The web app interact with the datacube API 
 to perform some tasks.
 """
-DC_API_URL = 'http://api:8000'
+DC_API_URL = os.environ.get('DC_API_URL')
 
 """
 The datacube storage:
@@ -56,7 +56,7 @@ dc_storage/
         description_file.yml
         mgen_script.py
 """
-DC_STORAGE_PATH = '/dc_storage'
+DC_STORAGE_PATH = os.environ.get('DC_STORAGE_PATH')
 
 """
 The web storage will contains:
@@ -71,25 +71,25 @@ The web storage will contains:
         the image metadata generation script for each product (satelite).
 
 """
-WEB_STORAGE_PATH = '/web_storage'
+WEB_STORAGE_PATH = os.environ.get('WEB_STORAGE_PATH')
 
 """
 Execution module index page and executon detail page
 are refresehd with javascript each number of seconds 
 specified on this variables.
 """
-WEB_EXECUTION_TEMPORIZER = 3000
+WEB_EXECUTION_TEMPORIZER = int(os.environ.get('WEB_EXECUTION_TEMPORIZER'))
 
 """
 This variable has the ID of the algorithm that 
 can generate a gif.
 """
-WEB_ALGORITHM_ID_FOR_CUSTOM_SERVICE = 8
+WEB_ALGORITHM_ID_FOR_CUSTOM_SERVICE = int(os.environ.get('WEB_ALGORITHM_ID_FOR_CUSTOM_SERVICE'))
 
 """
 
 """
-WEB_DAYS_ELAPSED_TO_DELETE_EXECUTION_RESULTS = 3
+WEB_DAYS_ELAPSED_TO_DELETE_EXECUTION_RESULTS = int(os.environ.get('WEB_DAYS_ELAPSED_TO_DELETE_EXECUTION_RESULTS'))
 
 # Application definition
 
@@ -168,11 +168,11 @@ WSGI_APPLICATION = 'ideam.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'HOST': 'web_db',
-        'PORT': '5432',
-        'NAME': 'cdcol',
-        'USER': 'cdcol',
-        'PASSWORD': 'cdcol'
+        'HOST': os.environ.get('WEB_DB_HOST'),
+        'PORT': os.environ.get('WEB_DB_PORT'),
+        'NAME': os.environ.get('WEB_DB_NAME'),
+        'USER': os.environ.get('WEB_DB_USER'),
+        'PASSWORD': os.environ.get('WEB_DB_PASSWORD')
     }
 }
 
@@ -264,10 +264,10 @@ ACCOUNT_ADAPTER = 'user_profile.adapters.MyAccountAdapter'
 
 # Email service
 # this variables are needed for 'allouth' to perform password reset 
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_HOST_USER = "aucarvideo@gmail.com"
-EMAIL_HOST_PASSWORD = "aucar2018"
-EMAIL_PORT = "587"
+EMAIL_HOST = os.environ.get('WEB_EMAIL_HOST')
+EMAIL_HOST_USER = os.environ.get('WEB_EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('WEB_EMAIL_HOST_PASSWORD')
+EMAIL_PORT = os.environ.get('WEB_EMAIL_PORT')
 EMAIL_USE_TLS = True
 
 # Rest Framework
