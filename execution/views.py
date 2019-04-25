@@ -424,6 +424,7 @@ def send_execution(execution):
         if r.status_code == 201:
             response = {'status': 'ok', 'description': 'Se envió la ejecución correctamente.','detalle':'No hay detalles'}
         else:
+            r.raise_for_status()
             response = {'status': 'error', 'description': 'Ocurrió un error al enviar la ejecución',
                         'detalle': "{}, {}".format(r.status_code, r.text)}
     except:
