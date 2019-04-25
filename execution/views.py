@@ -250,8 +250,8 @@ class ExecutionCreateView(TemplateView):
 
             # This is returned when the Area parameter is not given or
             # the user has consumed all the credits
-            messages.warning(request,'El usuario no tiene créditos para llevar a cabo esta ejecución')
-            messages.info(request,'O la versión del algoritmo no tiene parametro de tipo AREA')
+            messages.error(request,'El usuario no tiene créditos para llevar a cabo esta ejecución')
+            messages.error(request,'O la versión del algoritmo no tiene parametro de tipo AREA')
             return redirect('execution:create', pk=version_pk)
 
 def create_execution_parameter_objects(parameters, request, execution):
@@ -415,21 +415,21 @@ def send_execution(execution):
         'is_gif': False
     }
     # sending the request
-    # try:
-    header = {'Content-Type': 'application/json'}
-    if execution.version.algorithm.id == int(settings.WEB_ALGORITHM_ID_FOR_CUSTOM_SERVICE):
-        json_response['is_gif'] = True
-    url = "{}/api/new_execution/".format(settings.DC_API_URL)
-    r = requests.post(url, data=json.dumps(json_response), headers=header)
-    if r.status_code == 201:
-        response = {'status': 'ok', 'description': 'Se envió la ejecución correctamente.','detalle':'No hay detalles'}
-    else:
-        r.raise_for_status()
-        response = {'status': 'error', 'description': 'Ocurrió un error al enviar la ejecución',
-                    'detalle': "{}, {}".format(r.status_code, r.text)}
-    # except:
-    #     # print('Something went wrong when trying to call the REST service')
-    #     raise
+    try:
+        header = {'Content-Type': 'application/json'}
+        if execution.version.algorithm.id == int(settings.WEB_ALGORITHM_ID_FOR_CUSTOM_SERVICE):
+            json_response['is_gif'] = True
+        url = "{}/api/new_execution/".format(settings.DC_API_URL)
+        r = requests.post(url, data=json.dumps(json_response), headers=header)
+        if r.status_code == 201:
+            response = {'status': 'ok', 'description': 'Se envió la ejecución correctamente.','detalle':'No hay detalles'}
+        else:
+            # r.raise_for_status()
+            response = {'status': 'error', 'description': 'Ocurrió un error al enviar la ejecución',
+                        'detalle': "{}, {}".format(r.status_code, r.text)}
+    except:
+        # print('Something went wrong when trying to call the REST service')
+        raise
     return response
 
 
