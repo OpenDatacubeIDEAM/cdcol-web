@@ -241,11 +241,11 @@ class ExecutionCreateView(TemplateView):
 
                     if response.get('status') in 'error':
                         messages.error(request,response.get('description'))
-                        # messages.error(request,response.get('detalle'))
+                        messages.error(request,response.get('detalle'))
                         return redirect('execution:create', pk=version_pk)
                     else:
                         messages.info(request,response.get('description'))
-                        messages.info(request,response.get('detalle'))
+                        # messages.info(request,response.get('detalle'))
                         return redirect('execution:detail', pk=new_execution.id)
 
             # This is returned when the Area parameter is not given or
