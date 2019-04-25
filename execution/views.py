@@ -238,9 +238,15 @@ class ExecutionCreateView(TemplateView):
 
                     # send the execution to the REST service
                     response = send_execution(new_execution)
-                    messages.info(request,response.get('description'))
-                    print(response)
-                    return redirect('execution:detail', pk=new_execution.id)
+
+                    if response.get('status') in 'error':
+                        messages.error(request,response.get('description'))
+                        # messages.error(request,response.get('detalle'))
+                        return redirect('execution:create', pk=version_pk)
+                    else:
+                        messages.info(request,response.get('description'))
+                        messages.info(request,response.get('detalle'))
+                        return redirect('execution:detail', pk=new_execution.id)
 
             # This is returned when the Area parameter is not given or
             # the user has consumed all the credits
@@ -416,7 +422,7 @@ def send_execution(execution):
         url = "{}/api/new_execution/".format(settings.DC_API_URL)
         r = requests.post(url, data=json.dumps(json_response), headers=header)
         if r.status_code == 201:
-            response = {'status': 'ok', 'description': 'Se envió la ejecución correctamente.'}
+            response = {'status': 'ok', 'description': 'Se envió la ejecución correctamente.','detalle':'No hay detalles'}
         else:
             response = {'status': 'error', 'description': 'Ocurrió un error al enviar la ejecución',
                         'detalle': "{}, {}".format(r.status_code, r.text)}
