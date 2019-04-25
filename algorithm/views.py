@@ -325,9 +325,9 @@ class VersionPublishView(FormView):
 
         response = requests.post(url,data=data,files=files)
 
-        if response.status_code != 201:
+        if response.status_code != 200:
             err_message = response.json()
-            messages.warning(self.request,err_message)
+            messages.error(self.request,err_message)
             return redirect('algorithm:version-publish',pk=version_pk)
 
         if version.publishing_state == Version.REVIEW:
