@@ -313,8 +313,8 @@ class VersionPublishView(FormView):
         algorithms_zip = form.cleaned_data['algorithms']
  
         files = {
-            'template_zip': template_zip.file,
-            'algorithms_zip': algorithms_zip.file,
+            'template_file': template_zip.file,
+            'algorithms_zip_file': algorithms_zip.file,
         }
 
         data = {
