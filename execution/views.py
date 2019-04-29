@@ -13,8 +13,10 @@ from django.http import HttpResponse
 from django.db.models import Avg
 from django.utils.text import slugify
 from django.contrib import messages
+from django.core.paginator import Paginator
+from django.core.paginator import EmptyPage
+from django.core.paginator import PageNotAnInteger
 
-from rest_framework import viewsets
 from algorithm.models import VersionStorageUnit
 from algorithm.models import Parameter
 from algorithm.models import Algorithm
@@ -22,6 +24,7 @@ from algorithm.models import Version
 from algorithm.models import Topic
 
 from execution.serializers import ExecutionSerializer
+from execution.serializers import TaskSerializer
 from execution.forms import VersionSelectionForm
 from execution.forms import ReviewForm
 from execution.models import FileConvertionTask
@@ -40,6 +43,12 @@ from execution.models import StorageUnitNoBandType
 from execution.models import Task
 
 from storage.models import StorageUnit
+
+from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+
+from airflow.models import DagRun
 
 import os
 import zipfile
@@ -791,3 +800,56 @@ class GenerateGeoTiffTask(View):
         context['response_message'] = message
 
         return render(request,'execution/execution_detail.html',context)
+
+
+class ExecutionTasksListView(DetailView):
+
+    model = Execution
+    template_name = 'execution/execution_task_list.html'
+
+
+class ListTasksAPIView(viewsets.ViewSet):
+    # Required for the Browsable API renderer to have a nice form.
+    serializer_class = TaskSerializer
+    permission_classes = (AllowAny,)
+
+    def list(self, request):
+
+        execution_pk = request.query_params.get('exec_id', None)
+        execution = Execution.objects.get(pk=execution_pk)
+
+        dag_list = DagRun.find(dag_id=execution.dag_id)
+        dag = dag_list[-1]
+
+        tasks = dag.get_task_instances()
+        data_list = []
+
+        for task in tasks:
+            task_dict = {
+                'id': task.task_id,
+                'state': task.state,
+                'log_url': task.log_url,
+                'execution_date': task.execution_date,
+                'start_date': task.start_date,
+                'end_date': task.end_date,
+                'duration':task.duration
+            }
+            data_list.append(task_dict)
+
+        # paginator = Paginator(data_list, 10)
+        # print('query_params',request.query_params)
+        # page = request.query_params.get('draw')
+        # print('page', page)
+        # try:
+        #     data_list = paginator.page(page)
+        # except PageNotAnInteger:
+        #     # If page is not an integer, deliver first page.
+        #     data_list = paginator.page(1)
+        # except EmptyPage:
+        #     # If page is out of range (e.g. 9999),
+        #     # deliver last page of results.
+        #     data_list = paginator.page(paginator.num_pages)
+
+        serializer = TaskSerializer(
+            instance=data_list, many=True)
+        return Response(serializer.data)

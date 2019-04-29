@@ -4,12 +4,12 @@
 
 {% block extra_head %}
 <script type="text/javascript">
-{% if execution.state == '1' or execution.state == '2' or generating_tiff == '1' %}
-  function timedRefresh(timeoutPeriod) {
-      setTimeout("location.reload(true);", timeoutPeriod);
-  }
-  window.onload = timedRefresh({{ temporizer_value }});
-{% endif %}
+// {% if execution.state == '1' or execution.state == '2' or generating_tiff == '1' %}
+//   function timedRefresh(timeoutPeriod) {
+//       setTimeout("location.reload(true);", timeoutPeriod);
+//   }
+//   window.onload = timedRefresh({{ temporizer_value }});
+// {% endif %}
 </script>
 {% endblock %}
 

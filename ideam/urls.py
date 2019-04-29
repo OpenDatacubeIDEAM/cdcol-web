@@ -26,6 +26,7 @@ from template.views import YamlViewSet
 from template.views import IngestViewSet
 from ingest.views import TaskViewSet
 from execution.views import ExecutionViewSet
+from execution.views import ListTasksAPIView
 
 
 # Routers provide an easy way of automatically determining the URL conf.
@@ -36,6 +37,7 @@ router.register(r'templates/yaml', YamlViewSet)
 router.register(r'templates/ingest', IngestViewSet)
 router.register(r'ingest/task', TaskViewSet)
 router.register(r'executions', ExecutionViewSet)
+router.register(r'tasks', ListTasksAPIView, basename='task')
 
 urlpatterns = [
     path('api/', include(router.urls)),

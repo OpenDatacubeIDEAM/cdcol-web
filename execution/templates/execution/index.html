@@ -91,13 +91,14 @@
               {
                 "data": "state",
                 "render": function(data, type, full, meta){
-                    var current_executions = full['current_executions']
-                    if (data == "EN ESPERA"){
-                        return '<span>' + data + '</span> ' + '<span class="label label-danger" data-toggle="tooltip" data-placement="right" title="Hay ' + current_executions +' ejecuciones en espera antes de que esta comience su ejecución ">' + current_executions +'</span>';
-                    }
-                    else{
-                        return data;
-                    }
+                    return data;
+                    // var current_executions = full['current_executions']
+                    // if (data == "EN ESPERA"){
+                    //     return '<span>' + data + '</span> ' + '<span class="label label-danger" data-toggle="tooltip" data-placement="right" title="Hay ' + current_executions +' ejecuciones en espera antes de que esta comience su ejecución ">' + current_executions +'</span>';
+                    // }
+                    // else{
+                    //     return data;
+                    // }
                 }
               },
               {"data":"credits_consumed"},
