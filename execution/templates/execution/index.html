@@ -167,6 +167,7 @@
                 "searchable": false,
                 "sortable": false,
                 "render": function (data, type, full, meta) {
+                    console.log('data',data);
                     var canRate = full['can_rate'];
                     var detail_button = "<a href='" + data + "/detail' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>";
                     if (canRate === true){

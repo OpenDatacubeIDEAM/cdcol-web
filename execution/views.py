@@ -10,6 +10,7 @@ from django.shortcuts import render, redirect, reverse
 from django.conf import settings
 from django.core import serializers
 from django.http import HttpResponse
+from django.http import Http404
 from django.db.models import Avg
 from django.utils.text import slugify
 from django.contrib import messages
@@ -824,11 +825,22 @@ class ListTasksAPIView(viewsets.ViewSet):
         tasks = dag.get_task_instances()
         data_list = []
 
+        def get_raw_log(log_filepath):
+            try:
+                with open(log_filepath,'r') as file:
+                    content = file.read()
+                    return content
+            except FileNotFoundError as e:
+                return 'Archivo no encontrado, probablemente fué eliminado.'
+
+
         for task in tasks:
             task_dict = {
                 'id': task.task_id,
                 'state': task.state,
                 'log_url': task.log_url,
+                'log_filepath':task.log_filepath,
+                'log_content': get_raw_log(task.log_filepath),
                 'execution_date': task.execution_date,
                 'start_date': task.start_date,
                 'end_date': task.end_date,
@@ -853,3 +865,23 @@ class ListTasksAPIView(viewsets.ViewSet):
         serializer = TaskSerializer(
             instance=data_list, many=True)
         return Response(serializer.data)
+
+
+class DownloadTaskLogView(View):
+    """
+        Donwload the log or an airflow task.
+        the taks's logs are located at 'WEB_STORAGE_PATH/logs'
+    """
+
+    def get(self,request,*args,**kwargs):
+        log_path = request.GET.get('log_path')
+        task_id = request.GET.get('task_id')
+
+        try:
+            with open(log_path,'rb') as file:
+                mimetype = mimetypes.guess_type(log_path)
+                response = HttpResponse(file,content_type=mimetype)
+                response['Content-Disposition'] = 'attachment; filename={}'.format(task_id)
+                return response
+        except FileNotFoundError as e:
+            raise Http404

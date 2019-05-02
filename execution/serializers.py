@@ -55,8 +55,8 @@ class ExecutionSerializer(serializers.ModelSerializer):
 class Task(object):
     def __init__(self, **kwargs):
         fields = (
-            'id', 'state', 'log_url', 'execution_date',
-            'start_date','end_date', 'duration'
+            'id', 'state', 'log_url', 'log_filepath','execution_date',
+            'start_date','end_date', 'duration', 'log_content'
         )
         for field in fields:
             setattr(self, field, kwargs.get(field, None))
@@ -67,6 +67,8 @@ class TaskSerializer(serializers.Serializer):
     id = serializers.CharField(read_only=True)
     state = serializers.CharField(max_length=256)
     log_url = serializers.URLField(max_length=900, min_length=None, allow_blank=False)
+    log_filepath = serializers.CharField(max_length=900)
+    log_content = serializers.CharField(allow_blank=True)
     execution_date = serializers.DateTimeField()
     start_date = serializers.DateTimeField()
     end_date = serializers.DateTimeField()
