@@ -9,9 +9,9 @@ from airflow.models import DagRun
 class ExecutionSerializer(serializers.ModelSerializer):
 
     AIRFLOW_STATES = {
-        'running': Execution.EXECUTING_STATE,
-        'success': Execution.COMPLETED_STATE,
-        'failed': Execution.ERROR_STATE
+        'running': "EN EJECUCIÓN",
+        'success': "FINALIZADA",
+        'failed': "CON FALLO"
     }
 
     algorithm_name = serializers.SerializerMethodField()
@@ -35,13 +35,21 @@ class ExecutionSerializer(serializers.ModelSerializer):
         return obj.version.algorithm.name
 
     def get_state(self, obj):
+        """
+            While the execution is running (has not finisehd),
+            the state  is retrieved from airflow database.
+        """
         dag_state = obj.get_state_display()
 
-        if not obj.finished_at:
+        if not obj.finished_at and obj.dag_id:
             dr_list = DagRun.find(dag_id=obj.dag_id)
+            print('execution_id',obj.id,'dag_id',obj.dag_id)
+            # print('dag run',dr_list)
             if dr_list:
                 dag_state = dr_list[-1].state
-                dag_state = AIRFLOW_STATES.get(dag_state)
+                print('dag_state',dag_state)
+                dag_state = ExecutionSerializer.AIRFLOW_STATES.get(dag_state)
+                print('dag_state_2',dag_state)
 
         return dag_state
 

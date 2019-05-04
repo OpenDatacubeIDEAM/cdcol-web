@@ -62,7 +62,9 @@
                 <tr>
                   <td>Estado:</td>
                   {% if execution.state == '1' and current_executions.count >= 0 %}
-                    <td>{{ execution.get_state_display }} <span class="label label-danger" data-toggle="tooltip" title="Hay {{ current_executions.count }} ejecuciones en espera antes de que esta comience su ejecución" data-placement="right">{{ current_executions.count }}</span></td>
+                    <td>{{ execution.get_state_display }} 
+                      <!-- <span class="label label-danger" data-toggle="tooltip" title="Hay {{ current_executions.count }} ejecuciones en espera antes de que esta comience su ejecución" data-placement="right">{{ current_executions.count }}</span> -->
+                    </td>
                   {% else %}
                     <td>{{ execution.get_state_display }}</td>
                   {% endif %}
@@ -187,8 +189,8 @@
                     <tbody>
                       <tr>
                         <td>resultados.zip</td>
-                        <td><button type="button" class="btn btn-info fa fa-download">Descargar</button></td>
-                        <td></td>
+                        <td><button type="button" class="btn btn-info fa fa-download"> Descargar</button></td>
+                        <!-- <td></td> -->
                       </tr>
                     </tbody>
                   </table>
@@ -293,6 +295,9 @@
 {% endblock %}
 
 {% block extra_body %}
+<script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="utf8" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/plug-ins/1.10.13/sorting/datetime-moment.js"></script>
 <script type="text/javascript">
 
 $(document).ready(function() {
@@ -305,8 +310,9 @@ $(document).ready(function() {
   }
 
   var table = $('#tasks-logs').DataTable({
-      "searching": false
+      "searching": false,
       "paging":   false,
+      "info":     false,
       "serverSide": true,
       "ajax": "/api/tasks/?exec_id={{ execution.id }}&format=datatables",
       "columns":  [

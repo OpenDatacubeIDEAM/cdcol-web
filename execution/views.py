@@ -207,8 +207,20 @@ class ExecutionCreateView(TemplateView):
             checkbox_generate_mosaic = False;
       
         if current_user.has_perm('execution.can_create_new_execution'):
-            parameter = parameters.get(parameter_type=Parameter.AREA_TYPE)
-            time_parameters = parameters.filter(parameter_type=Parameter.TIME_PERIOD_TYPE)
+
+            try:
+                parameter = parameters.get(parameter_type=Parameter.AREA_TYPE)
+                time_parameters = parameters.filter(parameter_type=Parameter.TIME_PERIOD_TYPE)
+            except Parameter.DoesNotExist as e:
+                messages.error(
+                    request,
+                    (
+                         'la versión del algoritmo debe tener un parámetro de tipo Area '
+                         'y un parámetro de tipo Periodo de Tiempo como mínimo.'
+                    )
+                )
+                return redirect('execution:create', pk=version_pk)
+
             if parameter and credits_approved:
                 anhos = 1
                 if time_parameters:
@@ -253,6 +265,8 @@ class ExecutionCreateView(TemplateView):
                         messages.error(request,response.get('description'))
                         messages.error(request,response.get('detalle'))
                         return redirect('execution:create', pk=version_pk)
+                        # return HttpResponse(response.get('html'))
+                        new_execution.delete()
                     else:
                         messages.info(request,response.get('description'))
                         # messages.info(request,response.get('detalle'))
@@ -260,8 +274,9 @@ class ExecutionCreateView(TemplateView):
 
             # This is returned when the Area parameter is not given or
             # the user has consumed all the credits
-            messages.error(request,'El usuario no tiene créditos para llevar a cabo esta ejecución')
-            messages.error(request,'O la versión del algoritmo no tiene parametro de tipo AREA')
+            messages.error(
+                request,'El usuario no tiene créditos para llevar a cabo esta ejecución.'
+            )
             return redirect('execution:create', pk=version_pk)
 
 def create_execution_parameter_objects(parameters, request, execution):
@@ -435,8 +450,12 @@ def send_execution(execution):
             response = {'status': 'ok', 'description': 'Se envió la ejecución correctamente.','detalle':'No hay detalles'}
         else:
             # r.raise_for_status()
-            response = {'status': 'error', 'description': 'Ocurrió un error al enviar la ejecución',
-                        'detalle': "{}, {}".format(r.status_code, r.text)}
+            response = {
+                'status': 'error', 'description': 'Ocurrió un error al enviar la ejecución',
+                'detalle': "{}, {}".format(r.status_code, r.text),
+                'html': r.content
+
+            }
     except:
         # print('Something went wrong when trying to call the REST service')
         raise
@@ -820,9 +839,16 @@ class ListTasksAPIView(viewsets.ViewSet):
         execution = Execution.objects.get(pk=execution_pk)
 
         dag_list = DagRun.find(dag_id=execution.dag_id)
-        dag = dag_list[-1]
 
-        tasks = dag.get_task_instances()
+        try:
+            dag = dag_list[-1]
+            tasks = dag.get_task_instances()
+        except IndexError as e:
+            # If an index erro ocurs, it implies that 
+            # a dag was not found with the given dag_id
+            # so we return an empty task list
+            tasks = []
+        
         data_list = []
 
         def get_raw_log(log_filepath):
