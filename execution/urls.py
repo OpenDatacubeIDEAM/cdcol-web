@@ -14,6 +14,7 @@ from execution.views import DownloadResultImageView
 from execution.views import DeleteResultImageView
 from execution.views import GenerateGeoTiffTask
 from execution.views import DownloadTaskLogView
+from execution.views import ExecutionStateJsonView
 
 urlpatterns = [
     path('', ExecutionIndexView.as_view(), name='index'),
@@ -26,6 +27,8 @@ urlpatterns = [
     path('<int:pk>/result/image/<str:image_name>/delete',DeleteResultImageView.as_view(), name='image-delete'),
     path('<int:pk>/result/image/<str:image_name>/generate_geotiff_task',GenerateGeoTiffTask.as_view(), name='generate_geotiff_task'),
 
+    path('state/json', ExecutionStateJsonView.as_view(), name='state-json'),
+    
     path('<int:pk>/tasks/list', ExecutionTasksListView.as_view(), name='task-list'),
     path('task/log', DownloadTaskLogView.as_view(), name='task-download-log'),
 

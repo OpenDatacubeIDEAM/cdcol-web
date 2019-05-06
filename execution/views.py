@@ -17,6 +17,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
+from django.http import JsonResponse
 
 from algorithm.models import VersionStorageUnit
 from algorithm.models import Parameter
@@ -892,6 +893,32 @@ class ListTasksAPIView(viewsets.ViewSet):
             instance=data_list, many=True)
         return Response(serializer.data)
 
+
+class ExecutionStateJsonView(View):
+
+    def get(self,request,*args,**kwargs):
+
+        execution_pk = request.GET.get('exec_id', None)
+        execution = Execution.objects.get(pk=execution_pk)
+        print('execution',execution.dag_id)
+        dag_list = DagRun.find(dag_id=execution.dag_id)
+
+        # try:
+        dag = dag_list[-1]
+        dag_state = dag.get_state()
+
+        if dag_state in 'running':
+            dag_state = "EN EJECUCIÓN"
+        elif dag_state in 'success':
+            dag_state = "FINALIZADA"
+        elif dag_state in 'failed':
+            dag_state = "CON FALLO"
+
+        # except IndexError as e:
+        #     dag_state = execution.get_state_display()
+
+        data = {'state':dag_state}
+        return JsonResponse(data)
 
 class DownloadTaskLogView(View):
     """

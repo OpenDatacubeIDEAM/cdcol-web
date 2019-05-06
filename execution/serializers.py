@@ -43,13 +43,9 @@ class ExecutionSerializer(serializers.ModelSerializer):
 
         if not obj.finished_at and obj.dag_id:
             dr_list = DagRun.find(dag_id=obj.dag_id)
-            print('execution_id',obj.id,'dag_id',obj.dag_id)
-            # print('dag run',dr_list)
             if dr_list:
                 dag_state = dr_list[-1].state
-                print('dag_state',dag_state)
                 dag_state = ExecutionSerializer.AIRFLOW_STATES.get(dag_state)
-                print('dag_state_2',dag_state)
 
         return dag_state
 

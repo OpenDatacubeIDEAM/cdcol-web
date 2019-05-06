@@ -61,13 +61,7 @@
                 </tr>
                 <tr>
                   <td>Estado:</td>
-                  {% if execution.state == '1' and current_executions.count >= 0 %}
-                    <td>{{ execution.get_state_display }} 
-                      <!-- <span class="label label-danger" data-toggle="tooltip" title="Hay {{ current_executions.count }} ejecuciones en espera antes de que esta comience su ejecución" data-placement="right">{{ current_executions.count }}</span> -->
-                    </td>
-                  {% else %}
-                    <td>{{ execution.get_state_display }}</td>
-                  {% endif %}
+                  <td id='execution_state'>{{ execution.get_state_display }}</td>
                 </tr>
                 <tr>
                   <td>Créditos Consumidos:</td>
@@ -302,6 +296,29 @@
 
 $(document).ready(function() {
 
+  //Our custom function.
+  function send(){
+      $.ajax({
+          type: "get",
+          url: "/execution/state/json?exec_id={{ execution.id }}",
+          success:function(data)
+          {
+              //console.log the response
+              console.log(data);
+              //Send another request in 10 seconds.
+              setTimeout(function(){
+                  send();
+              }, 10000);
+          },
+          error: function(xhr,status,error) 
+          {
+            alert('Servidor no econtrado, no es posible actualizar el estado de la ejeucicón.')
+          }
+      });
+  }
+  //Call our function
+  send();
+
   function display_modal(data){
     var code = document.getElementById("error-console");
     code.textContent(data);
@@ -331,7 +348,7 @@ $(document).ready(function() {
       ],
       "language": {
         "decimal":        "",
-        "emptyTable":     "No hay datos disponibles en la tabla",
+        "emptyTable":     "No hay ejecuciones fallidas ni ignoradas.",
         "info":           "Mostrando del registro _START_ al _END_ de _TOTAL_ registros",
         "infoEmpty":      "Mostrando del registro 0 a 0 de 0 registros",
         "infoFiltered":   "(filtrando entre un total de _MAX_ registros)",
