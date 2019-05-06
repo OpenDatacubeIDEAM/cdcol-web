@@ -46,6 +46,8 @@ class ExecutionSerializer(serializers.ModelSerializer):
             if dr_list:
                 dag_state = dr_list[-1].state
                 dag_state = ExecutionSerializer.AIRFLOW_STATES.get(dag_state)
+            else:
+                dag_state = "Dag '{}' no encontrado".format(obj.dag_id)
 
         return dag_state
 

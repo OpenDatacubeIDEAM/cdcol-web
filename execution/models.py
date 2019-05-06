@@ -48,13 +48,13 @@ class Execution(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     generate_mosaic = models.BooleanField(default=True)
     credits_consumed = models.IntegerField(default=0)
-    # dag_id = models.CharField(max_length=200)
+    dag_id = models.CharField(max_length=1000)
 
-    @property
-    def dag_id(self):
-        return 'execution_{}_{}_{}'.format(
-            self.id,self.version.algorithm.name,self.version.number
-        )
+    # @property
+    # def dag_id(self):
+    #     return 'execution_{}_{}_{}'.format(
+    #         self.id,self.version.algorithm.name,self.version.number
+    #     )
          
     def can_rate(self):
         """If the execution was already reviwed it can not be reviwed again.

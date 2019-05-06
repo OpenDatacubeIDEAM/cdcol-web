@@ -8,12 +8,12 @@
 {% block extra_head %}
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
 <script type="text/javascript">
-{% if executions.count > 0 %}
-  function timedRefresh(timeoutPeriod) {
-    setTimeout("location.reload(true);", timeoutPeriod);
-  }
-  window.onload = timedRefresh({{ temporizer_value }});
-{% endif %}
+// {% if executions.count > 0 %}
+//   function timedRefresh(timeoutPeriod) {
+//     setTimeout("location.reload(true);", timeoutPeriod);
+//   }
+//   window.onload = timedRefresh({{ temporizer_value }});
+// {% endif %}
 </script>
 {% endblock %}
 
@@ -167,7 +167,7 @@
                 "searchable": false,
                 "sortable": false,
                 "render": function (data, type, full, meta) {
-                    console.log('data',data);
+                    // console.log('data',data);
                     var canRate = full['can_rate'];
                     var detail_button = "<a href='" + data + "/detail' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>";
                     if (canRate === true){

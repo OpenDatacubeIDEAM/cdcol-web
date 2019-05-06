@@ -296,7 +296,7 @@
 
 $(document).ready(function() {
 
-  //Our custom function.
+  // Update the execution state every second
   function send(){
       $.ajax({
           type: "get",
@@ -304,11 +304,20 @@ $(document).ready(function() {
           success:function(data)
           {
               //console.log the response
-              console.log(data);
-              //Send another request in 10 seconds.
-              setTimeout(function(){
-                  send();
-              }, 10000);
+              // console.log(data);
+
+              if(data.state != "FINALIZADA"){
+
+                var d = new Date();
+                $('#execution_state').html(data.state + ' (Actualizado a las '+ d.toLocaleTimeString() +')');
+                //Send another request in 10 seconds.
+                setTimeout(function(){
+                    send();
+                }, 10000);
+
+              }else{
+                $('#execution_state').html(data.state);
+              }
           },
           error: function(xhr,status,error) 
           {
@@ -318,13 +327,6 @@ $(document).ready(function() {
   }
   //Call our function
   send();
-
-  function display_modal(data){
-    var code = document.getElementById("error-console");
-    code.textContent(data);
-    $('#myModal').modal('toggle');
-    return false
-  }
 
   var table = $('#tasks-logs').DataTable({
       "searching": false,
@@ -340,8 +342,8 @@ $(document).ready(function() {
             "searchable": false,
             "sortable": false,
             "render": function (data, type, full, meta) {
-              console.log(data);
-              var html = "<a onclick='display_modal("+ data +")' class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Descargar log</a>";
+              // console.log(data);
+              var html = "<a class='download-log btn btn-gray btn-sm'><i class='fa fa-bars'></i> Descargar log</a>";
               return html;
             }
           }
@@ -375,6 +377,24 @@ $(document).ready(function() {
         }
       }
   });
+
+
+  function display_modal(data){
+    var code = document.getElementById("error-console");
+    code.textContent=data;
+    $('#myModal').modal('toggle');
+    return false;
+  }
+
+  $(document).on('click', '.download-log', function(){ 
+    var $btn=$(this);
+    var $tr=$btn.closest('tr');
+    var dataTableRow=table.row($tr[0]); // get the DT row so we can use the API on it
+    var rowData=dataTableRow.data();
+    // console.log(rowData);
+    display_modal(rowData.log_content);
+  });
+
 });
 </script>
 {% endblock %}

@@ -860,6 +860,7 @@ class ListTasksAPIView(viewsets.ViewSet):
             except FileNotFoundError as e:
                 return 'Archivo no encontrado, probablemente fué eliminado.'
 
+        tasks = [task for task in tasks if task.state in settings.WEB_EXECUTION_DETAIL_SHOW_TASKS_STATES]
 
         for task in tasks:
             task_dict = {
@@ -875,20 +876,6 @@ class ListTasksAPIView(viewsets.ViewSet):
             }
             data_list.append(task_dict)
 
-        # paginator = Paginator(data_list, 10)
-        # print('query_params',request.query_params)
-        # page = request.query_params.get('draw')
-        # print('page', page)
-        # try:
-        #     data_list = paginator.page(page)
-        # except PageNotAnInteger:
-        #     # If page is not an integer, deliver first page.
-        #     data_list = paginator.page(1)
-        # except EmptyPage:
-        #     # If page is out of range (e.g. 9999),
-        #     # deliver last page of results.
-        #     data_list = paginator.page(paginator.num_pages)
-
         serializer = TaskSerializer(
             instance=data_list, many=True)
         return Response(serializer.data)
@@ -900,22 +887,21 @@ class ExecutionStateJsonView(View):
 
         execution_pk = request.GET.get('exec_id', None)
         execution = Execution.objects.get(pk=execution_pk)
-        print('execution',execution.dag_id)
+        
         dag_list = DagRun.find(dag_id=execution.dag_id)
 
-        # try:
-        dag = dag_list[-1]
-        dag_state = dag.get_state()
+        if dag_list:
+            dag = dag_list[-1]
+            dag_state = dag.get_state()
 
-        if dag_state in 'running':
-            dag_state = "EN EJECUCIÓN"
-        elif dag_state in 'success':
-            dag_state = "FINALIZADA"
-        elif dag_state in 'failed':
-            dag_state = "CON FALLO"
-
-        # except IndexError as e:
-        #     dag_state = execution.get_state_display()
+            if dag_state in 'running':
+                dag_state = "EN EJECUCIÓN"
+            elif dag_state in 'success':
+                dag_state = "FINALIZADA"
+            elif dag_state in 'failed':
+                dag_state = "CON FALLO"
+        else:
+            dag_state = "Dag '{}' no encontrado".format(execution.dag_id)
 
         data = {'state':dag_state}
         return JsonResponse(data)
