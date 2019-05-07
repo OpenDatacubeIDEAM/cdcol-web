@@ -89,7 +89,7 @@ class AlgorithmCreateView(CreateView):
 
         # Creating new algorithm version
         version = Version(
-            algorithm=self.object ,
+            algorithm=self.object,
             description='Versión por defecto 1.0',
             number='1.0',
             repository_url='',
@@ -134,7 +134,7 @@ class AlgorithmUpdateView(UpdateView):
         """initialize the topic of the algorithm."""
         initial = super(AlgorithmUpdateView, self).get_initial()
         algorithm_obj = self.get_object()
-        initial['topic'] = algorithm_obj.topic
+        # initial['topic'] = algorithm_obj.topic
         return initial
 
 
@@ -184,7 +184,8 @@ class VersionCreateView(CreateView):
         algorithm_pk = self.kwargs.get('pk')
         algorithm = get_object_or_404(Algorithm,pk=algorithm_pk)
         initial = super(VersionCreateView, self).get_initial()
-        initial['algorithm'] = algorithm
+        initial['algorithm'] = algorithm.pk
+        initial['show_algorthm_name'] = algorithm.name
         return initial
 
     def form_valid(self, form):
@@ -244,7 +245,8 @@ class VersionUpdateView(UpdateView):
         """initialize version algorthm."""
         initial = super(VersionUpdateView, self).get_initial()
         version_obj = self.get_object()
-        initial['algorithm'] = version_obj.algorithm
+        initial['show_algorthm_name'] = version_obj.algorithm.name
+        initial['algorithm'] = version_obj.algorithm.pk
         initial['number'] = version_obj.number
         return initial
 
@@ -545,8 +547,12 @@ class ParameterCreateView(CreateView):
         initial = super(ParameterCreateView, self).get_initial()
         version_pk = self.kwargs.get('pk')
         version_obj = get_object_or_404(Version,pk=version_pk)
-        initial['algorithm'] = version_obj.algorithm
-        initial['version'] = version_obj
+        
+        initial['show_algorthm_name'] = version_obj.algorithm.name
+        initial['show_version_number'] = version_obj.number
+
+        initial['algorithm'] = version_obj.algorithm.pk
+        initial['version'] = version_obj.pk
         return initial
 
     def get_context_data(self, **kwargs):
@@ -581,6 +587,10 @@ class ParameterUpdateView(UpdateView):
         initial = super(ParameterUpdateView, self).get_initial()
         parameter_pk = self.kwargs.get('pk')
         parameter_obj = get_object_or_404(Parameter,pk=parameter_pk)
+
+        initial['show_algorthm_name'] = parameter_obj.version.algorithm.name
+        initial['show_version_number'] = parameter_obj.version.number
+        
         initial['algorithm'] = parameter_obj.version.algorithm
         initial['version'] = parameter_obj.version
         return initial

@@ -23,8 +23,7 @@ class AlgorithmCreateForm(forms.ModelForm):
 
     topic = forms.ModelChoiceField(
         label='Temática',
-        queryset=Topic.objects.filter(enabled=True),
-        to_field_name='name',
+        queryset=Topic.objects.filter(enabled=True)
     )
     name = forms.CharField(label='Nombre',max_length=200)
     description = forms.CharField(
@@ -54,9 +53,7 @@ class AlgorithmUpdateForm(AlgorithmCreateForm):
 
     topic = forms.ModelChoiceField(
         label='Temática',
-        queryset=Topic.objects.filter(enabled=True),
-        to_field_name="name",
-        disabled=True,
+        queryset=Topic.objects.filter(enabled=True)
     )
 
 
@@ -72,16 +69,31 @@ class VersionCreateForm(forms.ModelForm):
     class Meta:
         model = Version
         fields = [ 
-            'algorithm','number','description',
-            'repository_url','source_storage_units'
+            'show_algorthm_name',
+            'algorithm',
+            'number',
+            'description',
+            'repository_url',
+            'source_storage_units'
         ]
 
+    # This field only show the algorithm name to be related with the 
+    # version to the user
+    show_algorthm_name = forms.CharField(
+        label='Algoritmo',
+        widget=forms.TextInput(attrs={'readonly': 'readonly'})
+    )
+
+    # This fied is hidden so that the user can not modify 
+    # its value
     algorithm = forms.ModelChoiceField(
         label='Algoritmo',
         queryset=Algorithm.objects.all(),
-        to_field_name="name",
-        widget=forms.TextInput(attrs={'readonly':'readonly'}),
+        widget=forms.HiddenInput(),
     )
+
+    number = ChoiceFieldNoValidation(label='Número de Versión')
+
     description = forms.CharField(
         label='Descripción',
         widget=forms.Textarea(
@@ -96,10 +108,11 @@ class VersionCreateForm(forms.ModelForm):
             }
         )
     )
-    number = ChoiceFieldNoValidation(label='Número de Versión')
+    
     repository_url = forms.CharField(
         label='URL Código Fuente',max_length=200, required=True
     )
+    
     source_storage_units = forms.ModelMultipleChoiceField(
         queryset=StorageUnit.objects.all(), required=True
     )
@@ -110,17 +123,30 @@ class VersionUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Version
-        fields = [ 
-            'algorithm','number','description',
-            'repository_url','source_storage_units'
+        fields = [
+            'show_algorthm_name',
+            'algorithm',
+            'number',
+            'description',
+            'repository_url',
+            'source_storage_units'
         ]
 
+    # This field only show the algorithm name to be related with the 
+    # version to the user
+    show_algorthm_name = forms.CharField(
+        label='Algoritmo',
+        widget=forms.TextInput(attrs={'readonly': 'readonly'})
+    )
+
+    # This fied is hidden so that the user can not modify 
+    # its value
     algorithm = forms.ModelChoiceField(
         label='Algoritmo',
         queryset=Algorithm.objects.all(),
-        to_field_name="name",
-        widget=forms.TextInput(attrs={'readonly':'readonly'}),
+        widget=forms.HiddenInput(),
     )
+
     description = forms.CharField(
         label='Descripción de la Versión',
         widget=forms.Textarea(
@@ -147,32 +173,63 @@ class VersionUpdateForm(forms.ModelForm):
     )
 
 
+class AlgorithmModelChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return "{}".format(obj.name)
+
+class VersionModelChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return "{}".format(obj.number)
+
 class ParameterForm(forms.ModelForm):
 
     class Meta:
         model = Parameter
-        fields = [ 
-            'algorithm','version','name',
+        fields = [
+            'show_algorthm_name',
+            'algorithm',
+            'show_version_number',
+            'version',
+            'name',
             'parameter_type',
-            'description','help_text',
-            'position','required','enabled',
+            'description',
+            'help_text',
+            'position',
+            'required',
+            'enabled',
             'output_included',
-            'default_value','function_name',
-            
+            'default_value',
+            'function_name',
         ]
 
+    # This field only show the algorithm name to be related with the 
+    # version to the user
+    show_algorthm_name = forms.CharField(
+        label='Algoritmo',
+        widget=forms.TextInput(attrs={'readonly': 'readonly'})
+    )
+
+    # This fied is hidden so that the user can not modify 
+    # its value
     algorithm = forms.ModelChoiceField(
         label='Algoritmo',
         queryset=Algorithm.objects.all(),
-        to_field_name="name",
-        widget=forms.TextInput(attrs={'readonly':'readonly'}),
+        widget=forms.HiddenInput(),
     )
 
+    # This field only show the algorithm name to be related with the 
+    # version to the user
+    show_version_number = forms.CharField(
+        label='Numero de la Versión',
+        widget=forms.TextInput(attrs={'readonly': 'readonly'})
+    )
+
+    # This fied is hidden so that the user can not modify 
+    # its value
     version = forms.ModelChoiceField(
         label='Número de la Versión',
         queryset=Version.objects.all(),
-        to_field_name="number",
-        widget=forms.TextInput(attrs={'readonly':'readonly'}),
+        widget=forms.HiddenInput(),
     )
 
     name = forms.CharField(
