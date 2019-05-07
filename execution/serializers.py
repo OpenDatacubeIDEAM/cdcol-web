@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from django.utils import formats
 from rest_framework import serializers
 from execution.models import Execution
 
-from airflow.models import DagRun
+from datetime import timedelta
 
 
 class ExecutionSerializer(serializers.ModelSerializer):
@@ -16,9 +17,9 @@ class ExecutionSerializer(serializers.ModelSerializer):
 
     algorithm_name = serializers.SerializerMethodField()
     state = serializers.SerializerMethodField()
-    created_at = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S")
-    started_at = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S")
-    finished_at = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S")
+    created_at = serializers.SerializerMethodField()
+    started_at = serializers.SerializerMethodField()
+    finished_at = serializers.SerializerMethodField()
     current_executions = serializers.SerializerMethodField()
     can_rate = serializers.SerializerMethodField()
     credits_consumed = serializers.IntegerField()
@@ -35,21 +36,45 @@ class ExecutionSerializer(serializers.ModelSerializer):
         return obj.version.algorithm.name
 
     def get_state(self, obj):
-        """
-            While the execution is running (has not finisehd),
-            the state  is retrieved from airflow database.
-        """
         dag_state = obj.get_state_display()
-
-        if not obj.finished_at and obj.dag_id:
-            dr_list = DagRun.find(dag_id=obj.dag_id)
-            if dr_list:
-                dag_state = dr_list[-1].state
-                dag_state = ExecutionSerializer.AIRFLOW_STATES.get(dag_state)
-            else:
-                dag_state = "Dag '{}' no encontrado".format(obj.dag_id)
+        dag_run = obj.get_dag_run()
+        if dag_run:
+            dag_state = self.AIRFLOW_STATES.get(dag_run.state)
 
         return dag_state
+
+    def get_created_at(self,obj):
+        date = obj.created_at 
+        date = formats.date_format(
+            date, format="DATETIME_FORMAT"
+        ) if date else '---'
+        return date
+
+    def get_started_at(self,obj):
+        dag_started_at = obj.started_at
+        dag_run = obj.get_dag_run()
+        if dag_run:
+            date = dag_run.start_date 
+            date = formats.date_format(
+                date - timedelta(hours=5), 
+                format="DATETIME_FORMAT"
+            ) if date else '---'
+            dag_started_at = date
+
+        return dag_started_at 
+
+    def get_finished_at(self,obj):
+        dag_finished_at = obj.finished_at
+        dag_run = obj.get_dag_run()
+        if dag_run:
+            date = dag_run.end_date 
+            date = formats.date_format(
+                date- timedelta(hours=5), 
+                format="DATETIME_FORMAT"
+            ) if date else '---'
+            dag_finished_at = date
+
+        return dag_finished_at
 
     def get_current_executions(self, obj):
         return obj.pending_executions().count()

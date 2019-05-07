@@ -5,6 +5,8 @@ from algorithm.models import Version
 from algorithm.models import Parameter
 from django.contrib.auth.models import User
 
+from airflow.models import DagRun
+
 
 class Execution(models.Model):
     """Algorithms/Workflows execution data."""
@@ -50,12 +52,17 @@ class Execution(models.Model):
     credits_consumed = models.IntegerField(default=0)
     dag_id = models.CharField(max_length=1000)
 
-    # @property
-    # def dag_id(self):
-    #     return 'execution_{}_{}_{}'.format(
-    #         self.id,self.version.algorithm.name,self.version.number
-    #     )
-         
+    def get_dag_run(self):
+        """
+        Return the last dag run associated with 
+        the dag_id from airflow database
+        """
+        if not self.finished_at and self.dag_id:
+            dag_runs = DagRun.find(dag_id=self.dag_id)
+            if dag_runs:
+                return dag_runs[-1]
+        return None
+        
     def can_rate(self):
         """If the execution was already reviwed it can not be reviwed again.
 

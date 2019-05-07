@@ -18,6 +18,7 @@ from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
 from django.http import JsonResponse
+from django.utils import formats
 
 from algorithm.models import VersionStorageUnit
 from algorithm.models import Parameter
@@ -51,6 +52,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
 from airflow.models import DagRun
+
+from datetime import timedelta
 
 import os
 import zipfile
@@ -834,50 +837,50 @@ class ListTasksAPIView(viewsets.ViewSet):
     serializer_class = TaskSerializer
     permission_classes = (AllowAny,)
 
+    def _get_raw_log(self,task):
+        log_file = '/{}.log'.format(task.try_number)
+        log_path = task.log_filepath.replace('.log',log_file)
+        print('task log file path',log_path)
+        try:
+            with open(log_path,'r') as file:
+                content = file.read()
+                return content
+        except FileNotFoundError as e:
+            return 'Archivo no encontrado, probablemente fué eliminado.'
+
     def list(self, request):
 
         execution_pk = request.query_params.get('exec_id', None)
         execution = Execution.objects.get(pk=execution_pk)
 
-        dag_list = DagRun.find(dag_id=execution.dag_id)
+        dag_run = execution.get_dag_run()
 
-        try:
-            dag = dag_list[-1]
-            tasks = dag.get_task_instances()
-        except IndexError as e:
-            # If an index erro ocurs, it implies that 
-            # a dag was not found with the given dag_id
-            # so we return an empty task list
-            tasks = []
-        
+        states = settings.WEB_EXECUTION_DETAIL_SHOW_TASKS_STATES.split(',')
+
+        tasks = []
+        if dag_run:
+            for state in states:
+                tasks += dag_run.get_task_instances(state=state)
+
         data_list = []
-
-        def get_raw_log(log_filepath):
-            try:
-                with open(log_filepath,'r') as file:
-                    content = file.read()
-                    return content
-            except FileNotFoundError as e:
-                return 'Archivo no encontrado, probablemente fué eliminado.'
-
-        tasks = [task for task in tasks if task.state in settings.WEB_EXECUTION_DETAIL_SHOW_TASKS_STATES]
-
         for task in tasks:
             task_dict = {
                 'id': task.task_id,
                 'state': task.state,
                 'log_url': task.log_url,
                 'log_filepath':task.log_filepath,
-                'log_content': get_raw_log(task.log_filepath),
+                'log_content': self._get_raw_log(task),
                 'execution_date': task.execution_date,
                 'start_date': task.start_date,
                 'end_date': task.end_date,
                 'duration':task.duration
             }
+            # print('task log file path',task.log_filepath)
             data_list.append(task_dict)
 
         serializer = TaskSerializer(
-            instance=data_list, many=True)
+            instance=data_list, many=True
+        )
         return Response(serializer.data)
 
 
@@ -888,23 +891,33 @@ class ExecutionStateJsonView(View):
         execution_pk = request.GET.get('exec_id', None)
         execution = Execution.objects.get(pk=execution_pk)
         
-        dag_list = DagRun.find(dag_id=execution.dag_id)
+        dag_state = execution.get_state_display()
+        start_date = execution.started_at
+        end_date = execution.finished_at
+        dag_run = execution.get_dag_run()
 
-        if dag_list:
-            dag = dag_list[-1]
-            dag_state = dag.get_state()
+        if dag_run:
+            dag_state = ExecutionSerializer.AIRFLOW_STATES.get(dag_run.state)
 
-            if dag_state in 'running':
-                dag_state = "EN EJECUCIÓN"
-            elif dag_state in 'success':
-                dag_state = "FINALIZADA"
-            elif dag_state in 'failed':
-                dag_state = "CON FALLO"
-        else:
-            dag_state = "Dag '{}' no encontrado".format(execution.dag_id)
+            start_date = dag_run.start_date
+            if start_date:
+                start_date = dag_run.start_date - timedelta(hours=5)
+                start_date = formats.date_format(start_date, format="DATETIME_FORMAT")
+                dag_finished_at = start_date
 
-        data = {'state':dag_state}
-        return JsonResponse(data)
+            end_date = dag_run.end_date
+            if end_date:
+                end_date = dag_run.end_date - timedelta(hours=5)
+                end_date = formats.date_format(end_date, format="DATETIME_FORMAT")
+                dag_finished_at = end_date
+
+        data = {
+            'state':dag_state,
+            'start_date':start_date if start_date else '---',
+            'end_date':end_date if end_date else '---'
+        }
+
+        return JsonResponse(data,safe=False)
 
 class DownloadTaskLogView(View):
     """

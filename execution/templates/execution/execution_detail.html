@@ -77,19 +77,11 @@
                 </tr>
                 <tr>
                   <td>Inicio ejecución:</td>
-                  {% if execution.started_at %}
-                  <td>{{ execution.started_at }}</td>
-                  {% else %}
-                  <td>---</td>
-                  {% endif %}
+                  <td id="execution_start_date">{{ execution.started_at }}</td>
                 </tr>
                 <tr>
                   <td>Fin ejecución:</td>
-                  {% if execution.finished_at %}
-                  <td>{{ execution.finished_at }}</td>
-                  {% else %}
-                  <td>---</td>
-                  {% endif %}
+                  <td id="execution_end_date">{{ execution.finished_at }}</td>
                 </tr>
                 <tr>
                   <td>Creada por:</td>
@@ -296,38 +288,6 @@
 
 $(document).ready(function() {
 
-  // Update the execution state every second
-  function send(){
-      $.ajax({
-          type: "get",
-          url: "/execution/state/json?exec_id={{ execution.id }}",
-          success:function(data)
-          {
-              //console.log the response
-              // console.log(data);
-
-              if(data.state != "FINALIZADA"){
-
-                var d = new Date();
-                $('#execution_state').html(data.state + ' (Actualizado a las '+ d.toLocaleTimeString() +')');
-                //Send another request in 10 seconds.
-                setTimeout(function(){
-                    send();
-                }, 10000);
-
-              }else{
-                $('#execution_state').html(data.state);
-              }
-          },
-          error: function(xhr,status,error) 
-          {
-            alert('Servidor no econtrado, no es posible actualizar el estado de la ejeucicón.')
-          }
-      });
-  }
-  //Call our function
-  send();
-
   var table = $('#tasks-logs').DataTable({
       "searching": false,
       "paging":   false,
@@ -378,6 +338,43 @@ $(document).ready(function() {
       }
   });
 
+
+  // Update the execution state every second
+  function send(){
+      $.ajax({
+          type: "get",
+          url: "/execution/state/json?exec_id={{ execution.id }}",
+          success:function(data)
+          {
+              //console.log the response
+              // console.log(data);
+
+              if(data.state != "FINALIZADA" & data.state != "CON FALLO"){
+
+                var d = new Date();
+                $('#execution_state').html(data.state + ' (Actualizado a las '+ d.toLocaleTimeString() +')');
+                $('#execution_start_date').html(data.start_date);
+                $('#execution_end_date').html(data.end_date);
+                table.ajax.reload();
+                //Send another request in 10 seconds.
+                setTimeout(function(){
+                    send();
+                }, 10000);
+
+              }else{
+                $('#execution_state').html(data.state);
+                $('#execution_start_date').html(data.start_date);
+                $('#execution_end_date').html(data.end_date);
+              }
+          },
+          error: function(xhr,status,error) 
+          {
+            alert('Servidor no econtrado, no es posible actualizar el estado de la ejecucicón.')
+          }
+      });
+  }
+  //Call our function
+  send();
 
   function display_modal(data){
     var code = document.getElementById("error-console");
