@@ -837,10 +837,14 @@ class ListTasksAPIView(viewsets.ViewSet):
     serializer_class = TaskSerializer
     permission_classes = (AllowAny,)
 
-    def _get_raw_log(self,task):
+    def _get_task_log_path(self,task):
         log_file = '/{}.log'.format(task.try_number)
         log_path = task.log_filepath.replace('.log',log_file)
-        print('task log file path',log_path)
+        return log_path
+
+    def _get_raw_log(self,task):
+
+        log_path = self._get_task_log_path(task)
         try:
             with open(log_path,'r') as file:
                 content = file.read()
@@ -868,7 +872,7 @@ class ListTasksAPIView(viewsets.ViewSet):
                 'id': task.task_id,
                 'state': task.state,
                 'log_url': task.log_url,
-                'log_filepath':task.log_filepath,
+                'log_filepath':self._get_task_log_path(task),
                 'log_content': self._get_raw_log(task),
                 'execution_date': task.execution_date,
                 'start_date': task.start_date,
@@ -927,13 +931,14 @@ class DownloadTaskLogView(View):
 
     def get(self,request,*args,**kwargs):
         log_path = request.GET.get('log_path')
-        task_id = request.GET.get('task_id')
 
         try:
             with open(log_path,'rb') as file:
                 mimetype = mimetypes.guess_type(log_path)
                 response = HttpResponse(file,content_type=mimetype)
-                response['Content-Disposition'] = 'attachment; filename={}'.format(task_id)
+                response['Content-Disposition'] = 'attachment; filename={}'.format(
+                    os.path.basename(log_path)
+                )
                 return response
         except FileNotFoundError as e:
-            raise Http404
+            raise Http404('Archivo no encontrado: {}'.format(log_path))

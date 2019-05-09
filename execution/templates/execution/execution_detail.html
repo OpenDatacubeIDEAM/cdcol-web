@@ -199,6 +199,8 @@
                       <tr>
                         <th>Tarea</th>
                         <th>Estado</th>
+                        <th></th>
+                        <th></th>
                         <th>Acciones</th>
                       </tr>
                     </thead>
@@ -297,16 +299,38 @@ $(document).ready(function() {
       "columns":  [
           {"data": "id"},
           {"data": "state"},
+          {"data": "log_filepath", "visible":false},
+          {"data": "log_content", "visible":false},
+
           {
-            "data": "log_content",
+            "data": null,
             "searchable": false,
             "sortable": false,
             "render": function (data, type, full, meta) {
-              // console.log(data);
-              var html = "<a class='download-log btn btn-gray btn-sm'><i class='fa fa-bars'></i> Descargar log</a>";
+              console.log('full',data);
+              // var html = "<a class='download-log btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver log</a>";
+              var html = `<div class="btn-group">
+                            <button type="button" class="btn btn-info">Acciones</button>
+                             <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                              <li>
+                                <a id='show-log'>
+                                <i class='fa fa-bars'></i> Ver log
+                                </a>
+                              </li>
+                              <li>
+                                <a id='download-log' href="/execution/task/log?log_path=${encodeURIComponent(data.log_filepath)}" >
+                                  <i class="fa fa-file"></i> Descargar log
+                                </a>
+                              </li>
+                            </div>
+                          </div>`;
               return html;
             }
-          }
+          },
       ],
       "language": {
         "decimal":        "",
@@ -383,7 +407,8 @@ $(document).ready(function() {
     return false;
   }
 
-  $(document).on('click', '.download-log', function(){ 
+  // Adding listener to the datatable ihner buttons
+  $(document).on('click', '#show-log', function(){ 
     var $btn=$(this);
     var $tr=$btn.closest('tr');
     var dataTableRow=table.row($tr[0]); // get the DT row so we can use the API on it
