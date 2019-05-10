@@ -174,7 +174,7 @@ class Version(models.Model):
     )
 
     algorithm = models.ForeignKey(Algorithm, on_delete=models.CASCADE)
-    source_storage_units = models.ManyToManyField(StorageUnit)
+    source_storage_units = models.ManyToManyField(StorageUnit,through='VersionStorageUnit')
     description = models.TextField()
     number = models.CharField(max_length=200)
     repository_url = models.CharField(max_length=300)

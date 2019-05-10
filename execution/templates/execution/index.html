@@ -83,6 +83,7 @@
 <script>
   $(document).ready(function() {
       var table = $('#executions').DataTable({
+          "order": [[ 0, "desc" ]],
           "serverSide": true,
           "ajax": "/api/executions/?format=datatables",
           "columns":  [

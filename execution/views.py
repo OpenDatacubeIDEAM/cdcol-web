@@ -91,7 +91,7 @@ class ExecutionViewSet(viewsets.ModelViewSet):
         executions must be Execution.ENQUEUED_STATE.
         """
         current_user = self.request.user
-        queryset = super().get_queryset().filter(executed_by=current_user)
+        queryset = super().get_queryset().filter(executed_by=current_user).order_by('-idlhlhlh')
 
         return queryset
 

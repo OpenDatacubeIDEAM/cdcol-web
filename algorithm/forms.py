@@ -74,7 +74,7 @@ class VersionCreateForm(forms.ModelForm):
             'number',
             'description',
             'repository_url',
-            'source_storage_units'
+            # 'source_storage_units'
         ]
 
     # This field only show the algorithm name to be related with the 
@@ -114,6 +114,7 @@ class VersionCreateForm(forms.ModelForm):
     )
     
     source_storage_units = forms.ModelMultipleChoiceField(
+        label='Posibles unidades de almacenamiento origen',
         queryset=StorageUnit.objects.all(), required=True
     )
 
@@ -129,7 +130,7 @@ class VersionUpdateForm(forms.ModelForm):
             'number',
             'description',
             'repository_url',
-            'source_storage_units'
+            # 'source_storage_units'
         ]
 
     # This field only show the algorithm name to be related with the 
@@ -169,6 +170,7 @@ class VersionUpdateForm(forms.ModelForm):
         label='URL Código Fuente',max_length=200, required=True
     )
     source_storage_units = forms.ModelMultipleChoiceField(
+        label='Posibles unidades de almacenamiento origen',
         queryset=StorageUnit.objects.all(), required=True
     )
 

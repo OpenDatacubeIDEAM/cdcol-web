@@ -203,15 +203,21 @@ class VersionCreateView(CreateView):
 
         self.object.source_code.save(file_name,ContentFile(content))
 
+        # Note this doesn’t delete the related objects – it just disassociates them.
+        self.object.source_storage_units.clear()
+        # Before disassociation, objects can be deleted
+        for storage_unit in self.object.source_storage_units.all():
+            storage_unit.delete()
+
         # Relate selecetd storage units with the current version
         selected_storage_units = form.cleaned_data['source_storage_units']
         for storage_unit in selected_storage_units:
-            version_storage_unit = VersionStorageUnit(
+            # if not VersionStorageUnit.objects.filter(storage_unit=storage_unit,version=self.object).exists():
+            VersionStorageUnit.objects.get_or_create(
                 version=self.object,
                 storage_unit=storage_unit
             )
-            version_storage_unit.save()
-
+            
         messages.info(self.request, 'Nueva versión creada con éxito !!.')
 
         return redirect(self.get_success_url())
@@ -248,6 +254,7 @@ class VersionUpdateView(UpdateView):
         initial['show_algorthm_name'] = version_obj.algorithm.name
         initial['algorithm'] = version_obj.algorithm.pk
         initial['number'] = version_obj.number
+        initial['source_storage_units'] = version_obj.source_storage_units.all()
         return initial
 
     def form_valid(self, form):
@@ -263,15 +270,20 @@ class VersionUpdateView(UpdateView):
 
         self.object.source_code.save(file_name,ContentFile(content))
 
+        # Note this doesn’t delete the related objects – it just disassociates them.
+        self.object.source_storage_units.clear()
+        # Before disassociation, objects can be deleted
+        for storage_unit in self.object.source_storage_units.all():
+            storage_unit.delete()
+
         # Relate selecetd storage units with the current version
         selected_storage_units = form.cleaned_data['source_storage_units']
         for storage_unit in selected_storage_units:
-            if not VersionStorageUnit.objects.filter(pk=storage_unit.pk).exists():
-                version_storage_unit = VersionStorageUnit(
-                    version=self.object,
-                    storage_unit=storage_unit
-                )
-                version_storage_unit.save()
+            # if not VersionStorageUnit.objects.filter(storage_unit=storage_unit,version=self.object).exists():
+            VersionStorageUnit.objects.get_or_create(
+                version=self.object,
+                storage_unit=storage_unit
+            )
 
         messages.info(self.request, 'Versión actualizada con éxito !!.')
 
@@ -289,7 +301,6 @@ class VersionDetailView(DetailView):
     Use the template algorithm/version_detail.html
     """
     model = Version
-
 
 
 class VersionPublishView(FormView):

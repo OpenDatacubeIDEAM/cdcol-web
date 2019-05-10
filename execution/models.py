@@ -34,6 +34,7 @@ class Execution(models.Model):
             ("can_create_new_execution", "Registrar la ejecución de un algoritmo"),
             ("can_view_new_execution", "Ver detalle y parámetros de un algoritmo para ejecutar"),
         )
+        ordering = ['-pk']
 
 
     version = models.ForeignKey(Version, on_delete=models.CASCADE)
