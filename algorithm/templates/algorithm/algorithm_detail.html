@@ -81,7 +81,7 @@
               {% for version in  algorithm.version_set.all %}
               <tr>
                 <td>{{ version.number }}</td>
-                <td>{{ version.count_parameters }}</td>
+                <td>{{ version.parameter_set.count }}</td>
                 <td>{{ version.get_publishing_state_display }}</td>
                 <td>{{ version.created_at }}</td>
                 <td><a href="{% url 'algorithm:version-detail' version.id %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a>

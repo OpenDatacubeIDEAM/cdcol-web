@@ -120,6 +120,9 @@ class ExecutionCreateView(TemplateView):
     An execution is created given an algorithm. 
     The last version of the algorithm is always 
     considered on this view to create an Execution.
+
+    To copy an execution, we create a new execution 
+    with the given algorithm version.
     """
 
     def get(self,request,*args,**kwargs):
@@ -674,80 +677,6 @@ class ExecutionRateView(CreateView):
         """Return a URL to the detail of the execution."""
         execution_pk = self.kwargs.get('pk')
         return reverse('execution:detail',kwargs={'pk':execution_pk})
-
-
-class ExecutionCopyView(ExecutionCreateView):
-    """
-    Given te id of an Execution a new execution is 
-    created as a copy of the given one.
-    """
-
-    def get(self,request,*args,**kwargs):
-
-        # Getting the version to be executed
-        execution_pk = kwargs.get('pk')
-        execution = get_object_or_404(Execution, pk=execution_pk)
-
-        version = execution.version
-
-        # Current user
-        current_user = request.user
-
-        # User approved credits
-        credits_approved = current_user.profile.credits_approved
-        # User credits consumed
-        credits_consumed = current_user.profile.credits_consumed
-
-        if credits_consumed:
-            credits_approved -= credits_consumed
-
-        # Version selection form
-        version_selection_form = VersionSelectionForm(
-            algorithm=version.algorithm,user=request.user
-        )
-
-        storage_units_version = VersionStorageUnit.objects.filter(
-            version__algorithm=version.algorithm
-        )
-
-        parameters = Parameter.objects.filter(
-            version=version, enabled=True
-        ).order_by('position')
-
-        reviews = Review.objects.filter(execution__version=version)
-
-        # getting the average rating
-        average_rating = Review.objects.filter(
-            execution__version=version
-        ).aggregate(Avg('rating'))['rating__avg']
-        average_rating = round(average_rating if average_rating is not None else 0, 2)
-
-        executions = Execution.objects.filter(version=version)
-
-        topics = Topic.objects.filter(enabled=True)
-
-        executed_params = []
-        params = get_detail_context(execution_pk).get('executed_params')
-        json_params = list(map(lambda param: param.obtain_json_values(),params))
-        executed_params = json.dumps(json_params)
-
-        context = {
-            'topics': topics, 
-            'algorithm': version.algorithm, 
-            'parameters': parameters,
-            'version_selection_form': version_selection_form, 
-            'version': version,
-            'reviews': reviews,
-            'average_rating': average_rating, 
-            'executions': executions,
-            'executed_params': executed_params, 
-            'credits_approved': credits_approved,
-            # return this parameter as a list is mandatory for
-            # /static/js/formBuilder.js works properly
-            'storage_units_version':list(storage_units_version)
-        }
-
-        return render(request, 'execution/execution_form.html', context)
 
 
 class ExecutionCancelView(View):

@@ -7,7 +7,6 @@ from execution.views import AlgorithmsByTopicListView
 from execution.views import VersionParametersJson
 from execution.views import ExecutionDetailView
 from execution.views import ExecutionRateView
-from execution.views import ExecutionCopyView
 from execution.views import ExecutionCancelView
 from execution.views import ExecutionTasksListView
 from execution.views import DownloadResultImageView
@@ -20,7 +19,6 @@ urlpatterns = [
     path('', ExecutionIndexView.as_view(), name='index'),
     path('<int:pk>/detail',ExecutionDetailView.as_view(), name='detail'),
     path('<int:pk>/rate',ExecutionRateView.as_view(), name='rate'),
-    path('<int:pk>/copy',ExecutionCopyView.as_view(), name='copy'),
     path('<int:pk>/cancel',ExecutionCancelView.as_view(), name='cancel'),
 
     path('<int:pk>/result/image/<str:image_name>/download',DownloadResultImageView.as_view(), name='image-download'),
