@@ -175,8 +175,11 @@
                     <tbody>
                       <tr>
                         <td>resultados.zip</td>
-                        <td><button type="button" class="btn btn-info fa fa-download"> Descargar</button></td>
-                        <!-- <td></td> -->
+                        {% if execution.result_file_path %}
+                        <td><a href="{{ execution.result_file_path}}"><button type="button" class="btn btn-info fa fa-download"> Descargar</button></a></td>
+                        {% else %}
+                        <td>Archivo de resultados no disponible</td>
+                        {% endif %}
                       </tr>
                     </tbody>
                   </table>

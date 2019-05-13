@@ -4,9 +4,11 @@ from django.db import models
 from algorithm.models import Version
 from algorithm.models import Parameter
 from django.contrib.auth.models import User
+from django.conf import settings
 
 from airflow.models import DagRun
 
+import os
 
 class Execution(models.Model):
     """Algorithms/Workflows execution data."""
@@ -84,6 +86,20 @@ class Execution(models.Model):
         return Execution.objects.filter(
             state=Execution.ENQUEUED_STATE,created_at__lt=self.created_at
         )
+
+    def result_file_path(self):
+        """
+        Return the file path of the execution result file in
+        /web_storage/results/resultado_{{dag_id}}.zip
+        """
+        results_path = settings.EXECUTION_RESULTS_PATH
+        dag_id = self.dag_id or ''
+        file_name = 'resultado_{}.zip'.format(dag_id)
+        file_path = os.path.join(results_path,dag_id,file_name)
+        if os.path.exists(file_path):
+            return file_path
+
+        return None
 
 
 class ExecutionParameter(models.Model):
