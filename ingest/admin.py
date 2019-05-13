@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from ingest.models import Task
+from ingest.models import IngestTask
 
 
-admin.site.register(Task)
+admin.site.register(IngestTask)

@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from storage.models import StorageUnit
 
 
-class Task(models.Model):
+class IngestTask(models.Model):
     """Ingestion task to ingest data into the datacube storage units."""
 
     SCHEDULED_STATE = '1'

@@ -9,7 +9,7 @@ from ingest.serializers import TaskSerializer
 
 from rest_framework import viewsets
 
-from ingest.models import Task
+from ingest.models import IngestTask
 from ingest.forms import TaskForm
 
 class TaskIndexView(TemplateView):
@@ -19,7 +19,7 @@ class TaskIndexView(TemplateView):
 
 class TaskViewSet(viewsets.ModelViewSet):
     """CRUD over ingestion Task  model via API calls."""
-    queryset = Task.objects.all()
+    queryset = IngestTask.objects.all()
     serializer_class = TaskSerializer
 
 
@@ -29,7 +29,7 @@ class TaskCreateView(CreateView):
     Use the template ingest/task_form.html
     """
 
-    model = Task
+    model = IngestTask
     form_class = TaskForm
     success_url = reverse_lazy('ingest:index')
 
@@ -42,7 +42,7 @@ class TaskCreateView(CreateView):
         """
         
         form.instance.created_by = self.request.user
-        form.instance.state = Task.SCHEDULED_STATE
+        form.instance.state = IngestTask.SCHEDULED_STATE
         self.object = form.save()
         return redirect(self.get_success_url())
  
@@ -62,5 +62,5 @@ class TaskDetailView(DetailView):
 
     Use the template ingest/task_detail.html
     """
-    model = Task
+    model = IngestTask
     context_object_name = 'task'

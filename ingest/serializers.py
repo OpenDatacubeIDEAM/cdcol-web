@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import serializers
-from ingest.models import Task
+from ingest.models import IngestTask
 
 
 class UserSerializer(serializers.Serializer):
@@ -19,7 +19,7 @@ class TaskSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S")
 
     class Meta:
-        model = Task
+        model = IngestTask
         fields = ('id', 'storage_unit', 'state', 'created_at', 'created_by')
 
     def get_state(self, obj):
