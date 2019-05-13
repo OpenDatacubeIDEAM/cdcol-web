@@ -63,7 +63,7 @@ class Yaml(models.Model):
 
     name = models.CharField(max_length=200)
     file = models.FileField(upload_to='template/yaml/',storage=upload_storage)
-    ttype = models.CharField(max_length=2, choices=TYPES)
+    type = models.CharField(max_length=2, choices=TYPES)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

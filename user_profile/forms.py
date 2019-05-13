@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
-from user_profile.models import Profile
+from user_profile.models import UserProfile
 
 
 class SignupForm(forms.ModelForm):
@@ -17,7 +17,7 @@ class SignupForm(forms.ModelForm):
     )
 
     class Meta:
-        model = Profile
+        model = UserProfile
         fields = ('institution', 'phone', 'usage', )
 
     def save(self, user):
@@ -30,11 +30,11 @@ class SignupForm(forms.ModelForm):
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
         # Saving the UserProfile model
-        profile = Profile(user=user)
+        profile = UserProfile(user=user)
         profile.institution = self.cleaned_data['institution']
         profile.phone = self.cleaned_data['phone']
         profile.usage = self.cleaned_data['usage']
-        profile.status = Profile.WAITING_APPROBATION_STATE
+        profile.status = UserProfile.WAITING_APPROBATION_STATE
         profile.save()
 
 

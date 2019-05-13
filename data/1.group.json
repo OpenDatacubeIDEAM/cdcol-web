@@ -52,12 +52,12 @@
       [
         "can_create_storage_task",
         "ingest",
-        "task"
+        "ingesttask"
       ],
       [
         "can_list_storage_tasks",
         "ingest",
-        "task"
+        "ingesttask"
       ],
       [
         "can_create_units",
@@ -135,9 +135,9 @@
         "yaml"
       ],
       [
-        "change_profile",
+        "change_userprofile",
         "user_profile",
-        "profile"
+        "userprofile"
       ]
     ]
   }
@@ -504,9 +504,9 @@
         "storageunit"
       ],
       [
-        "change_profile",
+        "change_userprofile",
         "user_profile",
-        "profile"
+        "userprofile"
       ]
     ]
   }

@@ -5,7 +5,7 @@ from django.views.generic.base import TemplateView
 from django.contrib.auth import logout
 from django.contrib import messages
 
-from user_profile.models import Profile
+from user_profile.models import UserProfile
 
 
 class IndexView(TemplateView):
@@ -21,7 +21,7 @@ class IndexView(TemplateView):
         if request.user.is_superuser:
             return redirect('admin:index')
 
-        if request.user.profile.status in Profile.WAITING_APPROBATION_STATE:
+        if request.user.profile.status in UserProfile.WAITING_APPROBATION_STATE:
             # When a new user is registered allauth authenticated them
             # automatically. To avoid this we logout the user and 
             # delete the messages that allouth place in messages when it 

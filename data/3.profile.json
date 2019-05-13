@@ -1,6 +1,6 @@
 [
 {
-  "model": "user_profile.profile",
+  "model": "user_profile.userprofile",
   "pk": 1,
   "fields": {
     "user": [
@@ -16,7 +16,7 @@
   }
 },
 {
-  "model": "user_profile.profile",
+  "model": "user_profile.userprofile",
   "pk": 2,
   "fields": {
     "user": [
@@ -32,7 +32,7 @@
   }
 },
 {
-  "model": "user_profile.profile",
+  "model": "user_profile.userprofile",
   "pk": 3,
   "fields": {
     "user": [
@@ -48,7 +48,7 @@
   }
 },
 {
-  "model": "user_profile.profile",
+  "model": "user_profile.userprofile",
   "pk": 4,
   "fields": {
     "user": [

@@ -49,6 +49,7 @@ class Execution(models.Model):
     executed_by = models.ForeignKey(User,on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    # Not used
     generate_mosaic = models.BooleanField(default=True)
     credits_consumed = models.IntegerField(default=0)
     dag_id = models.CharField(max_length=1000)
@@ -83,17 +84,6 @@ class Execution(models.Model):
         return Execution.objects.filter(
             state=Execution.ENQUEUED_STATE,created_at__lt=self.created_at
         )
-
-
-class Review(models.Model):
-    """Each execution can be punctuated after it has finished."""
-
-    execution = models.ForeignKey(Execution, on_delete=models.CASCADE)
-    rating = models.IntegerField()
-    comments = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    reviewed_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class ExecutionParameter(models.Model):
@@ -294,6 +284,17 @@ class MultipleChoiceListType(ExecutionParameter):
 
     def __unicode__(self):
         return "{} - {}".format(self.execution, self.value)
+
+
+class Review(models.Model):
+    """Each execution can be punctuated after it has finished."""
+
+    execution = models.ForeignKey(Execution, on_delete=models.CASCADE)
+    rating = models.IntegerField()
+    comments = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    reviewed_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class Task(models.Model):

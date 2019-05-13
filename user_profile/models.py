@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from execution.models import Execution
 
 
-class Profile(models.Model):
+class UserProfile(models.Model):
 
     WAITING_APPROBATION_STATE = '1'
     APPROVED_STATE = '2'
@@ -19,7 +19,7 @@ class Profile(models.Model):
         (DENIED_STATED, "RECHAZADO"),
     )
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     institution = models.CharField(max_length=200)
     phone = models.CharField(max_length=200)
     usage = models.TextField()
@@ -66,6 +66,8 @@ class Profile(models.Model):
             app_groups.append('Desarrollador')
         if 'Analyst' in user_groups:
             app_groups.append('Analista')
+        if 'WorkflowReviewer' in user_groups:
+            app_groups.append('Revisor de Workflows')
         
         return app_groups
 
@@ -82,8 +84,8 @@ class Profile(models.Model):
     #     data = (self.id, self.user, self.institution)
     #     return "{} - {} - {}" % data
 
-    # class Meta:
-    #     permissions = (
-    #         ("can_view_quick_guide_developer", "Puede ver guia rápida de desarrolladores"),
-    #         ("can_view_quick_guide_analyst", "Puede ver guia rápida de analista"),
-    #     )
+    class Meta:
+        permissions = (
+            ("can_view_quick_guide_developer", "Puede ver guia rápida de desarrolladores"),
+            ("can_view_quick_guide_analyst", "Puede ver guia rápida de analista"),
+        )
