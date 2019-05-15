@@ -680,9 +680,39 @@ class ExecutionRateView(CreateView):
 
 
 class ExecutionCancelView(View):
+    """
+    Delegate to the REST API thes task 
+    of terminate the given execution.
+    """
 
     def get(self,request,*args,**kwargs):
-        pass
+        execution_id = kwargs.get('pk')
+        execution = get_object_or_404(Execution,id=execution_id)
+
+        data = {
+            'execution_id': execution_id
+        }
+
+        try:
+            url = '{}/api/cancel_execution/'.format(settings.DC_API_URL)
+            headers = {'Content-Type': 'application/json'}
+
+            response = requests.post(
+                url=url,
+                data=json.dumps(data),
+                headers=headers
+            )
+            if response.status_code == 200:
+                messages.success(request,'Ejecución cancelada con éxito.')
+            else:
+                messages.error(request,'La ejecución no pudo ser cancelada.')
+        except Exception as e:
+            messages.error(request,'La API REST no esta trabajando correctamente.')
+            messages.error(request,str(e))
+
+        context = get_detail_context(execution_id)
+        return render(request, 'execution/execution_detail.html', context)
+
 
 
 class DownloadResultImageView(View):
