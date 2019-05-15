@@ -123,7 +123,7 @@
                 </tr>
               </thead>
               <tbody>
-                {% for param in version.parameter_set.all %}
+                {% for param in version.parameter_set.all|dictsort:"position" %}
                 <tr>
                   <td>{{ param.name }}</td>
                   <td>{{ param.get_parameter_type_display }}</td>
