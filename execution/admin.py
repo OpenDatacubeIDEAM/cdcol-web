@@ -2,8 +2,10 @@
 
 from django.contrib import admin
 from django.core.exceptions import PermissionDenied
+from django.contrib import messages
 
 from execution.models import Task
+from execution.models import Review
 from execution.models import Execution
 from execution.models import ExecutionParameter
 from execution.models import FileConvertionTask
@@ -22,30 +24,49 @@ from execution.models import MultipleChoiceListType
 from execution.views import ExecutionCancelView
 
 
-def cancel_execution(self, request, queryset):
-    for execution in queryset:
-        ExecutionCancelView.as_views(request, execution.id)
-
-cancel_execution.short_description = "Cancelar ejecución"
-
-
 class TaskInline(admin.TabularInline):
   model = Task
   fk_name = 'execution'
 
 
 class ExecutionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'version', 'state', 'executed_by', 'credits_consumed', 'created_at',  'results_available', 'results_deleted_at', 'started_at','finished_at')
+    list_display = (
+        'id', 'version', 'state', 'executed_by', 
+        'credits_consumed', 'created_at',  
+        'results_available', 'results_deleted_at', 
+        'started_at','finished_at'
+    )
     ordering = ('-id',)
     list_filter = (['state'])
-    actions = [cancel_execution]
+    actions = ['cancel_execution']
     inlines = [TaskInline]
+
     def save_model(self, request, obj, form, change):
         obj.user = request.user
         raise PermissionDenied
 
+    def cancel_execution(self, request, queryset):
+        for execution in queryset:
+            response = ExecutionCancelView.as_view()(request, pk=execution.id)
+            if response.status_code == 200:
+                self.message_user(
+                    request,'Ejecución %s cancelada con éxito.' % execution.id
+                )
+            else:
+                self.message_user(
+                    request,'La Ejecución %s no pudo ser cancelada.' % execution.id, 
+                    level=messages.ERROR
+                )
+
+    cancel_execution.short_description = "Cancelar ejecución"
+
+
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('id','execution', 'state', 'uuid', 'created_at', 'updated_at', 'start_date', 'end_date', 'state_updated_at')
+    list_display = (
+        'id','execution', 'state', 'uuid', 
+        'created_at', 'updated_at', 'start_date', 
+        'end_date', 'state_updated_at'
+    )
     ordering = (['-created_at'] )
     list_filter = (['state'])
     
@@ -56,7 +77,6 @@ class ReviewAdmin(admin.ModelAdmin):
         raise PermissionDenied
 
 
-admin.site.register(Task)
 admin.site.register(ExecutionParameter)
 admin.site.register(FileConvertionTask)
 admin.site.register(StringType)
@@ -69,5 +89,6 @@ admin.site.register(StorageUnitNoBandType)
 admin.site.register(TimePeriodType)
 admin.site.register(FileType)
 admin.site.register(MultipleChoiceListType)
+admin.site.register(Task,TaskAdmin)
 admin.site.register(Execution,ExecutionAdmin)
 admin.site.register(Review, ReviewAdmin)

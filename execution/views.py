@@ -714,6 +714,36 @@ class ExecutionCancelView(View):
         return render(request, 'execution/execution_detail.html', context)
 
 
+    def post(self,request,*args,**kwargs):
+        """
+        This method is called from the admin interface
+        """
+        print('POST FROM ADMIN')
+        execution_id = kwargs.get('pk')
+        print('ID',execution_id)
+        execution = get_object_or_404(Execution,id=execution_id)
+
+        data = {
+            'execution_id': execution_id
+        }
+
+        try:
+            url = '{}/api/cancel_execution/'.format(settings.DC_API_URL)
+            headers = {'Content-Type': 'application/json'}
+
+            api_response = requests.post(
+                url=url,
+                data=json.dumps(data),
+                headers=headers
+            )
+            if api_response.status_code == 200:
+                response = HttpResponse(status=200)
+            else:
+                response = HttpResponse(status=500)
+        except Exception as e:
+            response = HttpResponse(status=500)
+
+        return response
 
 class DownloadResultImageView(View):
     """
