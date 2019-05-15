@@ -25,8 +25,8 @@ from execution.views import ExecutionCancelView
 
 
 class TaskInline(admin.TabularInline):
-  model = Task
-  fk_name = 'execution'
+    model = Task
+    fk_name = 'execution'
 
 
 class ExecutionAdmin(admin.ModelAdmin):
