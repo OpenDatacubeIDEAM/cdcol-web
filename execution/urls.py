@@ -14,12 +14,18 @@ from execution.views import DeleteResultImageView
 from execution.views import GenerateGeoTiffTask
 from execution.views import DownloadTaskLogView
 from execution.views import ExecutionStateJsonView
+from execution.views import ExecutionCopyView
 
 urlpatterns = [
     path('', ExecutionIndexView.as_view(), name='index'),
     path('<int:pk>/detail',ExecutionDetailView.as_view(), name='detail'),
     path('<int:pk>/rate',ExecutionRateView.as_view(), name='rate'),
     path('<int:pk>/cancel',ExecutionCancelView.as_view(), name='cancel'),
+
+    # This URL format can not be change because the static/js/formBuilder.js 
+    # require this forma in the URL to set the algoritm version in the 
+    # select field.
+    path('<int:epk>/version/<int:vpk>/copy', ExecutionCopyView.as_view(), name='copy'),
 
     path('<int:pk>/result/image/<str:image_name>/download',DownloadResultImageView.as_view(), name='image-download'),
     path('<int:pk>/result/image/<str:image_name>/delete',DeleteResultImageView.as_view(), name='image-delete'),
@@ -32,6 +38,7 @@ urlpatterns = [
 
     path('algorithm/list', AlgorithmsByTopicListView.as_view(), name='algorithm-list'),
     path('algorithm/version/<int:pk>', ExecutionCreateView.as_view(), name='create'),
+    
 
     # This is used by formBuilder.js
     path('parameters/version/<int:pk>/json', VersionParametersJson.as_view(), name='version-parameters'),

@@ -29,7 +29,7 @@ def assign_user_to_group(modeladmin, queryset, group_name, request):
             )
     else:
         self.message_user(
-            request,'La grupo %s no existe.' % group_name, 
+            request,'El grupo %s no existe.' % group_name, 
             level=messages.ERROR
         )
 

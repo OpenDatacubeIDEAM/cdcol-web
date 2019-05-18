@@ -226,7 +226,7 @@
                 <a href="#" class="btn btn-gray btn-md btn-block">No hay acciones disponibles</a>
                 
                 <!-- To copy an execution, we create a new execution with the given algorithm version -->
-                <a href="{% url 'execution:create' execution.version.id %}" class="btn btn-default btn-md btn-block">Replicar ejecución</a>
+                <a href="{% url 'execution:copy' execution.id execution.version.id %}" class="btn btn-default btn-md btn-block">Replicar ejecución</a>
 
                 {% if execution.state == '2' or execution.state == '1' %}
                 <a href="{% url 'execution:cancel' execution.id %}" onclick="return confirm('¿Está seguro de cancelar esta ejecución?')" class="btn btn-danger btn-md btn-block">Cancelar ejecución</a>
@@ -239,7 +239,7 @@
                 <a href="{% url 'execution:rate' execution.id %}#rating" class="btn btn-primary btn-md btn-block">Calificar Resultados de la Ejecución</a>
                 {% endif %}
                 <!-- To copy an execution, we create a new execution with the given algorithm version -->
-                <a href="{% url 'execution:create' execution.version.id %}" class="btn btn-default btn-md btn-block">Replicar ejecución</a>
+                <a href="{% url 'execution:copy' execution.id execution.version.id %}" class="btn btn-default btn-md btn-block">Replicar ejecución</a>
                 {% if execution.state == '2' or execution.state == '1'%}
                 <a href="{% url 'execution:cancel' execution.id %}" onclick="return confirm('¿Está seguro de cancelar esta ejecución?')" class="btn btn-danger btn-md btn-block">Cancelar ejecución</a>
                 {% endif %}
