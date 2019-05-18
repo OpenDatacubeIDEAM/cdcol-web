@@ -960,7 +960,8 @@ class ExecutionCancelView(View):
             if response.status_code == 200:
                 messages.success(request,'Ejecución cancelada con éxito.')
             else:
-                messages.error(request,'La ejecución no pudo ser cancelada.')
+                messages.warning(request,'La ejecución no pudo ser cancelada.')
+                messages.warning(request,response.text)
         except Exception as e:
             messages.error(request,'La API REST no esta trabajando correctamente.')
             messages.error(request,str(e))
@@ -971,11 +972,9 @@ class ExecutionCancelView(View):
 
     def post(self,request,*args,**kwargs):
         """
-        This method is called from the admin interface
+        This method is called only from the admin interface.
         """
-        print('POST FROM ADMIN')
         execution_id = kwargs.get('pk')
-        print('ID',execution_id)
         execution = get_object_or_404(Execution,id=execution_id)
 
         data = {
@@ -986,17 +985,16 @@ class ExecutionCancelView(View):
             url = '{}/api/cancel_execution/'.format(settings.DC_API_URL)
             headers = {'Content-Type': 'application/json'}
 
-            api_response = requests.post(
+            response = requests.post(
                 url=url,
                 data=json.dumps(data),
                 headers=headers
             )
-            if api_response.status_code == 200:
-                response = HttpResponse(status=200)
-            else:
-                response = HttpResponse(status=500)
+
         except Exception as e:
-            response = HttpResponse(status=500)
+            response = {
+                'exception':e
+            }
 
         return response
 

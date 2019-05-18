@@ -48,15 +48,29 @@ class ExecutionAdmin(admin.ModelAdmin):
     def cancel_execution(self, request, queryset):
         for execution in queryset:
             response = ExecutionCancelView.as_view()(request, pk=execution.id)
-            if response.status_code == 200:
-                self.message_user(
-                    request,'Ejecución %s cancelada con éxito.' % execution.id
-                )
+
+            if not isinstance(response,dict):
+                if response.status_code == 200:
+                    self.message_user(
+                        request,'Ejecución %s cancelada con éxito.' % execution.id
+                    )
+                else:
+                    self.message_user(
+                        request,'La Ejecución %s no pudo ser cancelada.' % execution.id, 
+                        level=messages.ERROR
+                    )
+                    self.message_user(request,response.text,level=messages.ERROR)
             else:
                 self.message_user(
-                    request,'La Ejecución %s no pudo ser cancelada.' % execution.id, 
+                    request,
+                    'Error e interntar conectarse con la API REST.',
+                    level=messages.ERROR)
+                self.message_user(
+                    request,
+                    str(response.get('exception')),
                     level=messages.ERROR
                 )
+
 
     cancel_execution.short_description = "Cancelar ejecución"
 
