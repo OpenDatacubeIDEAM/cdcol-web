@@ -959,7 +959,8 @@ class ListTasksAPIView(viewsets.ViewSet):
     permission_classes = (AllowAny,)
 
     def _get_task_log_path(self,task):
-        log_file = '/{}.log'.format(task.try_number)
+        # log_file = '/{}.log'.format(task.try_number)
+        log_file = '/{}.log'.format(1)
         log_path = task.log_filepath.replace('.log',log_file)
         return log_path
 
@@ -992,7 +993,7 @@ class ListTasksAPIView(viewsets.ViewSet):
             task_dict = {
                 'id': task.task_id,
                 'state': self.STATE.get(
-                    task.state,'No determinado'
+                    task.state,task.state
                 ),
                 'log_url': task.log_url,
                 'log_filepath':self._get_task_log_path(task),
