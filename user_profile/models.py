@@ -29,14 +29,19 @@ class UserProfile(models.Model):
     credits_approved = models.IntegerField(default=8, blank=True, null=True)
 
     @property
+    def used_credits(self):
+        used_credits = self.user.execution_set.aggregate(Sum('credits_consumed'))
+        return used_credits['credits_consumed__sum']
+
+    @property
     def available_credits(self):
-        return self.credits_approved - self.credits_consumed
+        return self.credits_approved - self.used_credits
     
     @property
     def credits_consumed(self):
         """Return the number of credits consumed by the user.
 
-        Each execution has a number of credits it it consumes. 
+        Each execution has a number of credits it consumes. 
         The credits consumed by the user is the sum of all credits 
         consumed by each execution the user has performed.
         """
@@ -73,9 +78,32 @@ class UserProfile(models.Model):
     def is_data_admin(self):
         return self.user.groups.filter(name='DataAdmin').exists()
 
-    def get_executions(self):
-        self.user.execution_set.all()
+    def get_active_executions(self):
+        """
+        Retrieve the executios in EXECUTING_STATE and 
+        ENQUEUED_STATE performed by the current user.
+        """
+        executions = self.user.execution_set.filter(
+            state__in=[
+            Execution.EXECUTING_STATE, 
+            Execution.ENQUEUED_STATE
+        ])
 
+        """
+        Filter such execution that have no been
+        updated in the web database, but are 
+        finished executions.
+        """
+
+        execs = [] 
+        for execution in executions:
+            dag_run = execution.get_dag_run()
+            if dag_run:
+                if dag_run.state in 'running':
+                    execs.append(execution)
+
+        return execs
+        
     # def self(self):
     #     return self
 

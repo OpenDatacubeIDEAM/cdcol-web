@@ -240,8 +240,8 @@
                                       </tr>
                                     </thead>
                                     <tbody>
-                                    {% if user.execution_set.all|length > 0 %}
-                                    {% for execution in user.execution_set.all %}
+                                    {% if user.profile.get_active_executions|length > 0 %}
+                                    {% for execution in user.profile.get_active_executions %}
                                     <tr>
                                       <td class="quantity"><a href="{% url 'execution:detail' execution.id %}">{{ execution.id }}</a></td>
                                       <td class="product"><a href="{% url 'execution:detail' execution.id %}">{{ execution.version.algorithm.name }}</a></td>
@@ -256,8 +256,8 @@
                                     </tr>
                                     {% endif %}
                                     <tr>
-                                      <td class="total-quantity" colspan="2">Créditos en uso</td>
-                                      <td class="total-amount">{{ user.profile.credits_consumed }}</td>
+                                      <td class="total-quantity" colspan="2">Créditos usados</td>
+                                      <td class="total-amount">{{ user.profile.used_credits}}</td>
                                     </tr>
                                     <tr>
                                       <td class="total-quantity" colspan="2">Créditos dispónible</td>
