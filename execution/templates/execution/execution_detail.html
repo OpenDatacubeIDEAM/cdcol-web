@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% load execution_extras %}
 
@@ -235,7 +236,7 @@
               {% else %}
               <nav>
                 {% if user.is_authenticated %}
-                {% if perms.execution.can_rate_execution %}
+                {% if perms.execution.can_rate_execution and execution.state in '345'%}
                 <a href="{% url 'execution:rate' execution.id %}#rating" class="btn btn-primary btn-md btn-block">Calificar Resultados de la Ejecución</a>
                 {% endif %}
                 <!-- To copy an execution, we create a new execution with the given algorithm version -->
@@ -290,9 +291,10 @@
 {% endblock %}
 
 {% block extra_body %}
-<script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
-<script type="text/javascript" charset="utf8" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/plug-ins/1.10.13/sorting/datetime-moment.js"></script>
+
+<script type="text/javascript" charset="utf8" src="{% static 'js/jquery.dataTables.js' %} "></script>
+<script type="text/javascript" charset="utf8" src="{% static 'js/moment.min.js' %}"></script>
+<script type="text/javascript" charset="utf8" src="{% static 'js/datetime-moment.js' %}"></script>
 <script type="text/javascript">
 
 $(document).ready(function() {

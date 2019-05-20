@@ -268,6 +268,7 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_ADAPTER = 'user_profile.adapters.MyAccountAdapter'
+ACCOUNT_EMAIL_SUBJECT_PREFIX = '[IDEAM - CDCol] '
 
 # Email service
 # this variables are needed for 'allouth' to perform password reset 

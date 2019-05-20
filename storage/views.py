@@ -33,7 +33,14 @@ import re
 import json
 
 
-class IndexView(TemplateView):
+@method_decorator(
+    permission_required(
+        'storage.can_list_units',
+        raise_exception=True
+    ),
+    name='dispatch'
+)
+class IndexView(LoginRequiredMixin,TemplateView):
     """Render the list of storage units."""
     template_name = 'storage/index.html'
 
@@ -111,7 +118,14 @@ class StorageObtainJsonListView(View):
         return HttpResponse(data, content_type='application/json')     
 
 
-class StorageCreateView(FormView):
+@method_decorator(
+    permission_required(
+        'storage.can_create_units',
+        raise_exception=True
+    ),
+    name='dispatch'
+)
+class StorageCreateView(LoginRequiredMixin,FormView):
     """ Create a storage unit for the datacube.
     
     Tell to the REST API to create a storage unit.
@@ -170,7 +184,14 @@ class StorageCreateView(FormView):
         return super().form_valid(form)
 
 
-class StorageUpdateView(UpdateView):
+@method_decorator(
+    permission_required(
+        'storage.can_edit_units',
+        raise_exception=True
+    ),
+    name='dispatch'
+)
+class StorageUpdateView(LoginRequiredMixin,UpdateView):
     """Update an algorithm.
 
     Use the template storage/storage_form.html
@@ -182,7 +203,14 @@ class StorageUpdateView(UpdateView):
     success_url = reverse_lazy('storage:index')
 
 
-class StorageDetailView(DetailView):
+@method_decorator(
+    permission_required(
+        'storage.can_view_unit_detail',
+        raise_exception=True
+    ),
+    name='dispatch'
+)
+class StorageDetailView(LoginRequiredMixin,DetailView):
     """Display storage unit detail.
 
     Use the template storage/storage_detail.html
@@ -224,7 +252,15 @@ class DownloadFileView(TemplateView):
         raise Http404
 
 
-class StorageViewContentView(DetailView):
+
+@method_decorator(
+    permission_required(
+        'storage.can_view_storage_content',
+        raise_exception=True
+    ),
+    name='dispatch'
+)
+class StorageViewContentView(LoginRequiredMixin,DetailView):
     """
     Show the storage unit content. The storage 
     unit content is actually given by other view 
@@ -237,6 +273,13 @@ class StorageViewContentView(DetailView):
     context_object_name = 'storage_unit'
 
 
+@method_decorator(
+    permission_required(
+        'storage.can_view_storage_content',
+        raise_exception=True
+    ),
+    name='dispatch'
+)
 class StorageViewContentJsonView(TemplateView):
     """
     Return the content of a given storage unit as json. 
@@ -295,7 +338,14 @@ class StorageViewContentJsonView(TemplateView):
             return HttpResponseBadRequest()
 
 
-class StorageImageDetailView(TemplateView):
+@method_decorator(
+    permission_required(
+        'storage.can_view_content_detail',
+        raise_exception=True
+    ),
+    name='dispatch'
+)
+class StorageImageDetailView(LoginRequiredMixin,TemplateView):
     """
     Return the content of a given storage unit as json. 
     The storage unit content is obtained by a call to the 
@@ -337,7 +387,14 @@ class StorageImageDetailView(TemplateView):
         return render(request, 'storage/image_detail.html', context)
 
 
-class StorageDownloadImageView(TemplateView):
+@method_decorator(
+    permission_required(
+        'storage.can_download_file',
+        raise_exception=True
+    ),
+    name='dispatch'
+)
+class StorageDownloadImageView(LoginRequiredMixin,TemplateView):
     """Download an image form the given storage unit and image name.
 
     The image is downloaded from the dc_storage/<product-name>/...image_name
@@ -372,7 +429,14 @@ class StorageDownloadImageView(TemplateView):
         return HttpResponseNotFound('<h1>El archivo no se ha encontrado en el servidor</h1>')
 
 
-class StorageDownloadImageMetadataJsonView(TemplateView):
+@method_decorator(
+    permission_required(
+        'storage.can_download_metadata',
+        raise_exception=True
+    ),
+    name='dispatch'
+)
+class StorageDownloadImageMetadataJsonView(LoginRequiredMixin,TemplateView):
     """Download an image metadata as json."""
 
     def get(self,request,*args,**kwargs):

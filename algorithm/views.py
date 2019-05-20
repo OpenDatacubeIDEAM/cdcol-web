@@ -41,7 +41,10 @@ import requests
 
 
 @method_decorator(
-    permission_required('algorithm.can_list_algorithms',raise_exception=True),
+    permission_required(
+        'algorithm.can_list_algorithms',
+        raise_exception=True
+    ),
     name='dispatch'
 )
 class AlgorithmIndexView(LoginRequiredMixin,TemplateView):

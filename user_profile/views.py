@@ -2,6 +2,7 @@
 
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from user_profile.forms import ProfileForm
 
@@ -16,7 +17,7 @@ class HomeView(TemplateView):
     template_name = 'user_profile/home.html'
 
 
-class UpdateView(TemplateView):
+class UpdateView(LoginRequiredMixin,TemplateView):
     """Update user and profile models data."""
     
     def get(self,request,*args,**kwargs):

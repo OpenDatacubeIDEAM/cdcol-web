@@ -942,6 +942,18 @@ class GenerateGeoTiffTask(View):
 
 
 class ListTasksAPIView(viewsets.ViewSet):
+
+
+    STATE = {
+        'success':'Exitosa',
+        'running':'En Ejecución',
+        'failed': 'Fallida',
+        'skipped': 'Descartada',
+        'retry':'Repetida',
+        'queued': 'Encolada',
+        'no status': 'Sin estado'
+    }
+
     # Required for the Browsable API renderer to have a nice form.
     serializer_class = TaskSerializer
     permission_classes = (AllowAny,)
@@ -979,7 +991,9 @@ class ListTasksAPIView(viewsets.ViewSet):
         for task in tasks:
             task_dict = {
                 'id': task.task_id,
-                'state': task.state,
+                'state': self.STATE.get(
+                    task.state,'No determinado'
+                ),
                 'log_url': task.log_url,
                 'log_filepath':self._get_task_log_path(task),
                 'log_content': self._get_raw_log(task),
