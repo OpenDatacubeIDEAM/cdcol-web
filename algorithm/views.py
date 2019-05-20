@@ -13,6 +13,9 @@ from django.views.generic.edit import FormView
 from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import permission_required
 
 import django_filters.rest_framework
 
@@ -37,8 +40,13 @@ import urllib
 import requests
 
 
-class AlgorithmIndexView(TemplateView):
+@method_decorator(
+    permission_required('algorithm.can_list_algorithms',raise_exception=True),
+    name='dispatch'
+)
+class AlgorithmIndexView(LoginRequiredMixin,TemplateView):
     """Display a list of the algorithms."""
+
     template_name = 'algorithm/index.html'
 
 
@@ -67,7 +75,11 @@ class VersionViewSet(viewsets.ModelViewSet):
     serializer_class = VersionSerializer
 
 
-class AlgorithmCreateView(CreateView):
+@method_decorator(
+    permission_required('algorithm.can_create_algorithm',raise_exception=True),
+    name='dispatch'
+)
+class AlgorithmCreateView(LoginRequiredMixin,CreateView):
     """Create an algorithm and an initial version for the algorithm.
 
     Use the template algorithm/algorithm_form.html
@@ -109,7 +121,11 @@ class AlgorithmCreateView(CreateView):
         return context
 
 
-class AlgorithmUpdateView(UpdateView):
+@method_decorator(
+    permission_required('algorithm.can_edit_algorithm',raise_exception=True)
+    ,name='dispatch'
+)
+class AlgorithmUpdateView(LoginRequiredMixin,UpdateView):
     """Update an algorithm.
 
     Use the template algorithm/algorithm_form.html
@@ -138,16 +154,25 @@ class AlgorithmUpdateView(UpdateView):
         return initial
 
 
-class AlgorithmDetailView(DetailView):
+@method_decorator(
+    permission_required('algorithm.can_view_algorithm_detail',raise_exception=True),
+    name='dispatch'
+)
+class AlgorithmDetailView(LoginRequiredMixin,DetailView):
     """Display algorithm detail.
 
     Use the template algorithm/algorithm_detail.html
     """
+
     model = Algorithm
     context_object_name = 'algorithm'
 
 
-class VersionCreateView(CreateView):
+@method_decorator(
+    permission_required('algorithm.can_create_new_version',raise_exception=True),
+    name='dispatch'
+)
+class VersionCreateView(LoginRequiredMixin,CreateView):
     """Create a version for a given algorithm.
 
     Use the template algorithm/version_form.html
@@ -228,7 +253,11 @@ class VersionCreateView(CreateView):
         return reverse('algorithm:detail',kwargs={'pk':algorithm_pk})
 
 
-class VersionUpdateView(UpdateView):
+@method_decorator(
+    permission_required('algorithm.can_edit_version',raise_exception=True),
+    name='dispatch'
+)
+class VersionUpdateView(LoginRequiredMixin,UpdateView):
     """Perform version update.
 
     Use the template algorithm/version_form.html
@@ -295,7 +324,11 @@ class VersionUpdateView(UpdateView):
         return reverse('algorithm:version-detail',kwargs={'pk':version_pk})
 
 
-class VersionDetailView(DetailView):
+@method_decorator(
+    permission_required('algorithm.can_view_version_detail',raise_exception=True),
+    name='dispatch'
+)
+class VersionDetailView(LoginRequiredMixin,DetailView):
     """Display version detail.
 
     Use the template algorithm/version_detail.html
@@ -303,7 +336,11 @@ class VersionDetailView(DetailView):
     model = Version
 
 
-class VersionPublishView(FormView):
+@method_decorator(
+    permission_required('algorithm.can_publish_version',raise_exception=True),
+    name='dispatch'
+)
+class VersionPublishView(LoginRequiredMixin,FormView):
     """Change the publishing_state of a version as Version.PUBLISHED_STATE
 
     Only versions with publishing_state == Version.DEVELOPED_STATE 
@@ -379,7 +416,11 @@ class VersionPublishView(FormView):
         return redirect('algorithm:version-detail',pk=version_pk)
 
 
-class VersionUnPublishView(TemplateView):
+@method_decorator(
+    permission_required('algorithm.can_unpublish_version',raise_exception=True),
+    name='dispatch'
+)
+class VersionUnPublishView(LoginRequiredMixin,TemplateView):
     """Change the publishing_state of a version as Version.PUBLISHED_STATE
 
     Only versions with publishing_state == Version.PUBLISHED_STATE,
@@ -411,7 +452,11 @@ class VersionUnPublishView(TemplateView):
         return redirect('algorithm:version-detail',pk=version_pk)
 
 
-class VersionDeprecateView(TemplateView):
+@method_decorator(
+    permission_required('algorithm.can_deprecate_version',raise_exception=True),
+    name='dispatch'
+)
+class VersionDeprecateView(LoginRequiredMixin,TemplateView):
     """Change the publishing_state of a version as Version.DEPRECATED_STATE
 
     Only versions with publishing_state == Version.PUBLISHED_STATE 
@@ -438,20 +483,24 @@ class VersionDeprecateView(TemplateView):
         return redirect('algorithm:version-detail',pk=version_pk)
 
 
-class VersionDeleteView(DeleteView):
-    model = Version
-    # success_message = "Versión eliminada con éxito."
+# class VersionDeleteView(LoginRequiredMixin,DeleteView):
+#     model = Version
+#     # success_message = "Versión eliminada con éxito."
 
-    def get_success_url(self):
-        """
-        Return a URL to the detail of the algorithm which 
-        version was deleted.
-        """
-        algorithm_pk = self.kwargs.get('apk')
-        return reverse('algorithm:detail',kwargs={'pk':algorithm_pk})
+#     def get_success_url(self):
+#         """
+#         Return a URL to the detail of the algorithm which 
+#         version was deleted.
+#         """
+#         algorithm_pk = self.kwargs.get('apk')
+#         return reverse('algorithm:detail',kwargs={'pk':algorithm_pk})
 
 
-class VersionDeleteView(DeleteView):
+@method_decorator(
+    permission_required('algorithm.can_delete_version',raise_exception=True),
+    name='dispatch'
+)
+class VersionDeleteView(LoginRequiredMixin,DeleteView):
     """Delete a given version of an algorithm."""
     
     model = Version
@@ -466,7 +515,11 @@ class VersionDeleteView(DeleteView):
         return reverse('algorithm:detail',kwargs={'pk':algorithm_pk})
 
 
-class VersionReviewPendingView(TemplateView):
+@method_decorator(
+    permission_required('algorithm.can_send_version_to_review',raise_exception=True),
+    name='dispatch'
+)
+class VersionReviewPendingView(LoginRequiredMixin,TemplateView):
     """Change the publishing_state of a version as Version.REVIEW_PENDING."""
     
     def get(self,request,*args,**kwargs):
@@ -501,7 +554,11 @@ class VersionReviewPendingView(TemplateView):
         return redirect('algorithm:version-detail', pk=version_pk)
 
 
-class VersionReviewStartView(TemplateView):
+@method_decorator(
+    permission_required('algorithm.can_start_version_review',raise_exception=True),
+    name='dispatch'
+)
+class VersionReviewStartView(LoginRequiredMixin,TemplateView):
     """Change the publishing_state of a version as Version.REVIEW.
 
     And send an email to the user to indicate his/her version
@@ -540,12 +597,20 @@ class VersionReviewStartView(TemplateView):
         return redirect('algorithm:version-detail',pk=version_pk)
 
 
-class VersionReviewListView(TemplateView):
+@method_decorator(
+    permission_required('algorithm.can_list_versions',raise_exception=True),
+    name='dispatch'
+)
+class VersionReviewListView(LoginRequiredMixin,TemplateView):
     """Display the list of versions with publishing_state == Version.REVIEW_PENDING"""
     template_name = 'algorithm/version_review_list.html'
 
 
-class ParameterCreateView(CreateView):
+@method_decorator(
+    permission_required('algorithm.can_create_parameter',raise_exception=True),
+    name='dispatch'
+)
+class ParameterCreateView(LoginRequiredMixin,CreateView):
     """Create a parameter for a given version.
 
     Use the template algorithm/parameter_form.html
@@ -585,7 +650,11 @@ class ParameterCreateView(CreateView):
         return reverse('algorithm:version-detail',kwargs={'pk':version_pk})
 
 
-class ParameterUpdateView(UpdateView):
+@method_decorator(
+    permission_required('algorithm.can_edit_parameter',raise_exception=True),
+    name='dispatch'
+)
+class ParameterUpdateView(LoginRequiredMixin,UpdateView):
     """Update a parameter for a given version.
 
     Use the template algorithm/parameter_form.html
@@ -625,7 +694,11 @@ class ParameterUpdateView(UpdateView):
         return reverse('algorithm:parameter-detail',kwargs={'pk':parameter_pk})
 
 
-class ParameterDetailView(DetailView):
+@method_decorator(
+    permission_required('algorithm.can_view_parameter_detail',raise_exception=True),
+    name='dispatch'
+)
+class ParameterDetailView(LoginRequiredMixin,DetailView):
     """Display parameter detail.
 
     Use the template algorithm/parameter_detail.html

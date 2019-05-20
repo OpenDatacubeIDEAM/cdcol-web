@@ -19,6 +19,8 @@ from django.utils.encoding import smart_str
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import permission_required
 
 from storage.forms import StorageUnitForm
 from storage.forms import StorageUnitUpdateForm

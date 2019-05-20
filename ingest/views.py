@@ -5,6 +5,8 @@ from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from ingest.serializers import TaskSerializer
 
 from rest_framework import viewsets
@@ -12,8 +14,9 @@ from rest_framework import viewsets
 from ingest.models import IngestTask
 from ingest.forms import TaskForm
 
-class TaskIndexView(TemplateView):
-    """Display a list of the algorithms."""
+
+class TaskIndexView(LoginRequiredMixin,TemplateView):
+    """Display a list of ingestion tasks."""
     template_name = 'ingest/index.html'
 
 
@@ -23,7 +26,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
 
 
-class TaskCreateView(CreateView):
+class TaskCreateView(LoginRequiredMixin,CreateView):
     """Create an Ingestion Task.
 
     Use the template ingest/task_form.html
@@ -57,7 +60,7 @@ class TaskCreateView(CreateView):
         return context
 
 
-class TaskDetailView(DetailView):
+class TaskDetailView(LoginRequiredMixin,DetailView):
     """Display Ingestion Task detail.
 
     Use the template ingest/task_detail.html

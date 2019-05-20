@@ -305,3 +305,10 @@ REST_FRAMEWORK = {
 Redirect to the home page after admin logout
 """
 LOGOUT_REDIRECT_URL = 'index:index'
+
+"""
+This config is used for LoginRequiredMixin
+to redirect a unauthentccated user to the 
+login page.
+"""
+LOGIN_URL = '/accounts/login/'

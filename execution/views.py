@@ -19,6 +19,9 @@ from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
 from django.http import JsonResponse
 from django.utils import formats
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import permission_required
 
 from algorithm.models import VersionStorageUnit
 from algorithm.models import Parameter
@@ -66,7 +69,14 @@ import mimetypes
 import time
 
 
-class ExecutionIndexView(TemplateView):
+@method_decorator(
+    permission_required(
+        'execution.can_list_executions',
+        raise_exception=True
+    ),
+    name='dispatch'
+)
+class ExecutionIndexView(LoginRequiredMixin,TemplateView):
     """Display a list of the algorithms."""
     template_name = 'execution/index.html'
 
@@ -96,7 +106,7 @@ class ExecutionViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class AlgorithmsByTopicListView(ListView):
+class AlgorithmsByTopicListView(LoginRequiredMixin,ListView):
     """List algorithms by topic to be selected for execution."""
     
     model = Topic
@@ -115,7 +125,17 @@ class AlgorithmsByTopicListView(ListView):
         return queryset
 
 
-class ExecutionCreateView(TemplateView):
+@method_decorator(
+    permission_required(
+        (
+            'execution.can_create_new_execution', 
+            'execution.can_view_new_execution'
+        ),
+        raise_exception=True
+    ),
+    name='dispatch'
+)
+class ExecutionCreateView(LoginRequiredMixin,TemplateView):
     """
     An execution is created given an algorithm. 
     The last version of the algorithm is always 
@@ -287,178 +307,16 @@ class ExecutionCreateView(TemplateView):
             return redirect('execution:create', pk=version_pk)
 
 
-
-class ExecutionCopyView(TemplateView):
-    """
-    An execution is created given an algorithm. 
-    The last version of the algorithm is always 
-    considered on this view to create an Execution.
-
-    To copy an execution, we create a new execution 
-    with the given algorithm version.
-    """
-
-    def get(self,request,*args,**kwargs):
-
-        # Getting the version to be executed
-        version_pk = kwargs.get('pk')
-        version = get_object_or_404(Version, pk=version_pk)
-        # Current user
-        current_user = request.user
-
-        # User approved credits
-        credits_approved = current_user.profile.credits_approved
-        # User credits consumed
-        credits_consumed = current_user.profile.credits_consumed
-
-        if credits_consumed:
-            credits_approved -= credits_consumed
-
-        # Version selection form
-        version_selection_form = VersionSelectionForm(
-            algorithm=version.algorithm,user=request.user
-        )
-
-        storage_units_version = VersionStorageUnit.objects.filter(
-            version__algorithm=version.algorithm
-        )
-
-        parameters = Parameter.objects.filter(
-            version=version, enabled=True
-        ).order_by('position')
-
-        reviews = Review.objects.filter(execution__version=version)
-
-        # getting the average rating
-        average_rating = Review.objects.filter(
-            execution__version=version
-        ).aggregate(Avg('rating'))['rating__avg']
-        average_rating = round(average_rating if average_rating is not None else 0, 2)
-
-        executions = Execution.objects.filter(version=version)
-
-        topics = Topic.objects.filter(enabled=True)
-
-        executed_params = []
-
-        context = {
-            'topics': topics, 
-            'algorithm': version.algorithm, 
-            'parameters': parameters,
-            'version_selection_form': version_selection_form, 
-            'version': version,
-            'reviews': reviews,
-            'average_rating': average_rating, 
-            'executions': executions,
-            'executed_params': executed_params, 
-            'credits_approved': credits_approved,
-            # return this parameter as a list is mandatory for
-            # /static/js/formBuilder.js works properly
-            'storage_units_version':list(storage_units_version)
-        }
-
-        return render(request, 'execution/execution_form.html', context)
-
-    def post(self,request,*args,**kwargs):
-
-        # Getting the version to be executed
-        version_pk = kwargs.get('pk')
-        version = get_object_or_404(Version, pk=version_pk)
-
-        # Current user
-        current_user = request.user
-
-        # User approved credits
-        credits_approved = current_user.profile.credits_approved
-        # User credits consumed
-        credits_consumed = current_user.profile.credits_consumed
-
-        if credits_consumed:
-            credits_approved -= credits_consumed
-
-        parameters = Parameter.objects.filter(
-            version=version, enabled=True
-        ).order_by('position')
-
-        textarea_name = request.POST.get('textarea_name', None)
-        checkbox_generate_mosaic = request.POST.get('checkbox_generate_mosaic', None)
-        if checkbox_generate_mosaic is None :
-            checkbox_generate_mosaic = False;
-      
-        if current_user.has_perm('execution.can_create_new_execution'):
-
-            try:
-                parameter = parameters.get(parameter_type=Parameter.AREA_TYPE)
-                time_parameters = parameters.filter(parameter_type=Parameter.TIME_PERIOD_TYPE)
-            except Parameter.DoesNotExist as e:
-                messages.error(
-                    request,
-                    (
-                         'la versión del algoritmo debe tener un parámetro de tipo Area '
-                         'y un parámetro de tipo Periodo de Tiempo como mínimo.'
-                    )
-                )
-                return redirect('execution:create', pk=version_pk)
-
-            if parameter and credits_approved:
-                anhos = 1
-                if time_parameters:
-                    anhos = 0
-                    for p in time_parameters:
-                        start_date = request.POST.get('start_date_{}'.format(p.id), False)
-                        end_date = request.POST.get('end_date_{}'.format(p.id), False)
-                        start_date_value = datetime.datetime.strptime(start_date, "%d-%m-%Y")
-                        end_date_value = datetime.datetime.strptime(end_date, "%d-%m-%Y")
-                        anhos += 1+(end_date_value.year - start_date_value.year)
-                else:
-                    anhos = 1
-
-                sw_latitude = int(request.POST.get('sw_latitude', False))
-                sw_longitude = int(request.POST.get('sw_longitude', False))
-                ne_latitude = int(request.POST.get('ne_latitude', False))
-                ne_longitude = int(request.POST.get('ne_longitude', False))
-                credits_calculated = (ne_latitude-sw_latitude)*(ne_longitude-sw_longitude)*anhos
-                if credits_calculated <= credits_approved:
-                    new_execution = Execution(
-                        version=version,
-                        description=textarea_name,
-                        state=Execution.ENQUEUED_STATE,
-                        executed_by=current_user,
-                        generate_mosaic= checkbox_generate_mosaic,
-                        credits_consumed=credits_calculated,
-                    )
-                    new_execution.save()
-
-                    create_execution_parameter_objects(parameters, request, new_execution)
-
-                    # Unzip uploaded parameters
-                    execution_directory = os.path.join(settings.MEDIA_ROOT,'input',str(new_execution.id))
-
-                    if os.path.isdir(execution_directory):
-                        unzip_every_file_in_directory(execution_directory)
-
-                    # send the execution to the REST service
-                    response = send_execution(new_execution)
-
-                    if response.get('status') in 'error':
-                        messages.error(request,response.get('description'))
-                        messages.error(request,response.get('detalle'))
-                        return redirect('execution:create', pk=version_pk)
-                        # return HttpResponse(response.get('html'))
-                        new_execution.delete()
-                    else:
-                        messages.info(request,response.get('description'))
-                        # messages.info(request,response.get('detalle'))
-                        return redirect('execution:detail', pk=new_execution.id)
-
-            # This is returned when the Area parameter is not given or
-            # the user has consumed all the credits
-            messages.error(
-                request,'El usuario no tiene créditos para llevar a cabo esta ejecución.'
-            )
-            return redirect('execution:create', pk=version_pk)
-
-
+@method_decorator(
+    permission_required(
+        (
+            'execution.can_create_new_execution', 
+            'execution.can_view_new_execution'
+        ),
+        raise_exception=True
+    ),
+    name='dispatch'
+)
 class ExecutionCopyView(ExecutionCreateView):
     """
     An execution is created given an algorithm. 
@@ -724,7 +582,14 @@ def send_execution(execution):
     return response
 
 
-class ExecutionDetailView(DetailView):
+@method_decorator(
+    permission_required(
+        'execution.can_view_execution_detail',
+        raise_exception=True
+    ),
+    name='dispatch'
+)
+class ExecutionDetailView(LoginRequiredMixin,DetailView):
 
     model = Execution
 
@@ -870,7 +735,7 @@ class VersionParametersJson(TemplateView):
         return HttpResponse(data, content_type='application/json')
 
 
-class DeleteResultImageView(View):
+class DeleteResultImageView(LoginRequiredMixin,View):
 
     def get(self,request,*args,**kwargs):
 
@@ -899,7 +764,14 @@ class DeleteResultImageView(View):
         return redirect('execution:detail', pk=execution_id)
 
 
-class ExecutionRateView(CreateView):
+@method_decorator(
+    permission_required(
+        'execution.can_rate_execution',
+        raise_exception=True
+    ),
+    name='dispatch'
+)
+class ExecutionRateView(LoginRequiredMixin,CreateView):
 
     model = Review
     form_class = ReviewForm
@@ -934,7 +806,7 @@ class ExecutionRateView(CreateView):
         return reverse('execution:detail',kwargs={'pk':execution_pk})
 
 
-class ExecutionCancelView(View):
+class ExecutionCancelView(LoginRequiredMixin,View):
     """
     Delegate to the REST API thes task 
     of terminate the given execution.
@@ -998,7 +870,8 @@ class ExecutionCancelView(View):
 
         return response
 
-class DownloadResultImageView(View):
+
+class DownloadResultImageView(LoginRequiredMixin,View):
     """
     Download a selected image from a given execution.
     """
@@ -1066,12 +939,6 @@ class GenerateGeoTiffTask(View):
         context['response_message'] = message
 
         return render(request,'execution/execution_detail.html',context)
-
-
-class ExecutionTasksListView(DetailView):
-
-    model = Execution
-    template_name = 'execution/execution_task_list.html'
 
 
 class ListTasksAPIView(viewsets.ViewSet):
@@ -1165,7 +1032,8 @@ class ExecutionStateJsonView(View):
 
         return JsonResponse(data,safe=False)
 
-class DownloadTaskLogView(View):
+
+class DownloadTaskLogView(LoginRequiredMixin,View):
     """
         Donwload the log or an airflow task.
         the taks's logs are located at 'WEB_STORAGE_PATH/logs'
