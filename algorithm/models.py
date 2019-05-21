@@ -132,9 +132,7 @@ class Algorithm(models.Model):
         return next_version
 
 
-
-
-def version_upload_to(instance, filename):
+def upload_to(instance, filename):
     """File will be uploaded to MEDIA_ROOT/<algo_path>."""
 
     algo_name = slugify(instance.algorithm.name)
@@ -183,7 +181,7 @@ class Version(models.Model):
     number = models.CharField(max_length=200)
     repository_url = models.CharField(max_length=300)
     source_code = models.FileField(
-        upload_to=version_upload_to,storage=upload_storage,max_length=1000, blank=True, null=True
+        upload_to=upload_to,storage=upload_storage,max_length=1000, blank=True, null=True
     )
     publishing_state = models.CharField(max_length=2, choices=VERSION_STATES)
     created_at = models.DateTimeField(auto_now_add=True)

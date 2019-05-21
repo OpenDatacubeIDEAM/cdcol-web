@@ -3,8 +3,9 @@
 from django.core.exceptions import ValidationError
 
 from allauth.account.adapter import DefaultAccountAdapter
-import re
 
+import re
+import os
 
 class MyAccountAdapter(DefaultAccountAdapter):
 
@@ -22,8 +23,16 @@ class MyAccountAdapter(DefaultAccountAdapter):
         )
         raise ValidationError(message)
 
-    # def send_mail(self, template_prefix, email, context):
-    #     context['activate_url'] = settings.URL_FRONT + \
-    #         'verify-email/' + context['key']
-    #     msg = self.render_mail(template_prefix, email, context)
-    #     msg.send()
+    def send_mail(self, template_prefix, email, context):
+        """
+        Change active_url when verification email is sended to the 
+        user.
+        """
+        if hasattr(settings,'WEB_VERIFICATION_EMAIL_URL_PRIFIX'):
+            host_port = settings.WEB_VERIFICATION_EMAIL_URL_PRIFIX
+            if host_port:
+                url = host_port + 'verify-email/' + context['key']
+                context['activate_url'] = url
+
+        msg = self.render_mail(template_prefix, email, context)
+        msg.send()

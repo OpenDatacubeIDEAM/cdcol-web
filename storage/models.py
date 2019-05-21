@@ -19,8 +19,8 @@ class StorageUnit(models.Model):
             ("can_edit_units", "Editar unidad de almacenamiento"),
         )
 
-    alias = models.CharField(max_length=200, unique=True)
-    name = models.CharField(max_length=200, unique=True)
+    alias = models.CharField(max_length=200,unique=True,default='no definido')
+    name = models.CharField(max_length=200,unique=True)
     description = models.TextField()
     description_file = models.CharField(max_length=200)
     ingest_file = models.CharField(max_length=200)

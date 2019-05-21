@@ -87,16 +87,28 @@ can generate a gif.
 WEB_ALGORITHM_ID_FOR_CUSTOM_SERVICE = int(os.environ.get('WEB_ALGORITHM_ID_FOR_CUSTOM_SERVICE'))
 
 """
-
+This variable speficies the number of days old of a finished or failed
+execution to be removed by the cleaner. 
 """
 WEB_DAYS_ELAPSED_TO_DELETE_EXECUTION_RESULTS = int(os.environ.get('WEB_DAYS_ELAPSED_TO_DELETE_EXECUTION_RESULTS'))
 
-
+"""
+Specifiers the tasks states to be depicted in the execution detail of a given execution.
+The task state are given in a coma separed format. Example: running,skip.
+"""
 WEB_EXECUTION_DETAIL_SHOW_TASKS_STATES = os.environ.get('WEB_EXECUTION_DETAIL_SHOW_TASKS_STATES')
 
-
+"""
+Specifies where execution results are stored.
+"""
 EXECUTION_RESULTS_PATH = os.path.join(WEB_STORAGE_PATH,'results')
 
+
+"""
+If defined, it changes the active_url when verification email 
+is sended to the user.
+"""
+# WEB_VERIFICATION_EMAIL_URL_PRIFIX = ''
 
 # Application definition
 

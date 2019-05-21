@@ -10,6 +10,10 @@ Used to upload file outside the proyect base directory
 """
 upload_storage = FileSystemStorage(location=settings.MEDIA_ROOT)
 
+# This functions is not required (its used to mantain migrations compatibility)
+def get_upload_to(new_yaml_template, filename):
+    return "uploads/yaml_templates/file/{}".format(filename)
+
 
 class Yaml(models.Model):
     """

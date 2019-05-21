@@ -62,7 +62,7 @@ class Execution(models.Model):
     # Not used
     generate_mosaic = models.BooleanField(default=True)
     credits_consumed = models.IntegerField(default=0)
-    dag_id = models.CharField(max_length=1000)
+    dag_id = models.CharField(max_length=1000,default='no_definido')
 
     def get_dag_run(self):
         """
