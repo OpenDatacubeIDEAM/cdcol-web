@@ -226,10 +226,10 @@ class ExecutionCreateView(LoginRequiredMixin,TemplateView):
         if current_user.has_perm('execution.can_create_new_execution'):
 
             try:
-                print('Parameter Type')
+                # print('Parameter Type')
                 parameter = parameters.get(parameter_type=Parameter.AREA_TYPE)
                 time_parameters = parameters.filter(parameter_type=Parameter.TIME_PERIOD_TYPE)
-                print('Parameter aproved',parameter,time_parameters)
+                # print('Parameter aproved',parameter,time_parameters)
             except Parameter.DoesNotExist as e:
                 messages.error(
                     request,
