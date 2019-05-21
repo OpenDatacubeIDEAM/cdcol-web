@@ -230,7 +230,7 @@
                 <a href="{% url 'execution:copy' execution.id execution.version.id %}" class="btn btn-default btn-md btn-block">Replicar ejecución</a>
 
                 {% if execution.state == '2' or execution.state == '1' %}
-                <a href="{% url 'execution:cancel' execution.id %}" onclick="return confirm('¿Está seguro de cancelar esta ejecución?')" class="btn btn-danger btn-md btn-block">Cancelar ejecución</a>
+                <a id="btn-cancel-1" href="{% url 'execution:cancel' execution.id %}" onclick="return confirm('¿Está seguro de cancelar esta ejecución?')" class="btn btn-danger btn-md btn-block">Cancelar ejecución</a>
                 {% endif %}
               </nav>
               {% else %}
@@ -242,7 +242,7 @@
                 <!-- To copy an execution, we create a new execution with the given algorithm version -->
                 <a href="{% url 'execution:copy' execution.id execution.version.id %}" class="btn btn-default btn-md btn-block">Replicar ejecución</a>
                 {% if execution.state == '2' or execution.state == '1'%}
-                <a href="{% url 'execution:cancel' execution.id %}" onclick="return confirm('¿Está seguro de cancelar esta ejecución?')" class="btn btn-danger btn-md btn-block">Cancelar ejecución</a>
+                <a id="btn-cancel-2" href="{% url 'execution:cancel' execution.id %}" onclick="return confirm('¿Está seguro de cancelar esta ejecución?')" class="btn btn-danger btn-md btn-block">Cancelar ejecución</a>
                 {% endif %}
                 {% endif %}
               </nav>
@@ -398,6 +398,8 @@ $(document).ready(function() {
                 $('#execution_state').html(data.state);
                 $('#execution_start_date').html(data.start_date);
                 $('#execution_end_date').html(data.end_date);
+                $('#btn-cancel-1').hide();
+                $('#btn-cancel-2').hide();
               }
           },
           error: function(xhr,status,error) 
