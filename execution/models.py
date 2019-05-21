@@ -5,10 +5,18 @@ from algorithm.models import Version
 from algorithm.models import Parameter
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 
 from airflow.models import DagRun
 
 import os
+
+
+"""
+Used to upload file outside the proyect base directory
+"""
+upload_storage = FileSystemStorage(location=settings.MEDIA_ROOT)
+
 
 class Execution(models.Model):
     """Algorithms/Workflows execution data."""
@@ -279,8 +287,18 @@ def get_upload_to(instance, filename):
     return "input/{}/{}/{}".format(instance.execution.id, instance.parameter.name, filename)
 
 
+def file_upload_to(instance, filename):
+    """File will be uploaded to MEDIA_ROOT/<returned path>."""
+    
+    file_path = os.path.join('downloads',instance.execution.id)
+    return file_path
+
 class FileType(ExecutionParameter):
-    file = models.FileField(upload_to=get_upload_to, validators=[validate_file_extension])
+    file = models.FileField(
+        upload_to=file_upload_to,
+        storage=upload_storage,
+        validators=[validate_file_extension]
+    )
 
     def file_name(self):
         return self.file.name.split('/')[-1]
