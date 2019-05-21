@@ -7,11 +7,7 @@
   <div class="container">
     <ol class="breadcrumb">
       <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
-      {% if 'WorkflowReviewer' in user.groups  %}
-      <li><a href="{% url 'algorithm:version-review-list' %}">Versiones para Revisión</a></li>
-      {% else %}
       <li><a href="{% url 'algorithm:index' %}">Mis Algoritmos</a></li>
-      {% endif %}
       <li class="active">Detalle</li>
     </ol>
   </div>
