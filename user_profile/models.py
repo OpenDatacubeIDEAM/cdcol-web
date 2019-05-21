@@ -31,7 +31,13 @@ class UserProfile(models.Model):
     @property
     def used_credits(self):
         used_credits = self.user.execution_set.aggregate(Sum('credits_consumed'))
-        return used_credits['credits_consumed__sum']
+        credits = used_credits['credits_consumed__sum']
+
+        # If credits is None, means that the current user
+        # does not have executions in the database.
+        if credits:
+            return credits
+        return 0
 
     @property
     def available_credits(self):
