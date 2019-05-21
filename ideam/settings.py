@@ -104,12 +104,6 @@ Specifies where execution results are stored.
 EXECUTION_RESULTS_PATH = os.path.join(WEB_STORAGE_PATH,'results')
 
 
-"""
-If defined, it changes the active_url when verification email 
-is sended to the user.
-"""
-# WEB_VERIFICATION_EMAIL_URL_PRIFIX = ''
-
 # Application definition
 
 INSTALLED_APPS = [

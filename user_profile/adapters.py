@@ -22,17 +22,3 @@ class MyAccountAdapter(DefaultAccountAdapter):
             " contener minúsculas y mayúsculas."
         )
         raise ValidationError(message)
-
-    def send_mail(self, template_prefix, email, context):
-        """
-        Change active_url when verification email is sended to the 
-        user.
-        """
-        if hasattr(settings,'WEB_VERIFICATION_EMAIL_URL_PRIFIX'):
-            host_port = settings.WEB_VERIFICATION_EMAIL_URL_PRIFIX
-            if host_port:
-                url = host_port + 'verify-email/' + context['key']
-                context['activate_url'] = url
-
-        msg = self.render_mail(template_prefix, email, context)
-        msg.send()
