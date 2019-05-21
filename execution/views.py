@@ -1058,34 +1058,3 @@ class DownloadTaskLogView(LoginRequiredMixin,View):
         except FileNotFoundError as e:
             raise Http404('Archivo no encontrado: {}'.format(log_path))
 
-
-class DownloadParameterFile(LoginRequiredMixin,View):
-    """
-        Donwload the log or an airflow task.
-        the taks's logs are located at 'WEB_STORAGE_PATH/logs'
-    """
-
-    def get(self,request,*args,**kwargs):
-        execution_id = request.GET.get('exec_pk')
-        param_name = request.GET.get('param_name')
-        file_name = request.GET.get('file_name')
-
-        execution = get_object_or_404(Execution, id=execution_id)
-        file_path = os.path.join(
-            settings.MEDIA_ROOT,'input',execution_id,param_name,file_name
-        )
-
-        file_path = "{}/input/{}/{}/{}".format(
-            settings.MEDIA_ROOT, execution.id, parameter_name, file_name
-        )
-
-        try:
-            with open(file_path,'rb') as file:
-                mimetype = mimetypes.guess_type(file_path)
-                response = HttpResponse(file,content_type=mimetype)
-                response['Content-Disposition'] = 'attachment; filename={}'.format(
-                    os.path.basename(file_path)
-                )
-                return response
-        except FileNotFoundError as e:
-            raise Http404('Archivo no encontrado: {}'.format(file_path))

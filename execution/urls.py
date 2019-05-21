@@ -14,7 +14,6 @@ from execution.views import GenerateGeoTiffTask
 from execution.views import DownloadTaskLogView
 from execution.views import ExecutionStateJsonView
 from execution.views import ExecutionCopyView
-from execution.views import DownloadParameterFile
 
 urlpatterns = [
     path('', ExecutionIndexView.as_view(), name='index'),
@@ -45,5 +44,4 @@ urlpatterns = [
 
     # This is used by formBuilder.js
     path('parameters/version/<int:pk>/json', VersionParametersJson.as_view(), name='version-parameters'),
-    path('<int:exec_pk>/parameter/<str:param_name>/download/zip/<str:file_name>', DownloadParameterFile.as_view(), name='download_parameter_file'),
 ]

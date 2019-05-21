@@ -132,7 +132,7 @@
                   <td>{{ param.obtain_value}}</td>
                   {% if param.parameter.parameter_type == '12' %}
                   <td>
-                    <a href="{% url 'execution:download_parameter_file' execution.id param.parameter.name param.filetype.file_name %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
+                    <a href="{{ param.filetype.file.url }}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
                   </td>
                   {% endif %}
                 </tr>

@@ -244,7 +244,7 @@ if 'PRODUCTION' in os.environ :
 
 
 # Media
-MEDIA_URL = '/media/'
+MEDIA_URL = '/web_storage/'
 MEDIA_ROOT = WEB_STORAGE_PATH
 
 # `allauth`
