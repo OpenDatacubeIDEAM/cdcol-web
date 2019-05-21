@@ -154,13 +154,8 @@ class ExecutionCreateView(LoginRequiredMixin,TemplateView):
         # Current user
         current_user = request.user
 
-        # User approved credits
-        credits_approved = current_user.profile.credits_approved
-        # User credits consumed
-        credits_consumed = current_user.profile.credits_consumed
-
-        if credits_consumed:
-            credits_approved -= credits_consumed
+        # Avaliable credits
+        available_credits = current_user.profile.available_credits
 
         # Version selection form
         version_selection_form = VersionSelectionForm(
@@ -199,7 +194,7 @@ class ExecutionCreateView(LoginRequiredMixin,TemplateView):
             'average_rating': average_rating, 
             'executions': executions,
             'executed_params': executed_params, 
-            'credits_approved': credits_approved,
+            'credits_approved': available_credits,
             # return this parameter as a list is mandatory for
             # /static/js/formBuilder.js works properly
             'storage_units_version':list(storage_units_version)
@@ -216,13 +211,8 @@ class ExecutionCreateView(LoginRequiredMixin,TemplateView):
         # Current user
         current_user = request.user
 
-        # User approved credits
-        credits_approved = current_user.profile.credits_approved
-        # User credits consumed
-        credits_consumed = current_user.profile.credits_consumed
-
-        if credits_consumed:
-            credits_approved -= credits_consumed
+        # Available credits
+        available_credits = current_user.profile.available_credits
 
         parameters = Parameter.objects.filter(
             version=version, enabled=True
@@ -236,8 +226,10 @@ class ExecutionCreateView(LoginRequiredMixin,TemplateView):
         if current_user.has_perm('execution.can_create_new_execution'):
 
             try:
+                print('Parameter Type')
                 parameter = parameters.get(parameter_type=Parameter.AREA_TYPE)
                 time_parameters = parameters.filter(parameter_type=Parameter.TIME_PERIOD_TYPE)
+                print('Parameter aproved',parameter,time_parameters)
             except Parameter.DoesNotExist as e:
                 messages.error(
                     request,
@@ -248,7 +240,7 @@ class ExecutionCreateView(LoginRequiredMixin,TemplateView):
                 )
                 return redirect('execution:create', pk=version_pk)
 
-            if parameter and credits_approved:
+            if parameter:
                 anhos = 1
                 if time_parameters:
                     anhos = 0
@@ -265,8 +257,10 @@ class ExecutionCreateView(LoginRequiredMixin,TemplateView):
                 sw_longitude = int(request.POST.get('sw_longitude', False))
                 ne_latitude = int(request.POST.get('ne_latitude', False))
                 ne_longitude = int(request.POST.get('ne_longitude', False))
+
+                # Calculate and check credits for this execution
                 credits_calculated = (ne_latitude-sw_latitude)*(ne_longitude-sw_longitude)*anhos
-                if credits_calculated <= credits_approved:
+                if credits_calculated <= available_credits:
                     new_execution = Execution(
                         version=version,
                         description=textarea_name,
@@ -340,12 +334,7 @@ class ExecutionCopyView(ExecutionCreateView):
         current_user = request.user
 
         # User approved credits
-        credits_approved = current_user.profile.credits_approved
-        # User credits consumed
-        credits_consumed = current_user.profile.credits_consumed
-
-        if credits_consumed:
-            credits_approved -= credits_consumed
+        available_credits = current_user.profile.available_credits
 
         # Version selection form
         version_selection_form = VersionSelectionForm(
@@ -390,7 +379,7 @@ class ExecutionCopyView(ExecutionCreateView):
             'average_rating': average_rating, 
             'executions': executions,
             'executed_params': executed_params, 
-            'credits_approved': credits_approved,
+            'credits_approved': available_credits,
             # return this parameter as a list is mandatory for
             # /static/js/formBuilder.js works properly
             'storage_units_version':list(storage_units_version)
@@ -508,6 +497,7 @@ def create_execution_parameter_objects(parameters, request, execution):
             print("Getting elements for File parameter")
             file_name = "file_input_{}".format(parameter.id)
             file_value = request.FILES.get(file_name, False)
+            print("FILE ARGS",execution.id,parameter,type(file_value))
             # FILE TYPE
             new_execution_parameter = FileType(
                 execution=execution,
@@ -1067,3 +1057,35 @@ class DownloadTaskLogView(LoginRequiredMixin,View):
                 return response
         except FileNotFoundError as e:
             raise Http404('Archivo no encontrado: {}'.format(log_path))
+
+
+class DownloadParameterFile(LoginRequiredMixin,View):
+    """
+        Donwload the log or an airflow task.
+        the taks's logs are located at 'WEB_STORAGE_PATH/logs'
+    """
+
+    def get(self,request,*args,**kwargs):
+        execution_id = request.GET.get('exec_pk')
+        param_name = request.GET.get('param_name')
+        file_name = request.GET.get('file_name')
+
+        execution = get_object_or_404(Execution, id=execution_id)
+        file_path = os.path.join(
+            settings.MEDIA_ROOT,'input',execution_id,param_name,file_name
+        )
+
+        file_path = "{}/input/{}/{}/{}".format(
+            settings.MEDIA_ROOT, execution.id, parameter_name, file_name
+        )
+
+        try:
+            with open(file_path,'rb') as file:
+                mimetype = mimetypes.guess_type(file_path)
+                response = HttpResponse(file,content_type=mimetype)
+                response['Content-Disposition'] = 'attachment; filename={}'.format(
+                    os.path.basename(file_path)
+                )
+                return response
+        except FileNotFoundError as e:
+            raise Http404('Archivo no encontrado: {}'.format(file_path))

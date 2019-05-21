@@ -289,8 +289,8 @@ def get_upload_to(instance, filename):
 
 def file_upload_to(instance, filename):
     """File will be uploaded to MEDIA_ROOT/<returned path>."""
-    
-    file_path = os.path.join('downloads',instance.execution.id)
+    executed_id_str = str(instance.execution.id)
+    file_path = os.path.join('downloads',executed_id_str,filename)
     return file_path
 
 class FileType(ExecutionParameter):

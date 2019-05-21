@@ -164,7 +164,7 @@
 
             <div class="section light-gray-bg">
               <div class="container">
-                <form id="mainForm" role="form" class="form-horizontal col-md-6 col-md-offset-1" method="POST" action="{% url 'execution:create' algorithm.id %}" enctype="multipart/form-data">
+                <form id="mainForm" role="form" class="form-horizontal col-md-6 col-md-offset-1" method="POST" action="{% url 'execution:create' version.id %}" enctype="multipart/form-data">
                 {% csrf_token %}
 
                   <!-- Parametro 1 -->

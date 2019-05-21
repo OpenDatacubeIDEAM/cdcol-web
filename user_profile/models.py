@@ -29,9 +29,16 @@ class UserProfile(models.Model):
     credits_approved = models.IntegerField(default=8, blank=True, null=True)
 
     @property
-    def used_credits(self):
-        used_credits = self.user.execution_set.aggregate(Sum('credits_consumed'))
-        credits = used_credits['credits_consumed__sum']
+    def credits_in_use(self):
+        """
+        It is the sum of credits_consumed by all executions
+        performed by the current user, but this executions are 
+        in state pending and running.
+        """
+        states = [Execution.ENQUEUED_STATE, Execution.EXECUTING_STATE]
+        executions = self.user.execution_set.filter(state__in=states)
+        credits = executions.aggregate(Sum('credits_consumed'))
+        credits = credits['credits_consumed__sum']
 
         # If credits is None, means that the current user
         # does not have executions in the database.
@@ -41,28 +48,28 @@ class UserProfile(models.Model):
 
     @property
     def available_credits(self):
-        return self.credits_approved - self.used_credits
+        return self.credits_approved - self.credits_in_use
     
-    @property
-    def credits_consumed(self):
-        """Return the number of credits consumed by the user.
+    # @property
+    # def credits_consumed(self):
+    #     """Return the number of credits consumed by the user.
 
-        Each execution has a number of credits it consumes. 
-        The credits consumed by the user is the sum of all credits 
-        consumed by each execution the user has performed.
-        """
+    #     Each execution has a number of credits it consumes. 
+    #     The credits consumed by the user is the sum of all credits 
+    #     consumed by each execution the user has performed.
+    #     """
 
-        # Getting the number of credicts used for all user executions
-        states = [Execution.ENQUEUED_STATE, Execution.EXECUTING_STATE]
-        credits_used = self.user.execution_set.filter(
-            state__in=states
-        ).aggregate(Sum('credits_consumed'))
+    #     # Getting the number of credicts used for all user executions
+    #     states = [Execution.ENQUEUED_STATE, Execution.EXECUTING_STATE]
+    #     credits_used = self.user.execution_set.filter(
+    #         state__in=states
+    #     ).aggregate(Sum('credits_consumed'))
 
-        # Number of credits consumed by all user executions
-        credits_consumed = credits_used['credits_consumed__sum']
+    #     # Number of credits consumed by all user executions
+    #     credits_consumed = credits_used['credits_consumed__sum']
 
-        # if the nombre of credits consumed is None it resturns 0.
-        return credits_consumed or 0
+    #     # if the nombre of credits consumed is None it resturns 0.
+    #     return credits_consumed or 0
 
 
     def get_groups(self):
