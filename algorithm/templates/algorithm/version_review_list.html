@@ -65,6 +65,7 @@
   <script>
       $(document).ready(function() {
           var table = $('#versions').DataTable({
+              "order": [[ 0, "desc" ]],
               "serverSide": true,
               "ajax": '/api/versions/?format=datatables',
               "columns": [

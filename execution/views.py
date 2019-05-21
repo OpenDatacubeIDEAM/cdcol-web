@@ -220,7 +220,7 @@ class ExecutionCreateView(LoginRequiredMixin,TemplateView):
 
         textarea_name = request.POST.get('textarea_name', None)
         checkbox_generate_mosaic = request.POST.get('checkbox_generate_mosaic', None)
-        if checkbox_generate_mosaic is None :
+        if checkbox_generate_mosaic is None:
             checkbox_generate_mosaic = False;
       
         if current_user.has_perm('execution.can_create_new_execution'):

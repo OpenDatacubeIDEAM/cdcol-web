@@ -50,28 +50,6 @@ class UserProfile(models.Model):
     def available_credits(self):
         return self.credits_approved - self.credits_in_use
     
-    # @property
-    # def credits_consumed(self):
-    #     """Return the number of credits consumed by the user.
-
-    #     Each execution has a number of credits it consumes. 
-    #     The credits consumed by the user is the sum of all credits 
-    #     consumed by each execution the user has performed.
-    #     """
-
-    #     # Getting the number of credicts used for all user executions
-    #     states = [Execution.ENQUEUED_STATE, Execution.EXECUTING_STATE]
-    #     credits_used = self.user.execution_set.filter(
-    #         state__in=states
-    #     ).aggregate(Sum('credits_consumed'))
-
-    #     # Number of credits consumed by all user executions
-    #     credits_consumed = credits_used['credits_consumed__sum']
-
-    #     # if the nombre of credits consumed is None it resturns 0.
-    #     return credits_consumed or 0
-
-
     def get_groups(self):
         """Return user associated groups for user profile update page."""
         
@@ -90,6 +68,14 @@ class UserProfile(models.Model):
 
     def is_data_admin(self):
         return self.user.groups.filter(name='DataAdmin').exists()
+
+    @property
+    def is_workflow_reviewer(self):
+        """
+        Return true if the current user has the role 
+        'WorkflowReviewer'.
+        """
+        return self.user.groups.filter(name='WorkflowReviewer').exists()
 
     def get_active_executions(self):
         """

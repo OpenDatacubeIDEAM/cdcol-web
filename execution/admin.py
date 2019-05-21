@@ -41,9 +41,9 @@ class ExecutionAdmin(admin.ModelAdmin):
     actions = ['cancel_execution']
     inlines = [TaskInline]
 
-    # def save_model(self, request, obj, form, change):
-    #     obj.user = request.user
-    #     raise PermissionDenied
+    def save_model(self, request, obj, form, change):
+        obj.user = request.user
+        raise PermissionDenied
 
     def cancel_execution(self, request, queryset):
         for execution in queryset:
