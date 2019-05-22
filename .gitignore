@@ -93,3 +93,6 @@ media/*
 # Airflow Files
 airflow/logs/
 airflow/unittests.cfg
+
+# devel 
+devel/api-rest

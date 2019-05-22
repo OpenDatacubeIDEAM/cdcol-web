@@ -1,7 +1,7 @@
 # Base image
 FROM python:3.6.8
 # Image propietary
-LABEL maintainer="Aurelio Vivas aurelio.vivas@correounivalle.edu.co"
+LABEL maintainer="Aurelio Vivas aa.vivas@uniandes.edu.co"
 # Working directory inside the container
 WORKDIR /usr/src/app
 # Copy the project into the container current workdir
