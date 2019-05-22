@@ -75,6 +75,11 @@
         "storageunit"
       ],
       [
+        "can_edit_units",
+        "storage",
+        "storageunit"
+      ],
+      [
         "can_list_units",
         "storage",
         "storageunit"

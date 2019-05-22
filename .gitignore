@@ -96,3 +96,7 @@ airflow/unittests.cfg
 
 # devel 
 devel/api-rest
+
+# Django static files 
+static/admin/
+static/rest_framework/
