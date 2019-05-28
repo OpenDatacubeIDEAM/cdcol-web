@@ -208,6 +208,56 @@ $(document).ready(function () {
         });
     }
 
+    function createStorageUnitField(data,form){
+      console.log("Creating StorageUnitType field");
+
+      storage_select = document.createElement("select");
+      storage_select.size = 8;
+      storage_select.style.width = "100%";
+      storage_select.className = "form-control";
+
+      option = document.createElement("option");
+      option.text = 'storage_1';
+      bands_select = document.createElement("select");
+      bands_select.size = 8;
+      bands_select.style.width = "100%";
+      bands_select.className = "form-control";
+
+      band_option = document.createElement("option");
+      band_option.text = "option_1"
+
+      div_0 = document.createElement("div");
+      div_0.className = "col-md-12"
+
+      storage_label = document.createElement("label");
+      storage_label.innerHTML = "<b>Posibles unidades de almacenamiento origen</b>";
+
+      div_0.appendChild(storage_label);
+
+      div_1 = document.createElement("div");
+      div_1.className = "col-md-6"
+
+      div_1.appendChild(storage_select);
+
+      div_2 = document.createElement("div");
+      div_2.className = "col-md-6"
+
+      div_2.appendChild(bands_select);
+
+      div = document.createElement("div");
+      div.className = "row"
+      div.style.padding = "10px 0px 20px 0px";
+
+
+      div.appendChild(div_0);
+      div.appendChild(div_1);
+      div.appendChild(div_2);
+
+
+      form.appendChild(div);
+
+    };
+
     function createForm(json) {
         executed_params = JSON.parse(executed_params);
         credits_approved = JSON.parse(credits_approved);
@@ -224,6 +274,10 @@ $(document).ready(function () {
         console.log(executed_params);
         // obtaining the form
         var f = document.getElementById("mainForm");
+
+
+        createStorageUnitField(json,f);
+
         // iterating over the parameters
         jQuery.each(json, function (i, parameter) {
             var input_description = "";
@@ -428,95 +482,95 @@ $(document).ready(function () {
                     break;
                 case "8":
                     console.log("Creating StorageUnitType field");
-                    // creating initial divs
-                    var tmp_storage = document.createElement("div");
-                    var tmp_bands = document.createElement("div");
-                    tmp_storage.id = "storage_band_div";
-                    tmp_bands.id = "band_div";
-                    f.appendChild(tmp_storage);
-                    f.appendChild(tmp_bands);
-                    //getting the json
-                    $.getJSON( "/storage/storage_units", function( su_data ) {
-                        console.log('StorageUnitType data',su_data)
-                        // storage_unit_select
-                        var storage_unit_select = document.createElement("select");
-                        storage_unit_select.id = "storage_unit_"+pk;
-                        storage_unit_select.name = "storage_unit_"+pk;
-                        storage_unit_select.className = "form-control";
-                        storage_unit_select.onchange = getBands;
-                        // storage_unit_options
-                        var storage_unit_option = document.createElement("option");
-                        var storage_unit_executed_param = getExecutedParam(pk);
-                        jQuery.each(su_data, function (i, storage_unit_value) {
-                            console.log('Storage unit type fields alias',storage_unit_value.fields.alias)
-                            console.log('Storage unit type fields version',storage_units_version)
-                            console.log('Storage unit type indexOf fields',storage_units_version.indexOf(storage_unit_value.fields.alias))
-                            if(storage_units_version.indexOf(storage_unit_value.fields.alias)>-1){
-                                var storage_pk = storage_unit_value.pk;
-                                var storage_name = storage_unit_value.fields.name;
-                                storage_unit_option = document.createElement("option");
-                                storage_unit_option.value = storage_pk;
-                                storage_unit_option.text = storage_unit_value.fields.alias;
-                                storage_unit_select.appendChild(storage_unit_option);
-                                if(storage_unit_executed_param && storage_name === storage_unit_executed_param.storage_unit_name)
-                                {
-                                    storage_unit_select.value = storage_pk;
-                                }
-                            }
+                    // // creating initial divs
+                    // var tmp_storage = document.createElement("div");
+                    // var tmp_bands = document.createElement("div");
+                    // tmp_storage.id = "storage_band_div";
+                    // tmp_bands.id = "band_div";
+                    // f.appendChild(tmp_storage);
+                    // f.appendChild(tmp_bands);
+                    // //getting the json
+                    // $.getJSON( "/storage/storage_units", function( su_data ) {
+                    //     console.log('StorageUnitType data',su_data)
+                    //     // storage_unit_select
+                    //     var storage_unit_select = document.createElement("select");
+                    //     storage_unit_select.id = "storage_unit_"+pk;
+                    //     storage_unit_select.name = "storage_unit_"+pk;
+                    //     storage_unit_select.className = "form-control";
+                    //     storage_unit_select.onchange = getBands;
+                    //     // storage_unit_options
+                    //     var storage_unit_option = document.createElement("option");
+                    //     var storage_unit_executed_param = getExecutedParam(pk);
+                    //     jQuery.each(su_data, function (i, storage_unit_value) {
+                    //         console.log('Storage unit type fields alias',storage_unit_value.fields.alias)
+                    //         console.log('Storage unit type fields version',storage_units_version)
+                    //         console.log('Storage unit type indexOf fields',storage_units_version.indexOf(storage_unit_value.fields.alias))
+                    //         if(storage_units_version.indexOf(storage_unit_value.fields.alias)>-1){
+                    //             var storage_pk = storage_unit_value.pk;
+                    //             var storage_name = storage_unit_value.fields.name;
+                    //             storage_unit_option = document.createElement("option");
+                    //             storage_unit_option.value = storage_pk;
+                    //             storage_unit_option.text = storage_unit_value.fields.alias;
+                    //             storage_unit_select.appendChild(storage_unit_option);
+                    //             if(storage_unit_executed_param && storage_name === storage_unit_executed_param.storage_unit_name)
+                    //             {
+                    //                 storage_unit_select.value = storage_pk;
+                    //             }
+                    //         }
 
-                        });
-                        // bands_select
-                        var bands_select = document.createElement("select");
-                        bands_select.id = "bands_"+pk;
-                        bands_select.name = "bands_"+pk;
-                        bands_select.className = "form-control";
-                        bands_select.multiple = true;
-                        bands_select.required = parameter.fields.required;
-                        bands_select.size = 8;
-                        // ===== LABELS =====
-                        var storage_unit_label = document.createElement("label");
-                        storage_unit_label.innerHTML = "<b>Posibles unidades de almacenamiento origen"+requiredText+input_description+"</b>";
-                        var band_label = document.createElement("label");
-                        band_label.innerHTML = "<b>Bandas de compuesto</b>";
-                        // ===== Paragraphs =====
-                        var storage_bands_text = document.createElement("p");
-                        storage_bands_text.innerHTML = parameter.fields.help_text;
-                        storage_bands_text.className = "help-block";
-                        // ===== DIVs =====
-                        var storage_unit_param_div = document.getElementById("storage_band_div");
-                        storage_unit_param_div.className = "form-group";
-                        var band_param_div = document.getElementById("band_div");
-                        band_param_div.className = "form-group";
-                        // appending everything
-                        storage_unit_param_div.appendChild(storage_unit_label);
-                        storage_unit_param_div.appendChild(storage_unit_select);
-                        band_param_div.appendChild(band_label);
-                        band_param_div.appendChild(bands_select);
-                        band_param_div.appendChild(storage_bands_text);
-                        // getting the bands for the storage unit;
-                        if(storage_unit_executed_param)
-                        {
-                            getBands(parseFloat(storage_unit_select.value), pk, function(){
-                                var bands = storage_unit_executed_param.bands.split(",");
-                                var options = bands_select.options;
-                                for(var i = 0, length = options.length; i< length; i++)
-                                {
-                                    if(bands.includes(options[i].value))
-                                    {
-                                        options[i].selected = true;
-                                    }
-                                    else
-                                    {
-                                        options[i].selected = false;
-                                    }
-                                }
-                            });
-                        }
-                        else
-                        {
-                            getBands(parseFloat(storage_unit_select.value), pk);
-                        }
-                    });
+                    //     });
+                    //     // bands_select
+                    //     var bands_select = document.createElement("select");
+                    //     bands_select.id = "bands_"+pk;
+                    //     bands_select.name = "bands_"+pk;
+                    //     bands_select.className = "form-control";
+                    //     bands_select.multiple = true;
+                    //     bands_select.required = parameter.fields.required;
+                    //     bands_select.size = 8;
+                    //     // ===== LABELS =====
+                    //     var storage_unit_label = document.createElement("label");
+                    //     storage_unit_label.innerHTML = "<b>Posibles unidades de almacenamiento origen"+requiredText+input_description+"</b>";
+                    //     var band_label = document.createElement("label");
+                    //     band_label.innerHTML = "<b>Bandas de compuesto</b>";
+                    //     // ===== Paragraphs =====
+                    //     var storage_bands_text = document.createElement("p");
+                    //     storage_bands_text.innerHTML = parameter.fields.help_text;
+                    //     storage_bands_text.className = "help-block";
+                    //     // ===== DIVs =====
+                    //     var storage_unit_param_div = document.getElementById("storage_band_div");
+                    //     storage_unit_param_div.className = "form-group";
+                    //     var band_param_div = document.getElementById("band_div");
+                    //     band_param_div.className = "form-group";
+                    //     // appending everything
+                    //     storage_unit_param_div.appendChild(storage_unit_label);
+                    //     storage_unit_param_div.appendChild(storage_unit_select);
+                    //     band_param_div.appendChild(band_label);
+                    //     band_param_div.appendChild(bands_select);
+                    //     band_param_div.appendChild(storage_bands_text);
+                    //     // getting the bands for the storage unit;
+                    //     if(storage_unit_executed_param)
+                    //     {
+                    //         getBands(parseFloat(storage_unit_select.value), pk, function(){
+                    //             var bands = storage_unit_executed_param.bands.split(",");
+                    //             var options = bands_select.options;
+                    //             for(var i = 0, length = options.length; i< length; i++)
+                    //             {
+                    //                 if(bands.includes(options[i].value))
+                    //                 {
+                    //                     options[i].selected = true;
+                    //                 }
+                    //                 else
+                    //                 {
+                    //                     options[i].selected = false;
+                    //                 }
+                    //             }
+                    //         });
+                    //     }
+                    //     else
+                    //     {
+                    //         getBands(parseFloat(storage_unit_select.value), pk);
+                    //     }
+                    // });
                     break;
                 case "9":
                     console.log("Creating TimePeriod field");
