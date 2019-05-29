@@ -276,6 +276,7 @@ $(document).ready(function () {
       // It is an object with a key for each storage unit name.
       // keep the selected bands for each storage unit.
       storage_selection = {};
+      current_storage_option = null;
 
       // Keep the current selected storage unit
       // current_storage_option = null;
@@ -350,16 +351,43 @@ $(document).ready(function () {
       //   storage_select.add(option);
       // }
 
+      // function updateSelectedStorageBands(){
+      //   storage_name = storage_option.storage_name;
+      //   bands_select = storage_selection[storage_name];
+      //   selected_bands_options = bands_select.selectedOptions
+      //   selected = [];
+      //   for (i = 0; i < selected_bands_options.length; ++i){
+      //     selected.push(selected_bands_options[i].value);
+      //   }
+      //   sname = current_storage_option.storage_name;
+      //   current_storage_option.text = `${sname} (${selected.length} bandas)`;
+
+      //   // Save the selected bands for the current storage unit.
+      //   storage_selection[sname]['selected'] = selected;
+      //   storage_selection[sname]['select_obj'] = bands_select.cloneNode(true);
+      //   storage_selection[sname]['select_obj'].id = current_storage_option.storage_id;
+      //   console.log('cloneNode',storage_selection);
+      //   // console.log('bands_select_clone',bands_select);
+      
+
+      function updateBandsCounter(){
+        storage_name = current_storage_option.storage_name;
+        bands_select = storage_selection[storage_name];
+        bands_options = bands_select.selectedOptions;
+        current_storage_option.text = `${storage_name} (${bands_options.length} bandas)`;
+      }
+
       function changeBandsSelect(storage_option){
+        console.log('band select',storage_option.storage_name);
         storage_name = storage_option.storage_name;
         bands_select = storage_selection[storage_name];
-        // div_2.innerHTML = ''
-        // div_2.appendChild(bands_select);
+
         for(key in storage_selection){
           select = storage_selection[key];
-          select.style.visibility = 'hidden';
+          select.style.display = 'none';
         }
-        bands_select.style.visibility = 'visible';
+        bands_select.style.display = 'block';
+        current_storage_option = storage_option;
       }
 
       $.ajax({
@@ -376,8 +404,7 @@ $(document).ready(function () {
             function(data, status){
 
               storage_option = document.createElement("option");
-              // storage_option.text = `${storage.fields.name} (${selected.length} bandas)`;
-              storage_option.text = `${storage.fields.name}`;
+              storage_option.text = `${storage.fields.name} (0 bandas)`;
               storage_option.storage_name = storage.fields.name;
               storage_option.addEventListener("click", function(event){
                 changeBandsSelect(event.target);
@@ -390,19 +417,28 @@ $(document).ready(function () {
               bands_select.style.width = "100%";
               bands_select.className = "form-control";
               bands_select.multiple = true;
-              bands_select.style.visibility = 'hidden';
+              bands_select.style.display = 'none';
 
               bands = data.metadata.measurements;
               for(i in bands){
                 option = document.createElement("option");
                 option.text = bands[i].name;
+                option.addEventListener("click", function(event){
+                  updateBandsCounter();
+                });
                 bands_select.add(option);
               }
               div_2.appendChild(bands_select);
               storage_selection[storage.fields.name] = bands_select;
+              storage_select.selectedIndex = 0;
+              first_selected_option = storage_select.selectedOptions[0];
+              changeBandsSelect(first_selected_option);
+              // first_selected_option.click();
 
             });
           });
+
+          storage_select.selectedIndex = 0;
 
         },
         error: function( data ) {
