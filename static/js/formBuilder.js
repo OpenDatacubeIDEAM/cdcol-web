@@ -273,10 +273,14 @@ $(document).ready(function () {
 
       // Keep the storage unit selecction state.
 
+      // It is an object with a key for each storage unit name.
+      // keep the selected bands for each storage unit.
       storage_selection = {};
+
+      // Keep the current selected storage unit
       current_storage_option = null;
 
-      function updateSelectedStorage(){
+      function updateSelectedStorageBands(){
         selected_bands_options = bands_select.selectedOptions
         selected = [];
         for (i = 0; i < selected_bands_options.length; ++i){
@@ -284,6 +288,9 @@ $(document).ready(function () {
         }
         sname = current_storage_option.storage_name;
         current_storage_option.text = `${sname} (${selected.length} bandas)`;
+
+        // Save the selected bands for the current storage unit.
+        storage_selection[sname]['selected'] = selected;
 
       }
 
@@ -294,13 +301,25 @@ $(document).ready(function () {
         sdata = storage_selection[sname];
         bands = sdata['bands'];
 
+        bands_select.innerHTML = '';
         for(i in bands){
           // console.log('band',band);
           option = document.createElement("option");
           option.text = bands[i].name;
-          option.addEventListener("click", updateSelectedStorage);
+          option.id = bands[i].name;
+          option.addEventListener("click", updateSelectedStorageBands);
           bands_select.add(option);
         }
+
+        // select the previous selected bands if there are 
+        // previous selected.
+        previous_bands = sdata['selected'];
+        for(j in previous_bands){
+          band_name = previous_bands[j];
+          option = document.getElementById(band_name);
+          option.selected = true;
+        }
+
           
       }
 
@@ -315,30 +334,28 @@ $(document).ready(function () {
         storage_select.add(option);
       }
 
+      // function initializeSelects()
+
       $.ajax({
         url: `/storage/storage_units/?version_pk=${version_number}`,
         dataType: 'json',
-        success: function( data ) {
-          data.forEach(function (storage) {
-
-            name = storage.fields.name;
-            pk = storage.pk;
+        success: function( storages ) {
+          
+          storages.forEach(function (storage) {
 
             $.post("/storage/json/",
             {
-              'storage_unit_id': pk,
+              'storage_unit_id': storage.pk,
             },
             function(data, status){
-
-              storage_selection[name] = {
+              
+              storage_data = {
                 bands:data.metadata.measurements,
                 selected:[]
               }
-
-              for (key in storage_selection){
-                sdata = storage_selection[key];
-                fillStorageSelect(key,sdata);
-              }
+              storage_selection[storage.fields.name] = storage_data
+              console.log('name',storage.fields.name,'data',data);
+              fillStorageSelect(storage.fields.name,storage_data);
 
             });
           });
@@ -348,11 +365,6 @@ $(document).ready(function () {
           console.log('Error retrieving the storage units');
         }
       });
-                  l = 'LS7_ETM_LEDAPS';
-            console.log('dic_',storage_selection['LS7_ETM_LEDAPS']);
-          
-          console.log('dic',storage_selection);
-          console.log('storages',storage_selection);
     }
 
     function createForm(json) {
