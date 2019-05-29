@@ -216,8 +216,19 @@ class ExecutionParameter(models.Model):
             response = {}
             storages = []
             for storage_name, bands in zip(storages_names,storage_bands):
-                storages.append({storage_name:bands})
-            response['storages'] = storages
+                if bands:
+                    storages.append(
+                        { 
+                            'name': storage_name,
+                            'bands':bands.split(',')
+                        }
+                    )
+
+            response = {
+                'function_name':self.parameter.function_name,
+                'storages':storages
+            }
+
         response['parameter_pk'] = self.parameter.pk
         response['parameter_type'] = self.parameter.parameter_type
         return response
