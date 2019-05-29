@@ -114,7 +114,14 @@ class StorageObtainJsonListView(View):
         This method is only used by /static/js/formBuilder.js 
         (lines 438 and 600) to get the given storage unit data.
         """
-        data = serializers.serialize("json", StorageUnit.objects.all())
+
+        version_pk = request.GET.get('version_pk',None)
+        if version_pk:
+            queryset = StorageUnit.objects.filter(versionstorageunit__version__pk=version_pk)
+        else:
+            queryset = StorageUnit.objects.all()
+
+        data = serializers.serialize("json", queryset)
         return HttpResponse(data, content_type='application/json')     
 
 

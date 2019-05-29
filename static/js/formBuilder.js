@@ -210,7 +210,9 @@ $(document).ready(function () {
 
     function createStorageUnitField(data,form){
       console.log("Creating StorageUnitType field");
+      console.log('data create',data)
 
+      // Form Layout
       storage_select = document.createElement("select");
       storage_select.size = 8;
       storage_select.style.width = "100%";
@@ -224,7 +226,8 @@ $(document).ready(function () {
       bands_select.className = "form-control";
 
       band_option = document.createElement("option");
-      band_option.text = "option_1"
+      band_option.text = "option_1";
+      bands_select.multiple = true;
 
       div_0 = document.createElement("div");
       div_0.className = "col-md-12"
@@ -253,10 +256,87 @@ $(document).ready(function () {
       div.appendChild(div_1);
       div.appendChild(div_2);
 
-
       form.appendChild(div);
 
-    };
+
+      // Insert data into the form.
+      // storage_params = data.filter(function(parameter){
+      //   return parameter.fields.parameter_type == "8";
+      // });
+      // console.log('params',storage_params);
+
+      // The version number is extracted from the URL 
+      // If the URL ahs a different format that the exepcted 
+      // this will fail.
+      path_url_array = window.location.pathname.split('/');
+      version_number = path_url_array[path_url_array.length-1];
+
+      // Keep the storage unit selecction state.
+
+      storage_selection = {};
+
+      function fillBandsSelect(event){
+          
+        sname = event.target.text;
+        sdata = storage_selection[sname];
+        bands = sdata['bands'];
+
+        for(i in bands){
+          // console.log('band',band);
+          option = document.createElement("option");
+          option.text = bands[i].name;
+          // option.addEventListener("click", fillBandsSelect);
+          bands_select.add(option);
+        }
+          
+      }
+
+      function fillStorageSelect(sname,sdata){
+        option = document.createElement("option");
+        option.text = name;
+        option.addEventListener("click", fillBandsSelect);
+        storage_select.add(option);
+      }
+
+      $.ajax({
+        url: `/storage/storage_units/?version_pk=${version_number}`,
+        dataType: 'json',
+        success: function( data ) {
+          data.forEach(function (storage) {
+
+            name = storage.fields.name;
+            pk = storage.pk;
+
+            $.post("/storage/json/",
+            {
+              'storage_unit_id': pk,
+            },
+            function(data, status){
+
+              storage_selection[name] = {
+                bands:data.metadata.measurements,
+                selected:[]
+              }
+
+              for (key in storage_selection){
+                sdata = storage_selection[key];
+                fillStorageSelect(key,sdata);
+              }
+
+            });
+          });
+
+        },
+        error: function( data ) {
+          console.log('Error retrieving the storage units');
+        }
+      });
+                  l = 'LS7_ETM_LEDAPS';
+            console.log('dic_',storage_selection['LS7_ETM_LEDAPS']);
+          
+          console.log('dic',storage_selection);
+          console.log('storages',storage_selection);
+    }
 
     function createForm(json) {
         executed_params = JSON.parse(executed_params);
