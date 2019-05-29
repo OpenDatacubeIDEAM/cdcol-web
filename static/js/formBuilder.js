@@ -274,10 +274,23 @@ $(document).ready(function () {
       // Keep the storage unit selecction state.
 
       storage_selection = {};
+      current_storage_option = null;
 
-      function fillBandsSelect(event){
-          
-        sname = event.target.text;
+      function updateSelectedStorage(){
+        selected_bands_options = bands_select.selectedOptions
+        selected = [];
+        for (i = 0; i < selected_bands_options.length; ++i){
+          selected.push(selected_bands_options[i].value);
+        }
+        sname = current_storage_option.storage_name;
+        current_storage_option.text = `${sname} (${selected.length} bandas)`;
+
+      }
+
+      function fillBandsSelect(storage_option){
+        
+        current_storage_option = storage_option;
+        sname = storage_option.storage_name;
         sdata = storage_selection[sname];
         bands = sdata['bands'];
 
@@ -285,7 +298,7 @@ $(document).ready(function () {
           // console.log('band',band);
           option = document.createElement("option");
           option.text = bands[i].name;
-          // option.addEventListener("click", fillBandsSelect);
+          option.addEventListener("click", updateSelectedStorage);
           bands_select.add(option);
         }
           
@@ -293,8 +306,12 @@ $(document).ready(function () {
 
       function fillStorageSelect(sname,sdata){
         option = document.createElement("option");
-        option.text = name;
-        option.addEventListener("click", fillBandsSelect);
+        selected = sdata['selected'];
+        option.text = `${sname} (${selected.length} bandas)`;
+        option.storage_name = sname;
+        option.addEventListener("click", function(event){
+          fillBandsSelect(event.target);
+        });
         storage_select.add(option);
       }
 
