@@ -46,6 +46,7 @@ from execution.models import StorageUnitBandType
 from execution.models import TimePeriodType
 from execution.models import FileType
 from execution.models import StorageUnitNoBandType
+from execution.models import MultiStorageUnitType
 from execution.models import Task
 
 from storage.models import StorageUnit
@@ -515,6 +516,29 @@ def create_execution_parameter_objects(parameters, request, execution):
                 execution=execution,
                 parameter=parameter,
                 storage_unit_name=select_value.name
+            )
+            new_execution_parameter.save()
+        if parameter.parameter_type == "14":
+            print("Getting elements for MultiStorageUnitType parameter")
+
+            storages_names = []
+            storages_bands = []
+            versions_storages = parameter.version.versionstorageunit_set.all()
+            for version_storage in versions_storages:
+                select_id = 'storage_{}_parameter_{}'.format(
+                    version_storage.storage_unit.pk,parameter.pk
+                )
+                values = request.POST.getlist(select_id,None)
+
+                storages_names.append(version_storage.storage_unit.name)
+                storages_bands.append(','.join(values))
+
+            new_execution_parameter = MultiStorageUnitType(
+                execution=execution,
+                parameter=parameter,
+                storage_unit_name=';'.join(storages_names),
+                bands=';'.join(storages_bands)
+
             )
             new_execution_parameter.save()
 

@@ -245,6 +245,8 @@ class Parameter(models.Model):
     # MULTIPLE_CHOICE_LIST_TYPE = '11'
     FILE_TYPE = '12'
     STORAGE_UNIT_SIMPLE_TYPE = '13'
+    STORAGE_UNIT_MULTIPLE_TYPE = '14'
+
     # full parameter type list
     PARAMETER_TYPES = (
         (STRING_TYPE, "STRING"),
@@ -260,6 +262,7 @@ class Parameter(models.Model):
         # (MULTIPLE_CHOICE_LIST_TYPE, "LISTA DE SELECCIÓN MÚLTIPLE"),
         (FILE_TYPE, "ARCHIVO"),
         (STORAGE_UNIT_SIMPLE_TYPE, "UNIDAD ALMACENAMIENTO SIN BANDAS"),
+        (STORAGE_UNIT_MULTIPLE_TYPE, "MULTI UNIDAD DE ALMACENAMIENTO"),
     )
 
     version = models.ForeignKey(Version, on_delete=models.CASCADE)

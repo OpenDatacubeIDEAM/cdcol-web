@@ -210,6 +210,14 @@ class ExecutionParameter(models.Model):
                 'storage_unit_name': self.storageunitnobandtype.storage_unit_name,
                 'type': self.parameter.parameter_type,
             }
+        elif parameter_type == "14":
+            storages_names = self.multistorageunittype.storage_unit_name.split(';')
+            storage_bands = self.multistorageunittype.bands.split(';')
+            response = {}
+            storages = []
+            for storage_name, bands in zip(storages_names,storage_bands):
+                storages.append({storage_name:bands})
+            response['storages'] = storages
         response['parameter_pk'] = self.parameter.pk
         response['parameter_type'] = self.parameter.parameter_type
         return response
@@ -263,6 +271,12 @@ class StorageUnitBandType(ExecutionParameter):
     def __unicode__(self):
         return "{} - {}".format(self.execution, self.storage_unit_name)
 
+class MultiStorageUnitType(ExecutionParameter):
+    storage_unit_name = models.CharField(max_length=200)
+    bands = models.CharField(max_length=200)
+
+    def __unicode__(self):
+        return "{} - {}".format(self.execution, self.storage_unit_name)
 
 class StorageUnitNoBandType(ExecutionParameter):
     storage_unit_name = models.CharField(max_length=200)
