@@ -147,9 +147,10 @@ class ExecutionParameter(models.Model):
         elif parameter_type == "13":
             response = "{}".format(self.storageunitnobandtype.storage_unit_name)
         elif parameter_type == "14":
-            name = self.multistorageunittype.storage_unit_name
-            bands = self.multistorageunittype.bands
-            response = "{} {}".format(name, bands)
+            names = self.multistorageunittype.storage_unit_name.split(';')
+            bands = self.multistorageunittype.bands.split(';')
+            for storage_name, band in zip(names,bands):
+                response = "{}:{}".format(storage_name, band)
         return response
 
     def obtain_json_values(self):
