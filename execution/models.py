@@ -150,7 +150,7 @@ class ExecutionParameter(models.Model):
             names = self.multistorageunittype.storage_unit_name.split(';')
             bands = self.multistorageunittype.bands.split(';')
             for storage_name, band in zip(names,bands):
-                response = "{}:{}".format(storage_name, band)
+                response = "{}:{}\n".format(storage_name, band)
         return response
 
     def obtain_json_values(self):
