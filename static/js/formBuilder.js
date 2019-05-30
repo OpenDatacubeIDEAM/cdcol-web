@@ -333,7 +333,7 @@ $(document).ready(function () {
               bands_select.multiple = true;
               bands_select.style.display = 'none';
 
-              bands_select.addEventListener("change", function(event){
+              addEventListener("change", function(event){
                   updateBandsCounter();
               });
 
@@ -343,9 +343,9 @@ $(document).ready(function () {
               for(i in bands){
                 option = document.createElement("option");
                 option.text = bands[i].name;
-                option.addEventListener("click", function(event){
-                  updateBandsCounter();
-                });
+                // option.addEventListener("click", function(event){
+                //   updateBandsCounter();
+                // });
                 bands_select.add(option);
               }
               div_2.appendChild(bands_select);
