@@ -175,6 +175,7 @@ class Version(models.Model):
         (DEPRECATED_STATE, "OBSOLETA"),
     )
 
+    name = models.CharField(max_length=200,default='No definido')
     algorithm = models.ForeignKey(Algorithm, on_delete=models.CASCADE)
     source_storage_units = models.ManyToManyField(StorageUnit,through='VersionStorageUnit')
     description = models.TextField()

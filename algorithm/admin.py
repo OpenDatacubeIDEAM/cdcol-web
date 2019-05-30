@@ -18,5 +18,5 @@ class RestrictAdmin(admin.ModelAdmin):
 admin.site.register(Topic)
 admin.site.register(VersionStorageUnit)
 admin.site.register(Algorithm,RestrictAdmin)
-admin.site.register(Version,RestrictAdmin)
+admin.site.register(Version)
 admin.site.register(Parameter,RestrictAdmin)

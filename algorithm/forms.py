@@ -71,6 +71,7 @@ class VersionCreateForm(forms.ModelForm):
         fields = [ 
             'show_algorthm_name',
             'algorithm',
+            'name',
             'number',
             'description',
             'repository_url',
@@ -91,6 +92,8 @@ class VersionCreateForm(forms.ModelForm):
         queryset=Algorithm.objects.all(),
         widget=forms.HiddenInput(),
     )
+
+    name = forms.CharField(label='Nombre de la Version',max_length=200)
 
     number = ChoiceFieldNoValidation(label='Número de Versión')
 
@@ -127,6 +130,7 @@ class VersionUpdateForm(forms.ModelForm):
         fields = [
             'show_algorthm_name',
             'algorithm',
+            'name',
             'number',
             'description',
             'repository_url',
@@ -147,6 +151,8 @@ class VersionUpdateForm(forms.ModelForm):
         queryset=Algorithm.objects.all(),
         widget=forms.HiddenInput(),
     )
+
+    name = forms.CharField(label='Nombre de la Version',max_length=200)
 
     description = forms.CharField(
         label='Descripción de la Versión',

@@ -81,8 +81,16 @@
                       <td>{{ algorithm.topic.name }}</td>
                     </tr>
                     <tr>
-                      <td>Nombre:</td>
+                      <td>Nombre Algoritmo:</td>
                       <td>{{ algorithm.name }}</td>
+                    </tr>
+                    <tr>
+                      <td>Nombre Versión:</td>
+                      <td>{{ version.name }}</td>
+                    </tr>
+                    <tr>
+                      <td>Descripción Versión:</td>
+                      <td>{{ version.description }}</td>
                     </tr>
                     <tr>
                       <td>Versión a ejecutar:</td>
@@ -197,12 +205,22 @@
                 <ul class="nav nav-pills">
                   {% for topic in topics %}
                   <li>
-                    <a href="#">{{ topic.name }}</a>
+                    <a  href="#">{{ topic.name }}</a>
                     <ul>
                       {% for algorithm in topic.get_published_algorithms %}
-                      <li><a href="{% url 'execution:create' algorithm.last_version.id %}">{{ algorithm.name }}</a></li>
+                      <li>
+                        <a href="{% url 'execution:create' algorithm.last_version.id %}">{{ algorithm.last_version.name }}</a>
+                         &nbsp;&nbsp;
+                        <span data-toggle="collapse" data-target="#demo" class="fa fa-question-circle"></span>
+                        <div id="demo" class="collapse">
+                          <div style="float:left; width:200px; max-width:200px; word-wrap:break-word;">
+                            {{ algorithm.last_version.description }} 
+                          </div>
+                        </div>
+                      </li>
                       {% endfor %}
                     </ul>
+                    <!-- <br> -->
                   </li>
                   {% endfor %}
                 </ul>
