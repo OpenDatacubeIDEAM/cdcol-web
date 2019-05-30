@@ -526,9 +526,9 @@ def create_execution_parameter_objects(parameters, request, execution):
             versions_storages = parameter.version.versionstorageunit_set.all()
             for version_storage in versions_storages:
                 select_id = 'storage_{}_parameter_{}'.format(
-                    version_storage.storage_unit.pk,parameter.pk
+                    version_storage.storage_unit.name,parameter.pk
                 )
-                values = request.POST.getlist(select_id,None)
+                values = reuest.POST.getlist(select_id,None)
 
                 storages_names.append(version_storage.storage_unit.name)
                 storages_bands.append(','.join(values))

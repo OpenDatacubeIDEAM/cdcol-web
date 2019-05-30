@@ -208,7 +208,7 @@ $(document).ready(function () {
         });
     }
 
-    function createStorageUnitField(data,form,parameter){
+    function createStorageUnitField(initials,data,form,parameter){
       console.log("Creating StorageUnitType field");
       // console.log('data create',data)
 
@@ -272,8 +272,16 @@ $(document).ready(function () {
       // The version number is extracted from the URL 
       // If the URL ahs a different format that the exepcted 
       // this will fail.
-      path_url_array = window.location.pathname.split('/');
-      version_number = path_url_array[path_url_array.length-1];
+      // path_url_array = window.location.pathname.split('/');
+      version_number = versionValue;
+
+      // var pathArray = window.location.pathname.split('/');
+      // var versionIndex = pathArray.indexOf("version");
+      // var versionValue = null;
+      // if (versionIndex > 0) {
+      //     versionValue = pathArray[versionIndex + 1];
+      //     $('#id_version').val(versionValue);
+      // }
 
       // Keep the storage unit selecction state.
 
@@ -303,6 +311,50 @@ $(document).ready(function () {
         current_storage_option = storage_option;
       }
 
+      // function loadInitialData(initials){
+      //   parameters_data = initials.filter(function(param_data){
+      //     return param_data.parameter_pk == parameter.pk;
+      //   });
+
+      //   if (parameters_data){
+      //     param_data = parameters_data[0]
+      //     param_data.storages.forEach(function(storage){
+      //       select_id = `storage_${storage.name}_parameter_${param_data.parameter_pk}`;
+      //       console.log('select_id',select_id);
+      //       select = document.getElementById(select_id);
+      //       select.value = storage.bands;
+      //       // storage.bands.forEach(function(band_name){
+      //       //   console.log('aa');
+      //       // });
+      //     });
+
+
+      //   }else{
+      //     console.log('Multi Storage initials is empty')
+      //   }
+      // }
+
+      function loadInitialData(storage_name){
+        parameters_data = initials.filter(function(param_data){
+          return param_data.parameter_pk == parameter.pk;
+        });
+
+        if (parameters_data){
+          param_data = parameters_data[0]
+          // console.log('loadInitialData',param_data)
+          storage_data = param_data.storages.filter(function(storage){
+          // console.log('loadInitialData',storage.name == storage_name,storage.name,storage_name,storage.bands);
+          return storage.name == storage_name;
+        });
+
+          return storage_data ? storage_data[0].bands : null;
+
+        }else{
+          console.log('Multi Storage initials is empty');
+          return null;
+        }
+      }
+
       $.ajax({
         url: `/storage/storage_units/?version_pk=${version_number}`,
         dataType: 'json',
@@ -325,8 +377,8 @@ $(document).ready(function () {
               storage_select.add(storage_option);
 
               bands_select = document.createElement('select');
-              bands_select.id = `storage_${storage.pk}_parameter_${parameter.pk}`;
-              bands_select.name = `storage_${storage.pk}_parameter_${parameter.pk}`;
+              bands_select.id = `storage_${storage.fields.name}_parameter_${parameter.pk}`;
+              bands_select.name = `storage_${storage.fields.name}_parameter_${parameter.pk}`;
               bands_select.size = 8;
               bands_select.style.width = "100%";
               bands_select.className = "form-control";
@@ -338,11 +390,15 @@ $(document).ready(function () {
               });
 
               console.log('bands_select_id',bands_select.id);
-
+              initial_bands = loadInitialData(storage.fields.name);
+              // console.log('initials', storage.fields.name,initial_bands, initial_bands.includes("red"));
               bands = data.metadata.measurements;
               for(i in bands){
                 option = document.createElement("option");
                 option.text = bands[i].name;
+                if (initial_bands.includes(bands[i].name)){
+                  option.selected = 'selected'
+                }
                 // option.addEventListener("click", function(event){
                 //   updateBandsCounter();
                 // });
@@ -353,7 +409,6 @@ $(document).ready(function () {
               storage_select.selectedIndex = 0;
               first_selected_option = storage_select.selectedOptions[0];
               changeBandsSelect(first_selected_option);
-              // first_selected_option.click();
 
             });
           });
@@ -367,6 +422,7 @@ $(document).ready(function () {
       });
     }
 
+
     function createForm(json) {
         executed_params = JSON.parse(executed_params);
         credits_approved = JSON.parse(credits_approved);
@@ -378,9 +434,9 @@ $(document).ready(function () {
             storage_units_version[i] = storage_units_version[i].substring(1,storage_units_version[i].length-1);
         }
 
-        console.log(storage_units_version);
-        console.log(credits_approved);
-        console.log(executed_params);
+        console.log('storage_units_version',storage_units_version);
+        console.log('credits_approved',credits_approved);
+        console.log('executed_params',executed_params);
         // obtaining the form
         var f = document.getElementById("mainForm");
 
@@ -804,7 +860,7 @@ $(document).ready(function () {
                     break;
                 case "14":
                     console.log("Creating MultiStorageUnitType field");
-                    createStorageUnitField(json,f,parameter);
+                    createStorageUnitField(executed_params,json,f,parameter);
                     break;
                 default:
                     console.log("Object not supported, " + parameter_type);

@@ -232,7 +232,7 @@ class ExecutionParameter(models.Model):
             bands = self.multistorageunittype.bands.split(';')
             response = ''
             for storage_name, band in zip(names,bands):
-                response += "{}:{}\n".format(storage_name, band)
+                response += "{}: {}\n".format(storage_name, band)
         return response
 
     def obtain_json_values(self):
