@@ -333,6 +333,10 @@ $(document).ready(function () {
               bands_select.multiple = true;
               bands_select.style.display = 'none';
 
+              bands_select.addEventListener("change", function(event){
+                  updateBandsCounter();
+              });
+
               console.log('bands_select_id',bands_select.id);
 
               bands = data.metadata.measurements;

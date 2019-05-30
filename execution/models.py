@@ -146,6 +146,10 @@ class ExecutionParameter(models.Model):
             response = "{}".format(self.filetype.file_name())
         elif parameter_type == "13":
             response = "{}".format(self.storageunitnobandtype.storage_unit_name)
+        elif parameter_type == "14":
+            name = self.multistorageunittype.storage_unit_name
+            bands = self.multistorageunittype.bands
+            response = "{} {}".format(name, bands)
         return response
 
     def obtain_json_values(self):
@@ -226,7 +230,8 @@ class ExecutionParameter(models.Model):
 
             response = {
                 'function_name':self.parameter.function_name,
-                'storages':storages
+                'storages':storages,
+                'type': self.parameter.parameter_type
             }
 
         response['parameter_pk'] = self.parameter.pk
@@ -283,8 +288,8 @@ class StorageUnitBandType(ExecutionParameter):
         return "{} - {}".format(self.execution, self.storage_unit_name)
 
 class MultiStorageUnitType(ExecutionParameter):
-    storage_unit_name = models.CharField(max_length=200)
-    bands = models.CharField(max_length=200)
+    storage_unit_name = models.CharField(max_length=500)
+    bands = models.CharField(max_length=500)
 
     def __unicode__(self):
         return "{} - {}".format(self.execution, self.storage_unit_name)

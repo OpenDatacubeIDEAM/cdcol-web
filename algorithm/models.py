@@ -197,11 +197,17 @@ class Version(models.Model):
 
     def __str__(self):
         """This is the way the object will be rendered in templates."""
-        return '{}-{} ({})'.format(self.algorithm.name,self.number,self.id)
+        name = self.name
+        if name == 'No definido':
+            name = self.algorithm.name
+        return '{} {}'.format(self.number,name)
 
     def __unicode__(self):
         """This is the way the object will be rendered in templates."""
-        return '{}-{} ({})'.format(self.algorithm.name,self.number,self.id)
+        name = self.name
+        if name == 'No definido':
+            name = self.algorithm.name
+        return '{} {}'.format(self.number,name)
 
 
 class VersionStorageUnit(models.Model):
