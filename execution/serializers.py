@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from django.utils import formats
 from rest_framework import serializers
 from execution.models import Execution
 
@@ -36,62 +35,21 @@ class ExecutionSerializer(serializers.ModelSerializer):
         return obj.version.algorithm.name
 
     def get_state(self, obj):
-        # To cacth get_dag_run() execption in 
-        # case airflow database is not present
-        try:
-            dag_state = obj.get_state_display()
-            dag_run = obj.get_dag_run()
-            if dag_run:
-                dag_state = self.AIRFLOW_STATES.get(dag_run.state)
-        except Exception as e:
-            dag_state = 'No disponible'
+        dag_state = obj.get_state_display()
+        dag_run = obj.get_dag_run()
+        if dag_run:
+            dag_state = self.AIRFLOW_STATES.get(dag_run.state)
 
         return dag_state
 
     def get_created_at(self,obj):
-        date = obj.created_at 
-        date = formats.date_format(
-            date, format="DATETIME_FORMAT"
-        ) if date else '---'
-        return date
+        return obj.get_created_at()
 
     def get_started_at(self,obj):
-
-        # To cacth get_dag_run() execption in 
-        # case airflow database is not present
-        try: 
-            dag_started_at = obj.started_at
-            dag_run = obj.get_dag_run()
-            if dag_run:
-                date = dag_run.start_date 
-                date = formats.date_format(
-                    date - timedelta(hours=5), 
-                    format="DATETIME_FORMAT"
-                ) if date else '---'
-                dag_started_at = date
-
-        except Exception as e:
-            dag_started_at = 'No disponible'
-
-        return dag_started_at 
+        return obj.get_started_at() 
 
     def get_finished_at(self,obj):
-        # To cacth get_dag_run() execption in 
-        # case airflow database is not present
-        try: 
-            dag_finished_at = obj.finished_at
-            dag_run = obj.get_dag_run()
-            if dag_run:
-                date = dag_run.end_date 
-                date = formats.date_format(
-                    date- timedelta(hours=5), 
-                    format="DATETIME_FORMAT"
-                ) if date else '---'
-                dag_finished_at = date
-        except Exception as e:
-            dag_finished_at = 'No disponible'
-
-        return dag_finished_at
+        return obj.get_finished_at()
 
     def get_current_executions(self, obj):
         return obj.pending_executions().count()

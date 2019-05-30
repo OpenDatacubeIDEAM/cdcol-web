@@ -6,6 +6,8 @@ from algorithm.models import Parameter
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
+from django.utils import formats
+from django.utils import timezone
 
 from airflow.models import DagRun
 
@@ -33,6 +35,12 @@ class Execution(models.Model):
         (COMPLETED_STATE, "FINALIZADA"),
         (CANCELED_STATE, "CANCELADA"),
     )
+
+    AIRFLOW_STATES = {
+        'running': "EN EJECUCIÓN",
+        'success': "FINALIZADA",
+        'failed': "CON FALLO"
+    }
 
     class Meta:
         permissions = (
@@ -67,13 +75,86 @@ class Execution(models.Model):
     def get_dag_run(self):
         """
         Return the last dag run associated with 
-        the dag_id from airflow database
+        the dag_id from airflow database.
+
+        NOTE: If the execution is finished 
+        the dag run is not retrieved form airflow.
         """
-        if not self.finished_at and self.dag_id:
-            dag_runs = DagRun.find(dag_id=self.dag_id)
-            if dag_runs:
-                return dag_runs[-1]
+
+        # Possible known execption
+        # sqlalchemy.exc.OperationalError: 
+        # (sqlite3.OperationalError) no such table: dag_run
+        # when the ariflow data base is not set correctly
+        try:
+            if not self.finished_at and self.dag_id:
+                dag_runs = DagRun.find(dag_id=self.dag_id)
+                if dag_runs:
+                    return dag_runs[-1]
+        except Exception as e:
+            pass 
+
         return None
+
+    def to_web_state(self,state):
+        return AIRFLOW_STATES.get(state,'No defiido')
+
+    def get_state(self):
+
+        # To cacth get_dag_run() execption in 
+        # case airflow database is not present
+
+        dag_state = self.get_state_display()
+        dag_run = self.get_dag_run()
+        if dag_run:
+            dag_state = self.to_web_state(dag_run.state)
+
+        return dag_state
+
+    def get_created_at(self):
+        date = self.created_at
+        if date:
+            date = timezone.localtime(date)
+            date = formats.date_format(
+                date,format="DATETIME_FORMAT"
+            )
+            return date
+        return date
+
+    def get_started_at(self):
+
+        date = self.started_at
+        if date:
+            date = timezone.localtime(date)
+            date = formats.date_format(date,format="DATETIME_FORMAT")
+
+        dag_run = self.get_dag_run()
+        if dag_run:
+            start_date = dag_run.start_date
+            if start_date:
+                # If time is form airflow, it must be converted form 
+                # UTC time to colombiand time. 
+                date = timezone.localtime(start_date)
+                date = formats.date_format(date,format="DATETIME_FORMAT")
+
+        return date
+
+    def get_finished_at(self):
+
+        date = self.finished_at
+        if date:
+            date = timezone.localtime(date)
+            date = formats.date_format(date,format="DATETIME_FORMAT")
+
+        dag_run = self.get_dag_run()
+        if dag_run:
+            end_date = dag_run.end_date
+            if end_date:
+                # If time is form airflow, it must be converted form 
+                # UTC time to colombiand time. 
+                date = timezone.localtime(end_date)
+                date = formats.date_format(date,format="DATETIME_FORMAT")
+
+        return date
         
     def can_rate(self):
         """If the execution was already reviwed it can not be reviwed again.
@@ -149,8 +230,9 @@ class ExecutionParameter(models.Model):
         elif parameter_type == "14":
             names = self.multistorageunittype.storage_unit_name.split(';')
             bands = self.multistorageunittype.bands.split(';')
+            response = ''
             for storage_name, band in zip(names,bands):
-                response = "{}:{}\n".format(storage_name, band)
+                response += "{}:{}\n".format(storage_name, band)
         return response
 
     def obtain_json_values(self):

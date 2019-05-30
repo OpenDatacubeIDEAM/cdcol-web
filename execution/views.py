@@ -1032,31 +1032,11 @@ class ExecutionStateJsonView(View):
 
         execution_pk = request.GET.get('exec_id', None)
         execution = Execution.objects.get(pk=execution_pk)
-        
-        dag_state = execution.get_state_display()
-        start_date = execution.started_at
-        end_date = execution.finished_at
-        dag_run = execution.get_dag_run()
-
-        if dag_run:
-            dag_state = ExecutionSerializer.AIRFLOW_STATES.get(dag_run.state)
-
-            start_date = dag_run.start_date
-            if start_date:
-                start_date = dag_run.start_date - timedelta(hours=5)
-                start_date = formats.date_format(start_date, format="DATETIME_FORMAT")
-                dag_finished_at = start_date
-
-            end_date = dag_run.end_date
-            if end_date:
-                end_date = dag_run.end_date - timedelta(hours=5)
-                end_date = formats.date_format(end_date, format="DATETIME_FORMAT")
-                dag_finished_at = end_date
 
         data = {
-            'state':dag_state,
-            'start_date':start_date if start_date else '---',
-            'end_date':end_date if end_date else '---'
+            'state':execution.get_state(),
+            'start_date':execution.get_started_at(),
+            'end_date':execution.get_finished_at()
         }
 
         return JsonResponse(data,safe=False)
