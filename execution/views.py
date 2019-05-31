@@ -22,6 +22,7 @@ from django.utils import formats
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import permission_required
+from django.db import transaction
 
 from algorithm.models import VersionStorageUnit
 from algorithm.models import Parameter
@@ -259,47 +260,48 @@ class ExecutionCreateView(LoginRequiredMixin,TemplateView):
                 ne_latitude = int(request.POST.get('ne_latitude', False))
                 ne_longitude = int(request.POST.get('ne_longitude', False))
 
-                # Calculate and check credits for this execution
-                credits_calculated = (ne_latitude-sw_latitude)*(ne_longitude-sw_longitude)*anhos
-                if credits_calculated <= available_credits:
-                    new_execution = Execution(
-                        version=version,
-                        description=textarea_name,
-                        state=Execution.ENQUEUED_STATE,
-                        executed_by=current_user,
-                        generate_mosaic= checkbox_generate_mosaic,
-                        credits_consumed=credits_calculated,
-                    )
-                    new_execution.save()
+                try:
 
-                    create_execution_parameter_objects(parameters, request, new_execution)
+                    with transaction.atomic():
+                        # Calculate and check credits for this execution
+                        credits_calculated = (ne_latitude-sw_latitude)*(ne_longitude-sw_longitude)*anhos
+                        if credits_calculated <= available_credits:
+                            new_execution = Execution(
+                                version=version,
+                                description=textarea_name,
+                                state=Execution.ENQUEUED_STATE,
+                                executed_by=current_user,
+                                generate_mosaic= checkbox_generate_mosaic,
+                                credits_consumed=credits_calculated,
+                            )
+                            new_execution.save()
 
-                    # Unzip uploaded parameters
-                    execution_directory = os.path.join(settings.MEDIA_ROOT,'input',str(new_execution.id))
+                            create_execution_parameter_objects(parameters, request, new_execution)
 
-                    if os.path.isdir(execution_directory):
-                        unzip_every_file_in_directory(execution_directory)
+                            # Unzip uploaded parameters
+                            execution_directory = os.path.join(settings.MEDIA_ROOT,'input',str(new_execution.id))
 
-                    # send the execution to the REST service
-                    response = send_execution(new_execution)
+                            if os.path.isdir(execution_directory):
+                                unzip_every_file_in_directory(execution_directory)
 
-                    if response.get('status') in 'error':
-                        messages.error(request,response.get('description'))
-                        messages.error(request,response.get('detalle'))
-                        return redirect('execution:create', pk=version_pk)
-                        # return HttpResponse(response.get('html'))
-                        new_execution.delete()
-                    else:
-                        messages.info(request,response.get('description'))
-                        # messages.info(request,response.get('detalle'))
-                        return redirect('execution:detail', pk=new_execution.id)
+                            # send the execution to the REST service
+                            response = send_execution(new_execution)
+                            messages.info(request,response.get('description'))
+                            return redirect('execution:detail', pk=new_execution.id)
 
-            # This is returned when the Area parameter is not given or
-            # the user has consumed all the credits
-            messages.error(
-                request,'El usuario no tiene créditos para llevar a cabo esta ejecución.'
-            )
-            return redirect('execution:create', pk=version_pk)
+                    pass
+                except Exception as e:
+                    messages.error(request,'Ha ocurrido un error al intentar enviar la ejecución a la API')
+                    messages.error(request,str(e))
+                    return redirect('execution:create', pk=version_pk)
+                    # return HttpResponse(response.get('html'))
+
+        # This is returned when the Area parameter is not given or
+        # the user has consumed all the credits
+        messages.error(
+            request,'El usuario no tiene créditos para llevar a cabo esta ejecución.'
+        )
+        return redirect('execution:create', pk=version_pk)
 
 
 @method_decorator(
@@ -528,7 +530,7 @@ def create_execution_parameter_objects(parameters, request, execution):
                 select_id = 'storage_{}_parameter_{}'.format(
                     version_storage.storage_unit.name,parameter.pk
                 )
-                values = reuest.POST.getlist(select_id,None)
+                values = request.POST.getlist(select_id,None)
 
                 storages_names.append(version_storage.storage_unit.name)
                 storages_bands.append(','.join(values))
@@ -574,25 +576,24 @@ def send_execution(execution):
         'is_gif': False
     }
     # sending the request
-    try:
-        header = {'Content-Type': 'application/json'}
-        if execution.version.algorithm.id == int(settings.WEB_ALGORITHM_ID_FOR_CUSTOM_SERVICE):
-            json_response['is_gif'] = True
-        url = "{}/api/new_execution/".format(settings.DC_API_URL)
-        r = requests.post(url, data=json.dumps(json_response), headers=header)
-        if r.status_code == 201:
-            response = {'status': 'ok', 'description': 'Se envió la ejecución correctamente.','detalle':'No hay detalles'}
-        else:
-            # r.raise_for_status()
-            response = {
-                'status': 'error', 'description': 'Ocurrió un error al enviar la ejecución',
-                'detalle': "{}, {}".format(r.status_code, r.text),
-                'html': r.content
-
-            }
-    except:
-        # print('Something went wrong when trying to call the REST service')
-        raise
+    # try:
+    header = {'Content-Type': 'application/json'}
+    if execution.version.algorithm.id == int(settings.WEB_ALGORITHM_ID_FOR_CUSTOM_SERVICE):
+        json_response['is_gif'] = True
+    url = "{}/api/new_execution/".format(settings.DC_API_URL)
+    r = requests.post(url, data=json.dumps(json_response), headers=header)
+    if r.status_code == 201:
+        response = {'status': 'ok', 'description': 'Se envió la ejecución correctamente.','detalle':'No hay detalles'}
+    else:
+        r.raise_for_status()
+        # response = {
+        #     'status': 'error', 'description': 'Ocurrió un error al enviar la ejecución',
+        #     'detalle': "{}, {}".format(r.status_code, r.text),
+        #     'html': r.content
+        # }
+    # except:
+    #     # print('Something went wrong when trying to call the REST service')
+    #     raise
     return response
 
 

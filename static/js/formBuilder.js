@@ -311,48 +311,23 @@ $(document).ready(function () {
         current_storage_option = storage_option;
       }
 
-      // function loadInitialData(initials){
-      //   parameters_data = initials.filter(function(param_data){
-      //     return param_data.parameter_pk == parameter.pk;
-      //   });
-
-      //   if (parameters_data){
-      //     param_data = parameters_data[0]
-      //     param_data.storages.forEach(function(storage){
-      //       select_id = `storage_${storage.name}_parameter_${param_data.parameter_pk}`;
-      //       console.log('select_id',select_id);
-      //       select = document.getElementById(select_id);
-      //       select.value = storage.bands;
-      //       // storage.bands.forEach(function(band_name){
-      //       //   console.log('aa');
-      //       // });
-      //     });
-
-
-      //   }else{
-      //     console.log('Multi Storage initials is empty')
-      //   }
-      // }
-
       function loadInitialData(storage_name){
-        parameters_data = initials.filter(function(param_data){
+        // Getting the multi storage unit param
+        parameters_data = executed_params.filter(function(param_data){
           return param_data.parameter_pk == parameter.pk;
         });
 
-        if (parameters_data){
+        if (parameters_data.length != 0){
           param_data = parameters_data[0]
-          // console.log('loadInitialData',param_data)
+
           storage_data = param_data.storages.filter(function(storage){
-          // console.log('loadInitialData',storage.name == storage_name,storage.name,storage_name,storage.bands);
-          return storage.name == storage_name;
-        });
+            return storage.name == storage_name;
+          });
 
-          return storage_data ? storage_data[0].bands : null;
-
-        }else{
-          console.log('Multi Storage initials is empty');
-          return null;
+          return (storage_data.length != 0) ? storage_data[0].bands : [];
         }
+
+        return [];
       }
 
       $.ajax({
@@ -374,6 +349,7 @@ $(document).ready(function () {
               storage_option.addEventListener("click", function(event){
                 changeBandsSelect(event.target);
               });
+              
               storage_select.add(storage_option);
 
               bands_select = document.createElement('select');
@@ -389,15 +365,14 @@ $(document).ready(function () {
                   updateBandsCounter();
               });
 
-              console.log('bands_select_id',bands_select.id);
               initial_bands = loadInitialData(storage.fields.name);
-              // console.log('initials', storage.fields.name,initial_bands, initial_bands.includes("red"));
               bands = data.metadata.measurements;
               for(i in bands){
                 option = document.createElement("option");
                 option.text = bands[i].name;
                 if (initial_bands.includes(bands[i].name)){
-                  option.selected = 'selected'
+                  option.selected = 'selected';
+                  
                 }
                 // option.addEventListener("click", function(event){
                 //   updateBandsCounter();
@@ -407,9 +382,16 @@ $(document).ready(function () {
               div_2.appendChild(bands_select);
               storage_selection[storage.fields.name] = bands_select;
               storage_select.selectedIndex = 0;
+
+              // To update the selects count when there is initial data
+              // for each storage unit
+              current_storage_option = storage_option;
+              updateBandsCounter();
+
+              // Set the first storage unit select.
               first_selected_option = storage_select.selectedOptions[0];
               changeBandsSelect(first_selected_option);
-
+              
             });
           });
 
