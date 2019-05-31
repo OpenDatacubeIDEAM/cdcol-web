@@ -16,11 +16,6 @@ class Migration(migrations.Migration):
             name='userprofile',
             options={'permissions': (('can_view_quick_guide_developer', 'Puede ver guia rápida de desarrolladores'), ('can_view_quick_guide_analyst', 'Puede ver guia rápida de analista'))},
         ),
-        migrations.AddField(
-            model_name='userprofile',
-            name='credits_approved',
-            field=models.IntegerField(blank=True, default=8, null=True),
-        ),
         migrations.AlterField(
             model_name='userprofile',
             name='user',

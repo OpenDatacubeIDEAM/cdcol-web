@@ -15,11 +15,6 @@ class Migration(migrations.Migration):
             name='storageunit',
             options={'permissions': (('can_list_units', 'Ver listado de unidades de almacenamiento'), ('can_create_units', 'Crear unidad de almacenamiento'), ('can_view_unit_detail', 'Ver detalle de una unidad de almacenamiento'), ('can_view_storage_content', 'Ver contenido de una unidad de almacenamiento'), ('can_download_file', 'Descargar un archivo'), ('can_view_content_detail', 'Ver detalle de un contenido'), ('can_download_metadata', 'Descargar metadados'), ('can_edit_units', 'Editar unidad de almacenamiento'))},
         ),
-        migrations.AddField(
-            model_name='storageunit',
-            name='alias',
-            field=models.CharField(default='no definido', max_length=200, unique=True),
-        ),
         migrations.AlterField(
             model_name='storageunit',
             name='metadata',
