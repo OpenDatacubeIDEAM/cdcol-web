@@ -88,9 +88,10 @@
           "ajax": "/api/executions/?format=datatables",
           "columns":  [
               {"data": "id"},
-              {"data": "algorithm_name"},
+              {"data": "version.algorithm.name"},
               {
                 "data": "state",
+                //"searchable":false,
                 "render": function(data, type, full, meta){
                     return data;
                     // var current_executions = full['current_executions']
@@ -105,6 +106,7 @@
               {"data":"credits_consumed"},
               {
                 "data": "created_at",
+                //"searchable":false
                 // "render": function (data) {
                 //     if(data){
                 //         var date = new Date(data);
@@ -124,7 +126,8 @@
                 // }
               },
               {
-                "data": "started_at"
+                "data": "started_at",
+                //"searchable":false
                 // "render": function (data) {
                 //     if(data){
                 //         var date = new Date(data);
@@ -145,6 +148,7 @@
               },
               {
                 "data": "finished_at",
+                //"searchable":false,
                 // "render": function (data) {
                 //     if(data){
                 //         var date = new Date(data);

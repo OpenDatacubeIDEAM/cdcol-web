@@ -2,6 +2,7 @@
 
 from rest_framework import serializers
 from execution.models import Execution
+from algorithm.serializers import VersionSerializer
 
 from datetime import timedelta
 
@@ -14,7 +15,7 @@ class ExecutionSerializer(serializers.ModelSerializer):
         'failed': "CON FALLO"
     }
 
-    algorithm_name = serializers.SerializerMethodField()
+    version = VersionSerializer()
     state = serializers.SerializerMethodField()
     created_at = serializers.SerializerMethodField()
     started_at = serializers.SerializerMethodField()
@@ -26,7 +27,7 @@ class ExecutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Execution
         fields = [
-            'id', 'algorithm_name', 'state', 'created_at', 
+            'id', 'state','version', 'created_at', 
             'started_at', 'finished_at', 'current_executions', 
             'can_rate', 'credits_consumed'
         ]
