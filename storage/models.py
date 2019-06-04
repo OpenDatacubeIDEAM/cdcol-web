@@ -3,7 +3,8 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 from django.contrib.auth.models import User
-
+from django.utils import formats
+from django.utils import timezone
 
 class StorageUnit(models.Model):
 
@@ -33,6 +34,14 @@ class StorageUnit(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_created_at(self):
+        date = self.created_at
+        if date:
+            date = timezone.localtime(date)
+            date = formats.date_format(date,format='DATETIME_FORMAT')
+            return date
+        return date
 
     # def __unicode__(self):
     #     return "{} - {}".format(self.id, self.name)

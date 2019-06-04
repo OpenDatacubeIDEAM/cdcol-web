@@ -21,6 +21,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import permission_required
+from django.utils import formats
+from django.utils import timezone
 
 from storage.forms import StorageUnitForm
 from storage.forms import StorageUnitUpdateForm
@@ -31,6 +33,7 @@ import requests
 import os
 import re
 import json
+import dateutil
 
 
 @method_decorator(
@@ -63,6 +66,12 @@ class StoragelistJsonView(TemplateView):
         )
 
         storage_units = self._perfom_request(url)
+        for storage_dict in storage_units:
+            date_str = storage_dict['created_at']
+            date = dateutil.parser.parse(date_str)
+            date = timezone.localtime(date)
+            date = formats.date_format(date,format='DATETIME_FORMAT')
+            storage_dict['created_at'] = date
 
         # In order to allow non-dict objects to be serialized 
         # set the safe parameter to False.
