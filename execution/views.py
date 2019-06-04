@@ -224,7 +224,11 @@ class ExecutionCreateView(LoginRequiredMixin,TemplateView):
         checkbox_generate_mosaic = request.POST.get('checkbox_generate_mosaic', None)
         if checkbox_generate_mosaic is None:
             checkbox_generate_mosaic = False;
-      
+        if checkbox_generate_mosaic is 'on':
+            checkbox_generate_mosaic = True
+        else:
+            checkbox_generate_mosaic = False
+
         if current_user.has_perm('execution.can_create_new_execution'):
 
             try:
@@ -274,6 +278,7 @@ class ExecutionCreateView(LoginRequiredMixin,TemplateView):
                                 generate_mosaic= checkbox_generate_mosaic,
                                 credits_consumed=credits_calculated,
                             )
+
                             new_execution.save()
 
                             create_execution_parameter_objects(parameters, request, new_execution)
@@ -293,6 +298,7 @@ class ExecutionCreateView(LoginRequiredMixin,TemplateView):
                 except Exception as e:
                     messages.error(request,'Ha ocurrido un error al intentar enviar la ejecución a la API')
                     messages.error(request,str(e))
+                    raise e
                     return redirect('execution:create', pk=version_pk)
                     # return HttpResponse(response.get('html'))
 

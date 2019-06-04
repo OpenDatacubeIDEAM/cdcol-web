@@ -23,7 +23,7 @@ WEB_EMAIL_PORT="587"
 
 WEB_DB_HOST="db"
 WEB_DB_PORT="5432"
-WEB_DB_NAME="ideam"
+WEB_DB_NAME="ideam_1"
 WEB_DB_USER="portal_web"
 WEB_DB_PASSWORD="CDCol_web_2016"
 
