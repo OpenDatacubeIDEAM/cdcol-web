@@ -96,7 +96,7 @@ class Execution(models.Model):
         return None
 
     def to_web_state(self,state):
-        return AIRFLOW_STATES.get(state,'No defiido')
+        return Execution.AIRFLOW_STATES.get(state,'No defiido')
 
     def get_state(self):
 

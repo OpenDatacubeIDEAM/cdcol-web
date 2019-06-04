@@ -120,10 +120,17 @@ class AlgorithmsByTopicListView(LoginRequiredMixin,ListView):
         Return the topic which have algorithms which has 
         some version in published state.
         """
-        queryset = super().get_queryset().filter(
+        #queryset = super().get_queryset().filter(
+        #    algorithm__version__publishing_state=Version.PUBLISHED_STATE,
+        #    enabled=True
+        #)
+
+
+        queryset = Topic.objects.filter(
             algorithm__version__publishing_state=Version.PUBLISHED_STATE,
             enabled=True
-        )
+        ).distinct()
+
         return queryset
 
 
@@ -266,38 +273,38 @@ class ExecutionCreateView(LoginRequiredMixin,TemplateView):
 
                 try:
 
-                    with transaction.atomic():
-                        # Calculate and check credits for this execution
-                        credits_calculated = (ne_latitude-sw_latitude)*(ne_longitude-sw_longitude)*anhos
-                        if credits_calculated <= available_credits:
-                            new_execution = Execution(
-                                version=version,
-                                description=textarea_name,
-                                state=Execution.ENQUEUED_STATE,
-                                executed_by=current_user,
-                                generate_mosaic= checkbox_generate_mosaic,
-                                credits_consumed=credits_calculated,
-                            )
+                    # Calculate and check credits for this execution
+                    credits_calculated = (ne_latitude-sw_latitude)*(ne_longitude-sw_longitude)*anhos
+                    if credits_calculated <= available_credits:
+                        #with transaction.atomic():
+                        new_execution = Execution(
+                            version=version,
+                            description=textarea_name,
+                            state=Execution.ENQUEUED_STATE,
+                            executed_by=current_user,
+                            generate_mosaic= checkbox_generate_mosaic,
+                            credits_consumed=credits_calculated,
+                        )
 
-                            new_execution.save()
+                        new_execution.save()
 
-                            create_execution_parameter_objects(parameters, request, new_execution)
+                        create_execution_parameter_objects(parameters, request, new_execution)
 
-                            # Unzip uploaded parameters
-                            execution_directory = os.path.join(settings.MEDIA_ROOT,'input',str(new_execution.id))
+                        # Unzip uploaded parameters
+                        execution_directory = os.path.join(settings.MEDIA_ROOT,'input',str(new_execution.id))
 
-                            if os.path.isdir(execution_directory):
-                                unzip_every_file_in_directory(execution_directory)
+                        if os.path.isdir(execution_directory):
+                            unzip_every_file_in_directory(execution_directory)
 
-                            # send the execution to the REST service
-                            response = send_execution(new_execution)
-                            messages.info(request,response.get('description'))
-                            return redirect('execution:detail', pk=new_execution.id)
+                        # send the execution to the REST service
+                        response = send_execution(new_execution)
+                        messages.info(request,response.get('description'))
+                        return redirect('execution:detail', pk=new_execution.id)
 
-                    pass
                 except Exception as e:
                     messages.error(request,'Ha ocurrido un error al intentar enviar la ejecución a la API')
                     messages.error(request,str(e))
+                    #new_execution.delete()
                     raise e
                     return redirect('execution:create', pk=version_pk)
                     # return HttpResponse(response.get('html'))
