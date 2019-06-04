@@ -3,6 +3,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from storage.models import StorageUnit
+from django.utils import formats
+from django.utils import timezone
 
 
 class IngestTask(models.Model):
@@ -34,7 +36,15 @@ class IngestTask(models.Model):
     #     return "{} - {} - {}".format(self.id, self.storage_unit.name, self.get_state_display())
 
     class Meta:
+        ordering = ['-created_at']
         permissions = (
             ("can_list_storage_tasks", "Ver listado de tareas de ingesta"),
             ("can_create_storage_task", "Programar una nueva tarea de ingesta"),
         )
+
+
+    def get_created_at(self):
+        date = self.created_at
+        date = timezone.localtime(date)
+        date = formats.date_format(date,format='DATETIME_FORMAT')
+        return date

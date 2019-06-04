@@ -76,6 +76,7 @@
   <script>
       $(document).ready(function() {
           var table = $('#ingest').DataTable({
+              "order":[[2,"desc" ]],
               "serverSide": true,
               "ajax": "/api/ingest/task/?format=datatables",
               "columns": [
