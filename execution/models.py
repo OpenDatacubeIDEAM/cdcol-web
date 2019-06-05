@@ -77,7 +77,7 @@ class Execution(models.Model):
         Return the last dag run associated with 
         the dag_id from airflow database.
 
-        NOTE: If the execution is finished 
+        NOTE: If the execution is not in ERROR_STATE
         the dag run is not retrieved form airflow.
         """
 
@@ -86,7 +86,7 @@ class Execution(models.Model):
         # (sqlite3.OperationalError) no such table: dag_run
         # when the ariflow data base is not set correctly
         try:
-            if not self.finished_at and self.dag_id:
+            if self.ERROR_STATE == self.state and self.dag_id:
                 dag_runs = DagRun.find(dag_id=self.dag_id)
                 if dag_runs:
                     return dag_runs[-1]
