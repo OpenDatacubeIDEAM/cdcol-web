@@ -583,6 +583,7 @@ def send_execution(execution):
     # building the request
     json_response = {
         'execution_id': execution.id,
+        'generate_mosaic': execution.generate_mosaic,
         'algorithm_name': "{}".format(slugify(execution.version.algorithm.name)),
         'version_id': "{}".format(execution.version.number),
         'parameters': json_parameters,

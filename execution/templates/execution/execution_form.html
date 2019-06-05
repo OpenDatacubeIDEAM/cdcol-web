@@ -176,12 +176,12 @@
                     <label><b>Descripción de la ejecución</b></label>
                     <textarea id="textarea_id" name="textarea_name" placeholder="Ingrese una descripción que te ayude a identificar el objetivo del análisis que deseas realizar" class="form-control" rows="3"></textarea>
                   </div>
-                  {% if algorithm.generate_mosaic %}
+                  
                   <div class="form-group">
                     <b>Generar Mosaico</b>
                     <input type="checkbox" id="checkbox_id" name="checkbox_generate_mosaic" placeholder="Generar Mosaico" checked >
                   </div>
-                  {% endif %}
+                  
                 </form>
               </div>
             </div>
@@ -205,7 +205,7 @@
                     <ul>
                       {% for algorithm in topic.get_published_algorithms %}
                       <li>
-                        <a href="{% url 'execution:create' algorithm.last_version.id %}">{{ algorithm.name }}</a>
+                        <a href="{% url 'execution:create' algorithm.last_published_version.id %}">{{ algorithm.name }}</a>
                          <!-- &nbsp;&nbsp;
                         <span data-toggle="collapse" data-target="#demo" class="fa fa-question-circle"></span>
                         <div id="demo" class="collapse">
