@@ -108,6 +108,9 @@ class Algorithm(models.Model):
         """
         return self.version_set.all().last()
 
+    def last_published_version(self):
+        return self.version_set.filter(publishing_state=Version.PUBLISHED_STATE).last()
+
     def next_minor_version(self):
         """Return the next version number for a new algorithm version."""
         

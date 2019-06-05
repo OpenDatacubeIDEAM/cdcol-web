@@ -74,7 +74,7 @@ class Execution(models.Model):
 
     def get_dag_run(self):
         """
-        Return the last dag run associated with 
+        Return the last dag run associated with
         the dag_id from airflow database.
 
         NOTE: If the execution is not in ERROR_STATE
@@ -82,18 +82,32 @@ class Execution(models.Model):
         """
 
         # Possible known execption
-        # sqlalchemy.exc.OperationalError: 
+        # sqlalchemy.exc.OperationalError:
         # (sqlite3.OperationalError) no such table: dag_run
         # when the ariflow data base is not set correctly
+        #try:
+            #if not self.finished_at == self.state and self.dag_id:
+            #    dag_runs = DagRun.find(dag_id=self.dag_id)
+            #    if dag_runs:
+            #        return dag_runs[-1]
+
+        #except Exception as e:
+        #    pass
+
+        return None
+
+    def get_task_instances(self,state):
+
         try:
             if self.ERROR_STATE == self.state and self.dag_id:
                 dag_runs = DagRun.find(dag_id=self.dag_id)
                 if dag_runs:
-                    return dag_runs[-1]
+                    dag_run = dag_runs[-1]
+                    return dag_run.get_task_instances(state=state)
         except Exception as e:
-            pass 
+            pass
 
-        return None
+        return []
 
     def to_web_state(self,state):
         return Execution.AIRFLOW_STATES.get(state,'No defiido')

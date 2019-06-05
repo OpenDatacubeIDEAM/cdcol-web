@@ -60,7 +60,7 @@
                   <ul>
                     {% for algorithm in topic.get_published_algorithms %}
                     <li>
-                      <a href="{% url 'execution:create' algorithm.last_version.id %}">{{ algorithm.name }}</a>
+                      <a href="{% url 'execution:create' algorithm.last_published_version.id %}">{{ algorithm.name }}</a>
                    
                     </li>
                     {% endfor %}

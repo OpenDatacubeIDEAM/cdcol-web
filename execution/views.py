@@ -1007,14 +1007,14 @@ class ListTasksAPIView(viewsets.ViewSet):
         execution_pk = request.query_params.get('exec_id', None)
         execution = Execution.objects.get(pk=execution_pk)
 
-        dag_run = execution.get_dag_run()
+        #dag_run = execution.get_dag_run()
 
         states = settings.WEB_EXECUTION_DETAIL_SHOW_TASKS_STATES.split(',')
 
         tasks = []
-        if dag_run:
-            for state in states:
-                tasks += dag_run.get_task_instances(state=state)
+        #if dag_run:
+        for state in states:
+            tasks += execution.get_task_instances(state=state)
 
         data_list = []
         for task in tasks:
