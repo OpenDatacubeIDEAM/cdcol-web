@@ -336,8 +336,7 @@ class VersionPublishForm(forms.Form):
     # The dag .py file in a zip file which use te algorithms submited
     template = forms.FileField(
         label='Plantilla (.py)',
-        validators=[validate_py_extention],
-        required=True
+        validators=[validate_py_extention]
     )
     # The .py algorithms required to execute the dag.
     algorithms = forms.FileField(
