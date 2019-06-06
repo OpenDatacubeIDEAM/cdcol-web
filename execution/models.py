@@ -286,10 +286,16 @@ class ExecutionParameter(models.Model):
                 'type': self.parameter.parameter_type,
             }
         elif parameter_type == "8":
+            bands_str = self.storageunitbandtype.storage_unit_name
+            default_bands = self.parameter.default_value.split(',')
+            for band in default_bands:
+                if band not in bands_str:
+                    bands_str += ',' + band
+
             response = {
                 'function_name': self.parameter.function_name,
                 'storage_unit_name': "{}".format(self.storageunitbandtype.storage_unit_name),
-                'bands': "{}".format(self.storageunitbandtype.bands),
+                'bands': bands_str,
                 'type': self.parameter.parameter_type,
             }
         elif parameter_type == "9":
@@ -306,9 +312,11 @@ class ExecutionParameter(models.Model):
                 'type': self.parameter.parameter_type,
             }
         elif parameter_type == "13":
+            bands_str = self.parameter.default_value.split(',')
             response = {
                 'function_name': self.parameter.function_name,
                 'storage_unit_name': self.storageunitnobandtype.storage_unit_name,
+                'bands': bands_str,
                 'type': self.parameter.parameter_type,
             }
         elif parameter_type == "14":

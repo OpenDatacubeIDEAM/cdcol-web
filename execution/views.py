@@ -229,9 +229,9 @@ class ExecutionCreateView(LoginRequiredMixin,TemplateView):
 
         textarea_name = request.POST.get('textarea_name', None)
         checkbox_generate_mosaic = request.POST.get('checkbox_generate_mosaic', None)
-        if checkbox_generate_mosaic is None:
-            checkbox_generate_mosaic = False;
-        if checkbox_generate_mosaic is 'on':
+        if not checkbox_generate_mosaic:
+            checkbox_generate_mosaic = False
+        elif 'on' in checkbox_generate_mosaic:
             checkbox_generate_mosaic = True
         else:
             checkbox_generate_mosaic = False

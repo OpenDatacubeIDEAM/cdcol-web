@@ -250,17 +250,32 @@ $(document).ready(function () {
       div_3.appendChild(storage_help_text);
 
       div_1 = document.createElement("div");
-      div_1.className = "col-md-6"
+      div_1.className = "col-md-7"
 
       div_1.appendChild(storage_select);
 
       div_2 = document.createElement("div");
-      div_2.className = "col-md-6"
+      div_2.className = "col-md-5"
+
+      div_2_1 = document.createElement("div");
+      div_2_1.className = "col-md-12"
+
+      div_2_2 = document.createElement("div");
+      div_2_2.className = "col-md-12"
+
+      help_p = document.createElement("p");
+      help_p.innerHTML = '<small>Mantenga presionado "Control" o "Command" en Mac, para seleccionar más de una banda';
+
+      div_2_2.appendChild(help_p);
+
+      div_2.appendChild(div_2_1);
+      div_2.appendChild(div_2_2);
+
+
 
       div = document.createElement("div");
       div.className = "row"
       div.style.padding = "10px 0px 20px 0px";
-
 
       div.appendChild(div_0);
       div.appendChild(div_1);
@@ -295,6 +310,8 @@ $(document).ready(function () {
         bands_select = storage_selection[storage_name];
         bands_options = bands_select.selectedOptions;
         current_storage_option.text = `${storage_name} (${bands_options.length} bandas)`;
+        current_storage_option.style.fontWeight = bands_options.length > 0 ? 'bold':'normal';
+
       }
 
       function changeBandsSelect(storage_option){
@@ -379,7 +396,7 @@ $(document).ready(function () {
                 // });
                 bands_select.add(option);
               }
-              div_2.appendChild(bands_select);
+              div_2_1.appendChild(bands_select);
               storage_selection[storage.fields.name] = bands_select;
               storage_select.selectedIndex = 0;
 
@@ -391,11 +408,12 @@ $(document).ready(function () {
               // Set the first storage unit select.
               first_selected_option = storage_select.selectedOptions[0];
               changeBandsSelect(first_selected_option);
-              
+
             });
           });
 
           storage_select.selectedIndex = 0;
+
 
         },
         error: function( data ) {
