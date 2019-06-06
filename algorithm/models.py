@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
+from django.utils import formats
+from django.utils import timezone
 
 from storage.models import StorageUnit
 
@@ -212,6 +214,14 @@ class Version(models.Model):
             name = self.algorithm.name
         return '{} {}'.format(self.number,name)
 
+
+    def get_created_at(self):
+        date = self.created_at
+        if date:
+            date = timezone.localtime(date)
+            date = formats.date_format(date,format='DATETIME_FORMAT')
+            return date
+        return date
 
 class VersionStorageUnit(models.Model):
     """Each algorithm version supports a set of storage units (LANDSAT,SENTNEL,etc)."""

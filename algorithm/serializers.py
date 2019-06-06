@@ -55,6 +55,7 @@ class VersionSerializer(serializers.ModelSerializer):
 
     id = serializers.IntegerField(read_only=True)
     algorithm = AlgorithmSerializer()
+    created_at = serializers.SerializerMethodField()
 
     class Meta:
         model = Version
@@ -68,3 +69,6 @@ class VersionSerializer(serializers.ModelSerializer):
 
         # django-rest-framework-datatables
         datatables_always_serialize = ('id',)
+
+    def get_created_at(self,obj):
+        return obj.get_created_at()
