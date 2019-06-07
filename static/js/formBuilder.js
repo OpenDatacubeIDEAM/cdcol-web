@@ -208,6 +208,7 @@ $(document).ready(function () {
         });
     }
 
+
     function createStorageUnitField(initials,data,form,parameter){
       console.log("Creating StorageUnitType field");
       // console.log('data create',data)
@@ -271,8 +272,6 @@ $(document).ready(function () {
       div_2.appendChild(div_2_1);
       div_2.appendChild(div_2_2);
 
-
-
       div = document.createElement("div");
       div.className = "row"
       div.style.padding = "10px 0px 20px 0px";
@@ -283,6 +282,11 @@ $(document).ready(function () {
       div.appendChild(div_3);
 
       form.appendChild(div);
+
+
+      //button_execution = document.getElementById('button-execution');
+
+
 
       // The version number is extracted from the URL 
       // If the URL ahs a different format that the exepcted 
@@ -302,8 +306,33 @@ $(document).ready(function () {
 
       // It is an object with a key for each storage unit name.
       // keep the selected bands for each storage unit.
+
       storage_selection = {};
       current_storage_option = null;
+
+      // Validates if at least one bend is selected in any 
+      // storage unit
+      function validateSelectedBands(){
+        //const storage_names = Object.keys(storage_selection);
+        count = 0;
+        for(name in storage_selection){
+          select = storage_selection[name];
+          count += select.selectedOptions.length;
+          console.log('storage_name',name,'select',select,'selected_bands',count);
+        }
+
+        button_execution = document.getElementById('button-execution');
+
+        if(count == 0 && button_execution){
+          multi_storage_message.style.visibility = 'visible';
+          button_execution.disabled = true;
+        }else if(button_execution){
+          multi_storage_message.style.visibility = 'hidden';
+          button_execution.disabled = false;
+        }else{
+
+        }
+      }
 
       function updateBandsCounter(){
         storage_name = current_storage_option.storage_name;
@@ -312,6 +341,7 @@ $(document).ready(function () {
         current_storage_option.text = `${storage_name} (${bands_options.length} bandas)`;
         current_storage_option.style.fontWeight = bands_options.length > 0 ? 'bold':'normal';
 
+        validateSelectedBands();
       }
 
       function changeBandsSelect(storage_option){
@@ -888,6 +918,14 @@ $(document).ready(function () {
          credits_message.style.visibility = "hidden";
          f.appendChild(credits_message);
 
+
+        multi_storage_message = document.createElement('p');
+        multi_storage_message.innerHTML = 'Debe selecconar al menos una banda en algúna unidad de almacenamiento para el campo multi unidad de almacenamiento.';
+        multi_storage_message.style.visibility = 'hidden';
+        multi_storage_message.className = 'alert alert-danger';
+        f.appendChild(multi_storage_message);
+
+
         console.log("Creating Send Button");
         var send_button = document.createElement("button");
         send_button.id = "button-execution";
@@ -904,6 +942,8 @@ $(document).ready(function () {
         $("mainForm").append(f);
         setExecutedParameters();
         changeRectBounds();
+
+
     };
 
     function setExecutedParameters()
