@@ -16,7 +16,7 @@ class VersionSelectionForm(forms.Form):
         as follows: 
 
         VersionSelectionForm(algorithm_id=algorithm_id, current_user=current_user)
-        
+
         This allow to obtain the parameters in the contructor.
         """
 
@@ -24,11 +24,13 @@ class VersionSelectionForm(forms.Form):
         self.user = kwargs.pop('user')
 
         super(VersionSelectionForm, self).__init__(*args, **kwargs)
+        states = [Version.DEVELOPED_STATE,Version.PUBLISHED_STATE,Version.REVIEW]
 
-        if self.user.profile.is_workflow_reviewer:
-            # The choice field will display such versions of a given algorithm
-            # that are published or were created by the current user.
-            self.fields['version'].queryset = Version.objects.filter(algorithm=self.algorithm)
+        if self.user.profile.is_workflow_reviewer or self.user.profile.is_data_admin():
+            self.fields['version'].queryset = Version.objects.filter(
+                algorithm=self.algorithm,
+                publishing_state__in=states
+            )
         else:
             # The choice field will display such versions of a given algorithm
             # that are published or were created by the current user.
