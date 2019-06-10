@@ -286,7 +286,7 @@ class ExecutionParameter(models.Model):
                 'type': self.parameter.parameter_type,
             }
         elif parameter_type == "8":
-            bands_str = self.storageunitbandtype.storage_unit_name
+            bands_str = self.storageunitbandtype.bands
             default_bands = self.parameter.default_value.split(',')
             for band in default_bands:
                 if band not in bands_str:
