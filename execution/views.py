@@ -1003,6 +1003,16 @@ class ListTasksAPIView(viewsets.ViewSet):
         except FileNotFoundError as e:
             return 'Archivo no encontrado, probablemente fué eliminado.'
 
+    def _task_state(self,task):
+        log_file_path = self._get_task_log_path(task)
+        log_folder_path = os.path.dirname(os.path.dirname(log_file_path))
+        no_data_file_path = os.path.join(log_folder_path,'no_data.lock')
+
+        if task.state == 'skipped' and os.path.exists(no_data_file_path):
+            return 'Sin datos en el area'
+
+        return self.STATE.get(task.state,task.state)
+
     def list(self, request):
 
         execution_pk = request.query_params.get('exec_id', None)
@@ -1019,12 +1029,13 @@ class ListTasksAPIView(viewsets.ViewSet):
 
         data_list = []
         for task in tasks:
+
+
             task_dict = {
                 'id': task.task_id,
-                'state': self.STATE.get(
-                    task.state,task.state
-                ),
+                'state': self._task_state(task),
                 'log_url': task.log_url,
+                'db_log_filepath': task.log_filepath,
                 'log_filepath':self._get_task_log_path(task),
                 'log_content': self._get_raw_log(task),
                 'execution_date': task.execution_date,

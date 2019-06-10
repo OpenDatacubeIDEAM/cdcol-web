@@ -75,6 +75,7 @@ class TaskSerializer(serializers.Serializer):
     state = serializers.CharField(max_length=256)
     log_url = serializers.URLField(max_length=900, min_length=None, allow_blank=False)
     log_filepath = serializers.CharField(max_length=900)
+    db_log_filepath = serializers.CharField(max_length=900)
     log_content = serializers.CharField(allow_blank=True)
     execution_date = serializers.DateTimeField()
     start_date = serializers.DateTimeField()
