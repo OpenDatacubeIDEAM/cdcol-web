@@ -99,7 +99,7 @@ class Execution(models.Model):
     def get_task_instances(self,state):
 
         try:
-            if self.ERROR_STATE == self.state and self.dag_id:
+            if self.dag_id:
                 dag_runs = DagRun.find(dag_id=self.dag_id)
                 if dag_runs:
                     dag_run = dag_runs[-1]
@@ -295,7 +295,7 @@ class ExecutionParameter(models.Model):
             response = {
                 'function_name': self.parameter.function_name,
                 'storage_unit_name': "{}".format(self.storageunitbandtype.storage_unit_name),
-                'bands': bands_str,
+                'bands': bands_str.split(','),
                 'type': self.parameter.parameter_type,
             }
         elif parameter_type == "9":
@@ -312,11 +312,11 @@ class ExecutionParameter(models.Model):
                 'type': self.parameter.parameter_type,
             }
         elif parameter_type == "13":
-            bands_str = self.parameter.default_value.split(',')
+            bands_str = self.parameter.default_value
             response = {
                 'function_name': self.parameter.function_name,
                 'storage_unit_name': self.storageunitnobandtype.storage_unit_name,
-                'bands': bands_str,
+                'bands': bands_str.split(','),
                 'type': self.parameter.parameter_type,
             }
         elif parameter_type == "14":

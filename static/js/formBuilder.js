@@ -745,7 +745,7 @@ $(document).ready(function () {
                         if(storage_unit_executed_param)
                         {
                             getBands(parseFloat(storage_unit_select.value), pk, function(){
-                                var bands = storage_unit_executed_param.bands.split(",");
+                                var bands = storage_unit_executed_param.bands;
                                 var options = bands_select.options;
                                 for(var i = 0, length = options.length; i< length; i++)
                                 {
