@@ -271,10 +271,13 @@ LOGIN_REDIRECT_URL = '/index/'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_ADAPTER = 'user_profile.adapters.MyAccountAdapter'
 ACCOUNT_EMAIL_SUBJECT_PREFIX = '[IDEAM - CDCol] '
+ACCOUNT_EMAIL_CONFIRMATION_HMAC=True
+
+DEFAULT_FROM_EMAIL='cuboimagenes@ideam.gov.co'
 
 # Email service
 # this variables are needed for 'allouth' to perform password reset 
@@ -282,6 +285,7 @@ EMAIL_HOST = os.environ.get('WEB_EMAIL_HOST')
 EMAIL_HOST_USER = os.environ.get('WEB_EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('WEB_EMAIL_HOST_PASSWORD')
 EMAIL_PORT = os.environ.get('WEB_EMAIL_PORT')
+DEFAULT_FROM_EMAIL = os.environ.get('WEB_EMAIL_HOST_USER')
 EMAIL_USE_TLS = True
 
 # Rest Framework
