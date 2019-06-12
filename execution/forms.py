@@ -24,9 +24,9 @@ class VersionSelectionForm(forms.Form):
         self.user = kwargs.pop('user')
 
         super(VersionSelectionForm, self).__init__(*args, **kwargs)
-        states = [Version.DEVELOPED_STATE,Version.PUBLISHED_STATE,Version.REVIEW]
+        states = [Version.REVIEW,Version.REVIEW_PENDING]
 
-        if self.user.profile.is_workflow_reviewer or self.user.profile.is_data_admin():
+        if self.user.profile.is_workflow_reviewer:
             self.fields['version'].queryset = Version.objects.filter(
                 algorithm=self.algorithm,
                 publishing_state__in=states
