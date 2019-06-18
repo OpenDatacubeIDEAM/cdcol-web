@@ -94,16 +94,16 @@ class UserProfile(models.Model):
         finished executions.
         """
 
-        execs = [] 
-        for execution in executions:
-            dag_run = execution.get_dag_run()
-            if dag_run:
-                if dag_run.state in 'running':
-                    execs.append(execution)
+        #execs = [] 
+        #for execution in executions:
+        #    dag_run = execution.get_dag_run()
+        #    if dag_run:
+        #        if dag_run.state in 'running':
+        #            execs.append(execution)
 
-        return execs
+        #return execs
 
-        # return executions
+        return executions
         
     # def self(self):
     #     return self
