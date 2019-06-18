@@ -337,11 +337,11 @@ class VersionPublishForm(forms.Form):
     template = forms.FileField(
         label='Plantilla (.py)',
         validators=[validate_py_extention],
-        required=False
+        required=True
     )
     # The .py algorithms required to execute the dag.
     algorithms = forms.FileField(
         label='Algoritmos (.zip)',
         validators=[validate_zip_extention],
-        required=True
+        required=False
     )

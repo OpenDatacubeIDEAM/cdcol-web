@@ -665,11 +665,20 @@ class ParameterUpdateView(LoginRequiredMixin,UpdateView):
     model = Parameter
     form_class = ParameterForm
 
+    def get_object(self):
+        pk = self.kwargs.get('pk')
+        return get_object_or_404(
+            Parameter,
+            pk=pk,
+            version__algorithm__created_by=self.request.user
+        )
+
     def get_initial(self):
         """initialize version algorthm."""
         initial = super(ParameterUpdateView, self).get_initial()
         parameter_pk = self.kwargs.get('pk')
-        parameter_obj = get_object_or_404(Parameter,pk=parameter_pk)
+        #parameter_obj = get_object_or_404(Parameter,pk=parameter_pk)
+        parameter_obj = self.get_object()
 
         initial['show_algorthm_name'] = parameter_obj.version.algorithm.name
         initial['show_version_number'] = parameter_obj.version.number
