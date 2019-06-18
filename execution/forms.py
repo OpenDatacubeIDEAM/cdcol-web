@@ -24,20 +24,20 @@ class VersionSelectionForm(forms.Form):
         self.user = kwargs.pop('user')
 
         super(VersionSelectionForm, self).__init__(*args, **kwargs)
-        states = [Version.REVIEW,Version.REVIEW_PENDING]
+        #states = [Version.REVIEW,Version.REVIEW_PENDING]
 
-        if self.user.profile.is_workflow_reviewer:
-            self.fields['version'].queryset = Version.objects.filter(
-                algorithm=self.algorithm,
-                publishing_state__in=states
-            )
-        else:
-            # The choice field will display such versions of a given algorithm
-            # that are published or were created by the current user.
-            self.fields['version'].queryset = Version.objects.filter(
-                Q(algorithm=self.algorithm) &
-                (Q(publishing_state=Version.PUBLISHED_STATE) | Q(algorithm__created_by=self.user))
-            )
+        #if self.user.profile.is_workflow_reviewer:
+        #    self.fields['version'].queryset = Version.objects.filter(
+        #        algorithm=self.algorithm,
+        #        publishing_state__in=states
+        #    )
+
+        # The choice field will display such versions of a given algorithm
+        # that are published or were created by the current user.
+        self.fields['version'].queryset = Version.objects.filter(
+            Q(algorithm=self.algorithm) &
+            (Q(publishing_state=Version.PUBLISHED_STATE) | Q(algorithm__created_by=self.user))
+        )
 
 
 class ReviewForm(forms.ModelForm):
