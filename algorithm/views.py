@@ -364,11 +364,11 @@ class VersionPublishView(LoginRequiredMixin,FormView):
 
         template_zip = form.cleaned_data['template']
         algorithms_zip = form.cleaned_data['algorithms']
- 
-        files = {
-            'template_file': template_zip.file,
-            'algorithms_zip_file': algorithms_zip.file,
-        }
+
+        files = {}
+
+        files['template_file'] = template_zip.file
+        files['algorithms_zip_file'] = algorithms_zip.file if algorithms_zip else None
 
         data = {
             'version_id': version_pk
