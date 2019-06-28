@@ -60,7 +60,8 @@ class VersionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Version
         fields = (
-            'id', 
+            'id',
+            'name', 
             'number', 
             'algorithm',
             'publishing_state', 

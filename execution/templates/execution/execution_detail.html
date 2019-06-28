@@ -53,8 +53,12 @@
                   <td>{{ execution.id }}</td>
                 </tr>
                 <tr>
-                  <td>Algoritmo:</td>
+                  <td>Tipo de Ejecución:</td>
                   <td>{{ execution.version.algorithm.name }}</td>
+                </tr>
+                <tr>
+                  <td>Algoritmo:</td>
+                  <td>{{ execution.version.name }}</td>
                 </tr>
                 <tr>
                   <td>Versión:</td>
@@ -176,11 +180,8 @@
                     <tbody>
                       <tr>
                         <td>resultados.zip</td>
-                        {% if execution.result_file_path %}
-                        <td><a href="{{ execution.result_file_path}}"><button type="button" class="btn btn-info fa fa-download"> Descargar</button></a></td>
-                        {% else %}
-                        <td>Archivo de resultados no disponible</td>
-                        {% endif %}
+                        <td id="results-btn"><a href="{{ execution.result_file_path}}"><button type="button" class="btn btn-info fa fa-download"> Descargar</button></a></td>
+                        <td id="results-text">Archivo de resultados no disponible</td>
                       </tr>
                     </tbody>
                   </table>
@@ -388,7 +389,13 @@ $(document).ready(function() {
                 $('#execution_state').html(data.state + ' (Actualizado a las '+ d.toLocaleTimeString() +')');
                 $('#execution_start_date').html(data.start_date);
                 $('#execution_end_date').html(data.end_date);
+
+                $('#results-btn').hide();
+                $('#results-text').show();
+
+                // refresh the logs table
                 table.ajax.reload();
+
                 //Send another request in 10 seconds.
                 setTimeout(function(){
                     send();
@@ -400,6 +407,8 @@ $(document).ready(function() {
                 $('#execution_end_date').html(data.end_date);
                 $('#btn-cancel-1').hide();
                 $('#btn-cancel-2').hide();
+                $('#results-btn').show();
+                $('#results-text').hide();
               }
           },
           error: function(xhr,status,error) 
