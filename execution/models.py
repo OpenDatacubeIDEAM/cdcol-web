@@ -199,10 +199,10 @@ class Execution(models.Model):
         dag_id = self.dag_id or ''
         file_name = 'resultados_{}.zip'.format(dag_id)
         file_path = os.path.join(results_path,dag_id,file_name)
-        if os.path.exists(file_path):
-            return file_path
+        #if os.path.exists(file_path):
+        #    return file_path
 
-        return None
+        return file_path
 
 
 class ExecutionParameter(models.Model):
