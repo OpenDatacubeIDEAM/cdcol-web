@@ -172,7 +172,7 @@ class ExecutionCreateView(LoginRequiredMixin,TemplateView):
         )
 
         storage_units_version = VersionStorageUnit.objects.filter(
-            version__algorithm=version.algorithm
+            version=version
         )
 
         parameters = Parameter.objects.filter(
@@ -358,7 +358,7 @@ class ExecutionCopyView(ExecutionCreateView):
         )
 
         storage_units_version = VersionStorageUnit.objects.filter(
-            version__algorithm=version.algorithm
+            version=version
         )
 
         parameters = Parameter.objects.filter(
