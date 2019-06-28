@@ -41,7 +41,7 @@ class Topic(models.Model):
         """
         return self.algorithm_set.filter(
             version__publishing_state=Version.PUBLISHED_STATE
-        )
+        ).distinct('name')
 
 
 class Algorithm(models.Model):
