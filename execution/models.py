@@ -301,8 +301,10 @@ class ExecutionParameter(models.Model):
         elif parameter_type == "9":
             response = {
                 'function_name': self.parameter.function_name,
-                'start_date': "{}".format(self.timeperiodtype.start_date.strftime('%d-%m-%Y')),
-                'end_date': "{}".format(self.timeperiodtype.end_date.strftime('%d-%m-%Y')),
+                #'start_date': "{}".format(self.timeperiodtype.start_date.strftime('%d-%m-%Y')),
+                #'end_date': "{}".format(self.timeperiodtype.end_date.strftime('%d-%m-%Y')),
+                'start_date': "{}".format(self.timeperiodtype.start_date.strftime('%Y-%m-%d')),
+                'end_date': "{}".format(self.timeperiodtype.end_date.strftime('%Y-%m-%d')),
                 'type': self.parameter.parameter_type,
             }
         elif parameter_type == "12":

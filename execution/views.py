@@ -600,11 +600,12 @@ def send_execution(execution):
         response = {'status': 'ok', 'description': 'Se envió la ejecución correctamente.','detalle':'No hay detalles'}
     else:
         r.raise_for_status()
-        # response = {
-        #     'status': 'error', 'description': 'Ocurrió un error al enviar la ejecución',
-        #     'detalle': "{}, {}".format(r.status_code, r.text),
-        #     'html': r.content
-        # }
+        #response = {
+        #    'status': 'error', 'description': 'Ocurrió un error al enviar la ejecución',
+        #    'detalle': "{}, {}".format(r.status_code, r.text),
+        #    'html': r.content
+        #}
+        #raise Exception(r.content)
     # except:
     #     # print('Something went wrong when trying to call the REST service')
     #     raise

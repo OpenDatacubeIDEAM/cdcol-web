@@ -43,9 +43,9 @@ class VersionAdmin(admin.ModelAdmin):
     algorithm_created_by.short_description = 'Creado Por'
     algorithm_created_by.admin_order_field = 'algorithm__created_by'
 
-    def save_model(self, request, obj, form, change):
-        obj.user = request.user
-        raise PermissionDenied
+    #def save_model(self, request, obj, form, change):
+    #    obj.user = request.user
+    #    raise PermissionDenied
 
 
 admin.site.register(Topic)
