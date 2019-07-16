@@ -989,8 +989,18 @@ $(document).ready(function () {
                 //     }
                 //     break;
                 case "9":
-                    document.getElementById("start_date_"+param.parameter_pk).value = param.start_date;
-                    document.getElementById("end_date_"+param.parameter_pk).value = param.end_date;
+                    start_date = param.start_date.split('-')
+                    syear = start_date[0];
+                    smonth = start_date[1];
+                    sday = start_date[2];
+
+                    end_date = param.end_date.split('-')
+                    eyear = end_date[0];
+                    emonth = end_date[1];
+                    eday = end_date[2];
+
+                    document.getElementById("start_date_"+param.parameter_pk).value = sday + '-' + smonth + '-' + syear;
+                    document.getElementById("end_date_"+param.parameter_pk).value = eday + '-' + emonth + '-' + eyear;
                     break;
                 // case "12":
                 //     break;

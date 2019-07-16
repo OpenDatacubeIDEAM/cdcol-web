@@ -260,8 +260,15 @@ class ExecutionCreateView(LoginRequiredMixin,TemplateView):
                     for p in time_parameters:
                         start_date = request.POST.get('start_date_{}'.format(p.id), False)
                         end_date = request.POST.get('end_date_{}'.format(p.id), False)
+                        # The web pages sends the date in the format dd-mm-yyyy and it is 
+                        # save on that format in the database.
+                        # wen the data is sended to the API REST the date is parsed to
+                        # yyyy-mm-dd which is the recomended date format for the data cube.
                         start_date_value = datetime.datetime.strptime(start_date, "%d-%m-%Y")
                         end_date_value = datetime.datetime.strptime(end_date, "%d-%m-%Y")
+                        #start_date_value = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+                        #end_date_value = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+
                         anhos += 1+(end_date_value.year - start_date_value.year)
                 else:
                     anhos = 1
@@ -501,6 +508,7 @@ def create_execution_parameter_objects(parameters, request, execution):
             # parsing dates
             start_date_value = datetime.datetime.strptime(start_date_value, "%d-%m-%Y")
             end_date_value = datetime.datetime.strptime(end_date_value, "%d-%m-%Y")
+
             # TIME PERIOD TYPE
             new_execution_parameter = TimePeriodType(
                 execution=execution,
