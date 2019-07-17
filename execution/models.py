@@ -204,6 +204,13 @@ class Execution(models.Model):
 
         return file_path
 
+    def result_file_path_exists(self):
+        """
+        Return true if the results file path exists, false otherwise
+        """
+        file_path = self.result_file_path()
+        return os.path.exists(file_path)
+
 
 class ExecutionParameter(models.Model):
     """Each algorithm version has a set of parameters defined."""
@@ -246,7 +253,8 @@ class ExecutionParameter(models.Model):
             bands = self.multistorageunittype.bands.split(';')
             response = ''
             for storage_name, band in zip(names,bands):
-                response += "{}: {}\n".format(storage_name, band)
+                if band:
+                    response += "{}: {}\n".format(storage_name, band)
         return response
 
     def obtain_json_values(self):
