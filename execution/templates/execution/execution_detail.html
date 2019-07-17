@@ -372,6 +372,9 @@ $(document).ready(function() {
       }
   });
 
+  $('#results-btn').hide();
+  $('#results-text').show();
+
 
   // Update the execution state every second
   function send(){
@@ -407,8 +410,14 @@ $(document).ready(function() {
                 $('#execution_end_date').html(data.end_date);
                 $('#btn-cancel-1').hide();
                 $('#btn-cancel-2').hide();
-                $('#results-btn').show();
-                $('#results-text').hide();
+                console.log('results_available',data.results_available)
+                if (data.results_available == true){
+                 $('#results-btn').show();
+                 $('#results-text').hide();
+                }else{
+                 $('#results-btn').hide();
+                 $('#results-text').show();
+                }
               }
           },
           error: function(xhr,status,error) 

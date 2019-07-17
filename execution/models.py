@@ -337,12 +337,24 @@ class ExecutionParameter(models.Model):
             storage_bands = self.multistorageunittype.bands.split(';')
             response = {}
             storages = []
+
+            default_storages_bands = self.parameter.default_value.split(';')
+            default_storages = {}
+            for storage_band_str in default_storages_bands:
+                if ':' in storage_band_str:
+                    storage_name, bands_str = storage_band_str.split(':')
+                    default_storages[storage_name.strip()] = bands_str.split(',')
+
             for storage_name, bands in zip(storages_names,storage_bands):
                 if bands:
+                    default_bands = default_storages.get(storage_name.strip(),[])
+                    param_bands = bands.split(',')
+                    new_bands = list(set(default_bands+param_bands))
+                    print("MULTI STORAGE",storage_name,len(storage_name),param_bands,default_bands,new_bands)
                     storages.append(
-                        { 
+                        {
                             'name': storage_name,
-                            'bands':bands.split(',')
+                            'bands':new_bands
                         }
                     )
 

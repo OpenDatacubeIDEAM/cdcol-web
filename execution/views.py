@@ -305,7 +305,11 @@ class ExecutionCreateView(LoginRequiredMixin,TemplateView):
 
                         # send the execution to the REST service
                         response = send_execution(new_execution)
-                        messages.info(request,response.get('description'))
+                        if 'error' in response.get('status'):
+                            messages.error(request,response.get('description'))
+                            messages.warning(request,'Esta ejecución no correrá debe crear una nueva')
+                        else:
+                            messages.info(request,response.get('description'))
                         return redirect('execution:detail', pk=new_execution.id)
 
                 except Exception as e:
@@ -607,12 +611,12 @@ def send_execution(execution):
     if r.status_code == 201:
         response = {'status': 'ok', 'description': 'Se envió la ejecución correctamente.','detalle':'No hay detalles'}
     else:
-        r.raise_for_status()
-        #response = {
-        #    'status': 'error', 'description': 'Ocurrió un error al enviar la ejecución',
-        #    'detalle': "{}, {}".format(r.status_code, r.text),
-        #    'html': r.content
-        #}
+        #r.raise_for_status()
+        response = {
+            'status': 'error', 'description': 'Ocurrió un error al enviar la ejecución, por favor revise el dag',
+            'detalle': "{}, {}".format(r.status_code, r.text),
+            'html': r.content
+        }
         #raise Exception(r.content)
     # except:
     #     # print('Something went wrong when trying to call the REST service')
@@ -1069,6 +1073,7 @@ class ExecutionStateJsonView(View):
         execution = Execution.objects.get(pk=execution_pk)
 
         data = {
+            'results_available': execution.result_file_path_exists(),
             'state':execution.get_state(),
             'start_date':execution.get_started_at(),
             'end_date':execution.get_finished_at()
