@@ -23,11 +23,11 @@ Otros módulos
 
 ## Desarollo
 
-Ingresa al dierctorio *devel* donde encontraras los pasos para desplegar el ambiente de desarrollo para la web.
+Ingresa al directorio *devel* donde encontraras los pasos para desplegar el ambiente de desarrollo para la web.
 
 ## Production 
 
-The instalation script can be founded [here](https://gitlab.virtual.uniandes.edu.co/datacube-ideam/scripts-despliegue-desacoplado/blob/open_data_cube/web_install.sh).
+El script de instalación se encuentra en el siguiente [link](https://gitlab.virtual.uniandes.edu.co/datacube-ideam/scripts-despliegue-desacoplado/blob/open_data_cube/web_install.sh).
 
 ## Consideraciones en Producción
 
