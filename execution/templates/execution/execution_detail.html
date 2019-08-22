@@ -1,0 +1,451 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% load execution_extras %}
+
+{% block extra_head %}
+<script type="text/javascript">
+// {% if execution.state == '1' or execution.state == '2' or generating_tiff == '1' %}
+//   function timedRefresh(timeoutPeriod) {
+//       setTimeout("location.reload(true);", timeoutPeriod);
+//   }
+//   window.onload = timedRefresh({{ temporizer_value }});
+// {% endif %}
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- breadcrumb start -->
+<!-- ================ -->
+<div class="breadcrumb-container">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
+      <li><a href="{% url 'execution:index' %}">Ejecuciones</a></li>
+      <li class="active">Detalle</li>
+    </ol>
+  </div>
+</div>
+<!-- breadcrumb end -->
+
+<!-- main-container start -->
+<!-- ================ -->
+<section class="main-container">
+  <div class="container">
+      <div class="row">
+
+        <!-- main start -->
+        <!-- ================ -->
+        <div class="main col-md-8">
+
+          <!-- page-title start -->
+          <!-- ================ -->
+          <h3 class="page-title">Información de la ejecución</h3>
+
+          <div class="separator-2"></div>
+
+            <!-- page-title end -->
+            <p>Esta es la información de la ejecución seleccionada.</p>
+            <table class="table">
+              <tbody>
+                <tr>
+                  <td>Código de la ejecución:</td>
+                  <td>{{ execution.id }}</td>
+                </tr>
+                <tr>
+                  <td>Tipo de Ejecución:</td>
+                  <td>{{ execution.version.algorithm.name }}</td>
+                </tr>
+                <tr>
+                  <td>Algoritmo:</td>
+                  <td>{{ execution.version.name }}</td>
+                </tr>
+                <tr>
+                  <td>Versión:</td>
+                  <td>{{ execution.version.number }}</td>
+                </tr>
+                <tr>
+                  <td>Estado:</td>
+                  <td id='execution_state'>{{ execution.get_state_display }}</td>
+                </tr>
+                <tr>
+                  <td>Créditos Consumidos:</td>
+                  <td>{{ execution.credits_consumed }}</td>
+                </tr>
+                <tr>
+                  <td>Fecha de Creación:</td>
+                  {% if execution.created_at %}
+                  <td>{{ execution.created_at}}</td>
+                  {% else %}
+                  <td>---</td>
+                  {% endif %}
+                </tr>
+                <tr>
+                  <td>Inicio ejecución:</td>
+                  <td id="execution_start_date">{{ execution.started_at }}</td>
+                </tr>
+                <tr>
+                  <td>Fin ejecución:</td>
+                  <td id="execution_end_date">{{ execution.finished_at }}</td>
+                </tr>
+                <tr>
+                  <td>Creada por:</td>
+                  <td>{{ execution.executed_by.email }}</td>
+                </tr>
+                <tr>
+                  <td>Descripción:</td>
+                  <td>{{ execution.description | linebreaks }}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3 class="page-title">Parámetros de la ejecución</h3>
+            <div class="separator-2"></div>
+            <!-- page-title end -->
+            <p>Los parámetros de la ejecución son los siguientes:</p>
+            <table class="table">
+              <tbody>
+                <tr>
+                  <td>Genera Mosaico</td>
+                  <td>{{ execution.generate_mosaic }}</td>
+                </tr>
+                {% for param in executed_params %}
+                {% if param.parameter.parameter_type == '7' %}
+                <tr>
+                  <td>{{ param.parameter.name }} (Latitud mínima)</td>
+                  <td>{{ param.obtain_json_values.latitude_start }}</td>
+                </tr>
+                <tr>
+                  <td>{{ param.parameter.name }} (Latitud máxima)</td>
+                  <td>{{ param.obtain_json_values.latitude_end }}</td>
+                </tr>
+                <tr>
+                  <td>{{ param.parameter.name }} (Longitud  mínima)</td>
+                  <td>{{ param.obtain_json_values.longitude_start }}</td>
+                </tr>
+                <tr>
+                  <td>{{ param.parameter.name }} (Longitud máxima)</td>
+                  <td>{{ param.obtain_json_values.longitude_end }}</td>
+                </tr>
+                {% elif param.parameter.parameter_type == '8' or param.parameter.parameter_type == '13' %}
+                <td>{{ param.parameter.name }}</td>
+                <td>{{ param.obtain_value | get_storage_unit}}</td>
+                {% else %}
+                <tr>
+                  <td>{{ param.parameter.name }}</td>
+                  <td>{{ param.obtain_value}}</td>
+                  {% if param.parameter.parameter_type == '12' %}
+                  <td>
+                    <a href="{{ param.filetype.file.url }}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Descargar</a>
+                  </td>
+                  {% endif %}
+                </tr>
+                {% endif %}
+                {% endfor %}
+              </tbody>
+            </table>
+
+            {% if execution.results_deleted_at %}
+            <h3 class="page-title">Resultados generados</h3>
+            <div class="separator-2"></div>
+            <p><span class="label label-danger">Los archivos fueron eliminados el {{ execution.results_deleted_at }}</span></p>
+            {% else %}
+            <h3 class="page-title">Resultados generados</h3>
+            <div class="separator-2"></div>
+            
+            <p>A continuación se encuentran los resultados de esta ejecución:</p>
+            {% if delete_time %}
+              <p><span class="label label-warning">Estos archivos serán borrados el {{ delete_time }}</span></p>
+            {% endif %}
+            {% if response_message %}
+              <p><span class="label label-danger">{{ response_message }}</span></p>
+            {% endif %}
+            
+            <div class="row">
+              {% if tiff_message %}
+              <script>
+                alert({{ tiff_message }});
+              </script>
+              {% endif %}
+              <div class="col-md-12">
+                <!-- <div class="table-responsive"> -->
+                <div>
+                  <table class="table table-striped table-colored">
+                    <thead>
+                      <tr>
+                        <th>Nombre</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>resultados.zip</td>
+                        <td id="results-btn"><a href="{{ execution.result_file_path}}"><button type="button" class="btn btn-info fa fa-download"> Descargar</button></a></td>
+                        <td id="results-text">Archivo de resultados no disponible</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+
+            <h3 class="page-title">Trazabilidad de la Ejecución</h3>
+            <div class="separator-2"></div>
+            
+            <p>A continuación se encuentran los archivos de seguimiento de esta ejecución:</p>
+            
+            <div class="row">
+              <div class="col-md-12">
+                <!-- <div class="table-responsive"> -->
+                <div>
+                  <table id="tasks-logs" class="table table-striped table-colored">
+                    <thead>
+                      <tr>
+                        <th>Tarea</th>
+                        <th>Estado</th>
+                        <th></th>
+                        <th></th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+            </div>
+        </div>
+        <!-- main end -->
+
+        <!-- sidebar start -->
+        <!-- ================ -->
+        <aside class="col-md-4 col-lg-3 col-lg-offset-1">
+          <div class="sidebar">
+            <div class=" clearfix">
+              <h3 class="title">Acciones</h3>
+              <div class="separator-2"></div>
+              {% if review %}
+              <nav>
+                <a href="#" class="btn btn-gray btn-md btn-block">No hay acciones disponibles</a>
+                
+                <!-- To copy an execution, we create a new execution with the given algorithm version -->
+                <a href="{% url 'execution:copy' execution.id execution.version.id %}" class="btn btn-default btn-md btn-block">Replicar ejecución</a>
+
+                {% if execution.state == '2' or execution.state == '1' %}
+                <a id="btn-cancel-1" href="{% url 'execution:cancel' execution.id %}" onclick="return confirm('¿Está seguro de cancelar esta ejecución?')" class="btn btn-danger btn-md btn-block">Cancelar ejecución</a>
+                {% endif %}
+              </nav>
+              {% else %}
+              <nav>
+                {% if user.is_authenticated %}
+                {% if perms.execution.can_rate_execution and execution.state in '345'%}
+                <a href="{% url 'execution:rate' execution.id %}#rating" class="btn btn-primary btn-md btn-block">Calificar Resultados de la Ejecución</a>
+                {% endif %}
+                <!-- To copy an execution, we create a new execution with the given algorithm version -->
+                <a href="{% url 'execution:copy' execution.id execution.version.id %}" class="btn btn-default btn-md btn-block">Replicar ejecución</a>
+                {% if execution.state == '2' or execution.state == '1'%}
+                <a id="btn-cancel-2" href="{% url 'execution:cancel' execution.id %}" onclick="return confirm('¿Está seguro de cancelar esta ejecución?')" class="btn btn-danger btn-md btn-block">Cancelar ejecución</a>
+                {% endif %}
+                {% endif %}
+              </nav>
+              {% endif %}
+            </div>
+            {% if review %}
+            <div class="block clearfix">
+              <h3 class="title">Calificación realizada</h3>
+              <div class="separator-2"></div>
+              <p>La calificación que realizaste de los resultados de esta ejecución es la siguiente:</p>
+              <nav>
+                <ul>
+                  <li>Calificación: {{ review.rating }}</li>
+                  <li>Comentario: {{ review.comments }}</li>
+                </ul>
+              </nav>
+            </div>
+            {% endif %}
+          </div>
+        </aside>
+        <!-- sidebar end -->
+      </div>
+    </div>
+  </section>
+<!-- main-container end -->
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
+        <h4 class="modal-title" id="myModalLabel">Traza de errores</h4>
+      </div>
+      <div class="modal-body">
+        <p>La traza del error de la ejecución es la siguiente:</p>
+        <pre><code id="error-console" style="color: #c7254e;">...</code></pre>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-dark" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_body %}
+
+<script type="text/javascript" charset="utf8" src="{% static 'js/jquery.dataTables.js' %} "></script>
+<script type="text/javascript" charset="utf8" src="{% static 'js/moment.min.js' %}"></script>
+<script type="text/javascript" charset="utf8" src="{% static 'js/datetime-moment.js' %}"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+  var table = $('#tasks-logs').DataTable({
+      "searching": false,
+      "paging":   false,
+      "info":     false,
+      "serverSide": true,
+      "ajax": "/api/tasks/?exec_id={{ execution.id }}&format=datatables",
+      "columns":  [
+          {"data": "id"},
+          {"data": "state"},
+          {"data": "log_filepath", "visible":false},
+          {"data": "log_content", "visible":false},
+
+          {
+            "data": null,
+            "searchable": false,
+            "sortable": false,
+            "render": function (data, type, full, meta) {
+              console.log('full',data);
+              // var html = "<a class='download-log btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver log</a>";
+              var html = `<div class="btn-group">
+                            <button type="button" class="btn btn-info">Acciones</button>
+                             <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                              <li>
+                                <a id='show-log'>
+                                <i class='fa fa-bars'></i> Ver log
+                                </a>
+                              </li>
+                              <li>
+                                <a id='download-log' href="/execution/task/log?log_path=${encodeURIComponent(data.log_filepath)}" >
+                                  <i class="fa fa-file"></i> Descargar log
+                                </a>
+                              </li>
+                            </div>
+                          </div>`;
+              return html;
+            }
+          },
+      ],
+      "language": {
+        "decimal":        "",
+        "emptyTable":     "No hay ejecuciones fallidas ni ignoradas.",
+        "info":           "Mostrando del registro _START_ al _END_ de _TOTAL_ registros",
+        "infoEmpty":      "Mostrando del registro 0 a 0 de 0 registros",
+        "infoFiltered":   "(filtrando entre un total de _MAX_ registros)",
+        "infoPostFix":    "",
+        "thousands":      ",",
+        "lengthMenu":     "Mostrar _MENU_ registros",
+        "loadingRecords": "Cargando...",
+        "processing":     "Procesando...",
+        "search":         "Buscar:",
+        "zeroRecords":    "No se encontraron registros",
+        "paginate": {
+            "first":      "Primero",
+            "last":       "Último",
+            "next":       "Siguiente",
+            "previous":   "Anterior"
+        },
+        "aria": {
+            "sortAscending":  ": activate to sort column ascending",
+            "sortDescending": ": activate to sort column descending"
+        },
+        "buttons": {
+          "copy": "Copiar",
+          "print": "Imprimir"
+        }
+      }
+  });
+
+  $('#results-btn').hide();
+  $('#results-text').show();
+
+
+  // Update the execution state every second
+  function send(){
+      $.ajax({
+          type: "get",
+          url: "/execution/state/json?exec_id={{ execution.id }}",
+          success:function(data)
+          {
+              //console.log the response
+              // console.log(data);
+
+              if(data.state != "FINALIZADA" & data.state != "CON FALLO"){
+
+                var d = new Date();
+                $('#execution_state').html(data.state + ' (Actualizado a las '+ d.toLocaleTimeString() +')');
+                $('#execution_start_date').html(data.start_date);
+                $('#execution_end_date').html(data.end_date);
+
+                $('#results-btn').hide();
+                $('#results-text').show();
+
+                // refresh the logs table
+                table.ajax.reload();
+
+                //Send another request in 10 seconds.
+                setTimeout(function(){
+                    send();
+                }, 10000);
+
+              }else{
+                $('#execution_state').html(data.state);
+                $('#execution_start_date').html(data.start_date);
+                $('#execution_end_date').html(data.end_date);
+                $('#btn-cancel-1').hide();
+                $('#btn-cancel-2').hide();
+                console.log('results_available',data.results_available)
+                if (data.results_available == true){
+                 $('#results-btn').show();
+                 $('#results-text').hide();
+                }else{
+                 $('#results-btn').hide();
+                 $('#results-text').show();
+                }
+              }
+          },
+          error: function(xhr,status,error) 
+          {
+            alert('Servidor no encontrado, no es posible actualizar el estado de la ejecucicón.')
+          }
+      });
+  }
+  //Call our function
+  send();
+
+  function display_modal(data){
+    var code = document.getElementById("error-console");
+    code.textContent=data;
+    $('#myModal').modal('toggle');
+    return false;
+  }
+
+  // Adding listener to the datatable ihner buttons
+  $(document).on('click', '#show-log', function(){ 
+    var $btn=$(this);
+    var $tr=$btn.closest('tr');
+    var dataTableRow=table.row($tr[0]); // get the DT row so we can use the API on it
+    var rowData=dataTableRow.data();
+    // console.log(rowData);
+    display_modal(rowData.log_content);
+  });
+
+});
+</script>
+{% endblock %}

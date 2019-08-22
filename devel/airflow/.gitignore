@@ -1,0 +1,15 @@
+### Python ###
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# C extensions
+*.so
+
+# Airflow files
+*.err
+*.log
+*.pid
+*.out
+unittests.cfg
+home/airflow/logs/

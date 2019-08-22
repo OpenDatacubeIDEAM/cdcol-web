@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block banner_block %}
+<img class="overlay" src="{% static 'images/small-banner-home.jpg' %}">
+{% endblock %}
+
+{% block content %}
+  <!-- breadcrumb start -->
+  <!-- ================ -->
+  <div class="breadcrumb-container">
+    <div class="container">
+      <ol class="breadcrumb">
+        <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
+        <li>Mi perfil</li>
+      </ol>
+    </div>
+  </div>
+  <!-- breadcrumb end -->
+
+  <!-- main-container start -->
+  <!-- ================ -->
+  <section class="main-container">
+    <div class="container">
+      <div class="row">
+        <!-- sidebar start -->
+        <!-- ================ -->
+        <aside class="col-md-4 col-lg-3 col-lg-offset-1">
+          <div class="sidebar">
+            <div class="block clearfix">
+              <h3 class="title">Configuración</h3>
+              <div class="separator-2"></div>
+              <nav>
+                <a href="{% url 'profile:update' %}" class="btn btn-primary btn-md btn-block">Información de la Cuenta</a>
+              </nav>
+              <nav>
+                <a href="{% url 'account_reset_password' %}" class="btn btn-primary btn-md btn-block">Restablecer contraseña</a>
+              </nav>
+            </div>
+          </div>
+        </aside>
+        <!-- sidebar end -->
+
+        <!-- main start -->
+        <!-- ================ -->
+        <div class="main col-md-8">
+
+          <!-- page-title start -->
+          <!-- ================ -->
+          <h3 class="page-title">Información del Perfil</h3>
+          <div class="separator-2"></div>
+          <!-- page-title end -->
+          <p>Esta es la información registrada en su perfil:</p>
+          <div class="section light-gray-bg">
+            <div class="container">
+              <form role="form" class="form-horizontal col-md-7" method="POST" action="{% url 'profile:update'%}" enctype="multipart/form-data">
+              {% csrf_token %}
+
+                <!-- Errors -->
+                {% if user_form.errors %}
+                {% for error in user_form.non_field_errors %}
+                <div class="alert alert-danger">
+                  <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- /Errors -->
+
+                <!-- Email -->
+                <div class="form-group">
+                  <!-- Errors -->
+                  {% if user_form.email.errors %}
+                  {% for error in user_form.email.errors %}
+                  <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                  </div>
+                  {% endfor %}
+                  {% endif %}
+                  <!-- /Errors -->
+                  <label><b>{{ user_form.email.label }}</b></label>
+                  {{ user_form.email }}
+                </div>
+                <!-- /Email -->
+
+                <!-- Nombres -->
+                <div class="form-group">
+                  <!-- Errors -->
+                  {% if user_form.name.errors %}
+                  {% for error in user_form.name.errors %}
+                  <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                  </div>
+                  {% endfor %}
+                  {% endif %}
+                  <!-- /Errors -->
+                  <label><b>{{ user_form.name.label }}</b></label>
+                  {{ user_form.name }}
+                </div>
+                <!-- /Nombres -->
+
+                <!-- Apellidos -->
+                <div class="form-group">
+                  <!-- Errors -->
+                  {% if user_form.last_name.errors %}
+                  {% for error in user_form.last_name.errors %}
+                  <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                  </div>
+                  {% endfor %}
+                  {% endif %}
+                  <!-- /Errors -->
+                  <label><b>{{ user_form.last_name.label }}</b></label>
+                  {{ user_form.last_name }}
+                </div>
+                <!-- /Apellidos -->
+
+                <!-- Institución -->
+                <div class="form-group">
+                  <!-- Errors -->
+                  {% if user_form.institution.errors %}
+                  {% for error in user_form.institution.errors %}
+                  <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                  </div>
+                  {% endfor %}
+                  {% endif %}
+                  <!-- /Errors -->
+                  <label><b>{{ user_form.institution.label }}</b></label>
+                  {{ user_form.institution }}
+                </div>
+                <!-- /Institución -->
+
+                <!-- Teléfono Institucional -->
+                <div class="form-group">
+                  <!-- Errors -->
+                  {% if user_form.phone.errors %}
+                  {% for error in user_form.phone.errors %}
+                  <div class="alert alert-danger">
+                  <strong>{{ error|escape }}</strong>
+                  </div>
+                  {% endfor %}
+                  {% endif %}
+                  <!-- /Errors -->
+                  <label><b>{{ user_form.phone.label }}</b></label>
+                  {{ user_form.phone }}
+                </div>
+                <!-- /Teléfono Institucional -->
+
+                <div class="form-group">
+                  <p><b>Roles Habilitados</b></p>
+                  <ul>
+                    {% for group_name in user.profile.get_groups %}
+                    <li>{{ group_name }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+
+                <div class="text-center">
+                  <button type="submit" class="btn btn-default btn-lg">Actualizar Perfil</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- main end -->
+      </div>
+    </div>
+  </section>
+  <!-- main-container end -->
+{% endblock %}

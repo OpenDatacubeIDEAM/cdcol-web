@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- breadcrumb start -->
+<!-- ================ -->
+<div class="breadcrumb-container">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
+      <li><a href="{% url 'storage:index' %}">Unidades de Almacenamiento</a></li>
+      <li class="active">Detalle de Imagen</li>
+    </ol>
+  </div>
+</div>
+<!-- breadcrumb end -->
+
+<!-- main-container start -->
+<!-- ================ -->
+<section class="main-container">
+  <div class="container">
+    <div class="row">
+      <!-- main start -->
+      <!-- ================ -->
+      <div class="main col-md-8">
+
+        <!-- page-title start -->
+        <!-- ================ -->
+        <h3 class="title">Información de la Imagen</h3>
+        <div class="separator-2"></div>
+        <p>La información de la imagen es la siguiente:</p>
+        <table class="table">
+          <tbody>
+          <tr>
+            <td>Unidad de almacenamiento:</td>
+            <td>{{ storage_unit_alias }}</td>
+          </tr>
+          <tr>
+            <td>Año:</td>
+            <td>{{ year }}</td>
+          </tr>
+          <tr>
+            <td>Longitud / Latitud:</td>
+            <td>{{ coordinates.latitude }} / {{ coordinates.longitude }}</td>
+          </tr>
+          <tr>
+            <td>Nombre:</td>
+            <td>{{ name }}</td>
+          </tr>
+          </tbody>
+        </table>
+
+        <h3 class="page-title">Thumbnails</h3>
+        <div class="separator-2"></div>
+        <p>Los thumbnails de esta imagen son los siguientes:</p>
+
+        <div class="isotope-container-fitrows row grid-space-10">
+          {% for thumb_name, thumb_url in thumbnails.items %}
+          <div class="col-sm-6 col-md-4 isotope-item">
+            <div class="image-box style-2 mb-20 bordered text-center">
+              <div class="carousel slide">
+                <div class="carousel-inner">
+                  <div class="item active">
+                    <div class="">
+                        <img src="{{ thumb_url }}" alt="">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="body shadow light-gray-bg ">
+                <p>{{ thumb_name }}</p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <h3 class="page-title">Metadatos</h3>
+        <div class="separator-2"></div>
+        <p>Los metadatos del contenido son los siguientes:</p>
+        <table class="table">
+          <tbody>
+            <tr>
+              <td>
+                <pre><code> {{ metadata }} </code></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- main end -->
+
+      <!-- sidebar start -->
+      <!-- ================ -->
+      <aside class="col-md-4 col-lg-3 col-lg-offset-1">
+        <div class="sidebar">
+          <div class="block clearfix">
+            <h3 class="title">Acciones</h3>
+            <div class="separator-2"></div>
+            {% if user.is_authenticated %}
+            {% if perms.storage.can_download_file%}
+            <nav>
+              <a href="{% url 'storage:image-download' storage_unit_id image_name %}" class="btn btn-primary btn-md btn-block">Descargar archivo</a>
+            </nav>
+            {% endif %}
+
+            <nav>
+              <a href="{% url 'storage:metadata-download' storage_unit_id image_name %}" target="_blank" class="btn btn-primary btn-md btn-block">Descargar metadatos</a>
+            </nav>
+            {% endif %}
+          </div>
+        </div>
+      </aside>
+      <!-- sidebar end -->
+    </div>
+  </div>
+</section>
+<!-- main-container end -->
+{% endblock %}

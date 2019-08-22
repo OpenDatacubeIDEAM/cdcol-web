@@ -1,43 +1,53 @@
 # -*- coding: utf-8 -*-
+
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from user_profile.models import UserProfile
-from user_profile.forms import UserProfileForm
+from django.views.generic.base import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from user_profile.forms import ProfileForm
 
 
-def pending(request):
-	return render(request, 'profile/pending.html')
+class PendingView(TemplateView):
+    """This page is rendered when a user is just registered."""
+    template_name = 'user_profile/pending.html'
 
 
-@login_required(login_url='/accounts/login/')
-def index(request):
-	current_user = request.user
-	user_profile = UserProfile.objects.get(user=current_user)
-	if request.method == 'POST':
-		# getting the form
-		user_form = UserProfileForm(request.POST)
-		# checking if the form is valid
-		if user_form.is_valid():
-			name = user_form.cleaned_data['name']
-			last_name = user_form.cleaned_data['last_name']
-			institution = user_form.cleaned_data['institution']
-			phone = user_form.cleaned_data['phone']
-			# updating User model
-			current_user.first_name = name
-			current_user.last_name = last_name
-			current_user.save()
-			# updating UserProfile model
-			user_profile.institution = institution
-			user_profile.phone = phone
-			user_profile.save()
-		else:
-			user_form.add_error(None, "Favor completar todos los campos marcados.")
-	else:
-		user_form = UserProfileForm(initial={
-			'email': current_user.email,
-			'name': current_user.first_name,
-			'last_name': current_user.last_name,
-			'institution': user_profile.institution,
-			'phone': user_profile.phone})
-	context = {'user_form': user_form}
-	return render(request, 'profile/index.html', context)
+class HomeView(TemplateView):
+    """Render the user home page."""
+    template_name = 'user_profile/home.html'
+
+
+class UpdateView(LoginRequiredMixin,TemplateView):
+    """Update user and profile models data."""
+    
+    def get(self,request,*args,**kwargs):
+        initial = {
+            'email': request.user.email,
+            'name': request.user.first_name,
+            'last_name': request.user.last_name,
+            'institution': request.user.profile.institution,
+            'phone': request.user.profile.phone
+        }
+        form = ProfileForm(initial=initial)
+        context = {'user_form':form}
+        return render(request,'user_profile/update.html',context)
+
+    def post(self,request,*args,**kwargs):
+
+        form = ProfileForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            last_name = form.cleaned_data['last_name']
+            institution = form.cleaned_data['institution']
+            phone = form.cleaned_data['phone']
+            # updating User model
+            request.user.first_name = name
+            request.user.last_name = last_name
+            request.user.save()
+            # updating UserProfile model
+            request.user.profile.institution = institution
+            request.user.profile.phone = phone
+            request.user.profile.save()
+
+        context = {'user_form':form}
+        return render(request,'user_profile/update.html',context)

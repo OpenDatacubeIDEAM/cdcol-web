@@ -1,491 +1,719 @@
-# -*- coding: utf-8 -*-
-import os
-import mimetypes
-from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponseRedirect, HttpResponse
-from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required, permission_required
-from django.db.models import Avg, Q
-from algorithm.models import Algorithm, Topic, VersionStorageUnit, Version, Parameter
-from algorithm.serializers import AlgorithmSerializer
-from execution.models import Review
-from storage.models import StorageUnit
-from execution.models import Execution
-from algorithm.forms import AlgorithmForm, AlgorithmUpdateForm, VersionForm, VersionUpdateForm, NewParameterForm
-from rest_framework.renderers import JSONRenderer
+ # -*- coding: utf-8 -*-
+
+from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.urls import reverse_lazy
+from django.contrib import messages
+from django.core.files.base import ContentFile
+from django.views.generic.base import TemplateView
+from django.views.generic.edit import CreateView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import UpdateView
+from django.views.generic.edit import DeleteView
+from django.views.generic.edit import FormView
 from django.conf import settings
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import permission_required
+
+import django_filters.rest_framework
+
+from rest_framework import viewsets
+from algorithm.serializers import AlgorithmSerializer
+from algorithm.serializers import VersionSerializer
+
+from algorithm.models import Algorithm
+from algorithm.models import Version
+from algorithm.models import Parameter
+from algorithm.models import VersionStorageUnit
+from algorithm.forms import VersionCreateForm
+from algorithm.forms import VersionUpdateForm
+from algorithm.forms import AlgorithmCreateForm
+from algorithm.forms import AlgorithmUpdateForm
+from algorithm.forms import VersionPublishForm
+from algorithm.forms import ParameterForm
+from storage.models import StorageUnit
+
+import os
 import urllib
-from django.core.files import File
-from wsgiref.util import FileWrapper
-from django.utils.encoding import smart_str
+import requests
 
 
-class JSONResponse(HttpResponse):
-	"""
-	An HttpResponse that renders its content into JSON.
-	"""
+@method_decorator(
+    permission_required(
+        'algorithm.can_list_algorithms',
+        raise_exception=True
+    ),
+    name='dispatch'
+)
+class AlgorithmIndexView(LoginRequiredMixin,TemplateView):
+    """Display a list of the algorithms."""
 
-	def __init__(self, data, **kwargs):
-		content = JSONRenderer().render(data)
-		kwargs['content_type'] = 'application/json'
-		super(JSONResponse, self).__init__(content, **kwargs)
-
-
-def is_data_admin(user):
-	return user.groups.filter(name='DataAdmin').exists()
+    template_name = 'algorithm/index.html'
 
 
-def as_json(request):
-	current_user = request.user
-	if is_data_admin(current_user):
-		queryset = Algorithm.objects.filter()
-	else:
-		queryset = Algorithm.objects.filter(created_by=current_user)
-	serializer = AlgorithmSerializer(queryset, many=True)
-	return JSONResponse(serializer.data)
+class AlgorithmViewSet(viewsets.ModelViewSet):
+    """CRUD over Algoritm model via API calls."""
+    queryset = Algorithm.objects.all()
+    serializer_class = AlgorithmSerializer
+
+    def get_queryset(self):
+        """Filter the queryset depending of the user.
+        
+        DataAdmin can list all algorithms. Other users 
+        can list only the algorithms they have created.
+        """
+
+        user = self.request.user
+        if hasattr(user,'profile') and user.profile.is_data_admin():
+            return super().get_queryset()
+
+        return user.algorithm_set.all()
 
 
-@login_required(login_url='/accounts/login/')
-@permission_required('algorithm.can_list_algorithms', raise_exception=True)
-def index(request):
-	return render(request, 'algorithm/index.html')
+class VersionViewSet(viewsets.ModelViewSet):
+    """CRUD over Version model via API calls."""
+    queryset = Version.objects.filter(publishing_state__in=['4','5'])
+    serializer_class = VersionSerializer
 
 
-@login_required(login_url='/accounts/login/')
-@permission_required('algorithm.can_create_algorithm', raise_exception=True)
-def new(request):
-	current_user = request.user
-	topics = Topic.objects.filter(enabled=True)
-	if request.method == 'POST':
-		# getting the form
-		algorithm_form = AlgorithmForm(request.POST)
-		# checking if the form is valid
-		if algorithm_form.is_valid():
-			field_topic = algorithm_form.cleaned_data['topic']
-			field_name = algorithm_form.cleaned_data['name']
-			field_description = algorithm_form.cleaned_data['description']
-			field_generate_mosaic = algorithm_form.cleaned_data['generate_mosaic']
-			field_multitemporal = algorithm_form.cleaned_data['multitemporal']
-			# creating the new algorithm
-			new_algorithm = Algorithm(
-				name=field_name,
-				description=field_description,
-				topic=field_topic,
-				generate_mosaic=field_generate_mosaic,
-				multitemporal=field_multitemporal,
-				created_by=current_user
-			)
-			new_algorithm.save()
-			# creating the base version
-			new_algorithm_version = Version(
-				algorithm=new_algorithm,
-				description='Versión por defecto 1.0',
-				number='1.0',
-				repository_url='',
-				publishing_state=Version.DEVELOPED_STATE,
-				created_by=current_user
-			)
-			new_algorithm_version.save()
-			return HttpResponseRedirect(reverse('algorithm:index'))
-		else:
-			algorithm_form.add_error(None, "Favor completar todos los campos marcados.")
-	else:
-		algorithm_form = AlgorithmForm()
-	context = {'algorithm_form': algorithm_form, 'topics': topics}
-	return render(request, 'algorithm/new.html', context)
+@method_decorator(
+    permission_required('algorithm.can_create_algorithm',raise_exception=True),
+    name='dispatch'
+)
+class AlgorithmCreateView(LoginRequiredMixin,CreateView):
+    """Create an algorithm and an initial version for the algorithm.
+
+    Use the template algorithm/algorithm_form.html
+    """
+
+    model = Algorithm
+    form_class = AlgorithmCreateForm
+    success_url = reverse_lazy('algorithm:index')
+
+    def form_valid(self, form):
+        """Create an initial version for the algorithm.
+
+        This method is called when valid form data has been POSTed.
+        """
+        
+        # Relate current user with the created algorthm
+        form.instance.created_by = self.request.user
+        self.object = form.save()
+
+        # Creating new algorithm version
+        version = Version(
+            algorithm=self.object,
+            description='Versión por defecto 1.0',
+            number='1.0',
+            repository_url='',
+            publishing_state=Version.DEVELOPED_STATE
+        )
+        version.save()
+        return redirect(self.get_success_url())
+ 
+    def get_context_data(self, **kwargs):
+        """Add or change context initial data."""
+
+        context = super(AlgorithmCreateView, self).get_context_data(**kwargs)
+        # Template aditional data
+        context['section'] = 'Nuevo'
+        context['title'] = 'Nuevo Algoritmo'
+        context['button'] = 'Crear Algoritmo'
+        return context
 
 
-@login_required(login_url='/accounts/login/')
-@permission_required('algorithm.can_edit_algorithm', raise_exception=True)
-def update(request, algorithm_id):
-	current_user = request.user
-	algorithm = get_object_or_404(Algorithm, Q(created_by=current_user), id=algorithm_id)
-	if request.method == 'POST':
-		# getting the form
-		algorithm_form = AlgorithmUpdateForm(request.POST)
-		# checking if the form is valid
-		if algorithm_form.is_valid():
-			field_name = algorithm_form.cleaned_data['name']
-			field_description = algorithm_form.cleaned_data['description']
-			field_generate_mosaic = algorithm_form.cleaned_data['generate_mosaic']
-			field_multitemporal = algorithm_form.cleaned_data['multitemporal']
-			# update the algorithm
-			algorithm.name = field_name
-			algorithm.description = field_description
-			algorithm.generate_mosaic = field_generate_mosaic
-			algorithm.multitemporal = field_multitemporal
-			algorithm.save()
-			return HttpResponseRedirect(reverse('algorithm:detail', kwargs={'algorithm_id': algorithm_id}))
-		else:
-			algorithm_form.add_error(None, "Favor completar todos los campos marcados.")
-	else:
-		algorithm_form = AlgorithmUpdateForm(
-			initial={'generate_mosaic': algorithm.generate_mosaic, 'multitemporal': algorithm.multitemporal})
-	print algorithm_form
-	context = {'algorithm_form': algorithm_form, 'algorithm': algorithm}
-	return render(request, 'algorithm/update.html', context)
+@method_decorator(
+    permission_required('algorithm.can_edit_algorithm',raise_exception=True)
+    ,name='dispatch'
+)
+class AlgorithmUpdateView(LoginRequiredMixin,UpdateView):
+    """Update an algorithm.
+
+    Use the template algorithm/algorithm_form.html
+    """
+
+    model = Algorithm
+    form_class = AlgorithmUpdateForm
+    success_url = reverse_lazy('algorithm:index')
 
 
-@login_required(login_url='/accounts/login/')
-@permission_required('algorithm.can_view_algorithm_detail', raise_exception=True)
-def detail(request, algorithm_id):
-	current_user = request.user
-	if is_data_admin(current_user):
-		algorithm = get_object_or_404(Algorithm, id=algorithm_id)
-	else:
-		algorithm = get_object_or_404(Algorithm, Q(created_by=current_user), id=algorithm_id)
-	versions = Version.objects.filter(algorithm_id=algorithm_id)
-	context = {'algorithm': algorithm, 'versions': versions}
-	return render(request, 'algorithm/detail.html', context)
+    def get_context_data(self, **kwargs):
+        """Add or change context initial data."""
+
+        context = super(AlgorithmUpdateView, self).get_context_data(**kwargs)
+        # Template aditional data
+        context['section'] = 'Editar'
+        context['title'] = 'Editar Algoritmo'
+        context['button'] = 'Actualizar Algoritmo'
+        return context
+
+    def get_initial(self):
+        """initialize the topic of the algorithm."""
+        initial = super(AlgorithmUpdateView, self).get_initial()
+        algorithm_obj = self.get_object()
+        # initial['topic'] = algorithm_obj.topic
+        return initial
 
 
-def download_source_code(new_version):
-	try:
-		# getting the file name
-		file_name = new_version.repository_url.split('/')[-1]
-		# downloading and updating the model
-		content = urllib.urlretrieve(new_version.repository_url)
-		new_version.source_code.save(file_name, File(open(content[0])), save=True)
-	except Exception as e:
-		print "Something went wrong when downloading, {}".format(new_version.repository_url)
-		pass
+@method_decorator(
+    permission_required('algorithm.can_view_algorithm_detail',raise_exception=True),
+    name='dispatch'
+)
+class AlgorithmDetailView(LoginRequiredMixin,DetailView):
+    """Display algorithm detail.
+
+    Use the template algorithm/algorithm_detail.html
+    """
+
+    model = Algorithm
+    context_object_name = 'algorithm'
 
 
+@method_decorator(
+    permission_required('algorithm.can_create_new_version',raise_exception=True),
+    name='dispatch'
+)
+class VersionCreateView(LoginRequiredMixin,CreateView):
+    """Create a version for a given algorithm.
 
-@login_required(login_url='/accounts/login/')
-@permission_required('algorithm.can_create_new_version', raise_exception=True)
-def new_version(request, algorithm_id):
-	current_user = request.user
-	algorithm = get_object_or_404(Algorithm, Q(created_by=current_user), id=algorithm_id)
-	current_version = algorithm.last_version()
-	try:
-		new_minor_version_number = current_version.new_minor_version()
-		new_major_version_number = current_version.new_major_version()
-	except:
-		new_minor_version_number = "1.0"
-		new_major_version_number = "1.0"
-	source_storage_units = StorageUnit.objects.all()
-	if request.method == 'POST':
-		# getting the form
-		version_form = VersionForm(request.POST)
-		# checking if the form is valid
-		if version_form.is_valid():
-			description = version_form.cleaned_data['description']
-			version_number = version_form.cleaned_data['number']
-			repository_url = version_form.cleaned_data['repository_url']
-			field_source_storage_units = version_form.cleaned_data['source_storage_units']
-			# reading the version
-			version_number = new_minor_version_number if version_number == "1" else new_major_version_number
-			# creating the new version
-			new_algorithm_version = Version(
-				algorithm=algorithm,
-				description=description,
-				number=version_number,
-				repository_url=repository_url,
-				publishing_state=Version.DEVELOPED_STATE,
-				created_by=current_user
-			)
-			new_algorithm_version.save()
-			download_source_code(new_algorithm_version)
-			# creating the relation with the storage units
-			for source_storage_unit in field_source_storage_units:
-				new_version_relation = VersionStorageUnit(
-					version=new_algorithm_version,
-					storage_unit=source_storage_unit
-				)
-				new_version_relation.save()
-			return HttpResponseRedirect(reverse('algorithm:detail', kwargs={'algorithm_id': algorithm_id}))
-		else:
-			version_form.add_error(None, "Favor completar todos los campos marcados.")
-	else:
-		version_form = VersionForm()
-	context = {'version_form': version_form, 'algorithm': algorithm, 'new_major_version': new_major_version_number,
-	           'new_minor_version': new_minor_version_number, 'source_storage_units': source_storage_units}
-	return render(request, 'algorithm/new_version.html', context)
+    Use the template algorithm/version_form.html
+    """
 
+    model = Version
+    form_class = VersionCreateForm
 
-@login_required(login_url='/accounts/login/')
-@permission_required('algorithm.can_edit_version', raise_exception=True)
-def update_version(request, algorithm_id, version_id):
-	current_user = request.user
-	version = get_object_or_404(Version, Q(created_by=current_user), id=version_id)
-	selected_storage_units = version.source_storage_units.all()
-	source_storage_units = StorageUnit.objects.all()
-	if request.method == 'POST':
-		# getting the form
-		version_form = VersionUpdateForm(request.POST)
-		if version.publishing_state != Version.DEVELOPED_STATE:
-			version_form.add_error(None, "Solo es posible actualizar una versión si esta se encuentra en estado 'En Desarrollo'.")
-		# checking if the form is valid
-		if version_form.is_valid():
-			description = version_form.cleaned_data['description']
-			repository_url = version_form.cleaned_data['repository_url']
-			field_source_storage_units = version_form.cleaned_data['source_storage_units']
-			# updating with the new information
-			version.description = description
-			version.repository_url = repository_url
-			version.save()
-			# downloading the new file
-			download_source_code(version)
-			# deleting all the source storage units associations
-			version_associations = VersionStorageUnit.objects.filter(version_id=version.id)
-			for association in version_associations:
-				association.delete()
-			# creating all the new associations
-			for source_storage_unit in field_source_storage_units:
-				new_version_relation = VersionStorageUnit(
-					version=version,
-					storage_unit=source_storage_unit
-				)
-				new_version_relation.save()
-			return HttpResponseRedirect(reverse('algorithm:version_detail', kwargs={'algorithm_id': algorithm_id, 'version_id': version.id }))
-		else:
-			version_form.add_error(None, "Favor completar todos los campos marcados.")
-	else:
-		version_form = VersionUpdateForm(initial={'description': version.description,
-		                                          'repository_url': version.repository_url})
-	context = {'version_form': version_form, 'version': version, 'selected_storage_units': selected_storage_units,
-	           'source_storage_units': source_storage_units}
-	return render(request, 'algorithm/update_version.html', context)
+    def get_context_data(self, **kwargs):
+        """Change form and context initial data."""
+
+        context = super(VersionCreateView, self).get_context_data(**kwargs)
+        form = context.get('form')
+
+        algorithm_pk = self.kwargs.get('pk')
+        algorithm = get_object_or_404(Algorithm,pk=algorithm_pk)
+        minor_version = algorithm.next_minor_version()
+        major_version = algorithm.next_major_version()
+
+        form.fields.get('number').choices = [
+            (minor_version,'Versión Menor - {}'.format(minor_version)),
+            (major_version,'Versión Mayor - {}'.format(major_version))
+        ]
+
+        # Template aditional data
+        context['section'] = 'Version'
+        context['title'] = 'Nueva Version'
+        context['button'] = 'Crear Version'
+
+        return context
+
+    def get_initial(self):
+        """initialize version algorthm."""
+        algorithm_pk = self.kwargs.get('pk')
+        algorithm = get_object_or_404(Algorithm,pk=algorithm_pk)
+        initial = super(VersionCreateView, self).get_initial()
+        initial['algorithm'] = algorithm.pk
+        initial['show_algorthm_name'] = algorithm.name
+        return initial
+
+    def form_valid(self, form):
+        """Initialice version status and source_code."""
+
+        # Selecting new version publishing_state.
+        form.instance.publishing_state = Version.DEVELOPED_STATE
+        self.object = form.save()
+
+        # Download source code from github and save it locally.
+        file_name = os.path.basename(self.object.repository_url)
+        response = urllib.request.urlopen(self.object.repository_url)
+        content = response.read()
+        response.close()
+
+        self.object.source_code.save(file_name,ContentFile(content))
+
+        # Note this doesn’t delete the related objects – it just disassociates them.
+        self.object.source_storage_units.clear()
+        # Before disassociation, objects can be deleted
+        for storage_unit in self.object.source_storage_units.all():
+            storage_unit.delete()
+
+        # Relate selecetd storage units with the current version
+        selected_storage_units = form.cleaned_data['source_storage_units']
+        for storage_unit in selected_storage_units:
+            # if not VersionStorageUnit.objects.filter(storage_unit=storage_unit,version=self.object).exists():
+            VersionStorageUnit.objects.get_or_create(
+                version=self.object,
+                storage_unit=storage_unit
+            )
+            
+        messages.info(self.request, 'Nueva versión creada con éxito !!.')
+
+        return redirect(self.get_success_url())
+
+    def get_success_url(self):
+        """Return a URL to the detail of the algorithm."""
+        algorithm_pk = self.kwargs.get('pk')
+        return reverse('algorithm:detail',kwargs={'pk':algorithm_pk})
 
 
-@login_required(login_url='/accounts/login/')
-def download_version(request, algorithm_id, version_id):
-	"""
-	Download a file using the version_id
-	"""
-	version = get_object_or_404(Version, id=version_id)
-	file_name = version.repository_url.split('/')[-1]
-	file_path = "{}/{}".format(settings.MEDIA_ROOT, version.source_code.name)
-	print file_path
-	file_wrapper = FileWrapper(file(file_path, 'rb'))
-	file_mimetype = mimetypes.guess_type(file_path)
-	response = HttpResponse(file_wrapper, content_type=file_mimetype)
-	response['X-Sendfile'] = file_path
-	response['Content-Length'] = os.stat(file_path).st_size
-	response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(file_name)
-	return response
+@method_decorator(
+    permission_required('algorithm.can_edit_version',raise_exception=True),
+    name='dispatch'
+)
+class VersionUpdateView(LoginRequiredMixin,UpdateView):
+    """Perform version update.
+
+    Use the template algorithm/version_form.html
+    """
+    model = Version
+    form_class = VersionUpdateForm
+
+    def get_context_data(self, **kwargs):
+        """Add or change context initial data."""
+
+        context = super(VersionUpdateView, self).get_context_data(**kwargs)
+
+        # Template aditional data
+        context['section'] = 'Version'
+        context['title'] = 'Editar Version'
+        context['button'] = 'Actualizar Version'
+        return context
+
+    def get_initial(self):
+        """initialize version algorthm."""
+        initial = super(VersionUpdateView, self).get_initial()
+        version_obj = self.get_object()
+        initial['show_algorthm_name'] = version_obj.algorithm.name
+        initial['algorithm'] = version_obj.algorithm.pk
+        initial['number'] = version_obj.number
+        initial['source_storage_units'] = version_obj.source_storage_units.all()
+        return initial
+
+    def form_valid(self, form):
+        """Initialice version status and source_code."""
+
+        self.object = form.save()
+
+        # Download source code from github and save it locally.
+        file_name = os.path.basename(self.object.repository_url)
+        response = urllib.request.urlopen(self.object.repository_url)
+        content = response.read()
+        response.close()
+
+        self.object.source_code.save(file_name,ContentFile(content))
+
+        # Note this doesn’t delete the related objects – it just disassociates them.
+        self.object.source_storage_units.clear()
+        # Before disassociation, objects can be deleted
+        for storage_unit in self.object.source_storage_units.all():
+            storage_unit.delete()
+
+        # Relate selecetd storage units with the current version
+        selected_storage_units = form.cleaned_data['source_storage_units']
+        for storage_unit in selected_storage_units:
+            # if not VersionStorageUnit.objects.filter(storage_unit=storage_unit,version=self.object).exists():
+            VersionStorageUnit.objects.get_or_create(
+                version=self.object,
+                storage_unit=storage_unit
+            )
+
+        messages.info(self.request, 'Versión actualizada con éxito !!.')
+
+        return redirect(self.get_success_url())
+
+    def get_success_url(self):
+        """Return a URL to the detail of the updted version."""
+        version_pk = self.kwargs.get('pk')
+        return reverse('algorithm:version-detail',kwargs={'pk':version_pk})
 
 
-@login_required(login_url='/accounts/login/')
-@permission_required('algorithm.can_view_version_detail', raise_exception=True)
-def version_detail(request, algorithm_id, version_id):
-	current_user = request.user
-	if is_data_admin(current_user):
-		version = get_object_or_404(Version, id=version_id)
-	else:
-		version = get_object_or_404(Version, Q(created_by=current_user), id=version_id)
-	parameters = Parameter.objects.filter(version=version_id).order_by('position')
-	reviews = Review.objects.filter(execution__version=version).order_by('created_at')
-	# getting version executions
-	execution_count = Execution.objects.filter(version=version).count()
-	# getting the average rating
-	average_rating = Review.objects.filter(version=version).aggregate(Avg('rating'))['rating__avg']
-	average_rating = average_rating if average_rating is not None else 0
-	storage_units = VersionStorageUnit.objects.filter(version_id=version_id)
-	context = {'version': version, 'storage_units': storage_units, 'parameters': parameters, 'reviews': reviews,
-	           'average_rating': average_rating, 'execution_count': execution_count}
-	return render(request, 'algorithm/version_detail.html', context)
+@method_decorator(
+    permission_required('algorithm.can_view_version_detail',raise_exception=True),
+    name='dispatch'
+)
+class VersionDetailView(LoginRequiredMixin,DetailView):
+    """Display version detail.
+
+    Use the template algorithm/version_detail.html
+    """
+    model = Version
 
 
-@login_required(login_url='/accounts/login/')
-@permission_required('algorithm.can_view_ratings', raise_exception=True)
-def version_rating(request, algorithm_id, version_id):
-	version = get_object_or_404(Version, id=version_id)
-	parameters = Parameter.objects.filter(version=version_id).order_by('position')
-	reviews = Review.objects.filter(execution__version=version).order_by('created_at')
-	# getting the average rating
-	average_rating = Review.objects.filter(version=version).aggregate(Avg('rating'))['rating__avg']
-	average_rating = round(average_rating if average_rating is not None else 0, 2)
-	storage_units = VersionStorageUnit.objects.filter(version_id=version_id)
-	context = {'version': version, 'storage_units': storage_units, 'parameters': parameters, 'reviews': reviews,
-	           'average_rating': average_rating}
-	return render(request, 'algorithm/version_rating.html', context)
+@method_decorator(
+    permission_required('algorithm.can_publish_version',raise_exception=True),
+    name='dispatch'
+)
+class VersionPublishView(LoginRequiredMixin,FormView):
+    """Change the publishing_state of a version as Version.PUBLISHED_STATE
+
+    Only versions with publishing_state == Version.DEVELOPED_STATE 
+    can be published.
+    """
+
+    template_name = 'algorithm/algorithm_publish_form.html'
+    form_class = VersionPublishForm
+    success_url = reverse_lazy('storage:index')
 
 
-@login_required(login_url='/accounts/login/')
-@permission_required('algorithm.can_publish_version', raise_exception=True)
-def publish_version(request, algorithm_id, version_id):
-	current_user = request.user
-	if is_data_admin(current_user):
-		version = get_object_or_404(Version, id=version_id)
-	else:
-		version = get_object_or_404(Version, Q(created_by=current_user), id=version_id)
-	if request.method == 'GET':
-		if version.publishing_state == Version.DEVELOPED_STATE:
-			version.publishing_state = Version.PUBLISHED_STATE
-			version.save()
-		else:
-			print "Trying to publish a version, state is not 'in develop'"
-	return HttpResponseRedirect(
-		reverse('algorithm:version_detail', kwargs={'algorithm_id': algorithm_id, 'version_id': version_id}))
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+
+        version_pk = self.kwargs.get('pk')
+        version = get_object_or_404(Version,pk=version_pk)
+
+        template_zip = form.cleaned_data['template']
+        algorithms_zip = form.cleaned_data['algorithms']
+
+        files = {}
+
+        files['template_file'] = template_zip.file
+        files['algorithms_zip_file'] = algorithms_zip.file if algorithms_zip else None
+
+        data = {
+            'version_id': version_pk
+        }
+
+        url = "{}/api/algorithms/publish/".format(settings.DC_API_URL)
+
+        response = requests.post(url,data=data,files=files)
+
+        if response.status_code != 200:
+            err_message = response.json()
+            messages.error(self.request,err_message)
+            return redirect('algorithm:version-publish',pk=version_pk)
+
+        if version.publishing_state == Version.REVIEW:
+            version.publishing_state = Version.PUBLISHED_STATE
+            version.save()
+            
+            message = "Versión publicada con éxito."
+            messages.info(self.request, message)
+
+            # send email
+            subject = 'Versión Publicada'
+
+            from_email = settings.DEFAULT_FROM_EMAIL
+            to_email =  [version.algorithm.created_by.email]
+
+            context = {
+                'version':version
+            }
+
+            message = render_to_string(
+                template_name='algorithm/email/algorithm_published.html',
+                context=context,
+                request=self.request
+            )
+
+            send_mail(subject,message,from_email,to_email,fail_silently=False)
+
+        else:
+            message = (
+                "No es posible publicar una version "
+                "que no esta en estado 'EN REVISION'."
+            )
+        
+            messages.warning(self.request, message)
+
+        return redirect('algorithm:version-detail',pk=version_pk)
 
 
-@login_required(login_url='/accounts/login/')
-@permission_required('algorithm.can_unpublish_version', raise_exception=True)
-def unpublish_version(request, algorithm_id, version_id):
-	current_user = request.user
-	if is_data_admin(current_user):
-		version = get_object_or_404(Version, id=version_id)
-	else:
-		version = get_object_or_404(Version, Q(created_by=current_user), id=version_id)
-	if request.method == 'GET':
-		execution_count = Execution.objects.filter(version=version).count()
-		if version.publishing_state == Version.PUBLISHED_STATE and execution_count == 0:
-			version.publishing_state = Version.DEVELOPED_STATE
-			version.save()
-		else:
-			print "Trying to unpublish a version, state is not published or executions are not 0"
-	return HttpResponseRedirect(
-		reverse('algorithm:version_detail', kwargs={'algorithm_id': algorithm_id, 'version_id': version_id}))
+@method_decorator(
+    permission_required('algorithm.can_unpublish_version',raise_exception=True),
+    name='dispatch'
+)
+class VersionUnPublishView(LoginRequiredMixin,TemplateView):
+    """Change the publishing_state of a version as Version.PUBLISHED_STATE
+
+    Only versions with publishing_state == Version.PUBLISHED_STATE,
+    and number of Executions == 0 can be unpublished.
+    """
+    
+    def get(self,request,*args,**kwargs):
+        version_pk = self.kwargs.get('pk')
+        version = get_object_or_404(Version,pk=version_pk)
+
+        # If the algorithm is public
+        condition_1 = version.publishing_state == Version.PUBLISHED_STATE
+        # and it does not have executions
+        condition_2 = version.execution_set.all().count() == 0
+
+        if condition_1 and condition_2:
+            version.publishing_state = Version.DEVELOPED_STATE
+            version.save()
+            message = "Versión ha cambiado a estado 'EN DESARROLLO'."
+            messages.info(request, message)
+        else:
+            message = (
+                "No es posible cambiar el estado de la version "
+                "puede que tenga ejecuciones o no sea publica aún."
+            )
+        
+            messages.warning(request, message)
+
+        return redirect('algorithm:version-detail',pk=version_pk)
 
 
-@login_required(login_url='/accounts/login/')
-@permission_required('algorithm.can_deprecate_version', raise_exception=True)
-def deprecate_version(request, algorithm_id, version_id):
-	current_user = request.user
-	if is_data_admin(current_user):
-		version = get_object_or_404(Version, id=version_id)
-	else:
-		version = get_object_or_404(Version, Q(created_by=current_user), id=version_id)
-	if request.method == 'GET':
-		if version.publishing_state == Version.PUBLISHED_STATE:
-			version.publishing_state = Version.DEPRECATED_STATE
-			version.save()
-		else:
-			print "Trying to deprecate version, state is not published"
-	return HttpResponseRedirect(
-		reverse('algorithm:version_detail', kwargs={'algorithm_id': algorithm_id, 'version_id': version_id}))
+@method_decorator(
+    permission_required('algorithm.can_deprecate_version',raise_exception=True),
+    name='dispatch'
+)
+class VersionDeprecateView(LoginRequiredMixin,TemplateView):
+    """Change the publishing_state of a version as Version.DEPRECATED_STATE
+
+    Only versions with publishing_state == Version.PUBLISHED_STATE 
+    can be deprecated.
+    """
+
+    def get(self,request,*args,**kwargs):
+        version_pk = self.kwargs.get('pk')
+        version = get_object_or_404(Version,pk=version_pk)
+
+        if version.publishing_state == Version.PUBLISHED_STATE:
+            version.publishing_state = Version.DEPRECATED_STATE
+            version.save()
+            message = "Versión deprecada con éxito."
+            messages.info(request, message)
+        else:
+            message = (
+                "No es posible deprecar una version"
+                " que no esta en estado 'PUBLICADA'."
+            )
+        
+            messages.warning(request, message)
+
+        return redirect('algorithm:version-detail',pk=version_pk)
 
 
-@login_required(login_url='/accounts/login/')
-@permission_required('algorithm.can_delete_version', raise_exception=True)
-def delete_version(request, algorithm_id, version_id):
-	current_user = request.user
-	if is_data_admin(current_user):
-		version = get_object_or_404(Version, id=version_id)
-	else:
-		version = get_object_or_404(Version, Q(created_by=current_user), id=version_id)
-	version = get_object_or_404(Version, id=version_id)
-	if request.method == 'GET':
-		execution_count = Execution.objects.filter(version=version).count()
-		# if execution_count == 0 and version.algorithm.obtain_versions().count() > 1: # TODO: Must ask this
-		if execution_count == 0:
-			version.delete()
-		else:
-			print "Trying to delete version but there are executions"
-	return HttpResponseRedirect(
-		reverse('algorithm:detail', kwargs={'algorithm_id': algorithm_id}))
+# class VersionDeleteView(LoginRequiredMixin,DeleteView):
+#     model = Version
+#     # success_message = "Versión eliminada con éxito."
+
+#     def get_success_url(self):
+#         """
+#         Return a URL to the detail of the algorithm which 
+#         version was deleted.
+#         """
+#         algorithm_pk = self.kwargs.get('apk')
+#         return reverse('algorithm:detail',kwargs={'pk':algorithm_pk})
 
 
-@login_required(login_url='/accounts/login/')
-@permission_required('algorithm.can_create_parameter', raise_exception=True)
-def new_parameter(request, algorithm_id, version_id):
-	current_user = request.user
-	version = get_object_or_404(Version, Q(created_by=current_user), id=version_id)
-	if request.method == 'POST':
-		# getting the form
-		new_parameter_form = NewParameterForm(request.POST)
-		if version.publishing_state != Version.DEVELOPED_STATE:
-			new_parameter_form.add_error(None, "Solo es posible agregar parámetros a versiones en estado 'En Desarrollo'.")
-		# checking if the form is valid
-		if new_parameter_form.is_valid():
-			name = new_parameter_form.cleaned_data['name']
-			parameter_type = new_parameter_form.cleaned_data['parameter_type']
-			description = new_parameter_form.cleaned_data['description']
-			help_text = new_parameter_form.cleaned_data['help_text']
-			position = new_parameter_form.cleaned_data['position']
-			required = new_parameter_form.cleaned_data['required']
-			enabled = new_parameter_form.cleaned_data['enabled']
-			default_value = new_parameter_form.cleaned_data['default_value']
-			function_name = new_parameter_form.cleaned_data['function_name']
-			output_included = new_parameter_form.cleaned_data['output_included']
-			# creating the parameter
-			new_version_parameter = Parameter(
-				version=version,
-				name=name,
-				parameter_type=parameter_type,
-				description=description,
-				help_text=help_text,
-				position=position,
-				required=required,
-				enabled=enabled,
-				default_value=default_value,
-				function_name=function_name,
-				output_included=output_included,
-			)
-			new_version_parameter.save()
-			return HttpResponseRedirect(
-				reverse('algorithm:version_detail', kwargs={'algorithm_id': algorithm_id, 'version_id': version_id}))
-		else:
-			new_parameter_form.add_error(None, "Favor completar todos los campos marcados.")
-	else:
-		new_parameter_form = NewParameterForm()
-	context = {'new_parameter_form': new_parameter_form, 'version': version}
-	return render(request, 'algorithm/new_parameter.html', context)
+@method_decorator(
+    permission_required('algorithm.can_delete_version',raise_exception=True),
+    name='dispatch'
+)
+class VersionDeleteView(LoginRequiredMixin,DeleteView):
+    """Delete a given version of an algorithm."""
+    
+    model = Version
+    success_message = "Versión eliminada con éxito."
+
+    def get_success_url(self):
+        """
+        Return a URL to the detail of the algorithm which 
+        version was deleted.
+        """
+        algorithm_pk = self.kwargs.get('apk')
+        return reverse('algorithm:detail',kwargs={'pk':algorithm_pk})
 
 
-@login_required(login_url='/accounts/login/')
-@permission_required('algorithm.can_view_parameter_detail', raise_exception=True)
-def view_parameter(request, algorithm_id, version_id, parameter_id):
-	current_user = request.user
-	if is_data_admin(current_user):
-		parameter = get_object_or_404(Parameter, id=parameter_id)
-	else:
-		version = get_object_or_404(Version, Q(created_by=current_user), id=version_id)
-		parameter = get_object_or_404(Parameter, id=parameter_id)
-	context = {'parameter': parameter}
-	return render(request, 'algorithm/parameter_detail.html', context)
+@method_decorator(
+    permission_required('algorithm.can_send_version_to_review',raise_exception=True),
+    name='dispatch'
+)
+class VersionReviewPendingView(LoginRequiredMixin,TemplateView):
+    """Change the publishing_state of a version as Version.REVIEW_PENDING."""
+    
+    def get(self,request,*args,**kwargs):
+        version_pk = self.kwargs.get('pk')
+        version = version = get_object_or_404(Version,pk=version_pk)
+        version.publishing_state = Version.REVIEW_PENDING
+        version.save()
+
+        # send email
+        subject = 'Versión Pendiente por Revisión'
+
+        from_email = settings.DEFAULT_FROM_EMAIL
+        to_email =  [version.algorithm.created_by.email]
+
+        context = {
+            'version':version
+        }
+
+        message = render_to_string(
+            template_name='algorithm/email/algorithm_review_send.html',
+            context=context,
+            request=request
+        )
+
+        send_mail(subject,message,from_email,to_email,fail_silently=False)
+
+        messages.info(
+            request, 
+            'La versión del algoritmo esta pendiente por Revisión.'
+        )
+
+        return redirect('algorithm:version-detail', pk=version_pk)
 
 
-@login_required(login_url='/accounts/login/')
-@permission_required('algorithm.can_edit_parameter', raise_exception=True)
-def update_parameter(request, algorithm_id, version_id, parameter_id):
-	current_user = request.user
-	parameter = get_object_or_404(Parameter, id=parameter_id)
-	version = get_object_or_404(Version, Q(created_by=current_user), id=version_id)
-	if request.method == 'POST':
-		# getting the form
-		parameter_form = NewParameterForm(request.POST)
-		if parameter.version.publishing_state != Version.DEVELOPED_STATE:
-			parameter_form.add_error(None, "Solo es posible actualizar parámetros a versiones en estado 'En Desarrollo'.")
-		# checking if the form is valid
-		if parameter_form.is_valid():
-			name = parameter_form.cleaned_data['name']
-			parameter_type = parameter_form.cleaned_data['parameter_type']
-			description = parameter_form.cleaned_data['description']
-			help_text = parameter_form.cleaned_data['help_text']
-			position = parameter_form.cleaned_data['position']
-			required = parameter_form.cleaned_data['required']
-			enabled = parameter_form.cleaned_data['enabled']
-			default_value = parameter_form.cleaned_data['default_value']
-			function_name = parameter_form.cleaned_data['function_name']
-			output_included = parameter_form.cleaned_data['output_included']
-			# updating the model
-			parameter.name = name
-			parameter.parameter_type = parameter_type
-			parameter.description = description
-			parameter.help_text = help_text
-			parameter.position = position
-			parameter.required = required
-			parameter.enabled = enabled
-			parameter.default_value = default_value
-			parameter.function_name = function_name
-			parameter.output_included = output_included
-			parameter.save()
-			return HttpResponseRedirect(reverse('algorithm:view_parameter', kwargs={'algorithm_id': algorithm_id, 'version_id': version_id, 'parameter_id': parameter_id}))
-		else:
-			parameter_form.add_error(None, "Favor completar todos los campos marcados.")
-	else:
-		parameter_form = NewParameterForm(initial={'name': parameter.name,
-		                                           'parameter_type': parameter.parameter_type,
-		                                           'description': parameter.description,
-		                                           'help_text': parameter.help_text,
-		                                           'position': parameter.position,
-		                                           'required': parameter.required,
-		                                           'enabled': parameter.enabled,
-		                                           'default_value': parameter.default_value,
-		                                           'function_name': parameter.function_name,
-		                                           'output_included': parameter.output_included,})
-	context = {'parameter_form': parameter_form, 'parameter': parameter}
-	return render(request, 'algorithm/update_parameter.html', context)
+@method_decorator(
+    permission_required('algorithm.can_start_version_review',raise_exception=True),
+    name='dispatch'
+)
+class VersionReviewStartView(LoginRequiredMixin,TemplateView):
+    """Change the publishing_state of a version as Version.REVIEW.
+
+    And send an email to the user to indicate his/her version
+    is being reviewed.
+    """
+
+    def get(self,request,*args,**kwargs):
+        version_pk = self.kwargs.get('pk')
+        version = get_object_or_404(Version, pk=version_pk)
+        version.publishing_state = Version.REVIEW
+        version.save()
+
+        # send email
+        subject = 'Versión en Revisión'
+
+        from_email = settings.DEFAULT_FROM_EMAIL
+        to_email =  [version.algorithm.created_by.email]
+
+        context = {
+            'version':version
+        }
+
+        message = render_to_string(
+            template_name='algorithm/email/algorithm_review_start.html',
+            context=context,
+            request=request
+        )
+
+        send_mail(subject,message,from_email,to_email,fail_silently=False)
+
+        messages.info(
+            request, 
+            'Se ha iniciado la revisión de la Version.'
+        )
+
+        return redirect('algorithm:version-detail',pk=version_pk)
+
+
+@method_decorator(
+    permission_required('algorithm.can_list_versions',raise_exception=True),
+    name='dispatch'
+)
+class VersionReviewListView(LoginRequiredMixin,TemplateView):
+    """Display the list of versions with publishing_state == Version.REVIEW_PENDING"""
+    template_name = 'algorithm/version_review_list.html'
+
+
+@method_decorator(
+    permission_required('algorithm.can_create_parameter',raise_exception=True),
+    name='dispatch'
+)
+class ParameterCreateView(LoginRequiredMixin,CreateView):
+    """Create a parameter for a given version.
+
+    Use the template algorithm/parameter_form.html
+    """
+    model = Parameter
+    form_class = ParameterForm
+
+    def get_initial(self):
+        """initialize version algorthm."""
+        initial = super(ParameterCreateView, self).get_initial()
+        version_pk = self.kwargs.get('pk')
+        version_obj = get_object_or_404(Version,pk=version_pk)
+        
+        initial['show_algorthm_name'] = version_obj.algorithm.name
+        initial['show_version_number'] = version_obj.number
+
+        initial['algorithm'] = version_obj.algorithm.pk
+        initial['version'] = version_obj.pk
+        return initial
+
+    def get_context_data(self, **kwargs):
+        """Add or change context initial data."""
+
+        context = super(ParameterCreateView, self).get_context_data(**kwargs)
+
+        # Template aditional data
+        context['section'] = 'Nuevo Parámetro'
+        context['title'] = 'Nuevo Parámetro'
+        context['button'] = 'Crear Parámetro'
+        return context
+
+    def get_success_url(self):
+        """
+        Return a URL to the detail of the algorithm version.
+        """
+        version_pk = self.kwargs.get('pk')
+        return reverse('algorithm:version-detail',kwargs={'pk':version_pk})
+
+
+@method_decorator(
+    permission_required('algorithm.can_edit_parameter',raise_exception=True),
+    name='dispatch'
+)
+class ParameterUpdateView(LoginRequiredMixin,UpdateView):
+    """Update a parameter for a given version.
+
+    Use the template algorithm/parameter_form.html
+    """
+    model = Parameter
+    form_class = ParameterForm
+
+    def get_object(self):
+        pk = self.kwargs.get('pk')
+        return get_object_or_404(
+            Parameter,
+            pk=pk,
+            version__algorithm__created_by=self.request.user
+        )
+
+    def get_initial(self):
+        """initialize version algorthm."""
+        initial = super(ParameterUpdateView, self).get_initial()
+        parameter_pk = self.kwargs.get('pk')
+        #parameter_obj = get_object_or_404(Parameter,pk=parameter_pk)
+        parameter_obj = self.get_object()
+
+        initial['show_algorthm_name'] = parameter_obj.version.algorithm.name
+        initial['show_version_number'] = parameter_obj.version.number
+        
+        initial['algorithm'] = parameter_obj.version.algorithm
+        initial['version'] = parameter_obj.version
+        return initial
+
+    def get_context_data(self, **kwargs):
+        """Add or change context initial data."""
+
+        context = super(ParameterUpdateView, self).get_context_data(**kwargs)
+
+        # Template aditional data
+        context['section'] = 'Editar Parámetro'
+        context['title'] = 'Editar Parámetro'
+        context['button'] = 'Actualizar Parámetro'
+        return context
+
+    def get_success_url(self):
+        """
+        Return a URL to the detail of the algorithm version.
+        """
+        parameter_pk = self.kwargs.get('pk')
+        return reverse('algorithm:parameter-detail',kwargs={'pk':parameter_pk})
+
+
+@method_decorator(
+    permission_required('algorithm.can_view_parameter_detail',raise_exception=True),
+    name='dispatch'
+)
+class ParameterDetailView(LoginRequiredMixin,DetailView):
+    """Display parameter detail.
+
+    Use the template algorithm/parameter_detail.html
+    """
+    model = Parameter
+    context_object_name = 'parameter'

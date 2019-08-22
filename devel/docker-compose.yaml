@@ -1,0 +1,125 @@
+version: '3'
+services:
+  # WEB SERVICES
+  web_db:
+    image: postgres
+    restart: on-failure
+    environment:
+      - POSTGRES_USER=cdcol
+      - POSTGRES_DB=cdcol
+      - POSTGRES_PASSWORD=cdcol
+
+  web:
+    build: ../
+    restart: on-failure
+    entrypoint: ./entrypoint.sh
+    env_file:
+      - ../environment
+    ports:
+      - 8001:8000
+    volumes:
+      - ../:/usr/src/app
+      #  Storages
+      - source-storage:/source_storage
+      - dc-storage:/dc_storage
+      - web-storage:/web_storage
+      # Static files serving with nginx
+      # - static:/usr/src/app/static
+    depends_on:
+      - web_db
+    # to run django in development mode
+    tty: true
+
+  nginx:
+    image: nginx:alpine
+    # restart: on-failure
+    ports:
+    - "8002:80"
+    volumes:
+    - static:/usr/share/nginx/html/static
+    - ./nginx/conf.d:/etc/nginx/conf.d
+    - web-storage:/web_storage
+    depends_on:
+      - web
+
+  # AIRFLOW SERVICES
+  # airflow_db:
+  #   image: postgres
+  #   # restart: always
+  #   environment:
+  #     - POSTGRES_DB=airflow
+  #     - POSTGRES_USER=airflow
+  #     - POSTGRES_PASSWORD=airflow
+
+  # rabbitmq:
+  #   image: rabbitmq:3-management
+  #   restart: always
+  #   environment:
+  #     - RABBITMQ_DEFAULT_USER=airflow
+  #     - RABBITMQ_DEFAULT_PASS=airflow
+  #     - RABBITMQ_DEFAULT_VHOST=airflow
+
+  # redis:
+  #   image: redis
+  #   expose:
+  #   - 6379
+
+  # airflow:
+  #   build: ./airflow
+  #   # restart: always
+  #   entrypoint: ./entrypoint.sh
+  #   environment:
+  #     - AIRFLOW_HOME=/usr/src/app/home
+  #     - C_FORCE_ROOT=true
+  #   volumes:
+  #     - ./airflow/home:/usr/src/app/home
+  #     - ./airflow/entrypoint.sh:/usr/src/app/entrypoint.sh
+  #     #  Storages
+  #     - source-storage:/source_storage
+  #     - dc-storage:/dc_storage
+  #     - web-storage:/web_storage
+  #   # host:container
+  #   ports:
+  #     # flower service
+  #     - 5555:5555
+  #     # Airflow web server
+  #     - 8080:8080
+
+  #   depends_on:
+  #     - airflow_db
+  #     - rabbitmq
+  #     - redis
+    
+  # REST API SERVICES
+  # cube_db:
+  #   image: postgres:9.5
+  #   restart: on-failure
+  #   environment:
+  #     - POSTGRES_USER=cube
+  #     - POSTGRES_DB=cube
+  #     - POSTGRES_PASSWORD=cube
+
+  # api:
+  #   build: ./api-rest
+  #   restart: on-failure
+  #   tty: true # Allow runserver work properly
+  #   entrypoint: ./entrypoint.sh
+  #   env_file:
+  #     - ./api-rest/environment
+  #   volumes:
+  #     - ./api-rest:/usr/src/app
+  #     - ./cube/datacube.conf:/root/.datacube.conf
+  #     #  Storages
+  #     - source-storage:/source_storage
+  #     - dc-storage:/dc_storage
+  #     - web-storage:/web_storage
+  #   depends_on:
+  #     - web_db
+  #     - cube_db
+  #     - airflow
+
+volumes:
+  static:
+  source-storage:
+  dc-storage:
+  web-storage:

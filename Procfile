@@ -1,1 +1,0 @@
-web: gunicorn ideam_cdc.wsgi

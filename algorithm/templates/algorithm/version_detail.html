@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- breadcrumb start -->
+<!-- ================ -->
+<div class="breadcrumb-container">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
+      <li><a href="{% url 'algorithm:index' %}">Mis Algoritmos</a></li>
+      <li class="active">Detalle de versión</li>
+    </ol>
+  </div>
+</div>
+<!-- breadcrumb end -->
+
+<!-- main-container start -->
+<!-- ================ -->
+<section class="main-container">
+  <div class="container">
+      <div class="row">
+        <!-- main start -->
+        <!-- ================ -->
+        <div class="main col-md-8">
+          <!-- page-title start -->
+          <!-- ================ -->
+          <h3 class="page-title">Información de la versión</h3>
+          <div class="separator-2"></div>
+          <!-- page-title end -->
+          <p>Esta es la información de la versión del algoritmo seleccionado:</p>
+          <table class="table">
+            <tbody>
+            <tr>
+              <td>Nombre del algoritmo:</td>
+              <td>{{ version.algorithm.name }}</td>
+            </tr>
+            <tr>
+              <td>Nombre de version:</td>
+              <td>{{ version.name }}</td>
+            </tr>
+            <tr>
+              <td>Número de version:</td>
+              <td>{{ version.number }}</td>
+            </tr>
+            <tr>
+              <td>Descripción:</td>
+              <td>{{ version.description|linebreaks }}</td>
+            </tr>
+            <tr>
+              <td>Código fuente:</td>
+              <td> 
+                {% if version.source_code %}
+                <a href="{{ version.source_code.url }}" class="btn btn-gray btn-sm"><i class="fa fa-download"></i> Descargar</a>
+                {% else %}
+                Anún no has subido un código fuente
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <td>Repositorio código fuente:</td>
+              <td><a href="{{ version.repository_url }}" target="_blank" class="btn btn-gray btn-sm">Ir al sitio</a></td>
+            </tr>
+            <tr>
+              <td>Estado:</td>
+              <td>{{ version.get_publishing_state_display }}</td>
+            </tr>
+            <tr>
+              <td>Fecha de Creación:</td>
+              <td>{{ version.created_at }}</td>
+            </tr>
+            <tr>
+              <td>Creada por:</td>
+              <td>{{ version.algorithm.created_by.email }}</td>
+            </tr>
+            </tbody>
+          </table>
+
+          <h3 class="page-title">Posibles Unidades de Almacenamiento Origen</h3>
+          <div class="separator-2"></div>
+          <p>A continuación se encuentran las posibles unidades de almacenamiento origen definidas para esta
+              versión:</p>
+          <div class="table-responsive">
+            <table class="table table-striped table-colored">
+              <thead>
+              <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+              </tr>
+              </thead>
+              <tbody>
+              {% for storage_unit in version.versionstorageunit_set.all %}
+                <tr>
+                  <td>{{ storage_unit.storage_unit.id }}</td>
+                  <td>{{ storage_unit.storage_unit.alias }}</td>
+                  <td><a target="_blank" href="{% url 'storage:detail' storage_unit.storage_unit.id %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a></td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <h3 class="page-title">Parámetros de la versión</h3>
+          <div class="separator-2"></div>
+          {% if version.publishing_state == "1" %}
+          {% if user.is_authenticated %}
+          {% if perms.algorithm.can_create_parameter %}
+          <div class="pull-right">
+              <a href="#"><a href="{% url 'algorithm:parameter-create' version.id %}" class="btn btn-default btn-md"><i class="fa fa-plus-circle"></i> Nuevo Parámetro</a></a>
+          </div>
+          {% endif %}
+          {% endif %}
+          {% endif %}
+          <p>A continuación se encuentran los parámetros de esta versión::</p>
+          <br/>
+          <div class="table-responsive">
+            <table class="table table-striped table-colored">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Tipo</th>
+                  <th>Posición</th>
+                  <th>Obligatorio</th>
+                  <th>Habilitado</th>
+                  <th>Incluido en Salida</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for param in version.parameter_set.all|dictsort:"position" %}
+                <tr>
+                  <td>{{ param.name }}</td>
+                  <td>{{ param.get_parameter_type_display }}</td>
+                  <td>{{ param.position }}</td>
+                  <td>{{ param.required }}</td>
+                  <td>{{ param.enabled }}</td>
+                  <td>{{ param.output_included }}</td>
+                  <td>
+                    <a href="{% url 'algorithm:parameter-detail' param.id %}" class="btn btn-gray btn-sm"><i class="fa fa-bars"></i> Ver Detalle</a>
+                    {% if version.publishing_state == "1" %}
+                    {% if user.is_authenticated %}
+                    {% if perms.algorithm.can_edit_parameter %}
+                    <a href="{% url 'algorithm:parameter-update' param.id %}" class="btn btn-gray btn-sm"><i class="fa fa-edit"></i> Editar</a>
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- main end -->
+
+        <!-- sidebar start -->
+        <!-- ================ -->
+        <aside class="col-md-4 col-lg-3 col-lg-offset-1">
+          <div class="sidebar">
+            <div class="block clearfix">
+              <h3 class="title">Acciones</h3>
+              <div class="separator-2"></div>
+                {% if version.publishing_state in "1245" %}
+                <nav>
+                  <a href="{% url 'execution:create' version.id %}" class="btn btn-primary btn-md btn-block">Ejecutar Versión</a>
+                </nav>
+                {% endif %}
+                {% if version.publishing_state == "1" %}
+                {% if user.is_authenticated %}
+                {% if perms.algorithm.can_edit_version %}
+                <nav>
+                  <a href="{% url 'algorithm:version-update' version.id %}" class="btn btn-primary btn-md btn-block">Editar Versión</a>
+                </nav>
+                {% endif %}
+                {% endif %}
+                {% endif %}
+                {% if version.publishing_state == "1" and perms.algorithm.can_send_version_to_review %}
+                <nav>
+                  <a href="{% url 'algorithm:version-review' version.id %}" class="btn btn-primary btn-md btn-block">Enviar a Revisión</a>
+                </nav>
+                {% endif %}
+                {% if version.publishing_state == "4" and perms.algorithm.can_start_version_review %}
+                <nav>
+                  <a href="{% url 'algorithm:version-review-start' version.id %}" class="btn btn-primary btn-md btn-block">Iniciar Revisión</a>
+                </nav>
+                {% endif %}
+                {% if version.publishing_state == "5" and perms.algorithm.can_publish_version %}
+                <nav>
+                  <a href="{% url 'algorithm:version-publish' version.id %}" class="btn btn-primary btn-md btn-block">Publicar Versión</a>
+                </nav>
+                {% endif %}
+                {% if version.publishing_state == "2" and version.execution_set.count == 0 %}
+                <nav>
+                  <a href="{% url 'algorithm:version-unpublish' version.id %}" class="btn btn-primary btn-md btn-block">Volver versión a En Desarrollo</a>
+                </nav>
+                {% endif %}
+                {% if version.publishing_state == "2" %}
+                <nav>
+                  <a onclick="return confirm('¿Está seguro de volver obsoleta la versión? Recuerde que esta no podrá seguir siendo utilizada por los analistas.')" href="{% url 'algorithm:version-deprecate' version.id %}" class="btn btn-primary btn-md btn-block">Volver Versión Obsoleta</a>
+                </nav>
+                {% endif %}
+                {% if version.execution_set.count == 0 %}
+                <nav>
+                  <a href="{% url 'algorithm:version-delete' version.algorithm.id version.id %}" class="btn btn-primary btn-md btn-block">Eliminar Versión</a>
+                </nav>
+                {% else %}
+                <nav>
+                  <a class="btn btn-primary btn-md btn-block" disabled="">Eliminar Versión</a>
+                </nav>
+                {% endif %}
+            </div>
+          </div>
+        </aside>
+        <!-- sidebar end -->
+      </div>
+    </div>
+  </section>
+  <!-- main-container end -->
+{% endblock %}

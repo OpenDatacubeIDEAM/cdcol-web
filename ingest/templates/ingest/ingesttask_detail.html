@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- breadcrumb start -->
+<!-- ================ -->
+<div class="breadcrumb-container">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
+      <li><a href="{% url 'ingest:index' %}">Tareas de Ingesta</a></li>
+      <li class="active">Detalle</li>
+    </ol>
+  </div>
+</div>
+<!-- breadcrumb end -->
+
+<!-- main-container start -->
+<!-- ================ -->
+<section class="main-container" style="margin-bottom: 100px;">
+  <div class="container">
+      <div class="row">
+        <!-- main start -->
+        <!-- ================ -->
+        <div class="main col-md-8">
+
+          <!-- page-title start -->
+          <!-- ================ -->
+          <h3 class="title">Información de la Tarea</h3>
+          <div class="separator-2"></div>
+          <!-- page-title end -->
+          <p>La siguiente información de la versión del algoritmo:</p>
+          <table class="table">
+            <tbody>
+              <tr>
+                <td>Unidad de Almacenamiento:</td>
+                <td>{{ task.storage_unit.name }}</td>
+              </tr>
+              <tr>
+                <td>Observaciones</td>
+                <td>{{ task.comments }}</td>
+              </tr>
+              <tr>
+                <td>Estado:</td>
+                <td>{{ task.get_state_display }}</td>
+              </tr>
+              <tr>
+                <td>Errors:</td>
+                <td>{{ task.error_messages }}</td>
+              </tr>
+              <tr>
+                <td>Logs:</td>
+                <td>{{ task.logs }}</td>
+              </tr>
+              <tr>
+                <td>Fecha Inicio de Ejecución:</td>
+                <td>{{ task.start_execution_date }}</td>
+              </tr>
+              <tr>
+                <td>Fecha Fin de Ejecución:</td>
+                <td>{{ task.end_execution_date }}</td>
+              </tr>
+              <tr>
+                <td>Fecha de Creación:</td>
+                <td>{{ task.created_at }}</td>
+              </tr>
+              <tr>
+                <td>Creada por:</td>
+                <td>{{ task.created_by.email }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- main end -->
+
+        <!-- sidebar start -->
+        <!-- ================ -->
+        <aside class="col-md-4 col-lg-3 col-lg-offset-1">
+          <div class="sidebar">
+            <div class="block clearfix">
+              <h3 class="title">Acciones</h3>
+              <div class="separator-2"></div>
+              <nav>
+                <a href="#" class="btn btn-gray btn-md btn-block">No hay acciones disponibles</a>
+              </nav>
+            </div>
+          </div>
+        </aside>
+        <!-- sidebar end -->
+      </div>
+    </div>
+  </section>
+  <!-- main-container end -->
+{% endblock %}

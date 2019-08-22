@@ -1,0 +1,32 @@
+#!/bin/bash
+# Load this file with 'export $(egrep -v '^#' environment | xargs)' command
+
+# Uncomment to set DEBUG to True
+DEBUG='on'
+
+# Uncommend to serve static file with nginx
+PRODUCTION='on'
+
+#DC_API_URL="http://api:8000"
+DC_API_URL="http://192.168.106.23:8000"
+DC_STORAGE_PATH="/dc_storage"
+
+WEB_STORAGE_PATH="/web_storage"
+WEB_EXECUTION_TEMPORIZER="10000"
+WEB_ALGORITHM_ID_FOR_CUSTOM_SERVICE=200
+WEB_DAYS_ELAPSED_TO_DELETE_EXECUTION_RESULTS=3
+WEB_EXECUTION_DETAIL_SHOW_TASKS_STATES=failed,skipped
+
+WEB_EMAIL_HOST="smtp.gmail.com"
+WEB_EMAIL_HOST_USER="cdcolprueba@gmail.com"
+WEB_EMAIL_HOST_PASSWORD="ideam20162"
+WEB_EMAIL_PORT="587"
+
+WEB_DB_HOST="db"
+WEB_DB_PORT="5432"
+WEB_DB_NAME="ideam_1"
+WEB_DB_USER="portal_web"
+WEB_DB_PASSWORD="CDCol_web_2016"
+
+AIRFLOW_HOME=/home/cubo/projects/web-app/airflow
+SLUGIFY_USES_TEXT_UNIDECODE=yes

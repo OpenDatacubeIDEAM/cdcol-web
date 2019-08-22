@@ -1,13 +1,11 @@
-from django.conf.urls import url
+# -*- coding: utf-8 -*-
 
-from . import views
+from django.urls import path
+from template.views import YamlIndexView
+from template.views import IngestIndexView
 
-app_name = 'template'
 urlpatterns = [
-	# ex: /template/
-	url(r'^$', views.index, name='index'),
-	# ex: /template/download/filename.ext
-	url(r'^download/(?P<template_id>.+)$', views.download_file, name='download_file'),
-	# ex /template/json
-	url(r'^json$', views.as_json, name='as_json'),
+    path('yaml', YamlIndexView.as_view(), name='yaml-index'),
+    path('ingest', IngestIndexView.as_view(), name='ingest-index'),
+    # path('index/', IndexView.as_view(), name='index'),
 ]

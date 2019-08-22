@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-datepicker.min.css' %}" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+<link href="{% static 'css/leaflet-areaselect.css' %}" rel="stylesheet">
+<style>
+  #map {
+    height: 400px;
+  }
+
+  .leaflet-areaselect-shade {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  .leaflet-areaselect-handle {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #666;
+    -moz-box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+    width: 14px;
+    height: 14px;
+    cursor: move;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- breadcrumb start -->
+<!-- ================ -->
+<div class="breadcrumb-container">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
+      <li><a href="{% url 'execution:index' %}">Ejecuciones</a></li>
+      <li class="active">Nueva ejecución</li>
+    </ol>
+  </div>
+</div>
+<!-- breadcrumb end -->
+
+<!-- main-container start -->
+<!-- ================ -->
+<section class="main-container">
+  <div class="container">
+    <div class="row">
+      <!-- main start -->
+      <!-- ================ -->
+      <div class="main col-md-8 col-lg-offset-1 col-md-push-4 col-lg-push-3">
+
+          <!-- page-title start -->
+          <!-- ================ -->
+          <!-- page-title end -->
+
+          <!-- blogpost start -->
+          <article class="">
+            <header>
+              <h3 class="page-title">Información de la ejecución</h3>
+              <div class="separator-2"></div>
+
+              <div class="alert alert-info" role="alert">
+                <strong>Información: </strong> La ejecución de un area de un grado de longitud por un grado de latitud durante un periodo de un año o menos equivale a un credito
+              </div>
+            </header>
+            <div class="blogpost-content">
+              <p>La siguiente información del algoritmo:.</p>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table">
+                    <tbody>
+                    <tr>
+                      <td>Tematica:</td>
+                      <td>{{ algorithm.topic.name }}</td>
+                    </tr>
+                    <tr>
+                      <td>Descripción de Ejecución:</td>
+                      <td>{{ algorithm.description | linebreaks }}</td>
+                    </tr>
+                    <tr>
+                      <td>Algorithmo:</td>
+                      <td>
+                          {{ version_selection_form.version }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Descripción del Algorithmo:</td>
+                      <td>{{ version.description }}</td>
+                    </tr>
+                    <tr>
+                      <td>Fecha de creación:</td>
+                      <td>{{ algorithm.created_at }}</td>
+                    </tr>
+                    <tr>
+                      <td>Creada por:</td>
+                      <td>{{ algorithm.created_by.email }}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </article>
+          <!-- blogpost end -->
+
+          <!-- blogpost start -->
+          <article class="">
+            <header>
+              <h3 class="page-title">Calificación de la versión</h3>
+              <div class="separator-2"></div>
+            </header>
+            <div class="blogpost-content">
+              <p>Estadísticas de la versión del algoritmo:</p>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4 ">
+                <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible animated object-visible fadeInDownSmall" data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+                  <span class="icon default-bg circle"><i class="fa fa-star"></i></span>
+                  <h4>Calificación</h4>
+                  <div class="separator clearfix"></div>
+                  <h2>{{ average_rating }}/5</h2>
+                </div>
+              </div>
+              <div class="col-md-4 ">
+                <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible animated object-visible fadeInDownSmall" data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+                  <span class="icon default-bg circle"><i class="fa fa-check"></i></span>
+                  <h4># de Calificaciones</h4>
+                  <div class="separator clearfix"></div>
+                  <h2>{{ reviews.count }}</h2>
+                </div>
+              </div>
+              <div class="col-md-4 ">
+                <div class="pv-30 ph-20 feature-box bordered shadow text-center object-non-visible animated object-visible fadeInDownSmall" data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+                  <span class="icon default-bg circle"><i class="fa fa-refresh"></i></span>
+                  <h4># de Ejecuciones</h4>
+                  <div class="separator clearfix"></div>
+                  <h2>{{ executions.count }}</h2>
+                </div>
+              </div>
+              <div class="text-center">
+                {#<a href="{% url 'algorithm:version_rating' algorithm.id version.id %}#ratings" class="btn btn-gray btn-sm">Ver Calificaciones</a>#}
+              </div>
+            </div>
+          </article>
+          <!-- blogpost end -->
+
+          <!-- blogpost start -->
+          <article class="">
+            <header>
+              <h3 class="page-title">Ejecutar algoritmo</h3>
+              <div class="separator-2"></div>
+            </header>
+            <div class="blogpost-content">
+              <p>Ingresa los siguientes parámetros para ejecutar el algoritmo:</p>
+            </div>
+
+            <div class="section light-gray-bg">
+              <div class="container">
+                <form id="mainForm" role="form" class="form-horizontal col-md-6 col-md-offset-1" method="POST" action="{% url 'execution:create' version.id %}" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                  <!-- Parametro 1 -->
+                  <div class="form-group">
+                    <label><b>Descripción de la ejecución</b></label>
+                    <textarea id="textarea_id" name="textarea_name" placeholder="Ingrese una descripción que te ayude a identificar el objetivo del análisis que deseas realizar" class="form-control" rows="3"></textarea>
+                  </div>
+                  
+                  <div class="form-group">
+                    <b>Generar Mosaico</b>
+                    <input type="checkbox" id="checkbox_id" name="checkbox_generate_mosaic" placeholder="Generar Mosaico" checked >
+                  </div>
+                  
+                </form>
+              </div>
+            </div>
+          </article>
+          <!-- blogpost end -->
+        </div>
+        <!-- main end -->
+
+        <!-- sidebar start -->
+        <!-- ================ -->
+        <aside class="col-md-4 col-lg-3 col-md-pull-8 col-lg-pull-9">
+          <div class="sidebar">
+            <div class="block clearfix">
+              <h3 class="title">Tipo de Ejecución</h3>
+              <div class="separator-2"></div>
+              <nav>
+                <ul class="nav nav-pills">
+                  {% for topic in topics %}
+                  <li>
+                    <a  href="#">{{ topic.name }}</a>
+                    <ul>
+                      {% for algorithm in topic.get_published_algorithms %}
+                      <li>
+                        <a href="{% url 'execution:create' algorithm.last_published_version.id %}">{{ algorithm.name }}</a>
+                         <!-- &nbsp;&nbsp;
+                        <span data-toggle="collapse" data-target="#demo" class="fa fa-question-circle"></span>
+                        <div id="demo" class="collapse">
+                          <div style="float:left; width:200px; max-width:200px; word-wrap:break-word;">
+                            {{ algorithm.last_version.description }} 
+                          </div>
+                        </div> -->
+                      </li>
+                      {% endfor %}
+                    </ul>
+                    <!-- <br> -->
+                  </li>
+                  {% endfor %}
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </aside>
+        <!-- sidebar end -->
+      </div>
+    </div>
+  </section>
+  <!-- main-container end -->
+{% endblock %}
+
+{% block extra_body %}
+<script type="text/javascript"> 
+  var executed_params = "{{ executed_params|escapejs }}";
+  var credits_approved = "{{ credits_approved|escapejs }}";
+  var storage_units_version = "{{ storage_units_version|escapejs }}";
+  {# var storage_units_version = "{{ storage_units_version|escapejs }}"; #}
+</script>
+<script src="{% static 'bootstrap/js/bootstrap-datepicker.min.js' %}"></script>
+<script src="{% static 'bootstrap/locales/bootstrap-datepicker.es.min.js' %}"></script>
+<script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+<script src="{% static 'js/leaflet-areaselect.js' %}"></script>
+<script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgHk6zP-EhApihfwqpoeoOe2ZjSraVVPM"></script>
+<script type="text/javascript" src="{% static 'js/formBuilder.js' %}"></script>
+{% endblock %}

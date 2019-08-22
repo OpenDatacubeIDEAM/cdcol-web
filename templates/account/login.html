@@ -1,97 +1,84 @@
-{% extends "account/base.html" %}
+{% extends "base.html" %}
 
 {% load i18n %}
 
-{% block head_title %}{% trans "Sign In" %}{% endblock %}
+{% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block content %}
 
-    <!-- main-container start -->
-    <!-- ================ -->
-    <div class="main-container dark-translucent-bg" style="background-image:url('images/background-img-6.jpg');">
-        <div class="container">
-            <div class="row">
-                <!-- main start -->
-                <!-- ================ -->
-                <div class="main object-non-visible" data-animation-effect="fadeInUpSmall" data-effect-delay="100">
-                    <div class="form-block center-block p-30 light-gray-bg border-clear">
-                        <h2 class="title">Acceda a Su Cuenta</h2>
-                        <form class="form-horizontal" method="POST" action="{% url 'account_login' %}">
-                            {% csrf_token %}
+<!-- main-container start -->
+<!-- ================ -->
+<div class="main-container dark-translucent-bg" style="background-image:url('images/background-img-6.jpg');">
+  <div class="container">
+    <div class="row">
+      <!-- main start -->
+      <!-- ================ -->
+      <div class="main object-non-visible" data-animation-effect="fadeInUpSmall" data-effect-delay="100">
+        <div class="form-block center-block p-30 light-gray-bg border-clear">
+          <h2 class="title">Acceda a Su Cuenta</h2>
+            <form class="form-horizontal" method="POST" action="{% url 'account_login' %}">
+            {% csrf_token %}
 
-                            <!-- Errors -->
-                            {% if form.errors %}
-                                {% for error in form.non_field_errors %}
-                                    <div class="alert alert-danger">
-                                        <strong>{{ error|escape }}</strong>
-                                    </div>
-                                {% endfor %}
-                            {% endif %}
-                            <!-- /Errors -->
+              <!-- Errors -->
+              {% if form.errors %}
+              {% for error in form.non_field_errors %}
+              <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+              </div>
+              {% endfor %}
+              {% endif %}
+              <!-- /Errors -->
 
-                            <div class="form-group has-feedback">
-                                <!-- Errors -->
-                                {% if form.login.errors %}
-                                    {% for error in form.login.errors %}
-                                        <div class="alert alert-danger">
-                                            <strong>{{ error|escape }}</strong>
-                                        </div>
-                                    {% endfor %}
-                                {% endif %}
-                                <!-- /Errors -->
-                                <label for="inputUserName" class="col-sm-3 control-label">Email<span
-                                        class="text-danger small"> *</span></label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" name="{{ form.login.html_name }}"
-                                           id="{{ form.login.id_for_label }}" placeholder="Email"
-                                            {% if form.login.value %} value="{{ form.login.value }}"{% endif %}
-                                           required>
-                                    <i class="fa fa-user form-control-feedback"></i>
-                                </div>
-                            </div>
-                            <div class="form-group has-feedback">
-                                <!-- Errors -->
-                                {% if form.password.errors %}
-                                    {% for error in form.password.errors %}
-                                        <div class="alert alert-danger">
-                                            <strong>{{ error|escape }}</strong>
-                                        </div>
-                                    {% endfor %}
-                                {% endif %}
-                                <!-- /Errors -->
-                                <label for="inputPassword" class="col-sm-3 control-label">{% trans "Password" %}<span
-                                        class="text-danger small"> *</span></label>
-                                <div class="col-sm-8">
-                                    <input type="password" class="form-control" name="{{ form.password.html_name }}"
-                                           id="{{ form.password.id_for_label }}"
-                                           placeholder="{% trans "Password" %}" required>
-                                    <i class="fa fa-lock form-control-feedback"></i>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-offset-3 col-sm-8">
-                                    <button type="submit"
-                                            class="btn btn-group btn-default">Ingresar</button>
-                                    <ul class="space-top">
-                                        <li>
-                                            <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-                                        </li>
-                                    </ul>
-
-                                </div>
-                            </div>
-                            {% if redirect_field_value %}
-                                <input type="hidden" name="{{ redirect_field_name }}"
-                                       value="{{ redirect_field_value }}"/>
-                            {% endif %}
-                        </form>
-                    </div>
-                    <p class="text-center space-top">Si todavía no ha creado una cuenta, entonces por favor <a href="{{ signup_url }}">Regístrese</a> primero.</p>
+              <div class="form-group has-feedback">
+                <!-- Errors -->
+                {% if form.login.errors %}
+                {% for error in form.login.errors %}
+                <div class="alert alert-danger">
+                  <strong>{{ error|escape }}</strong>
                 </div>
-                <!-- main end -->
-            </div>
+                {% endfor %}
+                {% endif %}
+                <!-- /Errors -->
+                <label for="inputUserName" class="col-sm-3 control-label">Email<span class="text-danger small"> *</span></label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" name="{{ form.login.html_name }}" id="{{ form.login.id_for_label }}" placeholder="Email" {% if form.login.value %} value="{{ form.login.value }}"{% endif %} required>
+                  <i class="fa fa-user form-control-feedback"></i>
+                </div>
+              </div>
+              <div class="form-group has-feedback">
+              <!-- Errors -->
+              {% if form.password.errors %}
+              {% for error in form.password.errors %}
+              <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+              </div>
+              {% endfor %}
+              {% endif %}
+              <!-- /Errors -->
+              <label for="inputPassword" class="col-sm-3 control-label">{% trans "Password" %}<span class="text-danger small"> *</span></label>
+                <div class="col-sm-8">
+                  <input type="password" class="form-control" name="{{ form.password.html_name }}" id="{{ form.password.id_for_label }}" placeholder="{% trans "Password" %}" required>
+                  <i class="fa fa-lock form-control-feedback"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-8">
+                  <button type="submit" class="btn btn-group btn-default">Ingresar</button>
+                  <ul class="space-top">
+                    <li><a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a></li>
+                  </ul>
+                </div>
+              </div>
+              {% if redirect_field_value %}
+              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+              {% endif %}
+            </form>
+          </div>
+          <p class="text-center space-top">Si todavía no ha creado una cuenta, entonces por favor <a href="{{ signup_url }}">Regístrese</a> primero.</p>
         </div>
+        <!-- main end -->
+      </div>
     </div>
-    <!-- main-container end -->
-
+</div>
+<!-- main-container end -->
 {% endblock %}

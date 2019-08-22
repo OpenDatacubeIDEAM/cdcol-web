@@ -1,11 +1,12 @@
-from django.conf.urls import url
+# -*- coding: utf-8 -*-
 
-from . import views
+from django.urls import path
+from user_profile.views import PendingView
+from user_profile.views import HomeView
+from user_profile.views import UpdateView
 
-app_name = 'profile'
 urlpatterns = [
-	# ex: /profile/
-	url(r'^$', views.index, name='index'),
-	# ex: /profile/pending
-	url(r'^pending/$', views.pending, name='pending'),
+	path('home/', HomeView.as_view(), name='home'),
+    path('pending/', PendingView.as_view(), name='pending'),
+    path('update/', UpdateView.as_view(), name='update'),
 ]

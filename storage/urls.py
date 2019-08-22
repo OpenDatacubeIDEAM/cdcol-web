@@ -1,32 +1,36 @@
-from django.conf.urls import url
+# -*- coding: utf-8 -*-
 
-from . import views
+from django.urls import path
+from storage.views import IndexView
+from storage.views import StoragelistJsonView
+from storage.views import StorageCreateView
+from storage.views import StorageDetailView
+from storage.views import StorageUpdateView
+from storage.views import DownloadFileView
+from storage.views import StorageViewContentView
+from storage.views import StorageViewContentJsonView
+from storage.views import StorageImageDetailView
+from storage.views import StorageDownloadImageView
+from storage.views import StorageDownloadImageMetadataJsonView
+from storage.views import StorageObtainJsonListView
 
-app_name = 'storage'
 urlpatterns = [
-	# ex: /storage/
-	url(r'^$', views.index, name='index'),
-	# ex: /storage/detail/11
-	url(r'^detail/(?P<storage_unit_id>[0-9]+)/$', views.detail, name='detail'),
-	# ex: /storage/new
-	url(r'^new/$', views.new, name='new'),
-	# ex: /storage/update/11
-	url(r'^update/(?P<storage_unit_id>[0-9]+)/$', views.update, name='update'),
-	# ex: /storage/1/image/imagename/download/
-	url(r'^download/image/(?P<storage_unit_name>.*)/(?P<image_name>.+)$', views.download_image, name='download_image'),
-	# ex: /storage/1/image/imagename/metadata/
-	url(r'^(?P<storage_unit_id>[0-9]+)/image/(?P<image_name>.+)/metadata/$', views.download_metadata, name='download_metadata'),
-	# ex: /storage/1/[type]/download/
-	url(r'^/download/file/(?P<storage_unit_name>.*)/(?P<file>.+)$', views.download_file, name='download_file'),
-	# ex: /storage/storage_units/
-	url(r'^storage_units/$', views.obtain_storage_units, name='obtain_storage_units'),
-	# ex: /storage/content/12/json/
-	url(r'^content/(?P<storage_unit_id>[0-9]+)/json/$', views.content_as_json, name='content_as_json'),
-	# ex: /storage/content/12/
-	url(r'^content/(?P<storage_unit_id>[0-9]+)/$', views.view_content, name='view_content'),
-	# ex: /storage/1/image/12/detail/
-	url(r'^(?P<storage_unit_id>[0-9]+)/image/(?P<image_name>.+)/detail/$', views.image_detail, name='image_detail'),
-	# ex /storage/content_as_json
-	url(r'^json$', views.as_json, name='as_json'),
+    path('', IndexView.as_view(), name='index'),
+    path('create/', StorageCreateView.as_view(), name='create'),
+    path('<int:pk>/', StorageDetailView.as_view(), name='detail'),
+    path('<int:pk>/update/', StorageUpdateView.as_view(), name='update'),
+    path('<int:pk>/content/', StorageViewContentView.as_view(), name='content'),
+    path('<int:pk>/content/json/', StorageViewContentJsonView.as_view(), name='content-json'),
+    path('<int:pk>/file/<str:file_name>/download/', DownloadFileView.as_view(), name='download-file'),
+    path('<int:pk>/image/<str:name>/detail/', StorageImageDetailView.as_view(), name='image-detail'),
+    path('<int:pk>/image/<str:image_name>/download/', StorageDownloadImageView.as_view(), name='image-download'),
+    path('<int:pk>/image/<str:name>/metadata/', StorageDownloadImageMetadataJsonView.as_view(), name='metadata-download'),
 
+    # This method is used by /static/js/formBuilder.js 
+    # In lines 193
+    # to ask for a posted storage unit id
+    path('json/', StoragelistJsonView.as_view(), name='as_json'),
+    # This method is used by /static/js/formBuilder.js 
+    # In lines 438 and 600.
+    path('storage_units/', StorageObtainJsonListView.as_view(), name='json-list'),
 ]

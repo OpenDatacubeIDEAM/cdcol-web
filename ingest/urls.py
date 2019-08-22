@@ -1,15 +1,12 @@
-from django.conf.urls import url
+# -*- coding: utf-8 -*-
 
-from . import views
+from django.urls import path
+from ingest.views import TaskIndexView
+from ingest.views import TaskCreateView
+from ingest.views import TaskDetailView
 
-app_name = 'ingest'
 urlpatterns = [
-	# ex: /ingest/
-	url(r'^$', views.index, name='index'),
-	# ex /ingest/json/
-	url(r'^json/$', views.as_json, name='as_json'),
-	# ex /ingest/new
-	url(r'^new/$', views.new, name='new'),
-	# ex /ingest/detail
-	url(r'^detail/(?P<ingest_task_id>[0-9]+)/$', views.detail, name='detail'),
+    path('', TaskIndexView.as_view(), name='index'),
+    path('task/create/', TaskCreateView.as_view(), name='task-create'),
+    path('task/<int:pk>/', TaskDetailView.as_view(), name='task-detail'),
 ]

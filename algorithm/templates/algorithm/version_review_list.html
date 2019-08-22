@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block banner_block %}
+<img class="overlay" src="{% static 'images/small-banner-home.jpg' %}">
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+{% endblock %}
+
+{% block content %}
+<!-- breadcrumb start -->
+<!-- ================ -->
+<div class="breadcrumb-container">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><i class="fa fa-home pr-10"></i><a href="/">Inicio</a></li>
+      <li class="active">Versiones</li>
+    </ol>
+  </div>
+</div>
+<!-- breadcrumb end -->
+
+<!-- main-container start -->
+<!-- ================ -->
+<section class="main-container padding-ver-clear">
+  <div class="container pv-40">
+    <div class="row">
+      <!-- main start -->
+      <!-- ================ -->
+      <div class="main col-md-12">
+        <h3 class="title">Versiones</h3>
+        <div class="separator-2"></div>
+        <p>A continuación se presenta el listado de versiones para revisión.</p>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <table id="versions" class="table table-striped table-colored">
+                <thead>
+                  <tr>
+                    <th>Código</th>
+                    <th>Nombre del Algoritmo</th>
+                    <th>Tipo del Algoritmo</th>
+                    <th>Número de la Versión</th>
+                    <th>Fecha de Creación</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- main end -->
+    </div>
+  </div>
+</section>
+<!-- main-container end -->
+{% endblock %}
+
+{% block extra_body %}
+  <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+  <script>
+      $(document).ready(function() {
+          var table = $('#versions').DataTable({
+              "order": [[ 0, "desc" ]],
+              "serverSide": true,
+              "ajax": '/api/versions/?format=datatables',
+              "columns": [
+                {"data": "id"},
+                {"data": "algorithm.name"},
+                {"data": "algorithm.topic.name"},
+                {"data": "number"},
+                {"data": "created_at","searchable":false,"sortable":false},
+                {
+                  "data": "id",
+                  "searchable": false,
+                  "sortable": false,
+                  "render": function (id) {
+                    html = `<a href=/algorithm/version/${id}/detail class='btn btn-gray btn-sm'><i class='fa fa-bars'></i> Ver Detalle</a>`;
+                    return html;
+                  }
+                }
+              ],
+              "language": {
+                "decimal":        "",
+                "emptyTable":     "No hay datos disponibles en la tabla",
+                "info":           "Mostrando del registro _START_ al _END_ de _TOTAL_ registros",
+                "infoEmpty":      "Mostrando del registro 0 a 0 de 0 registros",
+                "infoFiltered":   "(filtrando entre un total de _MAX_ registros)",
+                "infoPostFix":    "",
+                "thousands":      ",",
+                "lengthMenu":     "Mostrar _MENU_ registros",
+                "loadingRecords": "Cargando...",
+                "processing":     "Procesando...",
+                "search":         "Buscar:",
+                "zeroRecords":    "No se encontraron registros",
+                "paginate": {
+                    "first":      "Primero",
+                    "last":       "Último",
+                    "next":       "Siguiente",
+                    "previous":   "Anterior"
+                },
+                "aria": {
+                    "sortAscending":  ": activate to sort column ascending",
+                    "sortDescending": ": activate to sort column descending"
+                },
+                "buttons": {
+                  "copy": "Copiar",
+                  "print": "Imprimir"
+                }
+              }
+          });
+      });
+  </script>
+{% endblock %}
