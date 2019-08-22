@@ -29,6 +29,8 @@ Ingresa al directorio *devel* donde encontraras los pasos para desplegar el ambi
 
 El script de instalación se encuentra en el siguiente [link](https://gitlab.virtual.uniandes.edu.co/datacube-ideam/scripts-despliegue-desacoplado/blob/open_data_cube/web_install.sh).
 
+Luego de llevar a cabo al instalación de la aplicación web debe modificar el archivo *environment* con el fin de ajustar parámatros de configuración requeridos por la aplicación.
+
 ## Consideraciones en Producción
 
 * NGINX 
