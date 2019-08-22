@@ -1,56 +1,39 @@
-# CDCOL WEB SERVER
+# Cubo de Datos de Colombia Aplicación Web
 
-## Development
+Cubo de datos de Colombia se encuentra disponible en el siguinete link [http://cdcol.ideam.gov.co/](http://cdcol.ideam.gov.co/)
 
-If you use docker you need to get installed in your computer the following:
+## Módulos de la Aplicación Web
 
-* docker 
-* docker-compose
+* algorithm: Contiene todo el código fuente y HTML del módulo de Algoritmos. Comprende Temáticas, Algoritmos, Versiones, Parámetros de una Versión.
+* execution: Contiene todo el código fuente y HTML del módulo de Ejecuciones de la WEB. Comprende Ejecuciones y Parámetros de una Ejecución.
+index: Contiene todo el código fuente y HTML necesario para la visualización del index para cada rol de usuario, Analista, Desarrollador, Administrador de Datos y Analista de Workflows.
+* ingest: Contiene todo el código fuente y HTML del módulo de Ingesta. Comprende las Tareas de Ingesta.
+* storage: Contiene todo el código fuente y HTML del módulo de Unidades de Almacenamiento.
+* template: Contiene todo el código fuente y HTML del módulo de Plantillas (YAML descripción e ingesta y Scripts de generación de metadatos)
+* user_profile: Contiene todo el código fuente y HTML para administrar información del perfil de usuario . 
+* ideam: Contiene archivos de configuración de toda la aplicación WEB.
+* static: Contiene todos los archivos Javascript de la aplicación. 
+* templates: Contiene código HTML base de la aplicación WEB.
 
-Then look at the **devel folder**, you will be able to deploy a containerized development
-environmet for this web application.
+Otros módulos
 
-Deploy the test database:
+* maintenance: contine un conetendor que permite desplegar una venatana de mantenimiento.
+* data: mantiene datos para inilizalizar la base de datos (usar solo en desarollo).
+* devel: mantiene un mini ambiente de desarrollo para la web.
 
-```sh
-docker-compose up -d web_db
-```
+## Desarollo
 
-Deploy the test web server:
-
-```sh
-docker-compose up web
-```
-
-Some changes to the web source code required you to restart, you can close the web using Ctrl + C and perform the command above to start your web server again.
-
-You are ready do develop in your computer, the application will be available at http://localhost:8001. 
-You can improve the *docker-compose.yml* file in the devel folder to add more services.
-
-### Database backup
-
-To perform a backup of some database model, perform the following command. Change **auth.group** for the app.model_name and **.1group.json** for a name of your preference.
-
-Source the env variables.
-
-```sh
-export $(egrep -v '^#' environment | xargs)
-```
-
-Create database model data backup in json format.
-
-```sh
-python3.6 manage.py dumpdata --natural-foreign --natural-primary --indent 2 auth.group > data/1.group.json
-```
+Ingresa al dierctorio *devel* donde encontraras los pasos para desplegar el ambiente de desarrollo para la web.
 
 ## Production 
 
 The instalation script can be founded [here](https://gitlab.virtual.uniandes.edu.co/datacube-ideam/scripts-despliegue-desacoplado/blob/open_data_cube/web_install.sh).
 
-# NGINX 
+## Consideraciones en Producción
 
-Please check this section of the configuration file match the configuration file installed 
-by the web instalation script 
+* NGINX 
+
+Verifica que el archivo de configración de nginx provisto por el script de instalación de la web sea parecido al siguiente: 
 
 ```
   # redirect requests to the web server

@@ -1,26 +1,57 @@
-# CDCOL WEB DEVELOPMENT WITH DOCKER
+# CDCOL Ambiente de Desarrollo Web
 
-To deploy this development environmet you require the following to be installed:
+Para desplegar el ambiente de desarrollo web, se requiere lo siguiente:
 
+* Sistema Operativo Ubuntu 
+* Git
 * docker 
 * docker-compose
 
-Then look at the **devel folder**, you will be able to deploy a containerized development
-environmet for this web application.
+### Preparación del Ambiente de Desarrollo
 
-Deploy the test database:
+Abre una terminal en el Sistema Operativo Ubuntu y procede con la instalciónde los siguientes paquetes:
 
-```sh
-docker-compose up -d web_db
+Instalación de Git
+
+```sh 
+sudo apt install git
 ```
 
-Deploy the test web server:
+Instalación de docker y docker-compose
+
+```sh 
+sudo apt install docker.io
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker 
+sudo reboot now
+sudo apt install docker-compose 
+```
+
+Comenta la line **PRODUCTION** en el archivo environment para indicar a la aplicación web que no estamos en producción. **Nota: Cuando termines el desarollo debes volver a descomentar esta linea.**
+
+```sh 
+# Uncommend to serve static file with nginx
+PRODUCTION='on'
+
+# Uncommend to serve static file with nginx
+# PRODUCTION='on'
+```
+
+Despliega la base de datos de pruebas
+
+```sh
+docker-compose up -d db
+```
+
+Despliega el servidor web
 
 ```sh
 docker-compose up web
 ```
 
-Some changes to the web source code required you to restart, you can close the web using Ctrl + C and perform the command above to start your web server again.
+Agunos cambios en el código requieren que reinicios el servicio web. Puedes reiniciar el servidor usando Ctrol + C (para salir) y volver a ejecutar el comando anterior.
 
-You are ready do develop in your computer, the application will be available at http://localhost:8001. 
-You can improve the *docker-compose.yml* file in the devel folder to add more services.
+### Acceso a la Aplicación Web
+
+La aplicación web estará disponible en la siguiente URL http://localhost:8001. 
