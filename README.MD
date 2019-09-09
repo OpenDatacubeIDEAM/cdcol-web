@@ -4,22 +4,22 @@ Cubo de datos de Colombia se encuentra disponible en el siguinete link [http://c
 
 ## Módulos de la Aplicación Web
 
-* algorithm: Contiene todo el código fuente y HTML del módulo de Algoritmos. Comprende Temáticas, Algoritmos, Versiones, Parámetros de una Versión.
-* execution: Contiene todo el código fuente y HTML del módulo de Ejecuciones de la WEB. Comprende Ejecuciones y Parámetros de una Ejecución.
+1. **algorithm:** Contiene todo el código fuente y HTML del módulo de Algoritmos. Comprende Temáticas, Algoritmos, Versiones, Parámetros de una Versión.
+2. **execution:** Contiene todo el código fuente y HTML del módulo de Ejecuciones de la WEB. Comprende Ejecuciones y Parámetros de una Ejecución.
 index: Contiene todo el código fuente y HTML necesario para la visualización del index para cada rol de usuario, Analista, Desarrollador, Administrador de Datos y Analista de Workflows.
-* ingest: Contiene todo el código fuente y HTML del módulo de Ingesta. Comprende las Tareas de Ingesta.
-* storage: Contiene todo el código fuente y HTML del módulo de Unidades de Almacenamiento.
-* template: Contiene todo el código fuente y HTML del módulo de Plantillas (YAML descripción e ingesta y Scripts de generación de metadatos)
-* user_profile: Contiene todo el código fuente y HTML para administrar información del perfil de usuario . 
-* ideam: Contiene archivos de configuración de toda la aplicación WEB.
-* static: Contiene todos los archivos Javascript de la aplicación. 
-* templates: Contiene código HTML base de la aplicación WEB.
+3. **ingest:** Contiene todo el código fuente y HTML del módulo de Ingesta. Comprende las Tareas de Ingesta.
+4. **storage:** Contiene todo el código fuente y HTML del módulo de Unidades de Almacenamiento.
+5. **template:** Contiene todo el código fuente y HTML del módulo de Plantillas (YAML descripción e ingesta y Scripts de generación de metadatos)
+6. **user_profile:** Contiene todo el código fuente y HTML para administrar información del perfil de usuario . 
+7. **ideam:** Contiene archivos de configuración de toda la aplicación WEB.
+8. **static:** Contiene todos los archivos Javascript de la aplicación. 
+9. **templates:** Contiene código HTML base de la aplicación WEB.
 
 Otros módulos
 
-* maintenance: contine un conetendor que permite desplegar una venatana de mantenimiento.
-* data: mantiene datos para inilizalizar la base de datos (usar solo en desarollo).
-* devel: mantiene un mini ambiente de desarrollo para la web.
+* **maintenance:** contine un conetendor que permite desplegar una venatana de mantenimiento.
+* **data:** mantiene datos para inilizalizar la base de datos (usar solo en desarollo).
+* **devel:** mantiene un mini ambiente de desarrollo para la web.
 
 ## Desarollo
 
