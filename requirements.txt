@@ -1,4 +1,4 @@
-apache-airflow==1.10.1
+apache-airflow==1.10.15
 certifi==2019.3.9
 chardet==3.0.4
 defusedxml==0.5.0
